@@ -1,0 +1,807 @@
+Up you are all seeing my screen
+And you can you still hear me Perfect thank you
+Appreciate it
+OK um what I wanted to show you all first is the lab for um Tuesday for day one
+Because that lab is where you actually
+Implement that
+and Swin
+OK uh we saw that on on on
+The lab 4 Has anyone done lab 4 already
+Has anyone
+Give me a thumbs up
+So
+what do you need to know from web
+From day 1 lab 4 this is where the magic happens in the cold
+there is this line of code here is where we are setting
+The tools our agent is going to use Zach is going to use so we are saying
+all the functions we have in each catalog in this schema
+I want to use that key to be able to use so what this is saying then is that all
+these
+functions that are showing up
+Under
+Here
+Under this schema
+that key uh has permission to run all these functions
+Not
+the agent doesn't have permission Who needs to have the permission is the user
+just to make sure I'm clear that so the user who is accessing the agent needs to
+have
+permission here
+So this is something that uh we had an error on Tuesday because I forgot to put
+everybody
+here so this was fixed
+Uh but what this is telling uh le graphs is these are all the functions I want
+to make discoverable that I want you to be able to use
+Right
+And then I'm saying I also want you to have access to the documentation the
+syllables
+of the boot camp and I also want you to have access to all the code that we
+brought
+into
+into the vector database because what we did on Tuesday
+we created another
+another vector database which is this one the GitHub Docs index
+Which has Audi
+The chance of throwing the notebooks
+We saw that this worked in leng graph but we didn't finish the supervisor agent
+and
+that's where I want to make sure everybody understands because this is pretty
+cool
+And is where database is investing a lot and a lot of customers are using
+So how do we create a supervisor agent through the UX without using land graph
+more as a no code strategy
+We go into agents we click on supervisory agent
+And I have the description there so just call supervisor agent Yor Toy Chu
+And I'll say you are the boot camp
+Expert for
+Data expert
+Do I
+And here is where I can set up all the different the different tools I wanted to
+make
+available Here in this UX I have to go function by function
+It is smart enough to know uh based on the documentation you already described
+here
+And then
+We also said that you can't directly add a
+A vector database here you actually need another agent BRICS which is the one
+that
+references vector databases as you recall
+In agent Briggs
+We have the knowledge assistant which is reg
+so you need first you need to create um
+True
+You create one
+knowledge assistant
+With two vector search indexes one for the documentation another for the
+notebooks
+code
+And then you reference it here in the agent notebook and here you actually have
+reference the end point where that agent was deployed
+Then what we can also do we can deploy any genie space or we could reference the
+external
+MCP server
+In here now we see my app that has the custom MCP
+When we did the lab on Tuesday I went very fast and when I clicked create it
+didn't
+execute because we need two things to make sure that this works First thing we
+to do we need to come here in previews
+And we need to make sure
+That their own behalf
+Of user authentication
+Is enabled
+Can anyone explain to me why the on behalf of user authorization is important in
+context of our agent here
+And it's OK if you don't get the answer correct but why is this on behalf type
+of
+authorization important for the agent we are building
+Security purpose huh
+OK and high level you're right so give me more details
+Um what's the question actually
+So what I was saying is that for you to build an agent bricks that is a
+multi-agent
+supervisor for multiple
+databases tools
+you need to have this capability enabled which is the on behalf of user
+authorization
+So I'll give you the answer What this does go ahead go ahead So because it's a
+uh system so every agent works as an autonomous agent
+So it can it is stateful and it can take uh prompts from other another agent and
+it
+can wait and then
+decide and take action That's why it has to have on behalf
+of authentication
+I liked where you were going so the way I would compliment you
+sorry what
+they can they can be seen single agent also right instead of multi-agent
+Could be you're right could be this on behalf of user authorization also applies
+to
+a single agent
+Right even if you just had one tool the thing here guys is very important You
+need
+to remember this
+When your agent is calling a tool
+which might be calling another tool
+what is the identity the credentials that are passed into the database into the
+tool
+If you don't have this enabled if you don't have this enabled you're going to
+pass
+the identity of an agent
+So in the scenario we mentioned that if the user
+Let's say if a student
+Is calling this function here
+Let's say if I'm a student
+I'm accessing the the Zaki bot
+And I asked the question I want to see all the traveling expenses for you more
+we enabled it on behalf of user authorization
+Dare would send the credentials of the student
+And when it hits the database when it hits the the function database is going to
+evaluate
+if the user has the permission in here
+In here
+So we're flowing the end-user identity all the way through
+The UX the supervisor agent and the tools we're calling
+There is a lot of complexity in doing that There is a lot of overflow but
+Database
+is simplifying that to you but I want to make sure you understand because this
+is
+difficult to do
+OK
+and agent Bricks is making everything transparent to you All you need to do now
+You just click previews and you enable that feature
+The other thing you need to enable
+sorry uh is it like the access key or secret access key we have uh uh something
+connect with each other Is it like something of that sort or uh you generate or
+you
+don't generate I mean it's the data fix internally and this is it like something
+that sort
+There are no tokens Uh this is OAF uh authorization protocol So if you go into
+my
+blog you can go here AIBs.blog
+I think I wrote a post a long time ago Let me see if I can yeah this one here I
+what are the authentic authorization flows
+So look at this secrets diagram This is what database is doing for you
+With a click of a button
+There
+Um first you need uh the user needs to authorize the agent to act on behalf of
+the
+user then you need an authorization server
+I'm saying you are simplifying and this is an industry protocol OK this is an
+industry
+standard
+You can do all of a user to machine
+OO machine to machine
+And when we are talking about when we we are talking about on behalf of users we
+are
+talking about uh OAF
+for users which is users to machine
+OK I'll I'll paste my the link for this blog post I wrote
+When was it It was
+about a year ago yeah a year ago
+Well this is because of like avoiding data leak or something like that or some
+some
+kind of a thing
+yeah they to avoid that people hard code their tokens
+Which when you hard token your when you hard code your tokens is an easy way for
+to do data leakage
+Thanks
+How does the work the author
+beyond data bricks causes the impersonation makes sense within data bricks
+But how does it work beyond if the agent's doing other things outside of data
+bricks
+You asked one of the greatest questions for today kudos and you had a crystal uh
+ball
+because it's the next thing I was gonna show you
+So uh think that the app we built for the MCPN point
+Consider this is an external web
+How do we allow this app to be for the agent Briggs to talk to this app and even
+if
+this app was running on AWS or even in Snowflake
+If it was running on Snowflake I don't know the up time there but sorry I had to
+the joke um
+So to answer your question uh in data bricks you have this option here uh
+settings
+you go connections
+And look what I had to do I had to create a connection
+And define the OR flow
+for disintegration
+So the way you do that if it was an external API you would call it here let's
+say
+MCP connection
+EU can say HTP
+And you can say what is the flow the OR flow you wanna you wanna do You could
+do it with a better token token which I don't encourage you to do or you could
+do
+an OAF user to machine
+When you do that you need shootings You need
+What is the web application that is hosting this You need
+A client ID by the service provider and you need an authorization endpoint
+When you go into my diagram from my blog
+You see here you always need an authorization endpoint
+So you set up the the OA credentials here you say the scope
+And then you actually say this is the MCP connection
+Can anyone guess what happens when I check this box here
+I mean it it gets connected maybe like back and front and like it act as a
+rate
+MCP
+Yeah I I was asking a tricky question uh what this does
+When you are creating agent bricks like I was doing the multi-agent supervisor
+If we try that on on on Tuesday
+We were not getting anything from here Oh sorry I clicked the wrong option
+MCP server now it shows up here
+I have better news for you
+You only need to do this if you're working with a customized in-house MCP server
+you built
+But let's say if you're working with Glenn if you're working with other agents
+the data bricks marketplace now also support MCP servers
+And that's what you see here and you'll see this will continue to grow
+So you can just kind of install an MCP
+2
+Through the marketplace
+So what this is going to do this is gonna automatically going to add the
+connection
+that I had to do manually for our agent
+with the marketplace for the most popular MCP servers we're going to have that
+the marketplace
+So just to show you all um my configuration the connection for our Zakki
+Again I go into UC catalog I go into connections
+I had one connection for the GitHub Everything that goes outside of data bricks
+you need credential you want to create a connection if you're running a service
+So I created one for GitHub
+and another one here This is the connection the endpoint for our
+But what you see here the authorization endpoint in this case is actually
+database
+because Database is the one managing the access for this application
+These applications in data bricks they
+They cannot be public They have to go through Davis authentication So that's
+what
+I'm doing here I'm exposing the MCP server and I'm saying Datavix is the one who
+going to authenticate this
+With Ted uh our
+agent Brick Bricks my supervisor is live here
+And now I can test my agent bricks uh
+anywhere here I can open in the playground
+And I can ask a question
+Um
+Show me some sam show me
+the code for the talk
+Three chunking
+Strategies covered the glass
+OK here you can see the agent is thinking it's using the first uh tool
+And this tool uh if you can look here what was the thought it used
+Uh it's giving the syntax the code word chunking
+A fixed size chunking pretty cool right I mean you could ask this question to
+check
+GPT or cloud code but here you are confident that this is the content I covered
+in
+class
+And you know it is not going to hallucinate because we're only outputting what
+comes
+from our
+from our pipeline And do you want to know where it's coming from you can view
+citations
+And you can actually let me just open this guy over here
+You can actually see now what are the notebooks
+That has a
+The code samples
+We are looking for
+And he even brought something from the syllabus
+Pretty cool right
+Now let me ask you a different question just so we know it's gonna hit a
+different
+agent I'm when I ask what are the expenses
+For you more
+On March 2017
+So it knows it needs to go through the function get travel expenses summary Of
+if I didn't have access to this function it wouldn't
+call that function
+And now he's trying to call the function with
+My email
+in the date
+Oh for uh you know for this uh
+socialize like what uh is it your personal something or uh uh
+what is the bank uh
+Think of
+Sorry can you repeat the question please
+I mean this uh for this the data sources like is it your is this your like
+personal
+data I mean is it like from the bank statement
+uh it has taken only like from any app uh
+is this a real data also this one
+No of course not so
+Remember that's why I think you asked the question do I uh for completing labs
+On day 3 and day 4 do I need to compute the previous ones Yes you need So we
+actually
+created this function and populated this table the underlying table on lab
+number
+1
+Remember when we're doing the first class we created the synthetic receipts we
+we use AI cards document
+that's coming from that first lab
+Yeah correct we generate that's in I mean
+thanks
+I can see your guys' faces so I don't know how excited you are but this is the
+age
+of life It's orchestrating between multiple tools
+It's managing
+permissions on my behalf I mean it's leveraging my permissions and everything we
+did
+here was low code
+right We also had the implementation in Lang graph which worked we tested but
+I'm showing how this was able to do
+Blow code
+Once this becomes once you implement your uh agent BRICS
+your multi-agent supervisor
+this has now become
+An endpoint
+it is now implemented as an endpoint
+So I can
+Use it anywhere
+And Agent Briggs automatically adds uh that is an experiment for you
+So everything is already logged
+in the traces and in the inference tables so you can apply you can apply
+Apply the LLM as a judge evaluations in this data set
+Of course the moment you see the the let's say we are not happy with the answers
+from
+the multi-agent supervisor we have to go back
+improve the vector database the functions or the instructions we gave
+Uh through the multi-agent supervisor If it was the land graph implementation we
+would
+have more control on where we wanted to do the
+the implementation the improvements
+Cool
+Any questions about uh this multi-agent supervisor with agent BRICS
+I needed to wrap up dead so everybody could crystallize
+The entry in scenario Now I'm gonna walk you all through the the the labs for
+today
+Any questions
+Did I lose everybody How many people
+do we to have over there How many people 0 27 so people are not leaving
+Come on folks I want to see is everybody excited I didn't see any hearts any
+Party time OK I love it OK much better much better OK
+Perfect
+I love thank you thank you appreciate it
+OK so going to labs um I skipped this slide here so let me go into this slide
+One thing I I spoke uh
+in the previous class is everything we can do in the UX we can write code and we
+can
+automate with asset bundles I think I spoke about it
+Uh here's just a repetition for that we can host the MCP server in data breaks
+And
+What we do on the labs for today is the first one we implement saving the the
+length
+graph
+Model in UHH catalog
+then we implement tracing and monitor we implement LM evaluation and human
+feedback
+loop
+the before the
+The break I already showed you the the the review app OK so I want to spend more
+time
+on how we register the the model
+In each catalog and then I'm going to show you how we can build a very cool
+query
+To evaluate the cost of our agent
+Lab 4 I need to tweak something so we're gonna get uh Saturday So what I'm gonna
+once I do all the tweaks I wanna I'm gonna republish the Git report and I'm
+gonna
+do a quick video walk you through end to end
+So for the next 20 minutes I'm gonna walk you through lab 1 and a little bit of
+OK let's go there
+Uh I know you guys don't like uh VS code so I do need to go here and open my
+My data breaks from here and I want to see my remote folder
+When open
+OK content
+And here I'm on day 4
+Day 4 log model
+Folks what is the log model The log model is to get from our length graph model
+To get that Python implementation to show up here
+In the catalog
+Everything we are doing at the lab in this lab is to make our land graph
+implementation
+to show up here as a version
+And when we registered that version
+We already have an end endpoint users can talk to that endpoint
+And here we are actually treating this as an infrastructure as a code
+So we can actually see the lineage where were the tables used
+And we can see the the artifacts
+including the libraries we depend on
+And the actual implementation is going to be in the ML model here
+So we are packaging the model we are versioning
+And now we can call this model from anywhere
+So that's what we are doing here
+So how did I do this Um all we needed to do we needed to take the code from lab
+3.4
+from Tuesday
+and we needed to wrap
+everything that we did under this class from enough local y function
+And we log that model
+in Unit catalog and then we create a serving endpoint to serve that model
+And that's it
+how did I do that Um I need these libraries I need the lang chain and
+and data bricks lang chain because we are using land graph I need ML flow the
+version
+specific to data bricks
+And I just realized a duplicated link chain but it's OK it's not gonna fail
+Then uh we just declare our usual variables here
+And here's where the magic happens
+Code is very similar
+to what we did on Tuesday
+Here I'm building the actual le graph agent with all the tools
+The underlying model I'm using is a lemma
+Does anyone know why I I use llama and I don't use
+GPT or anyone any model philanthropic
+why am I going with the open source ones
+Is it
+Its costs
+Because I'm controlling I'm controlling the chunks I'm controlling the edging I
+don't
+need a model that is expensive that is very smart like GPT 5
+I can go with a cheaper model a more affordable model and still get the same
+level
+of accuracy that I get
+With a with a GPT 5 for example
+How do I know what is the best model Can anyone tell me how do we know what is
+best model for our problem
+Trial and error
+How do you do trial and er error the right way
+I mentioned the beginning of the question today on uh redrawing no I mean kind
+reinforcement algorithm you do uh
+you build an evaluation data set
+It's
+Right with the question and the expected answer
+but we know that uh for documents this is a correct model for the uh chunking of
+like images it's a different model is important so we mix and match it normally
+Yeah you mix and match but I wouldn't say that there is uh the right model
+because
+you always wanna optimize the use the most affordable model
+So if you can get the same results with uh let's say even the the model from
+Deepeek
+which database support
+We say OK we're gonna go into Lama and Deep seek because they are open source so
+they
+might be more affordable but which which one is the best one The only way you
+do it you have an evaluation data set and you try it
+Open source security is a problem
+Yeah uh
+It's a point you have less grounding of those models you have less
+Um what's the word I'm looking for
+You have less reinforcement learning that was done by open API OpenAI for
+example
+or Anthropic right
+But if your chunk strategies are good your system prompt is good and you have
+guardrail
+Would that work for you
+You need to test
+That could be our option
+As long as you're running the model locally or like in a within a platform where
+have strict guardrails it shouldn't be a problem
+Yeah but even even even if you're running uh lemma on data breaks it could still
+hallucinate
+Yeah so you you need to have a grounding techniques so like you know and then
+time limit how long it can actually work in order to not to exhaust the tokens
+all
+these kind of settings we have to do it
+Yeah
+I love where you guys are going so I think everybody is getting the point that
+it's
+not just about writing the code for the agent because the code for the agent is
+of straightforward where we spend most of the time is in the chunking and
+Then to build the code for the agent is the lines of code you guys are seeing
+where I say I wanna use this LLM I wanna use lang graph because it's very smart
+do multi-turn conversation it's very smart to do the reasoning
+And then I want to use these tools
+But when you go into production it's about testing it's about the cartwheels
+about evaluating over time
+And that's the intent of today's conversation right So uh folks I just want to
+bring
+your attention to this one this is very important So for you to register a model
+a Unity catalog
+Um a model like this from that we have built in in Lang chain with land graph
+need to create a Python class
+There is a child of this class here
+OK And then you need to implement two methods the load and the project
+And in the load I'm telling hey I am I'm gonna enable
+ML flow here
+And here are the tools I'm going to use
+And then in the project I'm just calling ML I'm just running
+The model I declared declared here in the load context
+If you think about it we are doing 10 lines of code using land graph
+Similar to what Datavix did with the multi-agent supervisor
+Why would I do this with the multi-agent supervisor versus this
+Because one thing nobody paid attention
+Is that in
+In the agent supervisor the multi-agent supervisor
+Data bricks never asked me
+which LLMG I want to use
+Database is doing some secret sauce there
+To always try to optimize for the most affordable option
+Think about it When I created the multi-agent supervisor I just gave my tools I
+never
+said
+Which LM I wanted to use for that So Database is going to know based on our
+experience
+based on the queries users are asking based on the tools
+what could be the model that would deliver
+The best accuracy
+With the lowest cost
+Some people don't like that some people wanna customize every knob
+That's when you go for the scenario here
+OK folks so what do you need to register your model into ML flow this model from
+La
+chain you need to create a class that is a child of this uh MLflow.python.python
+model
+Then you load the tools you want to use In our case we're loading the functions
+two vector databases and then we call ML flow to predict when the user passes
+value
+Then here I can actually register the module This is where I'm actually saving
+module in the catalog is when I call the log module I give it a name I give it
+class that I'm gonna use the signature which is what users used to call this
+And then I I inform what are the dependencies I have
+And here you can see that I had already run and I had success and the model was
+registered
+Then the moment I register the model here it's not available yet I need to
+create
+an endpoint to expose this model That's the next thing we do here We deploy the
+to the AI gateway
+this error I wanna show you all the error I had uh but I was able to
+No this this shouldn't this should be this this is working
+Uh but one thing I was trying to do folks I was trying to add
+um
+The gateway
+For PII detection
+In this model it doesn't work
+You can't add PII detection for a custom model like this
+So what is the alternative
+I don't know if you're still following me I'm gonna show you in a second what is
+alternative So what I did here I showed
+sorry I just showed in the UI right I mean uh we can select that thing
+If you are not able to write your own
+Oh good point but you can't so what I'm saying is if you are registering a model
+like
+this one that we built that uh
+Is a child of this class that is inheriting
+from this class
+Through the UI or via code you are not able to use the PII detection
+for this type of model
+So that this is what I was trying to do I wasn't aware
+of this limitation
+that you can't add guardrails for custom models
+So what I did I you can just create an AI gateway what I did here to save the
+inference
+table for our model and here's the rate limit This is very important Here's
+where
+I limit the number of calls that a user can have
+But what I can do I can
+wrap my lemma
+Model which I'm using here
+I wrapped my Lema module
+And I added the guard rail in the Lama model Then I can I just need to reference
+instead
+of referencing the original Lama model I referenced my
+Wrapped version of Lemon
+So a mistake I was making in the code but all you needed to do is you wrap
+dilemma
+How do we do that How do we wrap a foundational model in the model serving
+We go here into serving
+We create a serving endpoint
+And we say we want to serve a foundational model
+I select dilemma B37B
+And here now we see that I can add the guard radio option
+OK someone is not muted If you're not going to ask the question please mute mute
+yourself
+I keep hearing echo
+Yeah this is it for lab one and then here I just test uh I just tested
+So what I said there are ways for you to add more guard radios so I said if
+someone
+wants to try it
+Um to create a custom uh rejects like I said here can we prevent uh Zaki from
+talking
+about Coursera or Udemy
+Um that's a good thing to try
+Any questions about registering the model and why this is important why this is
+relevant
+and the thing I mentioned about the
+The limitation how we overcome that is this clear
+Uh humor I think it's kind of understandable understandable now but when once we
+run
+the scripts
+I think some some things may have not registered now some questions may come up
+Uh
+is it OK We we can just uh you know email you or something
+Yeah just send me a message on Discord Tag me on on on your question and it's
+that you ask on Discord so everybody sees that
+the the only thing I would say wait until Saturday before you run everything
+if if you run it now um this one should work and should work
+But after Saturday I will rerun everything and I'll make sure that you get zero
+errors
+The content is already there OK so you can review it You can understand the
+concept
+Got it OK Sounds good And and um on a separate note uh you know you did some uh
+uploading
+of PDF and bills
+To
+uh for for chunking the the previous class Have have you done some work in in
+loading
+images
+to compare for example if if for insurance purposes
+uh if somebody's detecting whether it's minor damage or heavy damage have you
+done
+something like that
+Yeah it's it's it's a common scenario
+Yeah it's a common scenario
+And that's part of machine learning is it
+Yeah it's gonna you're gonna use computer vision models
+OK Um you might have to go more into the traditional route
+The traditional route of computer vision
+Using GPUs using some open source models
+I can send you uh on a separate note some examples on how people have done that
+database Yeah
+I I think I have some questions not exactly related
+Uh I will run it by you on another occasion at this
+OK thank you Thanks thanks you know
+Not a problem OK folks I'm looking at the clock I do want to show uh lab number
+and then I'm gonna open for more questions Let me just show something on lab
+Because I think for you uh this is relevant
+This is just uh doing the tracing um
+what are the tracing these are the things that show up
+When you go on the experiments
+you click on the name of your agent
+And then you see the traces here
+So lab number 2 is just showing you how you can do the tracing to evaluate your
+retrieval
+strategies
+And compare them
+But what I really wanted to show you is how we can query how we can combine
+Oh I thought I had moved something Yeah this is part 3 This is what I wanted to
+show
+is how we combine data from these 3 different tables together I wanted to
+combine
+data from the usage table
+From the model stable and the payload the the the inference
+In a single view to understand the latency to understand cost
+So I wasn't able to do to vibe code this just with SQL so it's going to be a
+little
+bit of pie spark here
+And this is just a bunch of joints
+from these 3 tables
+And this should work
+It is gonna give you a nice uh daily view
+Oh I forgot to run I forgot to run the first one here
+OK so I'm gonna run
+Username and I forgot you run
+My bed
+Was it a data prick specific model
+Yeah uh so ML flow is open source When you do ML flow data bricks
+we already registered the data bricks endpoint URL
+as the ML flow server
+Cuz again remember ML flow is open source
+This includes everything everything from ML flu LLM as a judge a model
+deployment
+uh tracing
+It's the SDK for everything in in
+And our flowing data bricks
+Yeah I should have run this before so we just need to wait but it's almost there
+OK it's installing now and
+So wearing
+Thank you for your patience
+Now we run these variables
+Is the inference table in my username
+And now if we go all the way here to the queries that I went for part 3 it
+should
+work now
+Where are these tables coming from again
+When we go into an endpoint
+I'm going to select this end point here from
+Let me go into this one here
+Which one can I show you only mine
+And I think it might be this one
+And let's put this one So what this is giving is um we have 3 tables Uh the
+served
+entities has the version of your model has the information about your model
+Usage is the user who is querying
+some information about
+the environment and the inference table is the actual input to the LLM and the
+output
+to the LLM
+So we want to combine these three tables to understand how well the model is
+responding
+the latency and the cost
+That is the quarry I was trying to build for you guys
+So I combine the three tables and then I built some daily views
+so we understand first are we having success
+Um is the model
+Getting errors So for example this here should be a query that you can create an
+alert
+You get a notification if the number of failed requests like I had here
+Is higher than 10 10%
+What I like about this view here is also the average input token and output
+token
+Someone asked the question Hey Omar there is a way to optimize
+how we ask questions how the users ask the questions so we spend less on the
+input
+tokens
+Here we are seeing an aggregate of course we can drill down based on the request
+type
+And you can see the success rate as well
+It is very interesting and everything is grouped by day You're only seeing one
+day
+because I do this today but hopefully when we run this tomorrow
+I like this other one
+I mean what that the model uh I mean the previous one was the model I mean how
+much
+uh it can how much input we can give is that related to that based on the
+Statistics or something
+No what this this number here this number here is
+questions users are asking What is the average input token we're getting
+Are we getting long questions small questions
+This is important because you pay for token when you're calling LLMs
+Was that like I mean this model was already run by uh like few few users have
+come
+in and uh typed in the questions and got the results So based on that it is
+showing
+this this one
+this uh statistics
+I mean not I mean count
+Yeah this data breach is saving that for us
+In a table in what we call assistant table
+I'm just running some queries to give us some insights on how the usage of the
+LLMs
+are here
+So you're gonna go through the notebook you're gonna understand the details in
+high
+level what I'm telling you is that there are 3 tables in data breaks that are
+going
+to give you different insights
+One is about usage which means has it succeeded when you call the LLM or not
+The other is about billing how much
+Because you the the foundational models in data bits you can pay per token
+So that's another table that has the information and the 3rd table is the
+table where we say what our agent generates the input and output
+That's what I'm trying to do here I'm creating some queries that uh join those
+three
+tables
+To give these daily percentages
+Like we're gonna see here what is the 99th percentile
+latency for our queries in milliseconds
+And you're going to say is this good Is this bad I don't know I don't know what
+your requirement I don't know what is your user experience that's why you need a
+benchmark
+but I'm giving you the the query on how you understand how your model is
+behaving
+Uh I just want to run one more query 2 more queries and then I will let you all
+For those who want to stay I can
+Stay until
+11:30
+OK so there's another query I think the last one is the is the coolest one
+Even put some plots here I've coded some plots
+Yeah here um
+This is the one that matters
+This you can see per day
+for the agent that I'm querying what is the cost for that agent and I can break
+down
+the cost for input versus output
+Is the money query
+And I spent a lot of time to get this working so
+Come on I'm not seeing any hearts or excitement
+You should be
+OK folks yeah this is what I wanted to show you today Like I said uh by Saturday
+the labs will have zero errors you should be able to rerun everything
+For now I recommend you go to the labs you understand what I'm doing there I'm
+even
+doing some plots like I said uh so you visually understand the latency
+the distribution
+And this one is a copy I summary
+Let's see if this one works
+Yeah here look it talks about the end point the guard rail the period uh the
+of requests
+the success rate
+And what was the average latency when we talk about latency is the time for
+getting
+the first token
+And the cost
+So for Zaki when we deploy we want to have this so if Zaki is going to replace
+Wilson
+We need to make sure that his salary
+Is 1/10 of that otherwise
+Might not make sense right
+OK folks let me stop the recording

@@ -1,0 +1,63 @@
+{
+  "persona_id": "researcher_delhi_01",
+  "name": "Priya Mehta",
+  "archetype": "researcher",
+  "tagline": "Will read every review before spending ₹200 on a moisturizer",
+  "demographics": {
+    "age": 29,
+    "gender": "female",
+    "city": "Delhi",
+    "city_tier": "metro",
+    "state": "Delhi",
+    "income_segment": "upper_middle",
+    "language_primary": "Hindi",
+    "language_secondary": "English",
+    "education": "MBA from a mid-tier B-school",
+    "occupation": "Product Manager at a SaaS company",
+    "family_status": "Single, lives with parents"
+  },
+  "purchase_psychology": {
+    "price_sensitivity": 0.5,
+    "brand_loyalty": 0.3,
+    "impulse_tendency": 0.15,
+    "social_proof_need": 0.7,
+    "research_depth": 0.95,
+    "risk_tolerance": 0.3,
+    "decision_speed": "slow",
+    "deal_sensitivity": 0.4
+  },
+  "media_behavior": {
+    "platform_primary": "YouTube",
+    "platform_secondary": "Instagram",
+    "ad_tolerance": 0.4,
+    "scroll_speed": "slow",
+    "video_preference": 0.8,
+    "influencer_trust": 0.3,
+    "content_language_preference": "English"
+  },
+  "emotional_profile": {
+    "aspiration_drivers": ["being seen as smart and informed", "health-conscious living", "career growth"],
+    "trust_signals": ["clinical studies", "dermatologist recommendations", "ingredient transparency", "user reviews with photos"],
+    "rejection_triggers": ["vague claims", "no ingredient list", "excessive filters on before-after photos", "celebrity-only endorsement with no substance"],
+    "emotional_hooks": ["scientific backing", "expert approval", "community consensus", "long-term benefits over quick fixes"]
+  },
+  "category_affinities": [
+    {
+      "category": "skincare",
+      "interest_level": 0.9,
+      "monthly_spend_inr": 2000,
+      "preferred_brands": ["Minimalist", "Deconstruct", "The Ordinary"],
+      "purchase_frequency": "monthly"
+    },
+    {
+      "category": "electronics",
+      "interest_level": 0.7,
+      "monthly_spend_inr": null,
+      "preferred_brands": ["Apple", "Samsung"],
+      "purchase_frequency": "quarterly"
+    }
+  ],
+  "backstory": "Priya grew up in a family where every purchase was discussed and compared for days. Her father would visit three shops before buying a mixer. She inherited this thoroughness and elevated it — she reads Reddit threads, watches 30-minute YouTube breakdowns, and checks r/IndianSkincareAddicts before trying any new product. She trusts ingredient lists over brand names.",
+  "current_life_context": "Recently got a raise and is considering upgrading her skincare routine, but wants to make sure she is not wasting money on marketing hype. She just saw a colleague's skin react badly to a trendy brand and is more cautious than usual.",
+  "inner_monologue_style": "Analytical and slightly skeptical. Thinks in pros/cons. Will internally say things like 'Ok but what's the actual active ingredient?' or 'This looks like every other ad — where's the proof?'"
+}

@@ -1,0 +1,1193 @@
+Awesome Welcome everyone to Capstone Brainstorming So today we're gonna be
+talking
+it's good this is a kind of a free flowing conversation Uh part of this is I
+hope
+that some of you have
+not all of you but I'm sure like one or two of you have an idea of what you want
+to
+work on and I would love to give you feedback on that and to have other people
+like
+learn uh as well from this So uh here I'm just gonna I'm gonna share my screen
+and
+so you guys can uh kind of like also see kind of a perspective here of like what
+the
+idea here is right So if we go to like this data expert and you'll kind of see
+down
+here we have these capstone projects down here that you could definitely go over
+you can kind of check out to see like where people are like like what kind of
+ideas people have like I mean the uh uh I wanna go over kind of the requirements
+first
+and then we can kind of go over uh the differences of like how this works right
+So um
+Like
+the requirements right So you have to have a pipeline it has to have quality
+controls
+it has to be running in the cloud it has to have agentic action and it has to
+have
+multiple sources of data right You can't just like it can't just be like one
+One they can you can have one source but like your data model has to have two
+inputs
+right So it could you could have like one rest API but then that turns into two
+tables
+that then you join or like it can't just be like I scrape data from an API and
+call
+it a day like that's not good enough right
+So um what I'm trying to say is is like the
+Like that's kind of the perspective of where this is going Um so one of the
+things
+that uh like
+It is important to think about for like winners right So uh Hitesh right Hitesh
+he
+did this real-time Formula One analytics Does he have it on his LinkedIn I think
+does
+When we go to Hitesh
+Hades is
+He's a great guy Follow Hotesh one of my like all-time favorite students
+Did he put it in his freaking projects
+Education
+Is it not in his projects He he had to have like kept it in his projects
+Maybe not Wow I feel betrayed
+OK Interesting I thought that he definitely would have had a uh would have had a
+GitHub thing there Um
+anyways uh
+So
+one second I wanna I wanna Google it real quick
+Kaoshik
+GitHub
+It's got to be this guy
+No it's not that guy
+Of course and it's not either Why why does why do why why do there have to be so
+many
+freaking names
+OK sorry about that guys I guess that's not gonna work Um
+so let's just go over kind of the idea behind it though before right So let's go
+to data expert and then you can kind of understand what I mean by that I thought
+be able to actually have the code base there Super annoying OK Um so
+Real-time Formula One So this does this satisfies the requirements because it
+it's
+looking at like real-time data like and it's processing like real-time data in a
+queue
+and that can be like uh like understand that like
+Like the requirements of the capstone project are not like hard I used to do
+hard
+requirements but like it's it's essentially a collection of requirements and
+that
+like you have to meet five of them or whatever right So one of the things about
+Hitesh's
+right is he did only have uh like one data feed right And his data feed was uh
+it
+was a a queue so he could actually watch um Formula One races in in real time
+That's
+what he could actually do And so uh that was really awesome and then he had a
+dashboard
+that he built that could share like a visualization of like what's going on in
+in the data and then like the other thing that you have to add now which is
+different
+because we live in the era of AI is you have to have some sort of agentic action
+There
+has to be some sort of like an AI that does something like it can be simple it
+can
+be an AI that like sends an email an AI that summarizes an AI
+That looks at the dashboard and understands right Stuff like that So that's
+gonna
+be the um like those are the main requirements so like I would highly recommend
+Going through some of these to really understand it Uh also thinking about like
+other
+perspectives that you could be thinking about here are like I know that like one
+I would love right is you have uh one for like YouTube creators right So because
+one
+of the things that's beautiful about YouTube right is that you have this
+freaking
+just glorious amount of like unstructured data right There's just unstructured
+data
+all over the place right Because you have These videos that then you could
+download
+and caption and understand what's actually happening and then they also have
+metrics
+around like how viral they are right So then like you could have like all of
+together and like build uh an agent that can like find uh or that can like look
+the videos and generate a viral script based on your data right And that could
+be
+another uh interesting kind of project that you can work on right Because like
+remember
+that can be a Again just one source right Because but there's actually two
+sources
+here right Because you have the video transcript which is one source and then
+you
+have the video engagement metrics which is another source Those are gonna be two
+separate
+like data feeds that would build this product right And then that would be
+something
+that you can build an agent on top of to then like you know maybe script out new
+videos
+or like like maybe like I I've I've had a vision where people need to I want
+to build Zack GPT So Zack GPT is where um
+uh like you build out an AI that can like make content that sounds like me right
+another uh really powerful idea to think about like that's just one of kind of
+ideas that you could potentially work on One of the things that kind of sucks
+being a student is that like a lot of the really really awesome data things that
+want to do are on like proprietary data sets that like you can't just have
+access
+to So uh we also give access to this company So there's one called Massive This
+one that uh you guys will be able to work with Uh we'll get you an API key here
+shortly
+So Massive is just the stock market and it gives you stock market crypto but it
+also
+gives you flat files so like you don't just have to like do freaking nasty API
+calls
+You can also like suck up S3 flat files and that could be another really
+way to load in data and find trends and find the patterns like and like if you
+wanted
+to take this to a real real deep level what you could do is you build an API or
+build a pipeline that slurps up all this data and then you build an agent that
+at all this data and then it says like OK which stock based on the the the
+changes
+so it's like a real-time pipeline based on the changes that happened in the last
+15
+minutes
+Uh what trade should I make right And then you could if you wanted to like
+really
+go far you have the AI like uh connected to an MCP server and it actually makes
+trades
+for you So you have like you build like a spark structured streaming pipeline
+That
+sucks up all this data and then it looks at the the changes over the last 15
+and then it passes it to an LLM and then the LLM decides which action to take
+to buy or sell any um you know stock kind of like doing your own little like
+mini
+stock trading high frequency trading um uh trading bot That's uh a lot of
+students
+uh work with that Like I'm just trying to give you a perspective of like how
+much
+depth is expected here There's a lot there's a lot like and so uh and understand
+like um if you do get lost we will like I'm going to be working quite a bit with
+uh
+this product called Adle So Adl is a lot like cloud code Uh it's cloud code but
+developed by my friend uh Li Yin And she's really awesome and uh I really like
+It's it's it's like the only difference between this and cloud code really is
+like you can freaking like switch to different models I can use Gemini or GPT or
+or
+or any of the cloud the cloud models right And then it will work for me and so
+uh we We'll be like using Adle in the free boot camp We have a free boot camp
+coming
+up this weekend as well Like I don't know if you guys uh know about that but we
+the vibe coding challenge This starts um on the 21st of February So uh highly
+recommend
+checking this out We'll we'll there's gonna be a big marketing push for this
+over
+the next couple of days as well So um anyways that is uh like the the kind of
+what I had for you guys in terms of like what I wanted to say So if you guys
+wanna
+like I know there's what there's 30 of you in the in the call right now So I
+wanted to open the floor for any of you who have any questions So like you can
+either
+put the question in the chat on the right or you can raise your hand and you can
+come
+up on stage and you can you can talk it out with me either way like I'm I'm down
+with
+either one
+This is great I love I love the energy
+Give people just a little bit because like I wanna hear like
+Other projects right I don't wanna understand like what people are thinking
+about
+Yeah um yeah yeah Mohammed uh uh come on come on the stage Yeah go go ahead uh
+I think you can talk You you might be on mute but
+Is it uh audible right now I cannot hear you Uh
+one second Uh Oh wait I know I know what it is I know what it is It's the
+um
+It's the it's this guy
+Output
+OK there we go I can hear you now Sorry about that
+Yeah yeah go ahead uh I'm audible right now Yep yep you're good I mean uh
+Yeah
+is it possible to build something like uh because I also invest in like uh
+stocks
+cryptos those are the things I mean is it possible to build build a kind of a
+framework based on the news which you are uh getting based on the recent events
+I
+mean it goes up and it goes down So I mean we we get like a little bit uh uh
+insight
+what is going to happen maybe uh in a day or two or maybe a short so that uh we
+I mean we can minimize our uh loss making thing and if if it's going to market
+is
+going to go high
+I mean we we come to know uh uh
+I mean we know the insights a little before
+so I'm just saying something is built up
+Like what what what would be the source here though
+Click Twitter or like maybe Bloomberg uh I mean I mean if you are like subscribe
+subscribe yeah I mean you get to know I mean those are the things like all the
+big
+shots come to know and they make the decisions earlier itself I mean if you
+follow
+like whatever it's going on so
+I'm just thinking like if something uh Yeah for all that is a very very very
+very
+good idea
+It's $2000 per month but does that give you unlimited calls though
+Uh Rajesh does that give you if that gives you unlimited calls then freaking
+that might be worth it like uh like uh let me let let me look at this real quick
+Bloomberg Terminal That's an interesting
+and then and and then you could just like slurp it all up
+Interesting OK like it's $2000 a month though
+Maybe for the life of the boot camp OK I I'll I'll look into this and see if uh
+Bloomberg Terminal free Is there a way to do that
+OK Interesting Yeah you're right It's almost exactly per year per user though
+I don't know I guess you can just have one user though and be like no we're all
+user right Or like I don't know if it's an API key then that's kind of wild
+but um OK but OK there are other freaking alternatives but you just don't get
+real-time part of it OK interesting I I'll I'll think about that That seems like
+a little bit high for like what I want to offer
+Yeah no that is yeah that is per user right
+I just subscribed for Bloomberg News ₹200 bucks per month That is yeah well
+that's
+great That's a good Mohammed that's a good one Yeah you can use Yahoo Finance
+Python
+it's free Yeah there's there's a lot of choices here right To get the to get the
+right
+data Well and Massive massive is gonna be really good I'll get you guys
+massive.com
+is really good for stock right At least for not it's not as good as for like the
+sentiment like social media stuff but it's really good for like the actual
+like the actual like prices
+So um yeah I think that like so like I like the idea so it like looks at social
+or it looks at like uh your upstream sentiment and then it tries to predict
+where
+the stock's gonna go Is that kind of the would that be the um kind of the whole
+capstone
+Yeah I mean uh like basically it looks to the uh it looks through X uh I mean
+maybe
+if growth if you have growth I mean it can look through X but if you have
+Germany
+it will look look through the YouTube latest videos I mean based on all this
+combination
+we predictive analytics so that uh
+uh We minimize the loss uh I mean because recently we see like for the uh one or
+two
+months I mean
+we cannot predict I mean it's going up it's 1 day it's going up it's going down
+mean I think it's like uh stable uh so I mean for the last 1 month or so
+I mean if someone following the stocks etc
+Yeah it's been trading sideways yeah
+Yeah and I've been sad about it because I'm like Netflix come back Netflix my
+love
+come back
+Anyways I think that that is a OK so I guess the one thing I would say for that
+like what would be your agentic action What would your AI do Like so like would
+actually like cause you could have it like there's so much you could do there
+It it can either pick the stock it could like send you an alert it could do
+so much you could do Do you have any thoughts on like what you would want your
+agentic action to be
+I mean it it should be like kind of end to end like say if you integrate
+everything
+like based on the news everything you integrate with this thing and then if
+suppose
+I'm working in the office uh uh because uh I mean I uh actually work for a US
+defense
+kind of a thing where I was I was not having access to mobile so it's like
+is built up so that based on the news it actually uh connects to my uh I mean
+locks
+into my stocks thing and then based on the thing it it actually buys and sells
+something we can do that kind of a thing I mean uh real time it would be like uh
+Uh
+I I don't know Something like this is there Maybe you integrate that with crypto
+everything you do I mean if you don't need to be like online uh manual thing uh
+just like uh checks everything and then uh uh and then you set up some limit
+I have like this this much amount So based on this you invest uh uh otherwise
+don't so some kind of a logic you build up
+more of an agentic so that uh
+yeah I'm just thinking yeah because I'm into like uh for the past 10 years into
+this
+thing and I'm also into like some groups so yeah
+Uh I think that's great I think that's perfect Yeah yeah yeah sorry Mahendra
+there's
+an echo It's cause like uh it's coming through my speakers I needed to to not
+an echo I need to have headphones on But um anyways and I will get those for uh
+future
+sessions I just don't have them right now because I just moved in so Oh yeah
+Mohammed
+I think that's a great one I think that is the right amount right That's not too
+simple
+but also not too complex uh for you to for you to deliver in 5 weeks So yeah
+great
+man Uh good thinking That's yeah if we build something like that we can we can
+sell
+it to like maybe JP Morgan Goldman Sachs all these Let's do it
+get acquired Awesome man Well um uh I'm moving you to the audience I want
+someone
+else to come up
+Does does anyone else have any other ideas thoughts like uh or just you can
+raise
+your hand to come up to the audience and I or like I can call on you and then
+can uh you can uh you can do it that way cause I think that that's gonna be the
+that's kind of the idea here right is that there's there's so many other ways
+you can kind of do things like um
+here or I have another one for you guys I have I have one that I want to show
+that's pretty cool that like I've been working on but I'm also like super lazy
+um isn't it like isn't like
+Is it in here Oh yeah So uh I have this one it's pretty cool So I have like this
+blog post generator where I can be like uh I can be like uh give me uh
+a a really spicy blog post comparing um Snowflake and Data bricks right And then
+Make sure to keep my tone and we can say like uh we'll we'll we'll we'll have it
+casual right So now this is like an AI generator So what this does is like this
+actually
+uh it it sucks in all of my LinkedIn posts So this has like a there's an ETL
+behind
+the scenes that uh whenever I post on LinkedIn it adds it
+It adds it to the database
+right And so then like uh like and then what this does is it it's a rag system
+that like looks at my topic and then like it looks it it pulls this topic and
+then
+creates uh an an embedding query and then pulls in all the relevant things I've
+said
+and then boom
+You know data bricks versus snowflake a spicy comparison And now we have now we
+like a full blog post that is like kind of like in my um in my voice right which
+don't know it's just like
+another uh I've done a bunch of these that like I think are like also kind of
+interesting
+Like uh I don't know if you guys have did you guys ever work on this one This is
+another
+AI product that like I I was working on that like we could also do through data
+bricks
+is like so you can do this right So I'm gonna say like you know I want to become
+AI engineer right So what this does is this like
+This essentially
+looks at all my programs It looks at your LinkedIn profile and then it tells you
+what
+the best fitting program is right So here's my LinkedIn profile which was right
+It pulled my LinkedIn profile right There's my pickleball and hiking and
+flirting
+and data engineering and Boba I don't even know if Boba is a skill of mine on
+LinkedIn
+Yeah I didn't know if you know but you can have Boba as a skill
+So but then what this does is it's like a very intense AI that crunches
+So like you could imagine that you could do this very similarly where it's like
+have someone's context right They have to give you context and then you have uh
+a
+library of things right You'll see here's my so the number one match is the
+AI engineering bootcamp no shit and then the all-access subscription and you'll
+see
+this also tells about like um
+Uh like challenges
+what the refreshers are the prerequisites
+right And then it kind of goes through all of the possible um profiles and
+Here I'm I'm gonna send this to you guys because this is like public
+There we go
+So um this is uh like
+another kind of AI product that I worked on that is just letting you know this
+this generates tons of business value because now it's like when people are like
+am
+I a fit Like all I tell them I just point them there and I don't have to like
+explain
+it to them right It's just they get their answer in extreme detail They get
+their
+answer in very very extreme detail So like uh that's another um thing that uh
+could potentially be thinking about right Because The projects that do the best
+are projects that have real business value The projects that are like almost
+sass light right They're like they like what because it's like it's not about
+what data am I looking to collect it's what problem am I looking to solve right
+it's like if it's very clear the problem that you're going to do right
+Where can I see a list of prerequisites Um yeah I I uh Gopi I need to get you
+we I I definitely need to get you that Uh let me uh uh I this one is pretty good
+this doesn't have everything but it the this has most of it right So like we
+here we have a project spec so you have to have like a design your your dag your
+diagrams
+your models right That like like look
+I think it's better to look at this Formula One Thank you whoever found this I
+appreciate you you saved my entire life
+So you'll see here he has like a diagram a high-level diagram of how this is
+ingested right And and and processed in the Kafka right So he has this Kafka
+single
+store boom and then he has the other piece of it boom right And and remember
+you don't have to use the tech that we are taught in this boot camp right
+It but it does like it like I would recommend
+Using data bricks and that stuff because I think that's what you guys want to
+learn
+but like some of you like might think that like oh using data bricks is like the
+wrong
+wrong strategy but like so the big thing here to remember right is you have to
+this and then you have to have like the quality checks there has to be quality
+checks
+somewhere So I'm pretty sure his is gonna be like in DBT test
+DBT is in models Does he have like staging
+This is the I think the sources here has
+has has yeah see here here are the quality checks
+So it has to be some sort of quality checks right You you can't like we we give
+lot of shit about data quality check so um that matters to me a lot like that's
+thing and then there has to be a visualization or a front end of some kind I
+think
+this is what the this was his front end right here This is the uh the actual
+front
+end of wow he's made it so much better
+What is going on here dude this is nuts OK like Hatasha says he just took it to
+the next level Or what's this what's this Watson thing No like OK this is very
+This is like not even related to F1 anymore though
+OK like well this is OK that's wrong but um
+anyways his F1 dashboard like tracked cars right and had like a real-time
+That's the other requirement right And then like if you're gonna do batch so if
+you're
+gonna do batch it has to have at least a million rows if you're gonna do batch
+processing
+If you're doing micro batch or streaming that that requirement is not that's not
+it's not a requirement in streaming It's only Requirement in batch So like
+the other um requirement is you have to have at least a million rows of data
+we're not gonna let you like get away with being like I want to build a united
+know like fun facts about every US state and have like 50 rows of data that gets
+solid F That that's no it's not real
+Right So that's the thing to be thinking about like uh your final output might
+that right Like where like you ingest a million rows and then it crunches down
+50 like 50 aggregated rows and it's just like really high quality aggregation
+that's OK that's OK It's just all about how much you're actually ingesting
+So uh those are like the hard requirements but um like I have a this analytics
+engineer
+capstone project is pretty close The only thing this is missing is going to be
+agentic action So the agentic action needs to be like where you have an LLM or
+an
+agent look at your data or it looks at what you what what has been produced and
+does something
+It can be as easy as like send an email or like it just has to do something
+Cause I that that's a requirement because I I firmly believe that AI agents and
+MCP
+and agents that take action
+are uh an absolutely critical part of where the job landscape is going and if
+know how to build an AI agents you are going to be wildly successful right
+Why why you said you wanted to go back to Netflix again you wanna
+wanna do the full-time job No no you gotta understand that's uh unrelated
+Netflix
+uh you guys you know you haven't you haven't been watching you haven't been
+watching
+like what look the you haven't been watching this chart bro like we're down 38%
+It's been a it's been a hard year all right What what's what's the what's from
+peak 42% we're down like I've lost hundreds of thousands of dollars from this
+And I'm like Netflix come back How low can Netflix go right I mean but then you
+look
+at like this chart and it looks good and then you look at this chart and you're
+OK it's phenomenal
+right But like it it's it's gonna like I think it's like it might go down I
+it's gonna hit this peak down here and then it's gonna bounce it's gonna bounce
+back
+But we'll see Who knows I have to I have to sell my options in by 2030
+That's what I was talking about
+2 trillion would be amazing
+If I if Netflix got the 20 dude I would be very happy I don't wanna work I don't
+work at Netflix I just have been holding my stock options since I left So like
+because they're 10-year options they're like very it's a very strange uh
+compensation
+but it's a it's a 10-year option horizon and so that's what uh I I I do but
+a random But does anyone else have any other capstones that they wanna run by me
+Mohammad
+had a good one but if anyone else has like I would love
+to uh hear like maybe one more reference or like especially like don't be don't
+afraid if it's not fully formed This is a brainstorming session and Nick Niketh
+wanna you wanna you wanna come up and then Waffle House will get you out we'll
+get
+you in just a second
+Cause like don't be scared Ideas are supposed to come fully and not fully formed
+And that's how that's how it works So
+Yeah you have to accept the invite though to
+to to like to join
+uh here at Waffle House I'll invite you to just so we can we can might be able
+get 3 people up here
+OK
+Um
+OK guys can you hear me Yeah yeah yeah yeah yep yeah yeah go ahead
+OK cool Um so my name is Josh by the way Um I work with I work in public transit
+I'm
+a data analyst and um I was thinking about doing something to kind of add value
+there
+ingesting real-time data um
+Like GTFS like public transit data that that goes to to Google in real-time
+feeds
+and then doing some with something like that adding some angle front end that
+shows
+some some sort of like uh
+KPIs that might be
+you know might be good or bad Anybody can look at it
+Um I'm kind of soft on an agentic action I don't really
+I'm I wasn't really thinking alert wise but I don't know if anybody has any
+ideas
+on that What uh any any kind of like public transit data
+agent action action that could be taken
+but that's that's where I'm at somewhere I I love that Like I think that there's
+there there could be a couple there right where um like so uh some of these are
+interesting because like they don't necessarily
+100% need agentic right They could be done like They could be done with like
+more
+like traditional ML but they would be a much bigger pain in the ass to do with
+traditional
+ML like and they would they're actually easier to do with Agenic
+but like imagine imagine you were looking at uh routes right So so you have a
+have a pipeline so you have you're gonna have a couple of pieces here right So
+can Imagine you have a front end where someone can go in and they can be like OK
+care about uh this route and this route and this route right Or like or or if if
+I imagine you're gonna be like do you think that's the level of detail that
+gonna want to like scrape is like is it like for a certain metro area or like
+what were you thinking
+Yeah I live in I live in Phoenix um and I know that I can I can just grab the
+real-time
+feed for the whole metropolitan Phoenix area And um
+like I've built a coup I've done a couple of things where like I display where
+is in real-time on a map already Um but I want to do a little bit more with it
+know add some value to like maybe a user or somebody on like the management side
+I love that I love that I love that So like I think that like uh like I like uh
+this is uh do you know what I love about this project for you especially coming
+from
+a data analyst background is this is exactly what will stretch you the most
+because like this is gonna be like OK so you have like The ETL side of like
+slurping
+in all the data and that part is actually the easiest part of like what I would
+what I would recommend for you as a capstone project if you want to absolutely
+the absolute most is gonna be OK so you have that piece then you're gonna have a
+end that's vibe coded right You have a vibe-coded front end right That's uh
+allow
+users to enter data into a database right Uh so you're going to set up like have
+ever worked with Supabase
+I have not No OK so Subase is uh uh is a way that you can set up uh a free
+postgress
+instance right So like it's like it has a limit It's like you can set up a free
+post
+gross instance but it it it it like
+it it's only uh can have like 10,000 rows or something like that It's like very
+limited
+right But it would be enough like so if you use render so if you use render and
+Supabase
+those are going to be two very amazing technologies So you use render to deploy
+server completely free completely free and then you use Superbase to store the
+that the user types in right They're like hey I want to like I want to track
+route and this route and here's the email So it's like there's a couple of
+It's like I want to track this route and this route and here's the email I want
+send it to
+Right And then uh and then that adds so that's a new data set right That's like
+production
+data that then can be taken in and then you could imagine that like you have
+your
+you have your routes and then like you can send out actions of like hey like
+your bus is gonna be 30 minutes late or hey you're you know like or or Like I
+don't
+know like that's one example Like I don't know you could think of like other
+that you might be able to think about where it's like because you can think
+it as like an an alert in this case is like
+almost like a specific dimensional slice of the metro area right It's like maybe
+like I want to know like what is traffic like in my neighborhood or my my My
+route
+it could be like aggregated by neighborhood or aggregated by route I would
+imagine
+those are like the two like dimensional slices that you could look at and then
+if you do if you do detection on that right then that would be the um that's
+be the where the agentic stuff comes up But the thing is about for the detection
+of
+that is you can't
+you know you can't run detection on every Uh every dimensional slice right
+because
+there's Phoenix is a big place right so you have to like take it you have to
+a wear clause right some sort of wear clause and that wear clause is but that
+wee
+clause should be set up with a front end that users can then also configure
+alerting with right And if you did that right I know that probably sounds based
+on
+your life and what you've done so far in your life that probably sounds fucking
+crazy
+But like I I I would highly encourage you to take the vibe coding boot camp that
+we
+are doing this weekend and that's gonna completely change your guys' perspective
+how to do everything in engineering right And it's like we're gonna be doing in
+hours we're gonna build a full fully functioning SAS product in 2 days right
+what we're gonna do
+So like uh and and that's the goal is like uh me and Lee Yin we're gonna do that
+free but that's the whole point is because I'm launching a new product by the
+way
+I don't know if you guys know but there's also I actually own vibe
+codingexpert.io
+I don't know if you guys know that but just have to let you know I I got that I
+that domain but like if you did that right you would imagine like if you showed
+to employers
+they'd be like damn
+right It's like and like And so uh that is what and the the other cool thing
+you could do is that front end could also be the dashboard right
+It could be the it could read in the current like events and so it's both right
+It's
+like it's a dashboard that looks at the traffic data and it's also an alert
+thing
+for the agentic stuff to be like cause it's like a lot you know this is
+that's so interesting and like I would hope that you could learn from me if
+anything that you can learn from me What what what what's your name
+My name is Josh Josh OK Josh OK I'll remember that Waffle House is Josh Got it I
+I I I get the username to name mapping figured out like usually on week 5 right
+right when everyone leaves right
+yeah but like um like what I'm saying though is that like we're at a critical
+juncture
+in how technical work is being done right Critical right and um
+We want to uh be able to understand both like how things have been done and how
+are going right So that's why this boot camp is almost split up completely
+fifty-fifty
+I'm not doing like agents all the way down because like
+If we're being honest ETL and data pipeline and analytics and metrics still
+matter
+a lot They still matter a lot right And it's like that's why 60% of this boot
+camp
+is still traditional data engineering but 40% is we are moving into this new
+world
+because I want to get you guys exposure to the idea of like wait like If I
+instead
+of building a dashboard that like cause you know the data on dashboards you know
+like I think it's like 85% of dashboards that are created are looked at once and
+never again
+They just completely throw away 85% of all data like analytics work is like
+single-use
+right And so that is something that is
+extremely inefficient and is also agents are gonna really make it look terrible
+it's gonna really shine light on that inefficiency of like how humans do data
+analytics
+because a lot of those interesting trends and a lot of the interesting things
+not
+all I think that like data analytics is going to have to go a little bit higher
+level
+and have a uh work at a higher level of abstraction I don't think it's going to
+go
+away But I do think that like a lot of those like standard slice and dice
+analytical
+patterns are 100% going to agents 100% because then it's like you have a
+that will actually tell you if something's interesting You have a dashboard
+like worth looking at because most of the time when you look at a dashboard
+like yep that's our business It's like yep that's a thing yep that's a line
+chart
+right That's like I don't know like and then like once in a blue moon you're
+oh shit that's an interesting trend Right and it's like oh why is that happening
+And
+then like but that's like
+a minority of cases right And so that's where like there's like a double whammy
+here that we have to be thinking about One is we actually spend too much time
+looking
+at dashboards right
+Because like we only want to really look at dashboards when things are like
+trending
+negatively or they're like trending in a way that like is
+unexpected It's more like it's more about not negative or positive it's about if
+trending in a way that's alarming or unexpected and that's something that AI is
+good at So like I'm hoping
+that like through this 5 weeks this can be transformative for you Josh so that
+at the end of 5 weeks you can be like oh shit like
+I can do my job in a very different way now And like then obviously there's
+still
+like the political aspect of convincing uh because people are used to like the
+analytics like business rhythm They're they're used to that traditional rhythm
+but
+even that stuff's getting disrupted so like yeah man I think that's a beautiful
+project
+by the way I love it I love it I love that it's It's relevant to your industry I
+that it's freaking like like it's it's a slam dunk right It's a slam dunk for
+as a person as well because like it it it
+especially if that's the industry that you really want to grow in then you can
+just
+be like yo like look at this man Like like it's gonna be yeah I love it Thank
+so much Josh I appreciate it yeah
+Thanks Um uh Nobmaster 96 and let me see if I can get Niki Uh I'll try to invite
+Nikith
+again
+OK I I I invited you as well in the kiss uh but yeah New Master 96 you go first
+OK Um hey so my name is Akash by the way Um nice Anyway so as I mentioned in my
+message
+outside of work I do
+Uh a lot of running and other physical activities So a lot of my data gets
+recorded
+on Strava
+What I do use is there's there's a website uh where I put in some of my bio
+details
+essentially my weight age my gender
+I mentioned what activity I'm targeting
+Gives me a breakdown of the calories I can target per day for the next 3 or 4
+up until my target event but that's where that website stops
+My idea is to take that particular desert uh like the calorie count or the carb
+and everything
+Hopefully look at YouTube or some other resources to essentially get a recipe or
+ingredient
+count as such
+Oh
+it will be much more helpful for me as a runner I don't have to worry about
+well I need to buy or
+search again do an extra step
+Just integrates into one flow and I just get a final output I can go buy stuff
+cook it at home and you know what OK uh Akash do you know what I love love love
+love love love about that idea right is that it is uh it's extremely
+multi-dimensional
+And like it's extensible right because it's like you think about it like OK so
+in your mind you're like OK the two data sources I'm going for are YouTube
+and Strava data right And you're like all right this is great and but then it's
+what other elements oh my God like you know what's so interesting about that
+idea
+that like uh I have a I have a story about that idea but let me I gotta go to
+real quick Let me uh I this is I think this one is still on my personal it's on
+my
+personal GitHub
+This is like
+uh where you you're taking me back right now You're taking me back to the day OK
+here Oh there's a we only have this project's only got 47 stars but um so uh one
+the things I did is I don't know if you've ever seen this uh how my LinkedIn
+addiction
+destroyed my stress management right And so this shows like my my health
+my study uh
+I I'm not able to see your stream I'm not sure if it's the same for the screen
+can you guys it's in the loading
+OK here here I'll just send it I'll put I'll I'll drop the link then like
+Yeah it's still loading OK then like here just go look at the
+there's the link the personal health analytics So I actually like you see how
+is like what 4 years uh I I I started on this project 4 years ago
+and um anyways uh like you'll see I have like uh I have like a whole chart on
+on like how I did this So uh I have uh currently in here I have Fitbit LinkedIn
+Spotify those are the ones that I I I I mean I did it the very you could do this
+in
+a much more amazing way nowadays with agentic work but like um what I'm saying
+though
+is like what this does is like you have to 00 like oh yeah I did that and then I
+had
+the um
+I added like the dimensional data like if I was working at Facebook or Netflix
+Airbnb or like if I was single or in a relationship I I I I built it pretty cool
+was pretty freaking cool like the uh the way that that worked and like but like
+worked on all of this when I was um
+Uh I was gonna quit my job at uh Netflix and I was gonna found a company It was
+called
+The Analytics of You The Analytics of You was the was like the name of the
+company
+that I was like thinking of starting and like this is like the the first
+incarnations
+of that right where it was like I wanted to understand the interplay between my
+social media right and uh and music was the other one that I had in here And um
+like yeah Strava Strava is really great Uh there's there's so many interesting
+here And you know what's cool about Fitbit in particular is Fitbit actually has
+They don't like I do that I do it like the shitty GDPR way in this in this repo
+the I do it in the most high latency bullshit way you can do it like the legally
+bullshit way you can do it whereas like a lot of these uh
+things might even have APIs that you can actually work through you don't have to
+it like the The manual way right So like I love this idea for you because it's
+another perspective for you on like why this is a good capstone is because um
+Like my Magic The Gathering app that I built back in 2014 I loved it I used it
+every
+day I used it every day to build magic card decks right And it's like the thing
+is like if you build a product that you yourself love if you can fall in love
+your own product and actually you you are your own customer this is a process
+Dog fooding by the way dog fooding is like a very common term that they use in
+tech where it's like if you build an app that you love using that is the best
+app
+That is exactly what you need to be building That's uh and so I would uh I would
+say
+that that is like definitely something that like would be great So like so it It
+recommends
+you recommendations Oh my God like I have one for you I I have one for you uh
+Akash
+that would make this this one so crazy is so what it does is it it it gets you
+the new YouTube recipes It gets you the list of items and then there's like an
+Instacart
+or like a um uh like DoorDash or Instacart MCP server in the middle and then
+it does is it it buys it orders the food for you And then it gets delivered to
+house right So then like like like so then your diet
+like literally
+Automatically follows the YouTube trends that you can always try the next
+hottest
+thing like and you don't even have to do your own research like AI is doing the
+research
+for you on YouTube and then the food magically shows up for you right
+Like you could literally build that like that is like like we you think about
+How
+crazy like the world that we're living in now is like you'd have to like set a
+but like using something like Cloudbot dude if you guys use Cloudbot and like
+do something like that like I also am all about it OK like I think that that
+would
+be really awesome
+Yeah I don't know
+like I need to do that now I think that like the like I don't know there's like
+lot of things that you can do right Claude I I think I have to get a MacBook
+Mini
+I haven't even done it yet I don't know it's it it feels like just buying in the
+things but uh uh Akash what would be like your success criteria for this Like
+would what what what do you think like would be like the thing that you need
+Um I mean
+before we go into the purchasing stuff I would rather uh try to know if the
+recipe
+status being recommended as
+what the user is kind of looking at or
+OK you recipe
+yeah so you're not willing to like like just put blind faith in YouTube right
+You're
+not like you're like influencers take my body right right
+OK that makes sense
+I like that I like because it's essentially like
+There are cases where uh in YouTube some influencers would possibly make uh
+carbohydrates look like an enemy but that is in fact not the case We do need
+cuts
+or or or a cash like like for me right So I'm allergic to avocado and banana
+And like one of the things that like really hurts me Because of that is like you
+know
+you have like this like health smoothie culture that and like every smoothie
+you could ever buy like it's like 99% of smoothies have freaking banana in it
+and it's like so annoying So it's like I would like cause it's like if my if my
+cloud
+bot like
+was automatically buying me bananas I would be upset Uh I'm like
+it's like buying me poison Like you're just you're trying to kill me But like I
+can't
+make it Like that's like literally that's like bullets to my heart all right
+but like I like it I like it I think that like the matching even at that point
+matching is enough right I think where it's like cause some of that is agentic
+The matching of like cause a user has to specify their preferences in like some
+sort
+of production environment right And then the agentic is Looking at their
+preferences
+and then looking at if this matches their preferences right And that would be
+uh cause that's not a join
+that's like like you think about like all of it it's like oh I want things that
+a little less salty but a certain amount is OK and then it's like oh I want
+that are like you know uh you know no banana or no no on all these ingredients
+yes
+on all these ingredients It's like matching a recipe to a human is like it's
+possible but it's like fuzzy and nasty Right but that's a beautiful agentic
+action
+And then all you do is you send those recipes to the user right And that can be
+agentic action That is enough right I'm not trying to scare you guys with being
+buy a cloudbot automate your entire life with agents otherwise you fail Like
+not like the that's not what we're trying to do here in the Data Briggs boot
+but we are trying to like really
+Help you guys like see what you can do right cause I love that and I see do you
+what I love about your whole idea here Akash is like you see how I've just been
+on it in like every direction every single direction I've been riffing on it
+And so like for good I mean uh like do you know what'd be another one that would
+really interesting it'd be a very Very very it it it would change social
+dynamics
+so much It's like what it does is like so say like uh like you use like you you
+need
+like heart rate data or like you need a little bit closer than Strava data but
+you look at someone's like heart rate over a period of time and then like you
+correlate
+that with like you know rhythms of like loneliness or depression Cause sometimes
+when
+you're like depressed you don't wanna ask for help and that actually makes it
+worse
+right But then in this case what happens is the agent like will look at your
+health and then it will ping like your your trusted contact and be like yo
+They might be struggling right now but not like I think one of the things that
+do wrong in society nowadays right now is like with a lot of mental health stuff
+a lot of stuff that like it sucks it's like we we wait until it's like a crisis
+then we like support right versus like catching it earlier Right and that is why
+idea is amazing You get you get an A plus here Akash I love it I love it uh
+you can keep working on it for as long as you want Like it's like if you uh like
+also see a vision I'm sure like what you've thought about this like in the way
+thinking about it right
+Like just like it's this kind of broad divergent way
+Uh I mean yeah because it's like there are so many possibilities and it's just
+tough
+to kind of nail it down to one or two It's
+essentially like how you started
+all when you said
+You can try to fix the entire world into one pipeline
+not going to be possible yeah yeah and like that's what I'm a little confused So
+I think though that like the the MVP here like I think that like we like we've
+scoped
+it down now
+to something that's deliverable in 5 weeks right And so like uh like and then
+the cool thing is And this is why like uh remember like
+another perspective just for the audience and everything so you know my uh uh uh
+app that I built uh for Magic The Gathering I hacked on that like every weekend
+for
+two years right It was like and that's why it was amazing right And like so one
+the things that like I love about Akashha's thing here It is like what you can
+accomplish
+in 5 weeks is so so so much less than what you can accomplish in 2 years Like
+so different Like if you work on this like you know and like I'm not saying like
+your ass on it Like I would spend like 2 hours like on the weekends like like
+like almost like going to the code gym right and just like hacking away on it
+a little bit more adding this feature adding that feature and like Not stressing
+out about it but like it's like just it's like a little hobby right It's your
+little
+hobby project and you just make it you make it beautiful and like the what I'm
+and why I like your project and your idea here Akash is that like you it does
+run
+the risk of um over scoping right And over like you know like and but that
+also the best type of project is where you're like I want to do
+everything Right Especially if you have the energy to do that and then you see
+progress but that I would see I would say that's the big thing is like scope it
+I like recipe matching that's the killer feature Recipe matching is what people
+want
+and then uh so you you have three things there right It's like the scraping of
+how
+does Strava fit into this I I guess like uh uh like I I'm trying to understand
+part of the product vision
+Yeah so the initial part which I mentioned essentially is travel fits in to get
+calorie count or uh rather your historical data of how how much or rather how
+calories you're burning uh per activity Yeah like just to get an understanding
+that to make an estimate of how many calories you might need for a future
+activity
+that you're planning
+So like right now I do have my historical data from that and on my watch uh like
+coach updates my plans and I get it uh uploaded into my watch
+So yeah it looks yeah yeah so that's what you're thinking about this right and
+I you you wanna know the the last thing I wanna leave you with here Aash is like
+tone of voice your energy about this is Exactly where it needs to be right And
+the key thing that I hope for you is that like you can keep this energy up and
+you can keep staying motivated and like if you have this level of motivation for
+5
+weeks you will you will accomplish way more than you could ever thought possible
+And that's the the key thing to remember man So I'm I'm excited for you super
+excited
+for you
+You're you were you were in the AE boot camp right
+Were you in
+yeah yeah I OK cool awesome great awesome Uh I I I just we have time for one
+Someone else 00 I have one for from Jose I'll answer Jose's here How about a
+project around this idea
+Existing digital analytics data collection infrastructure solution in the market
+doesn't
+fit the need of X Y Z organization
+Uh a custom solution is needed We need to build a system that collects real-time
+usage
+data from an e-commerce website
+It is like a custom-built alternative to Google Analytics or Adobe Analytics
+type
+of solution integrated to backend proprietary data Potential validating data is
+being
+collected without interruption I I identify unexpected variations of a certain
+key
+metric beyond a certain threshold I like that I like that source of data fake
+website
+front-end Yeah we're gonna be working with you know what's so funny like that
+that as a project is it's so funny because that's literally what we do for uh
+know when we're working with Kafka So uh uh our Kafka feed is just every
+API hit Every time someone queries our API or freaking hits any any of these
+pages
+that's the um that's the actual uh like that's it That's the whole um like feed
+we're
+gonna be working with in the labs and it's it's a good one It's a good one So um
+anyways uh let me go back to Discord
+Uh yeah uh Sri Srini you wanna go I I I love your idea by the way um Jose I
+that like uh like if you have uh uh the data feed you have the logger you have
+logger so like that is the complexity there that I love is logging right Um
+Srini
+I did invite you to talk on the on the on the stage if if you want did I
+OK I just invited you to speak
+Oh and uh oh yeah Matt also invite you to speak We have we have we have we have
+5 minutes here guys and then uh we'll be done
+Yeah uh yeah
+yeah go ahead Matt Yeah go ahead Matt
+Yeah so um my idea is do you know like um Homozi's um ACQ
+Yeah yeah yeah yeah it's dope
+yeah yeah yeah yeah so
+So I was thinking like um getting doing it like a building like a bit of a SAS
+but like so that a creator can put all their content so they can point it to
+YouTube channel
+they can upload their own books and building like that but for a specific
+creator
+and so that different creators could like
+Maybe Potassium or Smarter Everyday or Mark Rober yourself you know like go and
+build that ACQ AI
+based on their content because they've already got so much content
+I love that
+I love that as an idea I freaking um that's exactly um a very very good idea
+uh like because like enabling like that's a whole other future right That's just
+taken off right That like uh that creative flowy energy right where you can like
+yeah
+I that's a lot like um the vision I was thinking Thinking about like you know I
+own
+the domain Zach GPT right Zach GPT.com is is my domain Like I I I it was only
+$12
+I was like I was surprised and like I think I could resell it now for right but
+it's like vibe coding expert so I bought vibe coding Expert for $30 and it's
+worth
+someone sent me an email and offered me $7500 for vibe coding Expert all right I
+was
+like no it's mine
+But anyways like I like the idea So um so the agentic action here is gonna be
+like generative then like it'd be like for because it would train it makes uh
+makes
+the bot it's the bot that like is essentially like the hormosi bot and is able
+be in their voice and everything right That's similar to like uh the the blog
+kind of like the blog generator I showed earlier but like how would you um like
+or like what what would be the uh other things that you would wanna add to it
+Yeah so I was thinking like obviously take all the YouTube channel all the
+transcripts
+and stuff but then the agenda g I could do things like like for Mark Rover you
+could
+do an upsell for his Crunch Labs
+um piece you know so it might be able to like here you wanna go and buy the the
+Crunchlab
+subscription go and do that as part of your like a shopping experience or like
+upsell for
+so you're kind of like aiming at the creators but
+Um they're then getting benefit out of like this platform being in their voice
+in their
+everything you can even ask questions about it like they can subscribe to that
+channel
+they could like talk to hey what episode was it that you did this on and it goes
+exactly
+to that episode on
+Do you know what is gonna get so crazy though the thing that's gonna get so
+I don't know just like about trends cause you know I'm these are the kind of
+that actually are making me very excited about the fact that I've written
+in my content creation right I have I have created 7400 pieces of content right
+the last like 5 years So I have like A lot of data I have a lot of data about
+is Zack right And like but obviously it's like my voice has changed and they're
+all bangers right I'll admit that I haven't done 7400 bangers That would be
+that would be crazy
+but like uh that is um something that I know is a massive gain it's a massive
+gain
+yeah that's another really really uh great idea uh and like that's the other
+to remember like uh for everyone here right Like remember that like if like
+Because I think the one thing about this project that I I think might be a
+bit tricky Matt right is like how do you get like the uh a deeper kind of like
+do you have the data engineering component to it right Cause it feels this is an
+project that feels a bit more AI heavy than data heavy you know what I mean It's
+cause you're just like it's like there's no Like ETL going on really You have E
+like I guess I guess turning extracting the transcript from the video is kind of
+ET It's like but that's still like E right Cause that's like extracting the the
+transcript right Or like although it's very interesting it's very like I think
+that's one thing that we may to be thinking about like how you might be able to
+add
+some other like Uh ETL traditional features in there like part of that might be
+the creator configuration the creator configurations and then joins and and and
+like that So yeah this is gonna be great I'm
+I'm really excited
+Um uh I yeah um uh uh Srini you wanna go Uh we have we have just one more
+Yes yep so
+uh yeah uh I work in healthcare so my idea is to kind of leverage some sort of
+API
+to get data from maybe CDC or WHO
+uh and
+Like get the data to the bronze layer do something in the silver build
+aggregates
+for uh metrics in the gold layer but the agent attachment would be something
+Yas
+which reasons show emerging outbreak signals or vis
+Texas is currently flagged as a high risk or summarized health use for this area
+this week Would that kind of fit right into what we need in the capstone project
+I think it's close OK so I just wanna explain like why I I like it but I I I
+that like you might need a little bit more
+is that like I think that that is totally OK assuming that there is some sort of
+configuration
+layer for the agent So there's like the And so it's like you you so like I I
+this OK like if you want to have like a an an interesting perspective here is
+so you slurp up your health data CDC data right You build a good model around it
+and like you make a you build an efficient awesome model around it And like one
+the things that's interesting about this stuff too though is that like uh you
+uh it's gonna test your data modeling skills a little bit because it's like um
+know agents agents really they really benefit more from like like OBT like you
+like 11 big table uh modeling So like I think that that's like uh so if you Like
+if
+you have your traditional like bronze silver gold kind of like strategy and then
+have like a like a final OBT that the AI consumes then that because that will
+make
+it like because you don't wanna like join every time that someone hits the agent
+you don't want that you don't wanna have to join 7 tables you know what I mean
+yeah you want it you want it to all be kind of aggregated Into one table that be
+the summary master table you mean yeah yeah well well well yeah the master
+are the representative things right This OBT is the master tables joined with
+all
+of the relationships right
+So it's like the entire web or the entire universe of the of the tables that are
+relevant
+to those queries Right so I so having an OBT there would be very good That's I
+where you can have like a stretch goal of like doing that Obviously you wouldn't
+to do that but like I would recommend doing that like just as a uh an additional
+step Um I would say the other thing here would be you need configuration layer
+So for like the um uh like there should be like a a UI where someone can go in
+be like
+I want this I want I I want this query ran on this cadence right So it's like so
+like you know
+what do the what do malaria cases look like or like what or or like like are
+any anomalies in vaccine you know rates or whatever right Things for like on
+whatever
+certain uh cadence that we're looking for and so uh like and then those those
+essentially
+translate into um sequel query
+Right
+uh uh like well the AI will essentially translate those into single queries and
+those queries will
+uh be ran on a cadence right as like detector queries essentially that could be
+written
+by the AI right And so then your front end does that configuration where it just
+stores
+both like the English I would recommend it does both It stores the English and
+it also stores the uh the the SQL translation Because the cool thing is is like
+you have the SQL translation you'll you'll know that that that you you'll know
+that pipeline will fire deterministically right So you like cause you don't have
+keep running the AI right The AI is ran one time right to just to generate the
+SQL
+to then run on a basis right So that would allow you to freaking have like a
+full
+project right that like would uh then because then you could see how like that's
+now a healthcare monitoring Project and then like your ETL or like especially
+OBT as long as it can describe the entire universe that is like your rag model
+your rag model to be able to describe trends in the world right and so that
+be really cool that could be really really cool Uh I think that that is another
+great project idea So then you and and then like the
+the agentic action is the the translation layer And then I think you would also
+to do an alerting layer just so that like like cause remember like one of the
+about software that this is this is why dashboards are freaking stupid right
+like dashboards that you have to go to them right They never really come to you
+they
+don't like tell you when something's wrong you have to look at the dashboard to
+if something's wrong which is like super annoying and slow and so like One of
+things is is like that is a feature that needs to be in this in like the agentic
+right Because one of the things we're gonna be talking about a lot in this boot
+is we're moving from an analytic analytical-oriented architecture to an
+action-oriented
+architecture We're like we're not gonna be really looking at the data as much
+We're gonna be looking at the thing or we're gonna be configuring the things
+we care about and letting AI do the looking for us
+Right and that is the uh the future and the the the best part about it is that
+we can actually configure what we're looking for in English for the most part as
+well
+which is uh that is scary but you know that's where we're at right So I love the
+I love that uh it's relevant to your domain
+Uh I like one of the things you might notice about that project though right
+an interesting thing to think about is that project works very broadly
+right Like if that's like an analytical like you see how that works for almost
+company as well
+It's like so you could think about like another way that you could be thinking
+this is like you could have like in your OBT you could also have a a a whole
+Partition you can have a partition there for like OK this is health data this is
+entertainment
+data this is you know what I mean and then like then the power of your product
+scales
+with the with the with the completeness of your OBT right And then that is like
+like that that's just a whole other thing that you could do that would also um
+this uh like even better Like that's one of the things you gotta like be
+thinking
+about like what like this this mindset of thinking what I'm trying to instill in
+guys is like there's always ways to make your project seem bigger and scope it
+Uh so why in this case I'm asking for him for more scope versus like a cash for
+scope right So I'm asking more scope here because you know
+SQL like you know English to SQL a learning framework is cool but like it's it
+have like enough like uh uh like the the only way that I wouldn't ask for more
+complexity
+here is like is if
+the CDC has like push APIs or has APIs that can run you don't have frequently I
+guess
+I guess that's my one
+concern about this project is that the CDC APIs
+are those like
+Yearly dumps like what what is I think what is it they have weekly
+OK see that I think that's that is why like I that is still why I would uh I
+push a little bit for a little bit more complexity here and like a little bit
+abstraction into thinking about like how you could do this more generically
+because then uh that will also Like so and then if you could have like one the
+example can be small right but one other subject area example beyond healthcare
+just anything else you know so that you can show a segmented experience right
+between
+the two The cool thing is is that they don't have to be that they don't have to
+that related right But like if you did that That would that would be enough That
+be enough because uh the one thing I I guess the the one thing I uh concerned
+is the weekly cadence which just means that's just not you're not gonna be
+working
+with you're not working with like very fast moving or like uh quick data so that
+part
+of the complexity is the one thing I I push back on So awesome man
+Thank you so much Thank you so much Thank you
+Yup OK Thank you everyone so much for coming to this I hope this was
+enlightening
+I hope that like this is inspiring enlightening and it makes you want to reach
+the stars Should be really great I'm excited for you guys I hope you guys are
+able
+to uh
+um invest into building projects like this cause this is how you get new this is
+you secure the jobs of the future
+Uh I hope you guys have a good time I'll catch you guys here again at 5 o'clock
+um yeah

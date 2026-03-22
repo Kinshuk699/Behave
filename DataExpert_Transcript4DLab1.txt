@@ -1,0 +1,830 @@
+streaming
+lab my bad Uh so today what we need to do is very first thing we're gonna do is
+we
+need to set up our secrets So you'll notice in a lot of these jobs here they say
+like
+get secret It's like get secret get secret So what we need to do is we need to
+uh
+get the secret So like one of the things you'll notice is um
+OK So in here right you get the data bricks right So if if you haven't yet like
+you
+can you can get the you can install the data bricks CLI It's it's really easy to
+do
+But I think if I do this I think it gives everyone access to the secrets so we
+will
+see That's the that's the goal Um I had the um uh this uh create scope Uh the
+scope
+here is actually bootcamp That's what we're gonna do
+We're gonna be like can you create scope
+Output That that is definitely what it is right Was it great scope bootcamp
+maybe
+Please create 10 yeah we dated we gotta we gotta log in first Sorry one second
+guys
+Data Brick's profile name default
+Data Brooks instance So our host is this guy right We have uh let's grab this
+guy
+Oh it's just oh it just wants the instant ID Oh no it wants the whole thing
+We'll copy this
+OK well that that worked
+OK I will it's saved OK So now now we should be able to create the scope OK so
+created our scope So uh uh a scope is like uh a family of secrets And why is it
+bootcamp
+Well that just comes back to like if you see in here we have like our
+we have the secret scope which is like data brick secret scope and we were
+saying
+it's bootcamp So we're just gonna do that And now what we need to do is we need
+to
+create the secret
+So we're gonna do our secret
+We're gonna do it this way I bet this needs like a what does it need something
+else
+OK put secret scope Yeah you don't need the OK it's a freaking
+hallucination here So we say uh put secret then we have our scope and then we
+have
+our
+key Our key here is actually like to get the key right right We had to look back
+at
+the pipeline
+So the pipeline key here is gonna be Kafka API key
+Right And then we actually have the like
+There should be like the actual secret right Oh yeah we have the
+seed and there's like the a specified value will be stored as bytes Uh but we
+want
+this string value so we're gonna say string value And then what we want to do is
+saw how we like we saved it here right Or I sent it to you guys So we have our
+string
+value here So
+OK so we just stored that right Then what we have the second one we have like
+the
+Kafka API secret
+So we're gonna say Kafka API secret
+Secret And then this one has a nasty little string value Let's get rid of this
+real quick
+String value and then we will copy this guy
+So like you don't generally speaking want to put secrets in the freaking um
+Like you know me emailing you that was not good practice I should have just been
+use the secrets and the secret manager and we called it a day but it is whatever
+If
+you guys wanna hack my Kafka like go ahead and I don't give a shit
+So then we have our bootstrap servers So let's actually uh let's actually put
+this
+guy as well as a secret
+We'll we'll we we will have to update things a little bit from this cause it's
+not
+um
+Currently doing that it's kind of like a hard-coded value So one small thing I
+gotta
+actually update on in the
+so we're gonna say Kafka bootstrap
+Servers
+So this is gonna be our
+servers and we have our Kafka bootstrap servers OK cool So now uh let's go back
+uh we're just gonna go to bronze's job
+So let's go ahead and actually get our um Kafka So the Kafka bootstrap is gonna
+be
+um it's actually gonna be a secret now
+right So we're gonna say get secret
+Um secret scope
+And this is now we're gonna just say this is
+Kafka bootstrap servers and that's what I called it Yeah Kafka bootstrap servers
+OK So
+Great Now there's like
+Just a lot a lot going on here A lot going on All right So
+like let's just go over each thing as we kind of like step through this This is
+you'll notice this job is pretty simple It's only 60 lines of code This is
+actually
+a very simple straightforward job that we can work through right So
+OK Kafka topic We can get it Bootcamp events proud That's the table we're
+reading
+from These are our secrets These are the things that uh we're keeping in there
+These
+we need to configure Kafka These these are uh based on the security ways that
+we're
+doing things cause there's like a bunch a bunch of different ways that you can
+things We are doing just a plain like essentially password security That's what
+is saying is like plain SSL
+Then we have the actual pieces of this puzzle that are spark streaming
+So let's go over each of these So trigger interval here would be like
+this is essentially like how frequently you would want to run the job This is
+run every 10 seconds Uh this actually does not work You'll notice like if we try
+run this job right now it's actually gonna fail right So if we try to run this
+job
+you'll see like right now it's just gonna um
+Kafka
+But these values should exist now
+These don't exist
+Cause this
+OK let's print these then That should have actually worked then like there's a
+API key Kafka API secret
+OK they're just it's not pulling them in OK let's let's we we gotta go look at
+get
+Secret real quick That looked that that should have worked
+Scope and key yeah right there That's the that's our key and that's our scope
+and
+that gets us our secrets
+That should be the DBUils That's literally uh what it should be doing
+And then we have our uh secrets here
+Boot camp OK bronze job Let's go back here So we have our boot camp Let's make
+sure
+that that's what is
+because the secret scope might be um
+Might be pulling in something else for some reason
+OK it is bootcamp It is boot camp That looks right So Kafka API key Kafka API
+secret
+and that's what I called it right Kafka API key Kafka API secret
+Those look right OK Um
+Weird That's uh that that that that should have worked like uh OK so um
+One second Let me see like what's going on here cause we have our
+when we say data brick secrets Does it have like the um
+Allows you to get secrets right Yeah then we have our we have our create scope
+put
+And that should have saved everything right Cause now we have our now it's not
+pulling
+it in though
+So I want to look at this just for one second if this doesn't work because it
+looks
+like it's just returning the the default string
+So we have a
+We have the exception here right
+Isn't there like
+Because we have our except E right Or as E right That's how it is and then we
+to say print E
+So I just want to see real quick what is actually going on with the with that
+with
+that call
+Isn't that how it is
+Except exception E
+OK fine We're just gonna ask Data Brooks to debug this real quick So
+It's not working
+We're so close We're so close here and then we'll be able to we'll see
+If there's something else I'm missing here
+Yeah obviously
+OK except
+OK That was that's literally what I had right
+DBUils is not defined OK one second
+Tools is not defined
+I swear this is I I
+So I had this running without the secrets I figured that this was going to be
+something
+that was gonna be a little bit simpler than this but
+Data Brick should be able to like actually know what to do here
+Our notebook level variables automatically inject them but they're not available
+Explicitly oh it's just uh you just have to explicitly import them
+OK thank you AI
+We're close here I will I will update the the code here to do this Thank you
+Now um OK now now let's go from the top here Now we should be able to actually
+see our keys see our secrets
+Oh OK it's even redacted OK There we go Amazing OK Thank you guys for your
+patience
+as I debug that Now it's actually working So
+one of the things that we we now we're getting back to like what I remembered
+when
+I was building this OK So
+see this uh trigger type processing time is not supported for this cluster type
+Use
+a different trigger type available now once
+So uh
+The trigger here right is like we're we're trying to say run this once every 10
+seconds
+right
+So
+What it wants us to do
+is it says available now true
+That's what we want us to do and we'll talk about what the hell this trigger
+even
+means Let's just run this so you can kind of see like what the hell is happening
+here
+OK so there we go I like how it redacts it dude That's so cool that you can't
+print the secret Like that's like and it's actually working OK so you'll see
+OK so this job ran it took 9 seconds to run and it um oh yeah let me post this
+this is uh I I forgot to do that So we're gonna post this like I'm doing a Delta
+Live
+table lab for my students and we'll have people well let's just create some data
+real
+quick
+OK cool So um
+we see that it actually ran now but it stopped
+It stopped That's an important thing to remember here So the trigger here just
+means
+run now right That's all it means right And you'll see if we look at the job
+it processed 794 rows right And it wrote out 112 kilobytes of data right
+Fantastic
+OK so like what the hell does this data even look like So we have our table
+We have tabular.dataexpertstudent
+web bronze web events bronze So let's go ahead and like open a new like just SQL
+query
+tab here real quick
+So let's go ahead and say select star from tabular.dataexpertstudent.web events
+bronze
+So this is gonna be our like we pulled the data off of Kafka and now we're into
+Why does this always happen Like I always it's like every time
+It's just like OK there we go
+So now you'll see we have our here's our data like this is like the actual data
+that
+we have now in Delta
+This is our delta data
+So we could do cool things right We can say like host
+Count one
+We say group by host
+We can run silly queries like this that give us
+our data and we can see the data expert is crushing it
+You can see like where people are going and like what websites they're actually
+visiting
+It's pretty cool It's pretty cool to see like the actual like web event hits
+that have happened over the last like little bit And um so this is pulled off of
+off of Kafka
+So but like some of you are probably like but wait a minute like I thought this
+was supposed to run all the time
+Right That's the um what's gonna happen here So but the cool thing is is like if
+run this again right We're gonna run them again The cool thing is now this is
+gonna
+it's gonna take this checkpoint
+And it's gonna write out
+only the new data You'll see OK it wrote out 18 rows because there's there's 18
+new
+rows of data since the last time the job ran which was like 5 seconds ago right
+And
+it like so it keeps track of the checkpoint right Which literally the checkpoint
+is
+just like a random like directory in data bricks right We use the temp directory
+or
+you could use like the or the tabular directory or a volume or whatever It's
+just
+like it needs to be consistent though right It needs to be like a uh a
+consistent
+a consistent spot
+And you'll see this is gonna just stop again It's just gonna ultimately like run
+stop and run and stop And so you're probably like why is it doing that Shouldn't
+it
+run like a server So this is where um
+like Spark streaming and Delta uh Delta Live table come into play right So this
+the way that Delta Live table works is the trigger is just now
+So there is no trigger It doesn't say run every 10 seconds or run every 5
+What it does is it's process all the new data and then run again Process all the
+data and then run again Process all the new data and then run again right So in
+case like you don't even need a cadence right But you might notice if we aren't
+using
+Delta Live Table right now it's like kind of annoying It's kind of freaking
+annoying
+So what we want to do right now is we're gonna uh we're actually gonna kick up
+We're gonna kick up the uh the data expert all-purpose compute which is gonna
+take
+a little bit of time because these servers take a little bit of time to like
+kick
+up and run so that we can actually see like one of these running like with just
+a
+normal Spark streaming environment right Cause you'll see like those 18 rows
+are in here now right They actually see the numbers actually changed here right
+You
+can actually see obviously there was someone who freaking Voted for um you know
+Lulu
+Lulu.techcreator.io That was me That was random I I I like how it actually
+picked
+that up That's the um I don't know if you guys know about that but we have like
+Lulu.techcreator.io
+Right which is like Lulu's tech Academy only top dogs go here It's a very broken
+academy
+but it is what it is So this will this is gonna keep track of like the all all
+of
+the academies on the data expert platform or on the tech creator data expert
+platform
+And so uh we will see over time that like there's gonna be more right
+So one of the things though is we want to look real quick at this data right And
+we'll
+see that like there is uh an event time So if we look at like max event time and
+min event time
+Let's just look at that real quick to see like of the the the data that we've
+processed
+So you'll see like all of this is in a very tight band right
+It's all pretty um
+recent right It's all for the most part uh like
+from the last like
+2 hours or so That's the like what is what it's been picking up on here
+So and some of that is from me running this several hours ago So uh this is
+already
+kind of created and it ran several hours ago before the lectures and so that's
+why
+we have like a big um kind of range here of like about 3 hours But Kafka
+remember Kafka actually has more data in it
+Right Kafka actually does have more data in it
+So um we're gonna uh like look at that as well So one of the things that you
+might
+be wondering about with this is Zach like
+OK so this reads from Kafka and then we have this uh you'll notice we have this
+build
+web events stream You see this function here that comes from common streaming as
+well
+So inside of here we have build web events stream which is gonna be this guy
+This is actually you'll see like
+This is Spark streaming right here Spark
+Read stream Literally how it works
+And then this is how we are gonna set up our confluent options
+One of the things that you might notice here is
+See this starting offsets
+Right Starting offsets is uh set to latest
+Which is um it's only gonna process the data
+Um that is new
+In Kafka since the last run right If we have a checkpoint it's only going to
+process
+the new data
+So what we can do is we can take starting offsets So let's go back to Bron's job
+uh you'll see inside of this guy in this build it stream we can say starting
+offsets
+Equals I'm gonna say earliest
+Right Now earliest is going to read in the whole damn thing It's gonna read in
+whole damn thing And then uh it will start there And it will essentially process
+lot of data and then it will keep running So but the other thing that we want to
+here is we wanna um we we we we wanna make sure that we have uh this trigger
+This um trigger interval
+Is gonna be the other big thing I think that's like did I do that right
+It's a processing time We gotta put that in there
+So cause we're just we just gotta wait for the
+This guy should be almost up and running Like can can we run this Does it does
+does it let me run this It
+it's probably still like this is a great example of why serverless was so good
+so amazing is that it actually um
+It this pain of waiting for your freaking cluster to start is is no more right
+uh this this will uh eventually run and um it should process all of the data
+exists in Kafka back to the beginning of time and then It will keep running and
+will process
+everything every 10 seconds right That's based on this trigger interval And so
+will like essentially go back to the beginning process everything But one of the
+things
+you might notice here is um
+We uh are not de-duping
+Right so and that's just how the cookie crumbles here We will have uh by the way
+doing this with um earliest like we have an append here right And we already ran
+data right So we will end up getting duplicates right Because like earliest will
+push
+the Kafka offsets all the way back to the beginning and it will still process
+whatever like you know we processed like 1000 rows here or whatever 1000 rows of
+new data coming in It's all processed right here Right you can kind of see like
+what's
+going on uh in with like what's actually happening here
+This should um damn bro
+Like
+sometimes I'm like
+Why is it so slow Why is it so slow So I guess while that's running or while
+is gonna be going cause it's I do want to show you guys like the the the nitty
+gritty
+way of doing it with uh with the servers like with the actual like
+You know all you know all-purpose compute not serverless like the old the old
+data
+bricks world So while that's running I just want to go over like some other
+that we could potentially be looking at right So
+You'll see here like we have another job here called the enrichment job So in
+enrichment job we do need to uh we need a copy from the bronze job OK let's just
+copy
+this block and we'll put them in there enrichment job
+And then that's gonna be this block
+OK and then that will give us our Kafka topic and we'll be able to pull in all
+the data And then this has its own enriched table So what this is gonna do is
+is uh we'll call this
+have a new checkpoint called streaming checkpoints enriched
+And then we've got to make sure that our processing time is available
+available now equals true And then last thing let's let's let's actually try
+here Let's do the um when we're building this event like we're gonna say offsets
+what's it called again Yeah starting offsets
+So we're gonna go here we're gonna say starting offsets equals earliest
+So um we should be able
+to run this guy
+Because he's on serverless right So he he he'll he'll run quick while we'll wait
+while
+we'll wait 30 years for this server to freaking start I'm surprised that it's
+still not up
+But um
+Oh yeah Oh the create catalog Yeah that makes sense but that's not gonna run
+But that's fine because all these things already exist
+OK so now this is gonna run and this is gonna like you'll notice the right here
+gonna be crazy
+Right So OK it ran the create table and now it's gonna do the right here And
+right is gonna be really a lot right So we have it um
+oh got a nice little exception See what happened here
+RDD is not implemented Yeah that makes sense Oh yeah so there's oh yeah this is
+be the because it
+Serverless is like that so we can just get rid of that guy and the persist is
+cache the caching is not gonna work here So we just have to always look up the
+IPs
+right So it's gonna be um cache data frame This is gonna be um batch DF
+right And then we have the batch DF here This will still work cause we just
+can't
+cache You can't cache and you can't call the RDD API
+OK This is a great example of things that are different in serverless and in um
+Uh
+The uh the the old Spark server world right OK there we go Cool
+Now now we actually got a running
+And uh we'll see here
+There we go
+Now it's it's it's it's it's it's pushing it's pushing OK so it ended up it
+ended
+up generating freaking um
+1030 tasks That's pretty cool
+And it's uh it's like dude this is this UI is pretty sick actually It's actually
+so
+this is actually gonna end up uh enriching our data with like where people are
+coming
+where people are coming in from
+and uh we should be able to like it should take a long time here because like we
+are
+enriching like thousands and thousands of rows of data right Like uh tens of
+thousands
+of rows of data So like there's uh the the actual right time on this is gonna be
+pretty
+long So OK OK this is actually working This is actually running now Amazing So
+one is running actually You'll see the we should be able to bronze so the the
+actual
+uh Spark streaming job is running now too right We should be able to actually
+it's it's kicking up
+I'm's taking a sec taking a second there but this one actually is up right We
+we go back to the enriched job go back to this and make sure we are seeing some
+here that is actually gonna be
+OK So this is this one's gonna take a little bit of time cause it's actually
+enriching all of the data
+Does it have the um
+Can you look at the query profile OK it is it is doing the um
+It's going through all of the OK so you see it has it it knows it so it's had um
+You'll see in this this grouping aggregate here it's like
+The most it's seeming like it has about
+12,000 rows 12,000 rows and like I think that makes sense because my Kafka queue
+has
+like 7 days of memory or whatever and 12,000 rows is like roughly speaking how
+much
+web traffic I get in 7 days So that makes uh a lot of sense Um
+Oh wait no this is in 25,000 rows And then OK so 25,000 rows into 12,000 rows
+That's pretty cool So like one of the reasons why this job is so slow is because
+it's
+actually doing an API call right So like one of the enrichment here is actually
+an
+API call right You see it's doing uh a rest API call in this job right here in
+IP
+um and and it might be um
+I'm trying to say what I'm trying to say here it might actually be um hitting
+Like rate limits right And that might be why this is uh choking And uh we can
+this to work There's a way of like oh this one is it's saying that it's
+but it's actually not it will end right Because it has the um available now here
+So this this one will eventually end
+Whereas this one over here should be running but it's like
+Dude this I had this running earlier and now I'm like
+Why are why is server-generated stuff not like
+Data bricks is like no like we're gonna give you a bad time Cause this should
+also
+give us
+more data But is that is it actually generating more data
+We can see by like looking here maybe maybe the the UI here is just terrible
+Cause this might actually give us more data on the um
+OK it is generating more data It is 100% generating more data because this was
+at 400 before
+right So we are actually seeing more um and oh yeah and there's the 2 there's
+2 from uh Lulu.tech creator.io
+So it is generating more data right And and it's pulling through Is it actually
+So I think one of the things we want to look at here is like the last time stamp
+Like so we see like this um 44 right So and we're we're at 7:45 So uh this was
+about
+you know 20 seconds ago
+Is it like actually um
+it looks like it is OK Yeah it is actually um moving right You see now we have
+7:45
+The 2:45 is 245 UTC is 7:45 So this data is coming in uh in in in about 12th
+batches
+right You see the 10-second batches like because that is what this job is doing
+It's it's processing the new data every 10 seconds That's what this guy is doing
+So um That's pretty cool Honestly that's really cool that this is um actually
+generating
+So and this will just run and run and run and run So one of the things you got
+be careful about with uh data bricks and stuff like that is like Is this
+what you want to run Is this like uh cause this job can just run forever and
+have you have freaking a big gigantic bill right Because this is this is holding
+on
+to this server It's keeping the server awake The server is staying awake just
+forever
+because it's constantly being used by this one tiny streaming job And so uh you
+to be careful because that's one of the things of why streaming is so expensive
+Is that streaming keeps it keeps the server awake forever
+right It's just just like what I said earlier right You know remember how I said
+a streaming job is just a server It's just a server That's all it is And that's
+what
+we're doing here And so you end up paying for that right You end up paying for
+compute time and You know some some people and I think this is definitely one of
+reasons why Data bricks is moving away from this model is like if I close this
+tab
+I just close this tab these jobs are gonna keep running It's not like it's not
+these jobs are done It's not like these jobs are gonna like die and stop You
+to actually click stop first right
+So uh that's the other thing about streaming jobs that are like really Uh dicey
+in
+that way right Is that they can definitely
+cause some more uh issues in that regard like in in terms of like what's going
+So like one of the things that's interesting is you guys might be noticing like
+I'm
+not doing any windowing right now but I'm getting min and max time like in a
+batch
+kind of fashion I'm just like what is going on Like what is the data Like where
+where
+are we getting where are we getting our um our our people to come in you know
+so It's pretty cool to see it's pretty cool to see that like we actually have I
+all these random academies that like all of this stuff is just like random um
+academies
+that are like also getting traffic
+besides like the the ones that get most of the traffic So
+Are we getting the is the enrichment job Uh what are we seeing here Oh see the
+enrichment
+job actually did uh OK so so the enrichment job is running Oh no it it it
+finished
+I think Did it finish I think it it looks like it finished Yeah because it's not
+the these numbers are not going up anymore
+Yeah OK The enrichment job did finish and it processed 61,000 rows of data So
+let's
+look at like what actually uh came about from the enrichment job So we can
+see So we have web events enriched is the name So we can say web events enriched
+let's just look at like what this data looks like real quick so you can kind of
+see
+like how we can we can use this to enrich our data sets and uh oh yeah there we
+go
+So now we have like
+All sorts of data here And we have um
+is it always just null Is it not pulling in like let's see where country is not
+null
+is it always null Is it just like
+OK so there's something buggy Something like the enrichment It it's interesting
+because
+it actually pulled in uh it pulled in all 60
+65,000 rows right So um what I want to see here though is I wanna see like what
+min and max are here So we're gonna say a host and we're gonna say min event
+time
+max event time So we can actually see like what uh is in Kafka Cause remember we
+used
+earliest here so we can actually see
+What the actual earliest timestamp is and then this gives us an idea about
+retention
+right So it looks like we have data here So it looks like we have data back to
+March 3rd March 3rd is the earliest we have data which is this is indicative of
+uh having seven days of retention for Kafka right So that's uh So some other
+to be thinking about here right And you'll see there's like a lot more other
+Random academies that people have gone to over the last um
+Uh the last 7 days they've gone to like all sorts of different academies that
+it it has all sorts what is that what does that account
+OK there we go You're gonna see like the the the tail here Oh wow Basa is
+crushing
+me because Basa is like doing they have a gigantic free boot camp that's going
+right now And so and then we have data expert and learn that data expert and
+then
+all the way down see like the long tail of people who have like tried a bunch of
+different
+academies and different things like you can see like this captures a large set
+logs right And so
+We can see that the enrichment job did a pretty good job here It's I'm surprised
+this is not like
+like this should have like
+Killed the job It's like it's very interesting because it's like you see how
+we're still getting this like interrupt here Yeah it's it's not actually running
+anymore
+though like cause it it it only runs once with that trigger and that's where
+Delta
+Live table is really awesome right Because it the big difference between Delta
+Table and like you know this crazy Spark streaming job that we're running right
+now
+is that the the Spark streaming job like
+You have to manage it and like the the triggers and the checkpoints and like
+it's running and like if it fails right And it it's there's a lot going on with
+Delta Live table really does manage for you
+So it's pretty cool It's pretty cool like what is possible with this new like
+new world and like we're gonna be able to get more of that as we kind of like
+step through
+Um more of the stuff on Thursday as well So one of the things that like
+Like OK let's go back and let's get that uh go back to the web events bronze
+So we want to look at web events bronze and remember this is only querying data
+for
+so this is essentially the popularity contest And we want to see of like where
+people
+are um actually visiting I see some of you are actually visiting
+You actually like opened it probably one of you in the lab like and it's picking
+up
+that data in real time right And so this is uh pretty cool Um some of this stuff
+you might notice like we actually have like more in here There there should be
+it's not like a user agent Don't we get user agent in this
+Yeah we have user agent should be in there So you can we look at like can we
+can we group by both
+So you can actually see like if you're on Chrome or like if you're on OK yeah
+agent is a um
+is a is a block right So it's a
+So this is like the exact like so user agent is gonna mostly be like OK you're
+Chrome or and and Mac OS and like what's going on right This is showing like OK
+some
+of you are visiting from Safari some of you are visiting from Chrome some of you
+visiting from Firefox right And you can kind of oh here's a crawler so you can
+this is a byte spider crawler You can kind of see like what is actually uh like
+You can see your web traffic kind of like expanded out I'm surprised that the
+enriched
+job did not run cause that's uh the enrichment job had some
+had an in it's probably uh something with that
+Um
+Like this piece of it is uh like
+Not there's there's some some small bug in the lookup I cause I know that this
+works like the
+like the API call like when you do the lookup the lookup IP when you do this guy
+actually does uh work but it it seems like the the IP that's coming in is not
+quite
+So um that might be
+do we call it something else Is that why It's like
+I want to see something real quick
+This is uh because this should have the so we have event key
+URL user agent headers and we have the like the IP here and um and you can see
+who are like on VPN and they're like forwarding their IPs right It's kind of
+of wild right
+Um and so uh obviously like there's uh oh there's 1100 rows It's pretty cool
+It's
+pretty cool like you can actually see like where people are uh visiting and
+to but anyways like
+I uh that's what I wanted to show you guys today I I there's not that much more
+um in terms of like what other pieces of this I will get um those small
+fixes to the code base so that you guys can run this you can run these jobs
+yourself
+as well So you can actually see like oh yeah we can run this on a server we can
+run
+this with a processing time and we can have a job here So I'm gonna kill this
+so we aren't like poor right But um
+That's gonna be the kind of the perspective Don't worry about racking up a cloud
+bill
+here cause like most most likely y'all are gonna be on the data expert
+all-purpose
+compute So if you're going to use a server that's not serverless use data expert
+Do not create a new resource Do not create a new resource Use the data expert
+and rock with that because that's going to be the smallest one that we need
+like none of this is very big data but we want it to be fast data right We want
+to be um low latency and fast data and that's what uh like what we get from this
+So Um I wanted to just uh pause there and um answer any questions that y'all
+have about um about what was covered here So let me go back to the back to the
+stage
+Revoke the permission to create new server Yeah I need to do that I definitely
+need
+to revoke that permission That is 100% uh
+uh necessary and required Um so we will we will definitely do that
+I'll get that rich working as well It's it's super close It's super close
+like that IP is like I didn't realize that that there was like an IP lookup like
+OK
+can you answer my above queries OK what were you saying Nayana
+OK From where are you injecting the data Is this click stream and how are you
+injecting
+Where is the offset set watermarking in this code and also item potency OK great
+All
+these questions from where are you injecting the data So
+If you remember from the lecture right whenever you hit a page like OK let's
+talk about this where are you injecting this data like specifically So um
+OK this is my like gigantic code base the data expert codebase right And this is
+um where the the producer is actually sending its data But what where does this
+come
+from Like if we go to uh like OK so this is the app entry point
+This is the app entry point for all of Data Expert which has like you know we
+use
+Clerk as the um login provider But you'll notice here we have this one component
+called the route change listener And so the route change listener every time you
+change
+a page so every time the path changes it will make it will post to this endpoint
+APIV1
+web events And so every time you change a path then we log that data to Kafka
+that is uh where that data is coming from So it's like it's live on the data
+expert
+servers So that's is this click stream data Yes And then where is the offset set
+latest and earliest don't need to be set anywhere right Because latest and
+earliest
+are just the beginning or the end So there's not a save so those are not saved
+anywhere
+right Those are like that's like Like 0 or latest right Both of those are just
+can do watermarking in this code and also item potency We'll we will cover
+watermarking
+more in detail on Thursday We did not do watermarking here The reason why
+there's
+no watermarking in this data is because we didn't do a group buy So we do have
+another
+like window job here but like
+we gotta cut it at at 8 o'clock cause it's like um and we will like we can go
+over
+this later but like I I just like to respect people's time And so um we will
+we can go over watermarking as well in here This is where you'll see in this job
+have the watermark delay right It gives you like that 10-minute watermark delay
+only really need the watermark when you execute a group by you see this dot
+group
+by because that's when you need all you need to like make sure all the data is
+in right Otherwise like if you're doing a simple like select star like a it's
+a select star but it's like a select star equivalent from Kafka And you're not
+grouping or ordering then you don't need a watermark right Because you can just
+Immediately write the data out Like you don't have to worry about it So like
+that's
+where uh you do need watermarking for uh for this to like make sure that your
+by has all of the data so that it can make a decision like OK do I have all the
+within this window And so like
+That's uh yeah there but we didn't cover that in this lab So um we have uh yep I
+think
+that's that's it Is this a Visual Studio editor This is data bricks right I
+all right Oh wait no this is yeah yeah no this is this is data bricks OK I I was
+wait a minute I'm I'm not I I wasn't sure I I sometimes I sometimes I use this
+sometimes
+I use Pie charm I usually use Pie charm or data bricks but um
+Thank you One business query How do you determine the region by seeing region
+locale
+or can we determine using client IP You can use it using client IP like for
+example
+like if you look at the freaking um OK let's go back to the enriched job and I
+know
+this works because I tested this It's just like I tested this on local sometimes
+like I need to like actually always test everything on data bricks as well
+Just learning myself here So you'll see like OK so you'll see like we have this
+Endpoint right If we go and look at like if I just say like
+what is my IP
+Right And then I'll grab my IP I'm gonna grab my IP We'll go back here right And
+we're gonna like paste them in here You'll see
+OK so this is gonna run and then you'll see here this is like see I'm in Las
+Vegas
+Nevada right And you can you can get a lot of um
+information from an IP address right You can you can know exactly where someone
+So you can see I'm in the US where the capital's Washington and so this is the
+Uh the response from this API So I was hoping that's what I would get but it's
+it might be uh
+uh it it it might you saw how we got that cloud flare cloud flare response That
+actually be what's happening here um in the AP in the actual code where it's
+just getting nothing back and uh that's what's going on But I thought when I ran
+it was gonna be able to do the enrich but So but how to extract that in data
+for VPN or mask IP So you can't right If it's from VPN right Like you have a
+tunnel
+right that you can sometimes look at and and you can understand like one hop
+back
+but usually you can't understand all the way back right So um
+Yeah
+It's like I'm trying to create a web events table uh with my username Could you
+please
+uh grant the perms to create table Um yeah I thought I did that actually but um
+I will uh I will make sure that uh we have that working as well for that Um you
+use another schema though like one that probably you already do have access to I
+I
+think tabular bootcamp
+Isn't the the client IP is PII Yeah it is PII in some regards right Yeah 100%
+This
+is like it's a it there's so many different ways and like this is data that we
+be deleting right It's like
+how it is right It's but it's like it's an interesting lab right Where it's like
+but
+like it's not that much of a PII like because it's like what can you do with it
+besides
+like oh this PII is in India
+Oh this PII is this guy but it's like if you have other information then it's
+useful
+right But like but
+an IP address in isolation is not very useful Can you link a person to it
+No like then it is PI IP address is a weird one right Cause it's kind of like
+in the middle right Where it's like it's not really like it is but it isn't
+It's both
+So uh you you you got it like
+IP address is
+Uh PII in that like you can if you have other information then you can you can
+know who that person is and like kind of where they live It's like a rough
+approximation
+of where they live like uh which is um
+interesting and I don't know there's like so many different ways to do these
+Yeah because browser region is set to US or blank Yeah
+that makes sense
+Like it's very interesting how uh these guys and like there's gonna be
+limitations
+of this like free API right So
+Yeah um I I'm down to answer like maybe one or two more questions and then we
+we'll break Hopefully this is interesting and I will uh fix the lab Uh I'll fix
+all
+the code in the lab It was like we had the had a little bit of a snafu there
+the secrets
+With streaming real-time sources often not being required for most use cases Do
+have any recommendations to get really good with streaming pipelines Many issues
+pipelines are things you really learn over time versus doing a lab any books etc
+mean
+like uh I think that books are a very interesting thing right Cause it's like
+can read something you're like oh that's interesting but like
+it is kind of one of the things that you learn from suffering and you learn from
+on the job experience like that's like Uh like DDIA is gonna be the other one
+uh the book that we are covering you know DDIA is the is the big one and we're
+be talking a little bit more about that you know on Thursday right about like
+streaming issues um and then literally setting stuff up like this right And then
+understanding
+like OK what happens if you like you can because you can like generate synthetic
+and be like OK we now have a streaming pipeline that has a lot of back pressure
+have a streaming pipeline that has a lot of issues right We can And that's what
+hoping to do with this boot camp over time is actually be able to stimulate a
+lot
+of these other bigger problems at scale and we're getting there Ron's getting
+because now we have a boot camp that has freaking
+all the structure
+all of the freaking details right And so like we're really trying to uh cover
+we need to do um but like uh like there's there is still a little bit of that a
+little
+bit more of that synthetic and a little bit more of like what breaks breaks down
+scale that needs to be added for sure
+Yeah that would be Ace cause nothing beats real hands-on use Yup yup Totally
+agree
+Totally agree That's like why building projects is good you know
+Awesome Thank you everyone I really appreciate each and every one of your time
+uh I will uh tell you when I have updated the the code base so that we can have
+the the changes so that you can run things again And I'll try to get the
+permissions
+working on that other stuff as well So cool Have a good one everyone Uh I'll
+you guys uh here tomorrow Make sure to come back tomorrow 5 p.m. Shron's
+Shinaron's
+call uh at 5:00 p.m. is gonna be really really really really really good And um
+then we will on Thursday we will actually go into Delta Live table and
+and stuff like that

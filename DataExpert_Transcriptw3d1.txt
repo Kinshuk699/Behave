@@ -1,0 +1,908 @@
+Awesome we are live again thank you so much everybody Good evening morning
+afternoon
+depending on where you are I'm excited
+To be kicking off day one for the unstructured part of this boot camp
+I think everybody was on on the previous session so Umar uh data solutions
+architect
+A manager at Data Bricks but here today not as a Dabricks employee here more to
+share
+my experience building agents working with unstructured data
+uh in data bricks I'll quickly go through the syllable for the next two weeks
+and
+then we're going to go into the lecture for today
+Everything that I'm talking here it's also on the GitHub Ripple
+Uh if you want to follow along you can download uh clone the ripple and follow
+along
+Can anyone give me a thumbs up you're seeing the slides
+Not seeing the questions all good OK all good so I'm gonna move this guy over
+here
+OK
+so
+In a very high level we're going to be together for 4 days each day for 2 hours
+my goal is to help you build Zaky or Zaky
+My Portuguese accent there you guys pronounce how you want it Zaky OK
+You can think where we got the inspiration from of course from our esteemed
+co-founder
+And this is an 8 enterprise AI agent
+That is able to deliver on 3 main things for dataexport.io
+It's able to help students who are thinking about enrolling in the boot camp
+going to help the students prospective students to answer questions about the
+boot
+camp the pricing curriculum
+For you guys who are already enrolled in the boot camp it's gonna help you
+answer
+questions about the the the content of the labs even it's gonna if we are
+successful
+it's gonna help us reveal the code answer questions about the code we have in
+the
+labs
+And also remember this is the company Dataexpert.io is a company
+so there is a persona of this agent that can help the employees
+submit their their expense reports
+track how much they are spending on on on on on travel
+And appeal for expenses that they manage managers or exec have not have not
+approved
+That's what we want to build in 4 days
+Uh when I was planning this content with Zach he told Yar Zach told me Umar
+everybody
+who enrolls in this course they know the basics right
+So I will try to go as deep as I can So I'm assuming you already have some
+experience
+with data engineering you might already know what is a vector database what is
+reg
+I'm going to recap some of these concepts but bottom line here is I assume you
+are
+a data engineer you already have some some experience with data engineering Or
+machine
+learning operations
+We're gonna do 44 lectures about 30 to 45 minutes We have Q&A we do a break then
+I
+come back and I go to the hands-on lab
+For today
+we'll be setting up our environment and every student will be creating one
+schema
+under this catalog called bootcamp_students I will walk you guys through
+during the lab time OK but by the end of today everybody will have their own
+where they will be creating their tables and volumes
+And
+I want to show you guys what is the reference architecture We want to build by
+end of day 4
+Like I mentioned and you guys will see in the lecture slides there are different
+ways
+to work with unstructured dating data bricks and build agents There is the easy
+way
+which is agent bricks You can think of that more as a low code no code way
+But you can also build it from scratch using our agent framework and even
+with frameworks like Lang chain
+For building rag based solutions
+There is also a way for you to use MCP or expose what you have in database as an
+MCP
+server
+So we want to help you guys try these different ways of building agents in their
+bricks
+put a supervisor agent on top
+and because we want to make everything enterprise ready we are gonna host this
+in
+the Debricks model serving and on top of that we are gonna add guard rails
+because
+we want to make sure if Zakki
+Is returning some because I I messed up on the code and I'm returning the Social
+Security
+number of all all the employees we want to have guard rails to limit that
+Also we wanna
+I think that
+If we're being attacked there is a
+denial of service attack here we're gonna do some rate limits to make sure that
+service is is always responding
+So the agent we're gonna build
+Hopefully by the end of day 4 can be exposed anywhere You could build a web app
+that
+talks to this agent This agent could run on Slack Cursor or anywhere
+This is the architecture we want to build
+For today we are gonna be focusing on the foundational part
+Which is unstructured and unit catalog
+So when I talk about here um for day one we're going to be talking about the
+importance
+of unstructured data
+Data bricks is a platform unity catalog foundational models and how you parse
+unstructured
+data
+using AI functions So Data Bricks um packages
+A lot of document parsing intelligence in these five main main AI functions AI_
+query
+AI_extract classify
+Generate and parse document
+These are the functions we're gonna be reviewing today
+because we have a bunch of uh receipts from the employees and we want to be able
+to
+parse and understand who is spending a lot of money
+from Dataexpert.io
+and we're going to be using these functions
+That's the goal for today Again
+by the end of day 4 we will have built this end to end enterprise architecture
+that is production ready is hardened can work from anywhere and it will allow
+to explore the different technologies we have in data bricks
+And from a personal perspective it's going to help prospective students students
+who
+are in the course and employees
+I'm going to stop right here to make sure the course content for this is clear
+what
+we're covering in the syllables is clear Any questions about what we're going to
+cover
+today and in the next 3 days Any questions
+Can you just ping OK I don't know if that was for me
+Can you just think I don't know if that was for me OK
+Um
+Is there in the git repo
+so I think Josh already already
+Already shared the link here on the chat
+It's in the in the root of the the the gate ripple OK
+OK let's get going I'm gonna move into PowerPoint
+I promised I would try to keep slides to no more than 6
+Because there are some foundational concepts I need to make sure you guys
+understand
+before we go and see some code that I wrote
+And this is showing presenter mode I don't want a presenter mode
+Hopefully I remember because I don't use
+PowerPoint anymore
+Why is this I just wanna show here
+Oh it's going to the other screen um
+Bear with me guys I haven't used PowerPoint in a while um
+Why is this going to the other screen If anyone remembers
+why is this going to my other screen not the one I'm presenting custom show
+Uh
+Let me
+Yeah Alberto you wanted to say something
+Alberto
+Sorry I was on mute so
+Uh so if you go in the lower part in the lower right part there is like a book
+Uh right here
+Yeah they
+Perfect Thank you so much Extra points for you on the lab
+Thank you
+Thanks appreciate it
+So foundations
+Doing the basics right is very difficult but people underestimate on the
+of setting the right foundation
+That's what we want to do here today
+Hopefully it's not gonna be too boring
+and hopefully I'm gonna
+reinforce some of the concepts that are very important if you're gonna build
+agents
+you're gonna take them to production What I'm seeing with the customers I work
+a lot of people are doing POCs they're doing demos on agents but very very few
+companies
+are actually going to production with those agents
+I want to make sure what you learn here is actually something you're going to
+take
+into production
+Or you're gonna help your company build agents that go to production That's my
+goal
+I think we have spoken about this multiple times
+Why should we care about unstructured data
+The world we live in if we want to be successful data engineers data experts
+and we only work with tables uh structured data we only have an opportunity to
+work
+with 20% of the data that our the enterprises have today
+So just the example I gave of a connected car that generates 1 terabyte a month
+That's unstructured data and these will continue to grow especially as
+everything
+becomes even more connected like my dog is connected to an IoT hub now
+Because I have a sensor on my dog
+My daughter's toothbrush is also connected to the cloud
+and all of those devices are creating unstructured data
+They are messy difficult to process
+And not only about Jason files we have especially PDFs
+Um I did another startup for Legal which was a co-pilot for uh lawyers
+Focus on on on federal um
+On federal contracts
+So understanding parsing uh PDFs is not an easy problem to solve
+And we will see some examples why this is difficult
+with code
+And logs is actually a a big big source of unstructured unstructured data
+And the list goes on and on presentations web content sensors and IoT these are
+all
+examples of unstructured data and if you're not able to tap into it we are
+missing
+an opportunity to really give insights to the business
+Here are some key use cases that are that before AI
+they were not readable and now AI is making allowing us to read them it's making
+them
+more accessible So for example imagine an an organization um
+healthcare and um
+Plan
+which needs to automatically evaluate the status of a claim For example I was in
+Brazil
+6 months ago I had to go to the ER on an emergency and I got this $5000 bill
+And I'm still waiting to get the reimbursement from my insurance
+$5000 that I spent in Brazil I'm waiting 5 months to get it back
+because they were not able to implement a basic AI pars document using database
+can read out the text of my my claim
+Get that into text and translate to English and run some LLMs to see if it was
+valid
+So companies in healthcare are innovating a lot
+Finance is another example reaching 100 feelings which is um
+The stakeholders report I mentioned when I introduced myself that I did the
+algorithmic
+trading startup or GI startup focused on trading We were doing a lot with
+data reading news uh reading um 10K feelings reaching earning calls and trying
+make predictions try to make decisions
+Only unstructured data and just like I mentioned legal is also another area
+where
+we're seeing a lot of
+adoption for
+Leveraging foundational models leveraging AI to give insights out of
+In the case of Zakie
+our agent
+the agent needs to parse the the the receipts to validate the expenses
+automatically
+We also want to make the syllables in the boot camp searchable the PDF I was
+just
+looking at and we also want to help our students to be able to review um the
+code
+from the notebooks So these are three examples close to home here
+that we we want to enable that is unstructured
+Any questions Let me look at the chat
+I guess banking pharma let me look at the the check
+I tried to find a meme I love how Zach teaches and his jokes
+so I tried to find a meme but I couldn't find a good one I asked Claude to help
+me
+here Hopefully this comes across
+but
+clean data that's cute right But in reality
+Unstructured data is even more challenging than we think
+So for example um
+Someone can upload an expense report with a receipt
+But that might be a photo of an expense report that has a photo inside
+which has mixed formats or if it what if it was a handwritten note
+from a cab driver in the UK
+So you have to still be able to do OCR to parse those receipts
+And when we talk about PDFs it's not just about the text in those PDFs PDFs they
+have
+tables charts
+multiple columns and if we want to get semantic meaning out of those PDFs we've
+got
+to be able to parse that structure
+Like I mentioned in the beginning a lot of companies they are storing data and
+structured
+data as just a as a Var just as a string column on a database
+Jason as a string column
+Uh log files from applications they have errors and the list can go on and on
+on
+So data is not going to be cute
+We'll have to do a lot of work
+and that's the good news for us because we are data engineers we know how to
+massage
+data we know how to do data wrangling
+And that's our superpower and everything we've done to date to
+for traditional analytical solutions is going to apply to building agentic
+solutions
+That brings us to the notion of context engineering
+If you want to go now and update your LinkedIn
+and maybe you're going to get a salary raise and you can say
+data engineer context engineer you should get a salary raise because you're now
+talking
+about Gen AI
+So everybody not only works with data engineering now you work with context
+engineering
+The same problem as we had before with traditional analytical reports garbage in
+garbage
+out
+If you give LLMs the wrong chunks
+Or data that is not up to date or you give no metadata you give the wrong system
+prompt
+You're gonna get
+Back hallucinations wrong answers and the users are not going to like your
+solution
+Your goal with context engineering
+Is to have the right retrieval meaning getting only the specific parts of the
+documents that the the LLM needs You want that to be fresh You wanna have you
+have metadata
+and you wanna have clear system prompts so your agents can deliver it
+Answers that are grounded
+and have lineage
+So as an amazing uh data engineer as everyone here is if you do these things
+well
+if you become a very good at context engineering
+you are going to build golden
+agentic solutions because the chunks you get back you are going to return real
+you're gonna have amazing uh metadata and your prompts are going to be created
+the people working with So your users hopefully are not gonna even realize that
+they're
+not talking to a human they're talking to Zaky
+Let me look at the questions we have on the chat before I talk about how we are
+going
+to do governance on top of unstructured data
+Yeah good question Mohammed Um I would say
+prompt engineering is part of context engineering So prompt engineering is a
+of context engineering
+Good question thank you
+So
+I hope that by now you understand that unstructured data is important
+But the question is how do you do governance on unstructured data
+If you can only do
+grants and access management on tables the analogy I had here is like you are
+cop you are the police who can only
+respond calls from nice neighborhoods
+You're not able to go into the bad neighborhoods and manage those neighborhoods
+right
+That's an analogy here
+So we need a way to do governance on the bad data or unstructured data I don't
+want
+to call that bad data because unstructured data has a lot of value on
+but we want to do governance on the data that is unstructured
+And that's where when I introduce you all to
+Unity Catalog volumes
+You probably have been working with Unity catalog That's how you get access to a
+table
+through a schema
+To a modeling database
+But UHC catalog has this notion of a volume
+Which sits on top of your cloud storage like S3 or Azure Data Lake storage and
+adds
+a layer of governance
+What is the value of it You can do ACOs ACLs on raw PDFs imaging blobs
+Everything
+you do is logged
+In the data bricks log
+So when you access unstructured data
+it's going to be logged in the audit trail You can do tagging and classification
+you can for example receipts from executives might be sensitive and you might
+to tag that
+alongside the record you have for your tables
+You also want to be able to do lineage If your agent responded to um external
+user
+You want to be able to to trace that back to the tables you use as a reference
+the unstructured document you uses as a reference
+And you don't want to move your your unstructured data you want to leave it
+it is today but you want to layer add a layer on top of it
+That's the value of Unity catalog volumes It's a layer on top of your cloud
+storage
+that is going to bring access control
+audit trail tagging and classification lineage and you don't need to move data
+And the syntax is going to be very simple
+Within your catalogs and your schemas you can create volumes
+And you can grant reads rights to people
+in those volumes
+Volumes are kind of built in data bricks you're gonna see in the syntax how easy
+it
+is to work with volumes but the nice thing even if you're working on-prem and
+you
+wanna read something that lives in in in in data bricks you want to do what we
+call
+credential venging
+Which is you could use the UNHC catalog which is free
+Everything we talk about the Unity catalog and ML flow it's free data breaks
+You're
+not using compute
+So you could use Unity catalog for free
+to be the management layer on top of your S3 on top of your Azure data lake
+just to manage access
+control
+So when database competitors like to say hey data bricks is complicated and it
+is
+expensive I'm just giving you another example
+why it's not expensive This is an example of a feature that is free and you can
+in data bricks or outside of data bricks For example there are customers they
+a .gb.
+On prem
+But he uses Unity catalog as the governance layer for free
+Think about that
+Let me look at the at the at the
+Are the questions here can I use ML flow tracing outside data bricks to log
+every
+LLM call So the answer is yes ML Flow is uh SDK
+and even if your application is running outside of data bricks you can use ML
+Flow
+OK so can I can you give me some explanation on the UNHH catalog
+OK I think when I go in the UI
+I'm gonna talk more about it but think about this your lake
+Without a catalog is a swamp
+Think about it your lake without a catalog is a swamp
+it doesn't have
+control on who can access what
+So you can think of catalog as the
+police the cop who manages access to tables to volumes
+to clusters
+To everything in data bricks
+That's the purpose of Unic catalog and I'll keep it
+I'll keep it high level now
+but there is also another big feature of database which is delta sharing
+It's one of the number one features customers are customers are using from data
+delta sharing Let's say I'm an
+automotive company and I want to share data from my drivers with the insurance
+I can share the data with the insurance companies without moving the data
+UHC catalog is basically managing the tokens
+So you can share your data with your with your suppliers with your partner
+without actually moving your data
+So not only you get all the access management the audit control the lineage with
+Unity
+catalog but if you want to do delta sharing it's also part of of of of Unity
+catalog
+And all the projects we are talking about here Unity catalog delta sharing and
+ML
+flow
+they are open source If you wanted to run them on premises that's a possibility
+Mohammed I hope I I I answer your question a little bit on Unity catalog and the
+value
+it delivers Hopefully when I go through the UI and you work in the demos it's
+gonna
+be even more clear
+Before I go into the next slide I want to ask a volunteer who wants to explain
+difference between a chat
+Versus an agent
+I'm going to introduce another concept now the difference between a chat versus
+an
+agent
+Any volunteer
+Go ahead
+Whoever raised the hand first uh Rangan I gave you permission to talk Thank you
+to what to the best I can explain agent is
+Interactive sorry the chat is interactive while agent is an automated
+Job that runs behind the scenes
+Fair enough thank you I'll let uh Jiu Qi
+talk to you
+Love this discussion on the chat
+A charter is built on top of agent
+There is no right or wrong
+Answer here So I love the discussion Thank you Jochi
+Anybody else wants to talk
+Or can I give you my definition
+Yes please
+I think Mohammad wants to explain
+OK Mohammed are you able to talk
+don't hear you OK um
+I'm gonna move us along because I have a few slides I want to get through before
+we
+go into the Q&A
+Um here's my definition
+So a chat in the context of LLMs is something that can query
+a data source
+Use our LLM and give an answer
+So a chat gives you an answer It's like a knowledge base that you ask questions
+gives you an output
+There are different ways you can use uh you can make a chat powerful
+but normally a chat is read only It doesn't have the context of memory
+It doesn't have the the idea of using tools to make actions
+And it's hard to have a multi-t conversations on chats That's my definition
+there
+of a chat in the context of LLM
+An agent is something more powerful that can have chat capabilities but it's
+actually
+something that can query your knowledge base
+Can make a plan based on your questions It can use tools skills
+understand what those tools do replan
+And then answer questions or make actions
+So in the example here an agent can call external tools like
+data bricks
+If my employee asked the question how much has Ya spent
+in travels in the last month going to Brazil
+Um my agent could realize that in the company we use data bricks so let me use
+data bricks too
+Write a SQL query on my
+travel report table
+Get the results and present that to the user
+I could have another tool that the agent uses that write that answers to another
+database
+That agents could also route that question to different agents for example
+Calling the slack agent to notify my manager that I've been to Brazil too many
+times
+so maybe I'm not working
+Uh someone needs to get the work done
+That's the idea
+Chet
+Guess a query use an LLM to provide answers An agent is going to query your
+knowledge
+base he's going to plan he's gonna use different skill sets we call them tools
+gonna understand how they work we plan and answer questions or execute an action
+That's what we wanna build with Zaki
+OK We don't want Zaki to be a chat
+We wanted it to be an agent
+We understood the importance of unstructured data we understood
+how we governed that with uh volumes we understood how chat
+compares and contrasts with with agents
+Let's talk about one of the most foundational ways you can build
+Uh a chat
+or even an agent which is called a reg
+So reg stands for retrieval augmented Generation
+The idea is you are going to combine
+a vector database
+To answer questions from your users to understand based on the questions that
+your
+users are asking
+what is the content I have in my vector database that is most similar to my
+The way it does it your user is gonna ask a question let's say how do I submit a
+receipt
+Then we need to convert that question into numbers into a vector because LLMs
+they
+only understand numbers
+Then based on that vector I query my my database to understand which vectors are
+similar
+2
+The vector I'm providing to the vector database
+I'm going to get an answer from the vector database with let's say the top 5
+documents
+most similar to that query
+Then I can add some context
+I can say hey I got these 5 documents from my vector database
+The context I'm going to provide I want you to answer in this specific format
+and suggest an action
+So I provide the results from the vector database and the context to our LLM
+In the LLM
+Gives the answers to the user
+So without rag
+We could just call an open AI GPT model
+But there are changes you it can hallucinate because um um
+A foundational model like GPT has access to everything that we have on the
+internet
+so Reg is a good way for you to ground your LLM on your data on your problem
+So reg is the best way for you to build chats and agents and answer questions
+about
+your data about your documents
+Your code base
+So our agent Zay is gonna use uh reg for answering questions on around the boot
+camp
+uh the policies we have for expense report and answer questions about um the
+of the course
+That's the definition of rag
+The analogy I tried to make here is that tools are the hands of your agents
+Without a tool your agent is just going to be a chatbot
+The tools you can think of then as the the skill set that lets your agent to act
+something
+So tools your agents can have could be a tool to run a query on a data warehouse
+a
+tool to call rest API like accessing the GitHub API We're going to do that a
+tool
+to write a file on Unity catalog a tool to search on the internet
+And the good thing here pay attention to this another benefit of the Unity
+You can register functions piece of code arbitrary piece of code like the
+example
+I'm giving here
+let's say get um the summary which is a select on a table for example
+I can register this function on UHC catalog
+I can add give access let's say only Zach Wilson has access to that function
+And guess what Database is automatically going to expose these functions that
+registered in UC
+As a as a tool
+through our managed MCP server that I'm gonna talk about
+This is very powerful This is a little bit new
+Again every function a piece of arbitrary code you add in UNIC catalog and in
+grant
+permission can be exposed as a tool for your agents
+Again there's another feature of Unity catalog because it's in Unity catalog
+is going to be audited
+You're going to be able to version
+And control and you're gonna be able to use from any MCP um client
+Yeah Mohammed on the vibe the vibe uh coding tools I would uh recommend first
+try
+if you are in if you love data bricks workspaces you are working on data bricks
+workspaces
+I would say use the data bricks assistant with the agent mode It's very powerful
+If you like VS code and cursor use cloud code with
+Database AI dev kit I'm gonna show you guys in one of the sessions
+The dev kit is a set of instructions for cloud code on how to work with data
+That makes the power
+That makes cloud way more powerful when working with databas
+Which LLM does data bricks use um multiple LLMs depending on which
+you're talking about If you're talking about the built-in assistant
+by default it's Azure OpenAI
+but I think there is also some plans to support your own models on the assistant
+Cool Can I get a volunteer to explain what is an MCP What is MCP
+The model context protocol Can anyone give me a definition of what is MCP
+I like Nayana's answers It's like combining multiple agents Yeah it's a good way
+is gonna let you combine multiple
+tools or even agents
+Yeah
+I wanted the formal definition
+Yeah I like that you scored an analogy
+OK let me give you unless someone wants to come out of milk
+And when I explain it
+So we are telling we are talking about here that agents they need to have
+multiple
+skills they need to have access to multiple tools
+The question is what is the standard that agents should be taught should be
+using
+So if an agent wants to use multiple tools
+what is the standard What's the protocol the language that my agent should be
+to these different tools
+That's what the the MCP model context protocol provides is this common language
+for agents to talk to tools
+So the way the industry is calling this is MCP is the USBC for AI tools
+So your agents they can talk to any
+if you build an agent that can talk MCP
+Your agent will be able to talk with multiple
+tools in the context of data bricks Data bricks already provides this If we were
+test you guys this would be a question for you guys to answer
+Data bricks already provides a managed MCP server and that's part of Unity
+another benefit of Unity catalog
+Databix already provides a managed MCP server
+So every vector database in data bricks every genie space or functions in UC
+get exposed as a
+tool in the database MCP server
+This delta table here is wrong I had removed I don't know what is true here
+So MCP is the USB for AI tools so it makes it easier for
+your AI agents who
+have different skill sets The beauty of this in database we already provide a
+managed
+MCP server
+so any function you registered in UC
+or vector database or GE space is going to be automatically shown up
+On the database managed M Mississippi server
+So let's talk about the architecture of Zaki
+And then I think I'm almost done with slides and I can open for questions
+So our agent
+It helps three personas
+So for the prospective student
+Uh it's gonna be able to talk about pricing curriculum schedules and enrollment
+process
+This we're gonna implement using reg retrieval augmented generation on the
+in volumes that we're gonna store on volumes
+Uh for students who are already here if we are able to finish the labs
+We're going to use uh reg
+plus we're going to build the MCP tool
+to access our code in GitHub
+And for the employee we're going to use the builting functions that are exposed
+by
+UNHC catalog
+Both via UC functions and GI
+So in the end
+our module is going to be stored on a database model serving We're going to use
+supervisor agent
+That is going to be able to route
+Based on the question based on the scenario
+across these three different scenarios
+That's what we want to build and everything is going to have guardrail
+We're going to store all the results from our agents in an inference table in a
+delta
+table so we can do analytics on how our chat uh our agent is doing
+and we're gonna do rate limits on on the APIs because we want to make sure that
+people
+are not misusing
+our Izaki agent
+Uh needless to say
+you're again I'm repeating myself here The skills you guys have learned on week
+and week 2 is going to be essential for what we're going to build
+We are gonna use Spark to parse PDFs at scale We're gonna have to create
+embeddings
+which is very cornerstone for the success of your rag solution is creating the
+embedgings
+Spark is gonna be very powerful for that We need we need pipelines to keep our
+vector
+database fresh
+We're gonna use delta tables to restructure the metadata and and add the the
+history
+trail
+Unit catalog is gonna be the governance layer for the volumes for the tools
+and as you see on the next slide we're gonna use ML flow to trace out the
+conversation
+we have with agents monitor the agents
+And I have a typo here it should be evolved so we can improve And I'll give you
+example here maybe it's true small
+But the example here
+is how by using Spark on a UDF a user defined function
+we are able to paralyze we are able to do
+split a PDF in chunks using multiple drivers in in Spark
+And I'm giving you a sample code here because the Spark is going to be essential
+in making sure that when you are parsing a structured data we can do that in
+parallel
+And we can scale the solution
+Yeah sorry that I didn't catch the the the typo early but I think I still know
+how
+to write in English Thank you
+To summarize a few things
+when you want to build an agentic solution in database there are 3 options
+Jeannie
+Is a data break solution for text to SQL
+You ask a question it writes the SQL code runs it and gives you the results On
+our
+agent that's what we're going to use to answer questions against the travel and
+expenses
+Agent BRICS is the low cold no cold or managed agentic solution
+An agent framework is uh a framework for you to build your agents from scratch
+So you can think of this as a continuum going left to right The more you want
+customization
+the more you want to control the more you should go to the right but at the at
+same time the more you go to the right the more management you're gonna have
+So database is all about giving you the power of choice If you want to go the
+text
+to SQL route no code you can do it If you want to go the agent bricks with local
+no
+code you can do it If you want to build it from scratch using la chain using
+data bricks and ML flow you can do that and we're going to show throughout the 4
+days
+all these 3 options
+Now if you are a developer like me who spent 10 years of my career writing code
+shipping
+software uh you have heard this phrase hey it works on my machine
+Right
+Yeah especially for a data scientist it works on your machine but the model once
+goes into production it drifts The data gets stale
+And hallucinations happen
+People try to misuse your APIs
+The price starts just to go to the roof
+And you don't have the visibility into what users are asking
+So we wanna make sure that the agents we build is implementing this notion of
+LLM
+ops LLM ops
+When we were building as software developers we have we had DevOps
+Machine learning has MLOs so now we as we are using LLMs we have the notion of
+ops
+The idea is that for our agents we'll be able to add tracing monitoring guard
+rails
+weight limits and evaluations We want to do automated quality scoring we want to
+use
+LM as a judge to evaluate the quality of our agents
+I'm glad Mohammed now has a new buzzword he can mention to his boss
+That's always the intent of the presentation
+Give you guys buzzwords you can use and look smart
+You teach him and he or she will be
+your fan
+OK so the question is in data bricks let me give you let me ask you guys a
+question
+How do we implement LLMOps in data bricks or anywhere because this is an open
+What is the easiest way to implement LLM ops with an open source technology that
+Data
+bricks created that is available in data bricks for free
+You see another feature that is free in data bricks and is also uh open source
+Anyone who gets this right I can ship you a sticker uh some Debix stickers
+The first one LLM opps
+Going one
+Won't you
+Yeah Sweeney got it ML Flo
+Really add me on LinkedIn and remind me to send you the stickers send me your
+address
+I don't know when they're gonna get there but I'll I'll send you some data break
+stickers
+So yeah
+Email flow
+Is your best friend to implement LLMOs in data bricks
+I'll keep emphasizing this it's free You don't pay anything to use ML flow in
+bricks You don't need to compute
+Every workspace in data bricks you have access is a Unity catalog server and is
+ML flow server
+What ML flow allows you it allows you to do the tracing to host the metrics It
+has
+this LLM as a judge evaluation which is amazing
+because you can think of the LLM as a judge evaluation as a neutral way
+To understand how your models are doing
+So let's say you have built an agent that under the hood uses llama
+Gemini and anthropic
+You could use the data bricks provided data bricks provided LLM as a judge on ML
+Should be the neutral evaluation of your agent's capabilities
+And it also has guard rails
+Someone asked me in the beginning how you how do I do this how do I use ML flow
+can I use this outside of data bricks
+You need
+Three lines of code
+You import the either if you're running on data bricks or outside of data bricks
+You import the ML flow library
+In this case I'm testing with lang chain so I say I want to use MLflow.lang
+chain.autolog
+and I add this decorator to my function
+And Data Breaks will be able to trace all your calls all the calls to your
+and the models it uses under the hood
+I believe this is my last slide so get ready
+because the rocket is taking off We call data bricks the rocket ship
+So it's going to take off
+And what we're going to do today we're going to have 3 labs One is going to
+provision
+your environment It's going to teach you guys secrets for working with volumes
+The second one is how we are going to generate synthetic data This is this is a
+fun
+one I spent time with Zach
+to generate uh some examples for synthetic receipt generation
+And you will understand why that is important and then we're gonna play with um
+AI
+query AI parse document AI extract and Gi
+To get insights out of our unstructured documents from our PDFs
+Now we have 5 to 10 minutes for questions then we're going to go into a 10
+minute
+break and we're going to come back for the labs
+Questions
+Yeah you are it looks like there's some questions on the right here
+I'm looking for the questions I'm gonna start I'm gonna go buttons up OK so
+Um guardrails we're going to see a demo of guardrails so essentially you can
+think
+of a guardrails and in data bricks you have model serving Modal serving is uh
+are hosting your agents as an API
+So guard rails is the filter in what gets into your API and what gets out of
+API
+So it's almost like guard rails is an API management in front of your agent
+We're going to see that and that's the capability of ML flow
+Yes that's correct Uh ML flow is open source It can run on premises You can
+install
+it now
+Run agents locally now let's say you download Lama
+Um like this guy I have here
+Olama
+which is a tool for you to run
+uh LLMs locally
+you could run a uh LLM locally
+Uh like dips seek
+and you could run ML flow locally and you could trace everything that you are
+asking
+your airline locally that would get flagged
+would get logged tracraced
+In ML flow of course if you're doing data bricks ML flow is managed and one
+that you're get in data bricks that you don't have in the open source one is the
+as a judge evaluation
+That feature is only available in data books
+Um not using la la graph we'll be using lang chain
+I'm getting old a little bit and I haven't uh I haven't been working with
+Landgraf
+uh lately I built my startups on land chain
+And DSP we'll talk about DSP
+so I don't have a lot of experience online graphs so I didn't include that
+Uh which are the other questions I have
+So question from Josh is Gini Text to SQL a tool for a language model to use or
+it a way for users to interact without knowing the data Very good question It's
+both
+GNE is a way to democratize access to database to your delta tables
+your CEO your CFO they can go to a GE and they can ask the question how much
+money
+has my company made this year
+Which customers are going to churn
+They're gonna get the nice answers If they want to see the sequel that was
+generated
+they can see it
+The beauty of it is that now Ginie is exposed as a tool
+to your agents
+because Data Bricks has that managed MCP server
+So Josh I hope I answered your question
+Are all functions going to be discovered by agents or there is a way I think if
+I'm
+not mistaken
+I don't know the name of the person who has uh
+Noob
+I think when you are exposing you tell which schema uh you wanna make that uh
+available
+so it's not everything that is in databases I think there is a filter I can get
+back
+to you I don't think it's everything
+Yes the question is how do we work straight and deploy to production at scale
+This
+is what we're gonna cover on day 4
+The answer to your question we have to use model serving
+Cape village of Debris
+And email flow that's how we're going to deploy
+use this at scale
+Lots of data is stuck especially banking It still runs on coal Hoda basis is
+planning
+to bring those into platform
+Yeah Data bricks is a cloud only platform There is a reasoning why we focus on
+cloud
+Um for Cobalt I've heard there are some partners that have accelerator solutions
+uh get Cobalt data into into data bricks
+uh but personally I haven't uh worked on that My experience with databricks is
+more
+on the manufacturing part
+uh so I don't have a lot of experience in in in the banking space
+And the question from Mahendra are we going to see how structured responses are
+handled
+by the agents at the
+Yes we're gonna we're gonna see this It's gonna be very cool and I'm promising a
+We have a lot of things to cover this for for lessons
+but you will see that uh with NL flow tracing
+You can see the entire chain of thought of your agents the different tools it
+used
+to get into the user's answer So if you're using structure it's going to show
+how it used Gini or if you're using a structure it's going to show you how it
+a vector search the results it's got from the vector search and what was the
+outcome
+of the
+And Lubo I appreciate your question If you guys start asking me a lot of
+questions
+about the different uh frameworks we have for Gen AI I'm not gonna know the
+I'm not keeping up to date on all the different frameworks uh for building GNAI
+applications
+Uh the ones I have more experience is DSP
+And Lang Cheng
+And Lama Index these are the three I have experienced I built my startups on
+I've helped customers Everything else I haven't had a lot of experience
+so I'm not the best person to to talk about those
+OK folks should we go for a break and when we come back we can go into the labs
+I can take more questions after the class I can stay a little bit longer
+if we need to to answer more questions
+Awesome cool Well yeah we'll be back at like 7:15
+7:15 OK
+Do I have a time

@@ -1,0 +1,915 @@
+We are live
+OK
+I'm gonna make these guys Morgan
+Again remember I'm not looking at the questions in the chat because I'm focused
+on
+the lab
+So just speak up if you have questions
+Um you all should have cloned the reaper
+And let's go there Let's look at the repo so if we go into data export
+If you go into GitHub
+We look at the repositories and you can see that yesterday
+I
+Edit this new report there I'm calling it day one of week 2
+True and we have 5 labs there
+Uh you might be asking where is lab number #3 Because lab number 3 is the actual
+MCP app that submit the receipts OK
+You also have the lecture here and one very cool thing is
+Everything we do in the way we're going to deploy Lab 3 is using a data bricks
+asset
+bundle
+Does anyone here
+does not have experience or know what data bricks asset bundles are
+Does everybody understand what our data asset bundles
+OK I'm seeing some thumbs down so database asset bundles you can think defining
+your
+database infrastructure as a code It's built on top of Terraform
+So you can define what are the assets you want to deploy into data bricks You
+create
+this Yummil file like I have here and you run Data bricks deploy and it's going
+to
+deploy your solution in data bricks So as you see we are deploying this custom
+MCP
+server as an app and all I needed was
+5 lines of code in my data bricks asset bundles
+To define
+what is the name of the app and what is the code that defines that app that is
+the
+subfolder on day one
+And based on this uh we got that app deployed
+In here in data breaks on their compute on apps
+it deployed as the MCP Zakki server
+and that's exactly what we put here
+Uh in the YL file
+We're gonna look into this in more details but I hope you understand now data
+bricks
+asset bundles infrastructure as a code built on top of a terraform and anything
+you
+can do through the UX in data bricks you should be able to do that through
+Uh asset bundles
+I wanna hide this is the size on on VS code uh good enough
+Or is it choose his mom
+Try to make it
+OK good
+OK folks starting with day one and oh wait a second you all said that you don't
+wanna
+use VS code you wanna use notebooks so my bad I will use
+I will use uh I'm not gonna be using VS code I'm gonna be using
+Um
+I'm gonna show this in the
+In the workspace my bed
+OK so this is synchronized I'll synchronize my code here with my workspace
+And now
+We can look here
+So day one
+Let's start with functions
+Folks I'm not gonna run I would just walk you through the code and then I can
+show
+you the results um
+Yeah and you know what let's run this one right So what I'm defining here I'm
+creating two functions uh get travel and expenses summaries and get the receipt
+status
+Same logic as we have been seeing we get the current username Here I'm also
+doing
+some cleanup in the table parts receipts just because remember you have to run
+labs
+uh from day one and day two
+Because we are building upon the vector databases and the tables and here I'm
+just
+doing some cleanups on things from the first labs
+OK um then I'm creating another table if it doesn't exist which is the one where
+we
+submit the the receipts
+And then I'm creating two functions This is the one where we are aggregating
+expenses
+by employee
+And here is where we check the receipt status by employee
+And here's an example on how I can just using PlainSQL I can get expenses for my
+user
+for the user that is logged in you are
+On March of 2017
+that's why we tried in the agent
+Now we're just trying here in SQL
+and same thing looking for the receipt status that we submitted today Hopefully
+here
+we're going to get two records now because we created one for Starbucks right
+Um and one thing if you want to do kind of an inventory of custom functions you
+have
+uh in unit catalog what are going to be exposed as as endpoints
+Here you just you can just use the catalog and you can call show user functions
+and
+you pass the name of the schema you're going to see all the custom functions and
+everything
+you have here is going to be exposed as an endpoint in your managed MCP server
+As
+I mentioned function number 4 you're not going to see when you run this In the
+beginning
+I started with
+the submit receipt as a function in UC but I realized it's an anti-pattern We
+normally
+want a function to be more or less a read only
+Um so not an entire pattern pattern that's too strong uh but I feel that the
+majority
+of my functions they are read only
+And what else you could try here
+you could try uh if you wanted to submit receipt to to be a
+function that can write you would need to parse the base 64 string or the user
+send you just the path of the image
+and you could try to use AI parse document to validate that
+And you could actually call an external This I like the second option here you
+could
+try
+which is once the user the user sends the receipt
+you could call an external currency API to convert
+To convert that into US dollars if it's not in US dollars That's lab number 11
+thing
+to remember folks is
+Your function similar to tables
+You need to grant the user permissions to those tables to those functions
+So even if your agent call function to get travel and expenses for you more
+But you haven't been granted permissions to that function you're not
+gonna be able to call that function
+And my question would be
+What if let's say Mohammed had been granted permission to get the traveling
+for Yar
+But Mohammed should not be able to see expenses
+Don't buy you more how would we solve that problem
+Cuz the function here is encapsulating the logic to query the table
+But what if we wanted employees only to be able to see the data for themselves
+The agent is gonna just gonna call the function How is the agent going to be
+able
+to restrict
+which data can be seen by each employee What would be the only strategy we could
+adopt
+Not quite there folks
+So my question again
+My question again is we said I said
+Sorry folks
+That uh for the functions we create that are exposed to our agents as tools
+We can control who can execute that function
+For example get the travel um and expenses for humor
+And if you Mohammed you have not been granted access to execute this function
+call to the function is going to fail But you if you have been granted access to
+call
+this function
+and the function reads everything we have on the table you'll be able to see my
+right
+So how could we make this lab better to make sure that you Mohammed you only see
+for yourselves
+I mean there might be some roles right Once you set up the rules
+Awesome Yeah you got it so remember folks we didn't implement it here good good
+answer
+Um but uh remember database has
+role-based
+level
+If you look on Google let's say data breaks unitary catalog
+Role base row level security sorry raw level security
+There is a way you can apply filters or masks based on the user that is logged
+in
+Right so in here let me see if I can give you an example query
+Let me see if I can give you
+Can do that based on text I just wanted to show you the syntax
+If you wanna make this lab uh if you wanna expand this lab what I'm saying here
+is
+you could uh change these functions to filter the data based on the user that is
+logged
+And in that scenario would only allow Mohammed to get results from his the
+receipts
+he has submitted and same for me and same for every employee So this is one
+we didn't do here we didn't reimplement role level
+Security we just implemented security at the tool level
+I think somebody has a question um is there a question there
+Yeah uh
+Hello Mark Uh we are all on the same role right How can uh
+when we are all on the same role how can I uh Data bricks know that uh I should
+not
+access uh some other schema uh which is which is in the same role
+uh
+You mean
+I do want to show the syntax to you guys so it will make things very clear
+OK here is kind of a you can define a function
+OK and everything is gonna behave automatically You can define a function that
+the data
+OK So let's say uh in a record in your employees stable you could have a role
+Let's say manager or employee
+And you could say in a function you would define a filter that only managers can
+see
+all the records If it's an employee you should apply a filter
+where the email of the current user should filter the column email
+so
+Here's an example
+Here we are filtering automatically filtering filtering the data on a table
+here we are first creating a function that says
+if the current user is an admin
+The user should be able to see the data from all the countries If not uh the
+should only be able to see data from the US
+And here at the bottom we are saying OK for this table sales I want to apply
+function that actually filters my data
+This is the Unity catalog Unity catalog is doing the role level filtering
+so when your agents call this function as a tool Unity catalog would be able to
+automatically
+filter the data based on the filters that are applied to each row
+I don't I didn't hear who asked that question in terms of being the same role
+how database would be able to filter
+Uh your question you have to create a function that acts as a filter and you can
+know
+which user is logged in right now which is executing the the query and even
+which
+groups the user is part of
+Right so say if Umar is part
+of HR Umar can see data for everybody If not he can only see data for himself so
+I'm
+gonna filter the call or email for himself
+So remember if you wanna make this lab
+Very powerful In addition to declaring the functions
+try to apply some filtering to only return the receipts and the travels and
+for the user that is logged in
+Is Everybody with me so far can I get a thumbs up or did I lose everybody
+OK awesome
+Going to lab 2 any questions about lab 1
+No questions about level one OK should be easy
+Lab 2 what we're doing here uh we are
+Bringing the data of uh GitHub
+We are bringing the data from this uh GitHub here
+Into our vector database
+So what you need to do here folks if you wanna try everything from scratch what
+need to do you need to clone this ripples
+into you you sorry not clone you fork this rippus
+because once you fork it's not gonna live under the data expert I your
+organization
+is gonna be under your organization
+Then with that you'll be able to go here into uh into GitHub you go into
+settings
+You go all the way down into developer settings and you can generate a personal
+access
+token
+And you can save that personal access token in data bricks secrets remember if
+are not familiar data bricks has a secure way for you to store your secrets
+Which you just use a data bricks uh CLI and you say hey I want to create a
+secret
+scope and I wanna save uh I wanna save some values there
+So in our case here I created a secret scope called um
+uh Zay
+and I stored my personal uh access token there This is not the real one
+So you all can read that you can use you can use my personal access token to
+data but you're never gonna know
+What is uh my personal access token and I actually had to grant access to you
+all
+to use my personal access token
+to read only the data for this ripples OK
+So again we needed a way for Dave to read data from uh GitHub
+And for you to test that you need to make sure that if you wanna try everything
+from
+scratch
+you fork the ripples you create the personal access token you save that on a
+scope and then you your code should be able to work
+You should also change on cell 4 you change your GitHub username because the URL
+of
+the repo is gonna change and then I know based on the name of the ripple
+where to crawl to source the information from
+And here's very easy
+So here I am just
+So let's try this live folks I tried week 1
+I'll try week 2
+2 OK
+OK so we will try to bring the
+Content we just
+And it
+Yesterday
+Did I fork this I need to make sure that I fork this otherwise it's gonna fail
+So
+I need to go into humor
+So I do something like this
+Yeah I actually forked
+but I didn't sin so I need to sin
+And I'm gonna update this branch
+Yeah now we have the latest content
+And let's try to bring that data into our vector database
+Here I'm getting looking at the rhymes and then I go recursively I go through
+the directories and I bring only notebooks and read me files into into our
+Uh do we have any questions
+Go ahead while I run this show Any questions
+Uh
+uh yes you are
+So this can be uh any
+A report that has public access can be forked and can be bought in or is it uh
+there any
+Any particular scope for this
+if it's a public repo you don't even need a personal access token You can just
+this code and it's gonna work
+What we are doing here we need a personal access token because this is a private
+repo
+the reason you need to fork it is because you guys only have permissions to
+generate
+a personal access token for your organization the one with your username
+If you try to create a personal access token for data exports you wouldn't have
+permission like here at this level
+That's the only reason you need to fork
+OK got it Yes OK
+And again if it was a public ripple you wouldn't need a personal access token
+You
+can just call these URLs
+My code for getting the data in would just work because there is no permissions
+Because when you look here look at look at cell 7 it's and it's a good question
+thank
+you for the question
+Uh cell 7 I'm just doing a web request
+To call that ripple and download the content
+OK OK
+Good question thank you
+So here's what happened We went into we went there and we were able to fetch the
+6
+files
+For day one of this week
+and where did I save this content I outputted this into a volume
+So now if we go here into catalog
+And I'm gonna move this guy over here
+To the right yeah better
+So into volume now I have cold samples and I've brought
+All the content from GitHub
+Into a volume
+Uh if data bricks helps me
+OK cool
+It's loading
+Yeah
+Look here now uh 2 minutes ago week 2 and it uh has week 2 the readme file and
+day
+1
+So we have all the notebooks here now
+Can anyone tell me what we need to do to do now Now we have the raw files What
+the next step to save these into a vector database What needs to happen next
+To save this into a vector database
+I have the raw files here the the the Jupiter notebooks I need to save them in a
+vector
+database What do we need to do next
+Just go ahead and say it Uh you do need my permission to talk Go ahead
+uh so
+Either you got to do the embedding or uh like you mentioned the previous
+or we can insert into the post-cris database one of them Yeah good answer You're
+correct
+So what we need to think now is how we do the chunking
+And the embeddings should save this into the vector database
+Does anyone remember my my discussion around should you store code in a vector
+database
+or not Does anyone remember the trade-offs
+This is actually doing it it's looking at our your our code base and saving that
+a vector database
+So I also wanted to contrast this another option which is if we didn't want to
+bring
+the files into a vector database we could just build a function where you pass
+name of the file and we download the file on the file and we try this one
+Is an example of trying to get the file in real time and I'm passing here to
+with
+me and this is actually fetching from
+the GitHub and giving us the content of the the the file
+Now the next
+notebook which is the 22B
+Talks about the chunking and retrieval strategies
+Here I talk about um the
+What is the chunking strategy we should use and what is the retrieval strategy
+Um keep it very straightforward
+What we're doing here I have another table called chunked GitHub docs OK
+um
+And I want to use 22 chunking strategies One is one that is code aware and one
+that
+is naive
+What I mean by code aware what I do when there is a cell that has code like this
+only save this cell as a chunk
+Naive I just go by the number of tokens so I could maybe I get this textual
+description
+but I could break
+At the middle of this
+SQL example Pyto example here So that's the difference I have two chunking
+strategies
+one that is code aware another that is naive
+And what I'm doing here I'm just creating the volume
+Go ahead any questions
+Yeah hi Ama Rajesh here So can you switch between those chunking strategy
+dynamically
+If it is a code it has to pick it up
+Uh code chunking strategy to keep the entire code as a one
+Uh 11 token or like you know even if it is a huge uh one block uh if it is a
+regular
+then we should do like you know based on the number of tokens Is there any way
+can do that I have two good news for you OK
+One this is one of the reasons why we have we'll have a job
+which is the engineers are gonna define those strategies That's the first good
+news
+The second news is that I've already implemented those two strategies for you
+So as part of data engineering and working with your machine learning engineers
+should try these strategies and have a benchmark and see which ones have the the
+results So what this notebook does it implements both strategies and executes
+some
+tests so you will see visually which one works best
+for our example here for our labs OK How many we can give in anotherX How many
+like you know
+We have pretty much everything Yeah this is on you Any any strategy you want and
+main takeaway here
+is I implemented all of this as a UGF Do you know why I'm using a UGF here Why
+this
+is so important
+Yeah you can it's a function you can pass the value and you can get the chunks
+What if we were scanning the entire code base of uh GitHub or let's say an
+entire
+code base of of Lemma
+we would probably need a lot of compute so we should not do this type of
+chunking
+processing at the driver We need to be able to scale through through the
+the nodes through the workers
+So what is important here is that I define my chunking strategies as a UGF one
+is uh cold aware
+Where I go
+cell by cell and if it's called I save that as an individual uh chunk If it's
+text
+I save that as an individual text
+That's a uh UDF
+Then I have another one that is naive It just look by the paragraphs
+Uh this is the one we tried on on on week two and I'm just doing recursive
+text splitter It will try to match whole sentences
+What is the digital advantage of this It might have a chunk that part has text
+only got half of the code cell
+so I have the two strategies as the UGF So then what I can do I can just apply
+those UGFs
+Using again the read files scaling that here read files by applying my chunk
+strategy
+the different chunking strategies for my files Just put that another way
+we saw we have all the notebooks in a volume If we're querying a very large code
+base
+we would need to process this in parallel What I did here OK we have all the
+in a volume
+I have my two different chunking strategies as a UDF
+Then all I need to do is to read out the files that I have in my volume and
+apply
+the UGF
+To the files I'm getting for my volume And look here I'm just doing a union so
+answer your question
+I'm actually saving both strategies in my table
+And I have a column that says if it's cold aware or if it's naive
+So in this table here at the top
+I saved the chunks for our lab files and I actually have the chunk strategy if
+it's
+naive or it's code aware
+Why is this important Because when we are saving this into the vector database
+can run some sample queries and we can do a benchmark which one is behaving
+better
+for retrieval
+I know I said a lot there so let me make sure everybody's following along is it
+clear
+on guys I'm giving you some golden nuggets here I spent a lot of time to get
+code to work
+Code that you could use in production to chunk a lot of uh code files
+because it's gonna automatically scale depending on the size of your cluster Any
+questions
+there Did everybody follow along
+I have one question in your mind Yes so this works with the notebooks Uh how
+about
+like a very generic and you have coordinate in it
+Uh how do we go about it Uh this is out of thing but like I'm just curious
+Yeah so that's why like I said we're gonna have a job we're gonna have a job for
+a
+long time because we need to understand what is the problem we are solving what
+the code base we're using is this C++ is this Scala
+Link chain will have strategies
+Because when you're using Lang chain uh based on my array here
+um where's my code aware so when you're using
+yeah so the code that the language right you can pass the language
+But language Python if it's a notebook for example notebooks in database can
+multiple languages
+Right
+so you just have to improve my code here a little bit to understand if it's a
+code
+cell You look at what type of language it is and then you tell uh Lang Chang the
+language
+you are you are doing the chunking for
+because remember yeah you have implemented that in the bottom where a code
+equals
+to code in that function
+and it considered as a code yeah
+But remember I'm not implementing this for everything right I just focus on the
+notebooks
+uh like notebooks can be Python Jupiter notebooks or .pi right So I'm filtering
+only
+for the type of extensions files we have in the labs OK Who is doing the magic
+to understand
+if it's Python I don't wanna break a chunk to only leave a part of the function
+outsourcing this responsibility to lang chain Cause Lang chain has this chunker
+based
+on the language that I specify like here I'm specifying Python
+I don't know if this is going to have intellisense yeah Here even Cobal right so
+could have different strategies You could even use an LLM
+To when you open the file you ask the LLM what is the language it should uh ch
+for
+and then you pass the return of the LLM for language change
+So that's another UDF you're talking about
+this is very powerful folks uh if we had a billion documents in the volume a
+billion
+We would return out the billion documents We could apply the UDFs in parallel
+Then
+we join both the naive and the code aware chunking and we save that into our
+chunked GitHub docs So if we go there into that table
+We see now
+And folks FYI we're gonna go because we started late uh we're gonna go 1:15 past
+hour If you have to go it's OK but I know because I started uh late I wanna be
+respectful
+of your time and I wanna
+spend the hour I had planned for this OK If you have to go it's OK you can catch
+up
+with the recording OK so here we have in the final table with the chunks uh we
+the actual chunk and it tells us what is the source file And it tells us if it's
+cold
+aware so for the cold war
+You can see here let's see I wanna see cold in the cold aware here you're gonna
+that it didn't break for cold aware we have one chunk per cell so you didn't
+break
+because it's cold aware
+And then I created a vector database
+To synchronize with this table
+Which is the vector database I used uh for current students to understand the
+of the labs
+So I have this other um vector database here
+And for example if I try this vector database in the playground
+We can ask uh show me
+sample code to use
+email flow with
+You know what show me some simple quote
+Crawl
+Data export
+Website
+Let's see if this gets and again we are pointing this only to the vector
+the vector search that has the chunks from our GitHub
+So you can see here it's going to the vector database
+Um complete Python code example for scraping data expert website with playwright
+So the agent is thinking because we have so many parts in the in the notebooks
+can do this Let's see what the agent is gonna
+It's gonna give us the final output
+Uh did you get in an infinite loop
+Did they break data bricks
+Zach's gonna be mad Uh this is a 9 OK awesome so uh it gave us all the reference
+it gave us a lot of examples
+And of course we're just testing here but it gives all the scenarios all the
+chunks
+That has something related to crawling the the website
+Cool Um this is what I did here I just synchronized the table with the chunks
+a new vector database
+And in here
+I compared the
+Different chunk size this is very important Let me try to run this out because I
+show you all uh something let me
+I just need to run this cell here cell number 4
+In cell number
+Searching and above and below I'm comparing
+The different strategies the naive versus the cold war
+And I have queries here as an example I want to test
+So to Rajesh's question hey how how how many strategies have we implemented I
+said
+hey you have to test You need to understand the trade-offs
+So I want for each strategy I want to ask these three different questions and I
+want
+to understand which question works which strategy works best
+Um what I also do here I also compare the size of the chunks with both
+And I shared this as an as an output
+So in the colder weather
+You can see here when my first question the code aware is this question
+MLflow.deployment
+get deployed syntax
+Uh in the cold war
+It didn't break it gave
+It gave me the syntax I was looking for
+The naive it broke
+Wait
+it broke
+It lost the context
+In all the different ways
+I have another another query here
+That compares the size of the chunks I think it's this one here
+You have to run the entire notebook but one thing you're gonna see is that the
+aware
+generates chunks that are much smaller
+So if you recall from my my first class
+when you have uh chunks that are very small you have granularity you get
+precision
+on on the
+Finding the answers to questions but you lose the context
+So believe it or not because notebooks by default not by default but by design
+practice you have text followed by code the naive strategy generated better
+results
+for us
+Uh for the questions I was asking and the chunks they were a little bit bigger
+because
+with the colder where I was chunking by
+by uh cold cell
+I recommend uh we have more labs to go through I recommend you all go through
+lab uh I would say this is one of the most important labs uh to be
+And look for the questions I'm asking
+Which strategy works better for each question is the code aware or naive
+You can also try to use the the hybrid
+When we uh versus nearest neighbor
+Um because here when I'm querying the
+When I'm querying the vector database I'm defaulting to hybrid you could try the
+nearest neighbor
+because remember the hybrid works well for
+Keywords it works well for for uh context-based questions
+OK I need to move into lab 3
+Any questions
+So lab #3
+Is the actual MCP server that allows us to host a custom to host
+AMCP to server to save uh receipts All you need to do you need to deploy this
+application
+This application uses this uh fast MCP library in Python
+And what I'm doing here I'm exposing this endpoint like I showed before
+where you can
+Where you can
+um pass
+A bunch of information and the base 64 image and it's gonna save it to a table
+And the way you tested I've already shown you testing with the agent
+but all you need to do you install the requirements um you need to export what
+the data standpoint
+And you start the server
+there is a way here on how you initialize the server uh a session with the
+in MCP how you list out the available tools
+and how you submit the receipts
+We tested that using the agent You all saw that so I'm not going to test it
+again
+But I do recommend you go through
+the application and you even try to deploy it to the database endpoint
+OK I have the throughout explanation there on how you deploy these two data
+breach
+and how you test it locally
+Any questions why we built this custom MCP server what it's doing and why it's
+important
+And how you can host it in data bricks
+Anything you want to know about this implementation on lab on lab #3
+The custom MCP server
+Yeah um Matthew I'm gonna um
+I'm gonna look at your uh pricing question later I wanna finish the labs and
+then
+I can go into remaining questions OK especially about pricing
+I'm gonna go into that later
+Can I get a thumbs up that everybody's following me uh that the custom MCP
+server
+makes sense
+Thank you Josh
+Thank you OK
+Lab number 4 this is a very important one
+Go ahead ask your question
+If you have a question go ahead
+Yeah no I just tried the GitHub
+the adding the vector index It it's giving some more
+it's it's even giving the results as notebooks when I checked OK give me all
+that has scraping in it
+It uh search the index and is the the result is
+Giving us hey whichever notebooks has a query and it and it's giving a summary
+So did you program it to give the output as notebooks or is it something that
+Um the the model does automatically
+Thank you for the question so walk me through so you're talking about lab #2
+right so which cell which cell are you referring to
+The then the the one you are after adding the uh the vector index you go to the
+playground
+and you do a test credit yes OK yeah
+so when I
+so when I tested that uh the output comes as
+not only it gives you the
+The code which has got a scraping logic in it but it also gives you
+output as notebooks Hey these are notebooks that's got that logic and gives a
+summary
+uh 2A 2 B
+That's something that you put in the function or does the model does it
+The LLM is doing it automatically because it knows which documents So it's it's
+mix of both right Is
+because our context engineering is so well our table has the name of the files
+It
+has the chunk
+It makes it easier for the model to give you that output
+Got it OK thank you Welcome Good question
+OK folks this is the Golden Nugget this is where Zachy comes to life OK
+We have 7 minutes to see Zaki becoming a real agent
+Uh how we do it hopefully it is going to run out for me
+We've seen Zaki coming to life using the supervisor agent but I wanna show you
+now
+in line graph how we do it
+So installing some libraries here
+Pinning the versions that are important here
+The reason I have this try and catch here so you all understand is because when
+run in VS code VS code locally doesn't know this function so that's why I always
+my try and catch
+Uh for the restart of the notebook
+And here are all the classes we need We need uh the data bricks link chain where
+get the chat we get the MCP server
+and the Mochi MCP server
+And I think it finished Did it finish Let's see
+Um OK is she running
+Let me see what else I can tell you from here Uh ML flow because we want our
+agent
+to automatically log into into
+ML flow
+And here I'm giving the endpoint of our Zakki uh MCP server
+I might have the wrong address here but I'm gonna not gonna test that now What
+this URL
+Is the URL from our
+custom MCP server
+Here
+And I need it from here
+So this would be here on cell 4
+Right so if I click here MCP
+And this is the right error message we should be getting so the endpoint exists
+but if the client wants to work with this MCP endpoint it needs to support the
+streaming
+So we finished installing the libraries we are declaring the libraries we're
+going
+to use
+And we're telling ML Flow ML flow now everything we do here we want you to log
+In here under experiments right So ML flow lives here under experiments
+So if we look into ML flow
+Uh for now the latest record we had was from
+March 17th from yesterday
+Um let's see what's gonna happen now
+So for now I think I commented out the MCP server I was getting getting some
+errors
+but here in Lang chain I'm exposing the
+UC functions with the receipts and the validating status I was exposing the
+Documents the syllabus and I was exposing the GitHub um documents like we just
+did
+right So here we have 3
+I'll make sure 4 is working for you and this would be the the custom MCP for
+submitting
+The expense What is the beauty of this Your code doesn't need to memorize to
+the URL of your custom MCP endpoint As long as we use this classroom database
+database multi-server MCP client
+uh these are going to be helpers to get us the URLs
+So here we have the URLs
+And then here I am actually loading uh using land graph what are the agents that
+have declared for
+land graph And you can see here how the the tools we have in UC are now in land
+graph
+And here is where we actually build Zaki so this is where we bring Zaki to life
+And we are saying we are gonna use uh Lama 3 as our LLM
+We're gonna get a temperature just a little bit uh there so we don't get uh we
+get
+more creativity in the answers
+and we're telling Zaki we're telling uh Landgraf hey you need to support these
+three
+types of scenarios when asked about TNE uh how you use these functions when
+asked
+about the boot camp use the vector search tool and when asked about uh receipts
+call the submit um
+End point with all the required fields Then we actually build the lane graph uh
+which is a bunch of cook and cutter code here just saying hey you need to build
+these
+nodes and all the nodes my first node is the actual model
+That calls my LLM
+And all the tools
+Which are the tools we declared here at the top
+Did I run the cell already I need to run the cell
+OK so the agent is ready
+And now we build a so let's say this is actually building uh the interface for
+Zakki
+Just ask Zaki and the question we print and we give you the answer
+And voila we're gonna ask uh Zaki show me uh Alice
+T spent for January 26th
+Some magic is gonna happen here
+EL flow is auto logging because we enabled auto logging here in the beginning
+Here ML flow link chain out log
+And
+Voila it's actually
+showing here in the in the data bricks
+UX first the results right Zaki it appears that Alice has no for January 26th
+Um yeah I didn't create an expense for Alice If you put my name in US for 17 you
+would
+get an answer But you can see here that Zakki is thinking is using the LLM and
+it hits the TNE2 right
+That's the first question Now if an enrolled student is saying I'm stuck on an
+AI
+parts document lab from day one can you explain how AI functions work
+This should actually now go into the vector database
+Let's see what we get
+So now we see that Zaki is going through the vector database
+and is looking at the boot camp docs
+And voila we gave it an answer Uh it seems like the lab you're stuck on is
+day 2 You see I I asked the wrong
+question here I thought I was stuck on day one but I actually stuck on day 2 not
+1 The lab is about parsing bootcamp PDF at scale right
+So here I'm helping students who are already in here and here is where I
+actually
+submit the the the receipt I think for now I just have the placeholder with the
+function
+You're going to see and I'm passing the images as a placeholder
+and you're going to see now it actually hit my old function
+Um with the receipt but once I make the change here at the top
+It will actually hit
+The custom MCP endpoint
+Um what else
+So yeah
+this is Aki coming to life Uh it's able to route questions for the different
+for the different endpoints Uh it's able to know if it needs to work with uh
+tools
+in UC with vector databases or custom MCP
+He's using a land graph and if we go into experiments here
+We'll now see that everything got logged as an experiment
+And you can see the questions that were asked
+And you can see what was passed what was the response the number of tokens The
+number
+of tokens is important for you to understand the cost of this agent and for
+example
+if you had LLM as a judge uh set up for this
+Uh you could evaluate if the answers the agent is doing is good You could have a
+benchmark
+data sets to understand if the questions are aligned to your data set And here's
+where
+we're going to talk more about
+uh on Thursday right how we leverage more the experiments uh the capabilities of
+ML
+flow
+Yeah folks you've just seen how we brought uh Zakki to life If you wanted to
+this using
+agent bricks and not use Land graph you would create a supervisor agent In the
+agent you could select
+Let's say Zaki comes to life
+And we can add here
+The genie space the genie space
+We could add
+let's say Jeanie to run queries about
+So you need
+I could add now I'm gonna add another
+One which is my agent endpoint
+It is age and end point
+Is where I have
+my vector database This is important In the multi multi in the supervisor agent
+can't directly reference a vector database What you need to do first
+you create
+A reg agent you create a knowledge assistant
+The knowledge assistant like I had here
+is connected to two vector databases the GitHub
+Index and the bootcamp dogs index
+and then I just referenced it here as an agent endpoint
+And then I could could even point to UC functions
+Like here
+And this agents should work
+Um something if you guys try to create this workspace I need to call Zachy Zach
+real Zach Wilson
+because we need a private uh uh preview enabled in this uh environment You're
+gonna
+see when I click create agent it's gonna fail for us
+because we need to enable this uh on behalf of user authorization I've tested
+in my database environment but I'll make sure that Zach Zach and I will work
+To enable this private preview this public preview so you all can actually
+the supervisor agent on your own OK you won't be able to finish this in this
+environment
+but you are able to finish the land graph version
+That's it folks folks this is what I wanted you to to learn
+is how to bring Zaky to life
+Through Lane graph
+through
+Agent Bricks
+Would love to take your questions
+Would love to take your questions so let's see the questions
+Yeah I think the questions from Matthews uh for the UC functions that I I ran
+Manage the MCP
+You can create surless service surveillance policies
+uh like Rajesh said with tags uh and the service surveillance policies would
+filter
+that uh that would be my recommendation
+But if you need a lot of control you might need to expose those as as a custom
+But yeah I would use tags I would use service service policies
+And was it necessary to build a custom MCP server I built it because I wanted
+guys to learn how to do it and I also thought uh in terms of allowing writing
+I prefer to do that in custom logic instead of keeping every logic in terms of
+writing
+in a UC function
+I didn't add guard rails that's part of uh Thursday OK so we don't have guard
+rails
+yet
+We didn't deploy Zaki yet
+Zach is live You can run it in a notebook but it's not deployed
+That's what we're going to do on Thursday We deploy it we had guard rails we add
+monitoring
+We are already avoiding a lot of hallucinations because we are only our agent is
+answering based on the the data sources We are feeding it
+We're not letting it get the data from its own knowledge right
+The way we designed this should already avoid a lot a lot of
+Uh hallucinations
+We don't need
+You don't need the guard rails for every AI agent
+But depending on the criticality might be helpful
+especially in terms of filtering the data that comes in the data that comes out
+If
+you wanna filter PII if you wanna filter language that is not appropriate
+So I think for mission critical or yeah it will depend on your business use case
+If you're working for a large enterprise and you're building something that is
+customer
+facing you probably will want to guard videos If it's something internally only
+used
+by developers
+uh you shouldn't be able to you you should be able to
+To do it without guard wheels I don't think it add a lot of a lot of uh
+performance
+I haven't heard from customers guard wheels as a as a bottleneck
+Uh it's not a complaint I hear from customers
+OK folks I'll take more questions but let me stop the recording because the
+recording
+has one hour Thank you so much everybody for joining and for those who are
+watching
+On Thursday we are gonna deploy Zakki
+to model serving and then we are gonna add guard rails and monitoring and
+inference
+tables
+Thank you

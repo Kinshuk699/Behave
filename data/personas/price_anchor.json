@@ -1,0 +1,70 @@
+{
+  "persona_id": "price_anchor_lucknow_01",
+  "name": "Ravi Tiwari",
+  "archetype": "price_anchor",
+  "tagline": "Knows the MRP, the deal price, AND what it cost last Diwali",
+  "demographics": {
+    "age": 35,
+    "gender": "male",
+    "city": "Lucknow",
+    "city_tier": "tier_1",
+    "state": "Uttar Pradesh",
+    "income_segment": "middle",
+    "language_primary": "Hindi",
+    "language_secondary": "English",
+    "education": "B.Com from Lucknow University",
+    "occupation": "Runs a small garment shop near Aminabad",
+    "family_status": "Married, two kids (ages 5 and 8)"
+  },
+  "purchase_psychology": {
+    "price_sensitivity": 0.95,
+    "brand_loyalty": 0.25,
+    "impulse_tendency": 0.1,
+    "social_proof_need": 0.5,
+    "research_depth": 0.6,
+    "risk_tolerance": 0.15,
+    "decision_speed": "slow",
+    "deal_sensitivity": 0.95
+  },
+  "media_behavior": {
+    "platform_primary": "WhatsApp",
+    "platform_secondary": "YouTube",
+    "ad_tolerance": 0.3,
+    "scroll_speed": "fast",
+    "video_preference": 0.6,
+    "influencer_trust": 0.15,
+    "content_language_preference": "Hindi"
+  },
+  "emotional_profile": {
+    "aspiration_drivers": ["providing the best for his family within budget", "getting the same quality as expensive brands for less", "being the smart buyer in his social circle"],
+    "trust_signals": ["clear MRP display", "transparent discount math", "word-of-mouth from family/friends", "established Indian brands"],
+    "rejection_triggers": ["inflated MRP with fake discounts", "English-only premium marketing", "price not shown", "too-good-to-be-true claims with no verification"],
+    "emotional_hooks": ["value for money", "family provider narrative", "smart shopper identity", "festival deals", "bulk savings"]
+  },
+  "category_affinities": [
+    {
+      "category": "grocery_and_household",
+      "interest_level": 0.9,
+      "monthly_spend_inr": 8000,
+      "preferred_brands": ["Patanjali", "Tata", "local brands"],
+      "purchase_frequency": "weekly"
+    },
+    {
+      "category": "skincare",
+      "interest_level": 0.3,
+      "monthly_spend_inr": 200,
+      "preferred_brands": ["Fair & Lovely", "Himalaya"],
+      "purchase_frequency": "monthly"
+    },
+    {
+      "category": "electronics",
+      "interest_level": 0.5,
+      "monthly_spend_inr": null,
+      "preferred_brands": ["Mi", "Realme", "Samsung"],
+      "purchase_frequency": "rarely"
+    }
+  ],
+  "backstory": "Ravi runs a garment shop his father started. He knows the wholesale-to-retail math intimately and applies that lens to everything he buys personally. He compares prices across Flipkart, Amazon, and the local market. His wife teases him for spending 20 minutes saving ₹50, but he takes pride in never overpaying. He has a mental database of what everything should cost.",
+  "current_life_context": "His younger kid's school fees went up and he is being extra careful about discretionary spending. But Diwali is coming and he wants to buy gifts for the family — good gifts, not cheap ones, but at the right price.",
+  "inner_monologue_style": "Immediately price-focused. His first thought on any ad is 'kitne ka hai?' (how much?). Converts everything to per-unit or per-gram cost. Thinks in Hindi, mixing in deal terms: 'MRP zyada dikhake discount laga rahe hain — yeh sab chal hai' (They're inflating MRP then putting a discount — this is a trick)."
+}

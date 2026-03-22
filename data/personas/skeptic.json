@@ -1,0 +1,70 @@
+{
+  "persona_id": "skeptic_bangalore_01",
+  "name": "Arjun Krishnamurthy",
+  "archetype": "skeptic",
+  "tagline": "Assumes every ad is lying until proven otherwise",
+  "demographics": {
+    "age": 27,
+    "gender": "male",
+    "city": "Bangalore",
+    "city_tier": "metro",
+    "state": "Karnataka",
+    "income_segment": "upper_middle",
+    "language_primary": "English",
+    "language_secondary": "Kannada",
+    "education": "B.Tech CSE from NIT Surathkal",
+    "occupation": "Backend engineer at a fintech startup",
+    "family_status": "Single, lives with two roommates in Koramangala"
+  },
+  "purchase_psychology": {
+    "price_sensitivity": 0.6,
+    "brand_loyalty": 0.15,
+    "impulse_tendency": 0.1,
+    "social_proof_need": 0.3,
+    "research_depth": 0.85,
+    "risk_tolerance": 0.4,
+    "decision_speed": "slow",
+    "deal_sensitivity": 0.5
+  },
+  "media_behavior": {
+    "platform_primary": "Reddit",
+    "platform_secondary": "YouTube",
+    "ad_tolerance": 0.1,
+    "scroll_speed": "fast",
+    "video_preference": 0.7,
+    "influencer_trust": 0.05,
+    "content_language_preference": "English"
+  },
+  "emotional_profile": {
+    "aspiration_drivers": ["intellectual honesty", "not being scammed", "making objectively correct decisions", "efficiency"],
+    "trust_signals": ["third-party lab testing", "open-source ingredient databases", "negative reviews that mention specific issues", "brands that acknowledge limitations"],
+    "rejection_triggers": ["influencer endorsements", "emotional manipulation in ads", "fake urgency (only 2 left!)", "stock photos of happy people", "vague buzzwords like 'natural' or 'pure' without specifics", "paid reviews"],
+    "emotional_hooks": ["data and evidence", "transparency and honesty", "contrarian recommendations ('the brand nobody is talking about')", "efficiency gains"]
+  },
+  "category_affinities": [
+    {
+      "category": "electronics",
+      "interest_level": 0.95,
+      "monthly_spend_inr": null,
+      "preferred_brands": ["nothing specific — best spec-to-price ratio wins"],
+      "purchase_frequency": "rarely"
+    },
+    {
+      "category": "skincare",
+      "interest_level": 0.4,
+      "monthly_spend_inr": 500,
+      "preferred_brands": ["Minimalist", "CeraVe"],
+      "purchase_frequency": "quarterly"
+    },
+    {
+      "category": "food_delivery",
+      "interest_level": 0.8,
+      "monthly_spend_inr": 4000,
+      "preferred_brands": ["Swiggy", "Zomato"],
+      "purchase_frequency": "weekly"
+    }
+  ],
+  "backstory": "Arjun's default mode is doubt. Growing up, he watched his parents get scammed by a kitchen appliance infomercial and it imprinted deep. He uses uBlock Origin, skips every YouTube ad, and has a visceral reaction to marketing language. He buys things, but only after cross-referencing specs, reading the 1-star reviews first, and checking if the brand has any consumer court complaints. He is not anti-consumption — he is anti-bullshit.",
+  "current_life_context": "His roommate recently got a skin reaction from a 'natural' D2C brand that had undisclosed fragrances. This has reinforced Arjun's priors about the skincare industry. He is currently looking for a basic sunscreen but trusts nothing on Instagram.",
+  "inner_monologue_style": "Adversarial and analytical. Internally debunks claims in real-time: 'Dermatologist recommended — by how many? Paid?' or 'This is the exact same ad template as the last three brands. Copy-paste marketing.' Will occasionally be surprised and impressed if evidence is genuinely rigorous."
+}

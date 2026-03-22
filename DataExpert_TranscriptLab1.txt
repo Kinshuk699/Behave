@@ -1,0 +1,809 @@
+Awesome Welcome everyone to the Delta Table Lab Uh this is day one Delta Table
+Lab
+So hopefully at the end of this we have a lot more information about like Delta
+Table
+and we can get more into it But before we do that before we do that we have a
+little
+bit of um
+A little bit of uh work we need to do to like really step through this So uh
+you'll
+see here I have like a bunch of like
+Uh Git projects here you see like these uh you can see the ones that are Git
+right
+Because they have like a main branch which is pretty cool
+So we like
+When you're working with data bricks you should almost always be working with a
+repo
+that is checked in Hopefully on GitHub or GitLab or Bitbucket or wherever the
+hell
+you put your repos But I want to show you guys how to create this for yourself
+first
+So go to create So like once you're logged into Data bricks right uh and
+hopefully
+y'all followed that on the kickoff So from here right you go to create and then
+you
+go get folder
+Then in here we need to fill out some details right So we go GitHub
+And then we're gonna say uh Delta Lab right So we want this uh we want this link
+here
+this the the Delta Lab one
+And then we're gonna paste this in here And then we have our you know we're just
+gonna
+do our GitHub provider And what is sparse checkout mode
+I don't talk about the ability to clone only a specific subdirectory of your
+repository
+I don't give a shit OK so we're gonna say create git folder
+Um so that works for me but like for some of you you might need to create a Git
+credential
+So uh let me go back to just like I I wanna I wanna show how to do that one more
+time
+cause we I'm only doing this again because freaking uh I know that like this is
+super
+important So when you go to GitHub it doesn't matter where just somewhere on
+GitHub
+And then you go to settings right So now you're on like your personal account
+settings
+then you go down to developer settings
+Then you go personal access tokens tokens classic
+So you want to create a classic token
+then you go to generate token generate new token
+And then uh you want to uh like sign in do the little song and dance there for
+your
+little authentication and then you have a classic token here change the
+expiration
+date to 90 days so the token expire expires um at the end of the boot camp Uh
+the
+only permissions it needs is a repo permissions I'm gonna call those like data
+bricks
+workspace
+Data expert maybe or whatever whatever you want to call it right And so then
+we'll
+create our token
+And so this token is what you will paste when you create your your Git
+It's super easy Like I'm pretty sure if I like do a different one can I do this
+with
+a different one
+Does it let me um
+I so you'll need to just create that token and then you just paste the
+in and it's really straightforward I don't want to have to like demonstrate that
+but
+now I'm gonna delete this credential so you guys don't like look at the video
+later
+and then hack all of my repos even though you have access to all of my private
+repos
+OK
+OK we're done yapping We have our freaking code set up
+Right
+Cool
+So let's go and check out what we are actually doing with this code OK So
+Um
+We're gonna go into the very very first one here So this is going to be our
+delta
+table right So this is like we this is gonna generate
+fake data right We have a we have a synthetic data generator and you'll see that
+on
+this line here where we where we generate our data frame This this generates a
+Spark
+data frame right
+So some of you are like probably like OK we're like so we're already in Spark
+Don't
+worry that much about Spark here Just understand that like it's just
+manipulating
+data and we're doing this to like cause we want to start with Delta and then
+go to Spark next week and uh by the end of next week you'll be good with both of
+them
+So don't worry too much and you'll see here we have this the very first line of
+this
+function is Git Spark So let's just look at that function real quick So you'll
+see
+this is from Data Bricks Utils
+So let's go into that Let's go back into our um our lab here So we can look at
+uh
+data bricks Utils We want to look at a couple files here at the same time So we
+have
+data bricks Utils and then we have our our delta table Bass right So you'll see
+we call get Spark So let's go look at what getSpark does
+So you'll see for Get Spark it has like this if it's data bricks then just
+return
+Spark right Because we can just we can just use Spark session and we can create
+a
+Spark session because all of the all of the configuration on data bricks is like
+uh like it's already supported right So one of the things you got to know about
+right Is that Delta is not
+Is not
+Immediately included in Spark right In open source Spark You have to
+add it You have to add it and you have to specify it right You'll see here
+see how like we have to specify all these configurations because in open source
+you actually have to specify these things and you have to add another uh another
+jar
+to the to the problem here right So
+OK So we get Spark Awesome Now we can go and play around with things Then we're
+set our shuffle partitions to 200 This is like how many files we're gonna write
+This
+is like essentially what this is gonna be It's how many files we're gonna write
+how
+much uh like how how many shuffle partitions we want to work with This is
+probably
+really high for what we want to work with We will look at some uh table
+statistics
+here in just a second as well So we have our get base path So you'll see get
+base
+path is also from uh Data bricks Utils
+So if we go to get base path right This is just Delta Lake demo right This
+that's
+all this is right So like we might want to change some of this I'm gonna call
+mine
+Delta Lake Demo Zack just to like because like some of y'all are probably also
+going
+to be running this code and we're all just gonna like step on each other's toes
+cause
+we're in the same data bricks instance
+So probably change this to like put your name at the end It's in the temp file
+though
+So um
+that's gonna get us our base path
+Then we have um uh we generate our web events So this is actually coming from a
+separate
+file right You'll see here we have generate web events here from web web events
+generator
+So here's web events generator It has this um uh
+Schema So Spark has a way of describing schema which like I like I don't know
+man
+It's if I had to describe like my least favorite way to describe schema it's the
+spark
+way but it's it is what it is Uh so how it works here is you have a giant struct
+type
+This is our top-level struc to like define the type and then we have all of
+these
+values right So like Yeah what it means is like OK so this type event ID is a
+string
+and false here So this true and false here is based on if it's nullable or not
+So
+is this column able to be null or not Is it required That's all that that that
+that
+last value in the schema definition means It's very common in Spark that you
+these Uh so a lot of this stuff is actually this type of schema is actually
+inferred
+So like when Spark reads in a data set it converts it into a schema like this
+and
+it will do this for JSON it will do this for freaking it does a very interesting
+sampling
+and like inference type inference Spark's pretty cool So then what this does is
+like
+we have a list of all of the regions and URLs and browsers and referrers that
+are
+in here and then what this does is this generates a random set of sessions It
+generates
+just a random set of sessions and user IDs just like to generate some
+interesting
+data and you'll see like uh spark range so it's just going to do this It's just
+to generate random data for like uh however many rows of data we we specify
+And then at the end of this it just returns that data frame So all this is doing
+is
+it's telling Spark generate a bunch of random web traffic data So
+It's pretty cool It's pretty cool stuff like I uh I like it much better than
+the super basic examples that like uh uh were other things I was um kind of
+working
+with So the reason why I'm going with this example with you guys is this exact
+schema
+is what we're gonna be working with in Delta Live table So because it's the same
+I'm like OK like we'll like we'll we'll play around with this same schema uh
+throughout
+the boot camp So
+So we've gotten to line 4 Congratulations OK now I'm just
+so then after that we uh we're gonna print the schema We're gonna uh OK we're
+generate some we we've generated our web events right And then it's gonna show
+some
+data
+Then all we're I think all this does right now is we're going to load data into
+table path right That's the the main thing that this is going to do is we're
+to load data into the table path and then we will uh
+Uh like we we're we're gonna we we're gonna query different history parameters
+So you can also look yeah this is how you can look at like the changes to that
+table
+directly You can actually like
+Play around with understanding like it it's it's really cool like um Iceberg has
+ability to you can like literally query
+the table history right You can just select star from the table's history It's
+pretty
+cool Like you can also do it with SQL We can kinda show you that way of doing
+things
+as well It's a little bit more uh explicit and obvious than like the data frame
+API
+but the data frame API also has this ability right
+So uh then uh we will do some group by to just see like OK like events by region
+just
+some some interesting data that is generated from our data set but like we will
+look
+at our uh our operation here first So
+Let's just run this code Let's hit run
+OK so OK so it's it just started right So
+Here we go So here is our uh you see this is our generated um schema right
+And one of the things you might notice here's here's something I want uh you to
+be
+clear just so you can kind of see something here So you see I'm gonna just copy
+schema over into our web events generator and I'm gonna paste them in here So
+it's very interesting to look at this right So you'll see like
+Spark doesn't really give a shit like what we say you know what I mean
+You'll see like region nullable false
+But we say it is nullable
+So like what's going on here
+Well the thing is is Spark can tell based on the data and the shape of this
+generated
+data frame that region is never null So just because we say it's null or say
+it's
+nullable it's able to be null The data like Spark is describing what the data is
+not
+our schema like and like you know maybe in a different iteration region is null
+0.001% of the time But what I'm trying to show you here is the type inference
+between the two is not always the same right Because these two things are
+describing
+different things One is what we what we want the data shape to be and what we
+anticipate
+the data shape to be and then what Spark is actually printing out is what is the
+shape What is the data shape So uh that's uh just something to be thinking about
+as
+like we go through more of these logs So now here is our you know generated web
+events
+We're only showing the top 10 right
+Then we have our uh our struct and then we wrote to our um
+delta table right We we wrote to uh temp
+Delta Lake demo Zack Web events So here is our history right So then we have our
+Delta
+uh transaction log So this is where we're gonna be walking through like OK what
+happened
+So you'll see here we have our right
+statement
+Right It's pretty
+interesting right So what I want to do here as well right is what we're gonna do
+we're gonna we're just gonna add a little bit more into the Spark query So what
+we're
+just gonna we're gonna do we're gonna use user ID So what we're gonna do is
+gonna make a little bit of an update to this So
+what do we have OK so we have our table path here right So what we what we're
+to do here is we're going to just add a little spark SQL
+We're gonna say delete from and then we're gonna say delta
+and we have a table path right Oh to make this an F string right
+Uh that will give us um it'll be SQL and then uh where user ID equals 495 OK So
+all
+we're gonna do here is we're gonna delete from this table I I think we need the
+dot
+It doesn't like that syntax
+Why not
+Delta dot That is like what do you mean it's not valid It's like that dot is in
+string Oh I'm gonna run it or maybe maybe Data Bricks is wrong
+OK fine We'll do it Oh my God See this is where Data bricks is so nice It's like
+we
+see what you're trying to do Now quit being dumb So we're gonna do it or we'll
+do
+it freaking the delta table way right Where we're going to do it with the Python
+apparently I'm fine with that Do it with the Python API
+So we're just gonna delete we're doing a row-level delete here right So remember
+this will ultimately create an additional data file
+So now we have you see how we have this new data file here This guy right here
+And then uh what what do we have this right here as well
+OK this this is gonna be the uh the the the copy right The copy uh that's what
+one's gonna be here is the copy
+And so um cause our insert must have been like a
+Where where's our insert We have our uh the the load here OK Yeah that makes
+sense
+So uh we have our delete right And then we're looking at our history and we have
+we have that actual in there right So
+That is how we can query the history of a of a of an actual delta table right
+And
+that's it's pretty cool It's pretty cool to see how you can actually like go
+through
+and you can see like when something was uh deleted So like this stuff is super
+important
+for when you are writing SQL right Or if you want to time travel So you'll see
+we have like Uh you have like a version number so you can say as of so that can
+as of version one or or like maybe you need a moment in time Where you can say
+as of this date right And then that will be or or as of this time stamp and then
+will also kind of filter the data down and allow you to uh back up if you have
+an oh shit moment where you delete something right But you see like it it keeps
+track
+of a lot of stuff right It also is showing you like what mutation actually
+so you can get a lot of very clear um Information about what is going on in this
+set right
+So how else can we uh do things here I think you know you know what's
+here I guess like I anticipated this to be different So one of the things about
+the delete here the delete like uh uh cause if we look at the code right If we
+at like at what actually ran I actually expected there to be
+Two rights right You have the delete you have the right delete right right You
+should
+have like both of them in here I think that this the the delta table must like
+um
+it the default here might be a deletion vector That's actually what's um what's
+on here
+Um like
+I'm I'm curious about that I actually want to so what I'm gonna do is I wanna
+like what is going on for cause this is our um
+Old data So we have our old data here
+after we overwrite right So this is where um
+We have our DF which is generated here and then we so we create it and then
+overwrite
+here and this uh I wonder if this is supposed to be an append I'm just curious
+to
+see like does that change things Cause
+oh is it not like a pend Can you not do a pen there
+No module found called Data bricks Uils
+OK now it's found
+OK does this change the history log
+See now the history log is the same It's the same for some reason right You see
+it's like
+it cause it it should be generating new random data every time That's the thing
+like I find uh very interesting is that like
+So where are we doing table history
+Time stamp version Can we just do like can we do like a star here Is there more
+that we can look at in the history table I think there is and then we'll like
+we should be actually um getting more than just uh like 3 values here you know
+It's the thing that like
+OK OK See we do have uh this looks like substantially more rows than than is
+is is is it really only 3
+So we have like user ID username Oh you can you can actually look at like who
+did
+what thing So version
+We'll also look at uh user ID
+username
+operation Just look at those those 3 or those 4
+And uh we'll see like oh so now we can actually yell at people for deleting the
+That's pretty cool That's pretty freaking cool
+OK see now it's doing it right where where we still have like but like I I think
+what's actually going on here right is it's doing like the right delete right
+delete
+right delete It's that's that's that's it's doing it correct
+Um but the delete should have like uh another copy right Cause it has the the
+copy
+on uh
+Copy on write right The like where when you delete and then it should create
+something
+else
+There's
+There's uh it it might be storing it as a deletion vector here maybe I think
+that's very interesting it's very interesting but anyways like I wanted to uh
+just show you this is the main thing here and like remember like all of these
+completely they're examples that you can play around with and like kind of do
+own research on like they're they're very good So uh let's uh let's go to the
+second
+one time travel just cause we only have like another like you know 1715 1720
+minutes
+Time travel right So how this works right is it ends up like
+we end up doing some things where we actually uh
+Like update the data in some version right So like we we do the same thing where
+generate our our initial web events and then this is gonna create V1 and then we
+our show
+and then this will create an update So we're gonna do some random update right
+We're
+gonna change our event type to quiz start in under these conditions
+And then that should
+And then then we're uh
+This is just uh loading back in the data but this line is not necessary 00 this
+just showing OK this is showing the data for some reason This is like not
+necessary
+I don't think Version one created events reclassified and then we add new events
+and then so this is gonna do a bunch of mutations
+And then we can look at the the different uh queries right So let's uh I I just
+want
+to step through each ways that we can do things right So you see we have like
+version
+as of So when you when you're using Spark you can load in an option
+right Uh just let you know like there you can do this with SQL too so we could
+like select R from Delta um
+As of one or whatever like if you want to use Spark SQL it's it it it's it's
+close
+to this syntax like where you can also do it that way or you can say like a
+sequel
+to you can be like equals uh select star from Delta
+um timestamp as of and then you say like 2026 02 18 at I don't know 0033
+whatever
+right Like that kind of like time stamp Uh you could oh that needs a lot and one
+more
+tick like that So like you can do it with SQL this way if you are more familiar
+SQL but this is this is the same thing right This is like version 0 version 1
+2 right So let's go ahead and run this code just from the top
+so that you guys can kind of like see what's going on here and we can kind of
+really kind of deeply understand like what's going on right So we have our
+initial
+our initial web right And then you can see like we have our quiz so remember we
+updated
+Quiz start right Quizt was something that um
+Is that that's that's what we did in that first um that first one right We did
+reclassified
+reclassify page view events on quiz paths as quiz start
+OK Why is this quiz start then
+Oh it's it's probably not a real update I'm I'm I'm guessing like when I I was
+generating
+some of this code that's probably like um it's probably already quiz start but
+OK let's let's see here like
+what we want to look at right is we've made a bunch of changes right And then OK
+complete
+table history Where where where is this at I'm gonna step through this complete
+history OK right here
+We have our delta table with our history right And then we're just stepping
+all of the the changes here
+So you'll see here we have our right and then we have our update
+OK OK So that makes sense now Um the the deletion vector is uh it's that delete
+from the previous example right You know how we had the operation this delete
+vector
+and it had the predicate of like what is the condition under what files are
+deleted
+at what time That's what's going on here So um
+because now we can see in in the logs here right We have uh we have uh all of
+right We have our right
+right update write delete optimize update optimize restore right That's gonna be
+like the complete history of the table right That's what's um it's pretty cool
+Because like if you delete any records you can you can see what the table was
+Before right And you can see what is actually going on like at different moments
+in
+time as you like delete or add new data Like this is very important like I don't
+know
+like it's one of those features that like like
+You're like OK that's kind of cool I guess But then when you actually uh need it
+when
+you actually need it that's when uh that's when things get really awesome right
+Because
+when you actually need this feature it's it's like an umbrella right When it's
+raining
+having time travel is great but like when it's not raining you're like I don't
+really
+need an umbrella right But then you're like you're very grateful when when when
+do need it right It helps you bounce back right So um
+Let's go through and just kind of like think about some of this stuff a little
+bit
+right So
+So you see restore creates a new version version 5 that matches version 2's data
+The
+history is preserved nothing is lost Where does that one start Restore
+Creates OK So when we do a restore here right So the thing that's gonna happen
+is we go back right So it kind of like does a whole loop right So you can this
+like essentially how you uh like you know how uh in Git in Git there is um
+The ability to like revert like so when someone does a PR you can revert a PR
+that doesn't delete their changes All it does is it puts something else on the
+stack
+that then uh undoes their changes so you actually just have two commits right So
+what restoring does too right Is it just it takes all the changes and stacks
+back on top right So it's just like Legos in that way It doesn't like it doesn't
+remove
+the history right So uh it's it's pretty cool It's pretty cool to see how like
+like you can like
+You can abuse delta tables so hard with so many different like deletes and pans
+stuff like that right So like really this this feature is gonna be mostly useful
+oh yeah there there is what it is in SQL right It's mostly useful when uh you
+those oh shit moments right And that's uh it's pretty great So now let's get
+into
+like a little bit more of um some
+bigger kind of
+interesting things here right So
+I I wrote some code here that like actually does like the described detail So
+what
+this is gonna do is
+oh that's the problem Ah so you know how I tried to do this earlier uh and like
+I
+I forgot the I forgot the ticks like the The smart ticks or whatever the back
+ticks
+because you need back it's delta.back ticks That's the actual valid sequel
+OK that's that's super interesting So um you can actually like look at this and
+will give you the the actual number of files like the data files how big they
+So let's kind of like I'm just going to run this from the top and then uh like
+can go through and kind of talk a little bit more about like how to manage these
+files
+and like what's gonna happen here so
+There we go See we're going to simulate the small file problem right Creating a
+with many small files
+You know what you know what Zach loves Small files
+Where's the what simulate
+simulating
+simulating the small files problem OK cool So we're gonna do 20 batches uh 100
+records
+and then 20 batches right So that's gonna create uh a bunch of files right
+Analyze
+and then we're gonna analyze our table before right So you'll see uh
+Like we have our 160 files right And like you'll see like where we actually
+analyze
+that right So we are we write our events we're generating our events and then we
+get
+our table file stats that's what this is gonna do We're gonna we're just gonna
+describe
+that's gonna do the describe detail right
+It's all we're doing describe detail nothing nothing fancy here And then this is
+be our um
+What's gonna go on right So we have way too many files right Way too many small
+because like this is a it's kind of simulating what uh a low latency environment
+would
+do where you do like a bunch of small file batches like every second or every
+minute
+right And so this is something that needs to be um compacted right Because we we
+we've generated 2000 rows of data
+right And then we literally like
+Just use remember what I was saying it's like dirt simple just optimize
+Table optimized table right
+And and like there's other ways you can do it Um
+name time is not defined
+OK can we just like import time
+OK let's try this again
+Now there might be even more small files
+Yeah now we're gonna have like 300 small files
+It's way too many
+It's riding all the matches
+It's grinding it's grinding it's building out the code right This is going way
+slower
+than I think to write 2000 rows like OK So now OK so we must have overwritten it
+didn't
+overwrite So then we have our um
+Uh 160 before optimization
+There we go And it's gonna run the optimized command right
+So then we have our optimization metrics right It should be there's now yep see
+now
+we have 11 file right So let's talk a little bit about this because like
+look how much smaller this is So 0.17
+Right What was it before
+0.86 So what is that 0.17 divided by 0.86
+19% So it's like an 80% reduction an 80% reduction in the
+Um in the files in the in the total size of the file So why does that happen
+Like
+when when like like you would think like uh isn't it the same if you have like
+know if you have 20 files that have 20 rows versus one file that has 200 rows
+what is going on here Like why is the uh why is the change so dramatic So
+there's a couple of things that are actually happening here um You have uh one
+big
+thing that's happening here is a thing called uh run length encoding
+So parquet has a thing called we're just gonna Google it real quick run length
+encoding
+and I I highly recommend just reading more up on run length encoding It's one of
+most important compression techniques So uh let me show you an example right So
+does
+it have the so
+Run length encoding works like this So if you have a bunch of data in a row that
+the same value It will compress it down right So you'll see like we have this
+giant
+row and you see we have like 12 W's 1 B and then another 12 W's and then 3 B's
+then another gigantic number of W's and then 1 B You see this is and then like
+see how this is a lot less data than this So parque
+naturally does this right It's it's a part of run length encoding compression is
+one of the most important aspects of parquet So what happens though in um this
+example
+here what happens in uh when you have 160 files is
+You don't get the same amount of compression because you're breaking up all of
+compression because now they're in separate files and at least the first row in
+file cannot be compressed right And so if you break it up that like the number
+of
+runs that can happen in your run length encoding is gonna be dramatically less
+like that's why like if you have fewer number of files
+especially if those files are sorted and ordered
+Then you what your goal there is is you're just trying to maximize the number of
+W's
+in a row because you can see here right with this uh run length encoding If we
+put
+all the W if we put all the B's later right Then this could be something that
+looks
+like 72 W 11B or whatever right Cause then all the W's are on the front and then
+put the B's at the end and you see how This is even less data This is like this
+only 6 characters right And we had like 100 We we we took 6 we took 100
+characters
+and now we can represent it as 6 right So that is if there's anything if there's
+anything
+you can learn from this like lecture and lab is this concept is incredibly
+right This is how we actually
+Shrink data right And it's there's nothing smart about it It's just we put data
+is the same next to each other
+And then we call it a block
+That's all we do That's like the number one most important optimization
+technique
+in data engineering in 2026 is this
+what's going on here Well like after we so optimize you see optimize here in the
+this query So
+optimize is doing more than just putting the files together right It's gonna be
+putting
+the files together and then it's gonna sort them
+So that's why like you get the double whammy here right Cause Optimize is gonna
+able to do both right Um that's and and it's gonna run so much faster right
+So that's a big thing to be thinking about like doesn't this have Z order in it
+Do
+we have Z order Yeah OK Co-locates related data in the same files So is this is
+actually after How small does this get OK so this is just from so no actually my
+bad
+This is not for this only does the combining of the files and then we do Z order
+next
+where we sort we sort the data and we co-locate right And it's gonna co-locate a
+bunch
+of different um
+Uh
+best columns for Z order in web events So Z ordering like cause some columns are
+are called the high cardinality columns and some columns are low cardinality
+columns
+I'm just gonna give a couple examples for you So like gender right Gender is
+usually
+like like there's like depending on if you're a Republican or Democrat 2 to 5
+values
+right for gender uh and low cardinality right Country is actually pretty low
+cardinality
+Um user ID is not User ID is very high cardinality right It's it's like like
+it it's like it's however many users you have So Z ordering like you put related
+together because whatever the lowest cardinality stuff is that's gonna be the
+stuff
+that has the most likely the highest likelihood of doing runs right So that's
+where
+uh that's what this is doing here is it's trying to find
+the the the best runs that can happen
+So then this does uh a new Z order right So like there's another
+Optimize right So keep in mind Optimize has 22 pieces right It one is so you
+think
+about like Humpty from a Humpty Dumpty perspective right So Humpty Dumpty fell
+off
+the wall right And then he cracked right And then so all the king's horses and
+the king's Men put Humpty Dumpty back together right But maybe they kind of like
+they
+just kind of slapped him back together and like maybe maybe Humpty Dumpty could
+lost some weight because he could have like put some eggshells closer together
+That's
+what Zorder is gonna do right Zorder is gonna take all of your shattered files
+put them together and then co-locate the data So all of that together is what
+gives
+you an even smaller data set right And does it have the does it have the size
+after
+the order
+I think it does right
+Does this have the OK We we should be able to do it after the Z order
+optimization
+Where's the
+Z order OK so we have our Z order optimization complete and then we have Z order
+result
+Um can't we like get the get the stats again I wanna like get the stats
+OK yeah let's just do this
+We're gonna get the stats again because we have our result but then we have to
+the stats after Z order optimized I also want to see like does that make a does
+make a substantial difference
+Oh OK I got it
+Freaking Python bro
+So we went from 0.8 meg to 0.17 and now we're gonna write a bunch more data here
+we'll see like
+If we can get it even smaller
+That'd be so crazy because it's 0.8 me is is a lot for like a thou for like 2000
+rows
+of data
+right OK so we have our 100 we have our 160 files OK then we we optimize so then
+so you know after so
+Analyzing table after optimized past OK
+And we have our Z order run
+This didn't even
+why did this not what
+Why like
+It's just saying that like it's all the same right This um it number of files
+160
+160 160 0% reduction
+Can I like just change the name of the table Maybe I'd like maybe it's something
+like the table path where's the table path
+Table path Uh I'm just gonna call it web compaction Z order I'm just gonna put
+Z order in there as well so we can get a
+a new run here because there might be like a weird uh thing in the in the lab
+it it needs to like running it again is not working the way we expect cause I
+to see the like there should be two sets here right There should be like like
+putting the files together and then after sorting them so we should be able to
+two optimization paths that
+OK so here's our before optimize This is great
+Run basic compaction OK
+Then yeah now we are down right This is that that OK I was able to replicate it
+We
+have 0.87 then 0.117 right
+Then we're looking at the order right
+OK so um
+Interesting
+It's the same OK like I guess the Z order is
+Is it is it just gonna help with query performance then It should
+OK that's super interesting Like I I I I swear this is gonna be something that
+have like done that unless Optimize does that OK let me just see Like what I I
+I need to ask Chat about this just real quick cause I'm like not 100% about this
+Optimize uh
+Do Z ordering out of the box
+Improves file size It does not change the row ordering inside files Yeah
+OK OK We can Z order then To use the ordering you must explicitly specify OK Can
+just actually do that in our code then
+Let's go back and uh like apparently this is not the because I think in our Z
+order
+example here
+Because we have our execute compaction
+Cause we're doing it the um
+So we want to do it this way Z order right And we're going to say region device
+Right This is gonna be our um we can just do it this way right We just say spark
+SQL
+and then we can just do um
+You can do this right And then uh make this an F string and then this is our um
+Table path right
+OK So now it's not angry about that right So now this should give us
+A different um value right Cause we have our we have our Spark SQL optimization
+OK So I want to try this one more time see if like the Z order here matters
+because
+I think in our in our actual Z order optimization OK we're we're doing it in
+Python
+right here doing it that way
+But like I find it very interesting that like it didn't reduce the size more
+it should have because those are the two concepts put the files together and
+sort
+the files
+OK so now we have 0.86 Our our randomness is a little bit different
+Yeah it's saying that it's the same here So uh it's very very interesting It's
+very
+very interesting that that's the the way it is OK and and and it is like yeah
+Data
+bricks is supporting the delete vectors So someone asked earlier if if data
+if delta is merge on read or copy on write first So well that's your answer is
+it it's it's merge on read first The the delete vectors are the
+are the uh the default way of doing things
+So um OK that makes sense That makes sense And uh like
+OK so that's essentially uh what I had to show you guys today I know we only got
+the 1st 3 of 7 So like uh the other ones that I wanna go over like I I these are
+some some of the stuff we will go over a little bit um
+in on Thursday's lab as well Uh I wanna like I wanna stop here before we go into
+vacuum and scheme evolution and everything cause like that's gonna take more
+and I wanna respect the Respect the clock So um I want to open it up for
+questions
+so that we can uh go from there Where are we storing the final process data here
+Delta table
+Than Delta
+But when will we be writing to dynamo table or a table series table We do not
+need
+to implement delete logic correct I would hope not Like once you're in that
+place
+you just overwrite everything
+Can we get access to temp deer We're all getting permission We're all getting
+permission
+OK that's interesting like uh like
+I have to see what's going on with that Like I I'm on the same I'm I'm on a a
+student
+one I'm pretty sure right Oh no I guess I am on the I'm on the admin So there's
+uh like there's probably a directory like I'm surprised that temp does not work
+like that's uh
+we'll we'll see what's going on with the lab That might be a small update we
+needed
+to add to the um to the files there so that you guys can like kind of follow
+along
+Yeah we were not able to write It's just because of the temp temp files that's
+Like uh like and like you guys like I'm I'm hope I hope that like you can bear
+me all right Like uh like we're we're we're doing we're doing our best here all
+Um like uh like cause it works for me right And that's like something that is
+yeah
+use this in the in the Uil crip volumes tabular data expert Delta demo Yup that
+great That is uh uh I will um I will also just update the code right now Rajesh
+thank
+you so much Rajesh for saving my bacon and just letting me update the code so
+then
+you guys you guys can just pull this down and then you uh like you can just do
+do all the work here
+So uh where's the temp So we can we can just pop them in here
+So uh yep you can say Delta Delta Lake demo
+uh delta demo right And then like and then that would be the that this is gonna
+the like the actual data bricks volume I'll I'll push this up right now Thank
+so much Rajesh
+Cool Uh does anyone have any other uh quick questions about like um
+where can I access the lab exercise Can you please send me the link Like uh like
+so
+this is the lab exercise we're going through it like the homework is gonna be
+published
+on Friday Homeworks are always published on Friday and then uh like you have you
+the weekend to kind of work through them Uh they're these lab exercises are just
+gimmes
+right They're just you play with them in data bricks They're not like homework
+They're
+not things that test your understanding They're just um
+Uh like their play examples to kind of demonstrate concepts So uh yeah we're
+to to just use Delta or are you touching on iceberg in future weeks This is just
+just Delta
+Uh if you wanted iceberg there was we did cover iceberg uh like we we have that
+the um analytics engineering boot camp uh and there's a lot of like iceberg data
+modeling
+concepts there We spend 10 hours on iceberg data modeling so yup
+Yup yup It's uh what is DBF Yup it's legacy but everything's Unity catalog now
+Yup
+Unity Catalog is dope We're definitely gonna be covering more of Unity Catalog
+2 days as well Unity Catalog is super important That's gonna be the other big
+thing
+You need like the things to be looking forward to to uh on Thursday you need to
+catalog
+liquid clustering kind of like the new fancier features of data bricks
+Everything
+I'm showing right now is like traditional data engineering fundamental right And
+Thursday should be a little bit flashier
+So uh yeah it should be pretty good Well
+thank you guys so much I really appreciate it I I like to respect everyone's
+and and close to 8 o'clock right
+Uh and uh I I I I hope you guys are having a good time here

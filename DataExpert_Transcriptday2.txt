@@ -1,0 +1,927 @@
+gonna
+be talking about
+Data Lake
+Delta Lake uh catalogs unity catalog governance
+a lot of really cool little features around like how
+Data Bricks is moving towards a world that kind of looks like Snowflake in some
+ways
+It's kind of wild like uh to see how these technologies are kind of converging
+and
+becoming Like you squint at them and you're like that that looks like the same
+technology
+almost like what what what's going on here Let's uh let's let's see what's up
+So um yeah let's let's let's dig into this y'all So
+We have 3 things really Uh we're talking about what is unity catalog
+You know what's going on with it Why is it powerful Why does it suck right It's
+like
+my goal and this is why I love not being like part of Data bricks like as a
+company
+is because like I will always just be honest like I'm an honest man and I will
+what's good and what's bad and what's like amazing and You know good bad ugly
+sort
+of situation And we'll talk about the catalog wars It's a little bit of a
+history
+lesson about some a couple of things We're gonna talk about some lambda and
+Kappa
+architectures Pretty cool stuff Uh we'll talk about that and then then last but
+not
+least we're gonna talk about how data bricks is becoming snowflake liquid
+clustering
+partitioning stuff like that If you were in the book club we talked a little bit
+that as well today So hopefully this can be uh a little bit more enlightening as
+well
+So
+what is Unity Catalog
+Well it's very simple You need to catalog is the central control plane for the
+lake
+house
+Done That's it So it's like uh you can imagine it like uh the way I like to
+think
+about it it's the doors and windows of our lake house Like it it has a lot of
+really
+cool features that we will uh see here in a second
+but
+Why was it even created right
+We're gonna talk a little bit more about that but it comes back to Unity Catalog
+is
+Data Bricks' answer
+to the swamp right To like when when everyone just started making data swamps
+right
+And we were like dude this is not Shrek or Shrek 2 We need to like
+get back like and this is data bricks is like Answer to uh the data swamp which
+uh the Unity catalog That's a big thing to remember It's just like it acts as
+the janitor the bouncer it acts like a it it it it's a very clean way to keep
+data like around
+So what is a control plane Some people are probably like what does that even
+mean
+So control plane means
+It's literally like a prison or it's like a a system where you have everything
+So all data is tracked all data has access provisioning and you could manage all
+of
+this across workspaces and like remember one of the other things I talked about
+here
+was that the um
+the Unity catalog is the doors and windows
+Of the data lake right So you could think of a door as like you could have a
+locked
+door or you can have an unlocked door right And that's gonna be your
+fine-grained
+access control right You have your locked door and unlocked door That's gonna be
+it's
+like do you have access to the catalog Do you have access to the schema Do you
+have
+access to the table Do you have access to the column Do you have access to the
+row
+It's like very uh you could you can you have very fine-grain access which is
+amazing
+because then that allows for like all your data can be centralized because now
+you
+have very very you have very strong guarantees about who can access what data
+Whereas
+like this is probably like one of the big things about like
+why when people they kind of shit on data bricks and they're like data bricks is
+so
+expensive you could just do all this with open source and it's like
+Getting all of this right What Unity catalog offers you in open source getting
+all
+of these layers is in the same strong level of guarantees
+It's very hard It's very hard Like it's it's one of those things that like it
+doesn't
+really happen it doesn't really happen like those companies like the companies
+that
+like ultimately go open source they can because they have a higher risk posture
+They can they can they can absorb more data risk and that's they're OK with that
+They're
+OK with like oh what happens if data gets exfiltrated Oh what happens if this
+happens
+or what happens if that happens right And it's like they're OK with sitting on a
+higher
+level of risk Like and that's like and that's OK like that's one of the things
+I think people forget about when they're talking through like open source versus
+these
+paid platforms is it's not just about like oh you save engineering time But you
+save
+risk right There's like there's the there like it buys down risk in other ways
+you have to manage yourself if you go and make your own platform And so that's
+uh
+that's something to really be thinking about So beyond access controls right We
+also
+have uh unified lineage and metadata So like like we can see like
+All the tables the views the functions the models the volumes all of the things
+uh like where data is coming from and where is it going right We have access to
+of that information It's that is like
+unbelievably powerful right That's something that like
+When you're using this you do not realize how much of a pain in the ass that
+actually
+is Like if you try to go and build data lineage yourself
+I remember like my two years at Netflix like we were building out the the
+lineage stack for all of Netflix's warehouse and like Like we had like a team of
+six engineers who were making like a million dollars each and like we were like
+scratching
+our heads with some of it and it's like some of the stuff that Data Bricks has
+created
+is really truly a work of art and they deserve to be the $100 billion company
+they are
+Um
+Then you have like the centralized governance layer right That's gonna be super
+important
+Like it's like how do we
+manage this stuff One of the things that's interesting about like Unity Catalog
+people are very used to having um a two dot uh like a a single dot right They do
+schema
+dot table
+That's like a that's like the name spacing that people are very used to
+Uh with Unity Catalog you actually get catalog.schema.table right You get you
+get
+uh uh uh you get like a 33 layers of um naming which is really awesome because
+then
+you have that governance layer at each at each step which can be really useful
+because
+then you can even share across workspaces to share and share across catalogs in
+some
+ways as well So that's the last piece of this right is you can do uh cross work
+sharing and security So like if you need a certain
+You need a certain data set or a certain schema to be given out to a third-party
+auditor
+You can you can give them that without having to give them like the whole data
+warehouse
+right That's like a very powerful
+thing that it allows you to do as well which is again something that is
+extremely
+underrated
+just these things are like cause and it makes sense right It makes sense why we
+as
+engineers don't think about these as much because like we aren't thinking about
+the lawsuits or the the the the the secu the security compliance like we are
+mostly
+thinking about like
+the bytes and the the way that the data is transformed and the dashboards that
+we're
+building and the AI systems that we're enabling Right And so these other uh
+these are like horizontal layers of the data platform whereas like we work
+in a vertical layer so like we don't generally see all of the horizontal layers
+this but I hope that at least this last couple of minutes can give you a deeper
+for Unity Catalog
+In a nutshell right
+You need to catalog prevents your data lake from becoming a data swamp right
+That's
+the um that's like at a very very high level what it does right Uh
+Remember why is it powerful Like from when when you're sitting in that data
+engineering
+vertical of like oh I need to solve the marketing team's problem and get them
+their
+funnel analytics A lot of a lot of times you start that process with looking at
+raw data and you're like where did this data come from
+And uh Data bricks will have an immediate answer for you OK cool Well that's
+freaking
+great Then you also have who has access to this data You have an immediate
+answer
+for that And then this one's my favorite because this one is like framed as a
+problem but it's also like it's a stakeholder accountability problem as well
+which
+is who has access to this data And you get immediate answers because I think a
+lot
+of people think of that as like oh if someone hacks into data bricks and then
+they
+steal our data we need to know which user but that doesn't really matter that
+much
+because they're gonna hack some employee's account and then it's like OK the the
+hacked
+employee account is the is the problem and that doesn't really help you that
+you know what I mean
+So but like who accessed this data is gonna be like who is using this data
+Because
+sometimes like people are like I remember like at Airbnb I was working on unit
+economics
+and like I had a data set and then like I was I made a change to the data set
+I thought I only had two downstream stakeholders and then like two other teams
+of Airbnb China messaged me and was like hey why did you change the data And
+I was like
+Oh there's like other people using the data right And so one of the things that
+this
+gives you is like
+you get uh you
+Your stakeholders don't have to identify themselves They identify themselves by
+usage right They identify themselves by their queries or by their loading of the
+dashboard
+right That is something that is so amazing so amazing right That is something
+like super super amazing not something that like is very common
+last but not least here uh Data bricks loves separating things right They're
+separate storage and compute and they also want to separate governance from
+storage
+right Where Snowflake does not do that Snowflake is this is one way that uh Data
+and Snowflake are very different whereas Snowflake is their governance is kind
+linked with their tables like with their snowflake tables They are kind of in
+the
+middle ground right now where you can do like those external iceberg table thing
+You
+could do some interesting things in Snowflake Uh but like with Unity Catalog
+It's governance and um uh governance and storage are separate right So you you
+have everyone access through Unity Catalog but the data lives in S3 but the data
+Owned by a complete you know it's Jeff Bezos' data not Ali's data you know what
+I
+mean It's it's like separate so like and that's really cool that's really cool
+it's like then you can actually have very strict AWS access right You can lock
+it
+down where it's like The only the only IAM rules for your data are data through
+data
+bricks That's one really powerful way to do it Obviously that goes against the
+open
+table format world that we're going into like the interoperable open table
+format
+but that comes back to like well how much
+Like if you are 100% data bricks you don't give a shit about an interoperability
+can just use everything on data bricks right And that's fine And that's actually
+smart
+right Because then you don't have all of these extra uh like
+Points of contact where like someone could hack AWS they could get the a
+different
+uh uh AWS role that like is the exception and like because once you move the
+out of data bricks and out of Unity Catalog well then and you're using something
+else
+then you don't get all of this anymore right You you get some of it like you can
+definitely
+still get some of this like even with the Out of you know out of Data bricks
+compute
+you know things like Trino things like Snowflake things like other you know like
+BigQuery
+all those kind of options So
+Uh it's a thing to be thinking about as you're like building out your catalogs
+is governance right It's amazing So I'm gonna shift gears here just a little bit
+cause
+I you know I've been saying amazing things about Unity Catalog and it's like OK
+guys give a shit now but like now we we need to go back to uh we need to go back
+in
+history so we gotta go back to like
+I don't know 12 years ago you know maybe a little bit more than 12 years ago
+This
+is like right when like the big data world was starting and we have this we have
+little stingy boy named Hive or he's like a little bee little bee boy and uh
+he's
+still around Like I don't understand how Hive is still around like the Hive
+metastore
+is still around Uh
+For a lot of reasons Uh one of the things that is very interesting about Hive as
+metastore versus uh Delta or Iceberg or Hootie is
+Hive actually ships with Spark You see how it says it's the only metastore that
+ships
+with Spark right So it's like if you want to use open source Spark you can use
+can use Hive out of the box just immediately It's just available right And like
+like why is Hive Available but Iceberg and all these other technologies are not
+Well
+Spark was put into an impossible situation when it was when it was ramping up
+So because Spark needed to become adopted by the big data dogs right It needed
+to
+Replace Hive and it needed to needed to replace MapReduce and so they got put
+into
+this situation where they're like OK we have to support Hive out of the box
+otherwise
+like we're wasting our time And so
+that's why the the Spark binary actually has Hive Metastore in it even though
+you know if if like if we rebuilt Spark today right And we rebuilt everything
+today
+Spark would not have Hive in it right It would not because we don't like there's
+whole thing when you're like designing software called backwards compatibility
+where
+like now the Hive metastore is kind of dying right And Spark keeps it in the
+code
+base because they don't want to break You know IBM's 15 year old pipeline that
+is still chugging along because it's that's just how it is cause they they are
+you know Hive and Cobalt and mainframes and you know they just are like we will
+never
+upgrade cause like why So that's just a common thing to think about but like
+Hive one of the things that was
+insane about the Hive metastore that like I think is extremely underappreciated
+they won
+They won
+completely
+It was you know how like in most cases like in the when you think about like oh
+I'm
+gonna build an app or uh oh I'm gonna do a thing right It's like the only other
+that I've seen that one as big as Hive won is React like the JavaScript
+React also won at the same like intensity where It wasn't like a Pepsi Coke
+It was like you know like Chinese Communist Party situation where it's like you
+don't
+have another choice It was like Hive or hive right And so there was definitely
+a like almost like a 10-year period where this little B boy was just
+dominant just dominant right But like he has some problems Hive has some
+problems
+even though he was so dominant
+Hive started showing weakness in the early 2020s right So
+We see um as like we move into like COVID and like this decade one of the things
+we started doing more of was we started doing um
+More uh streaming pipelines more low latency pipelines like this is where Spark
+streaming
+and Flink and all of these technologies really and and the the innovations with
+Kafka
+especially those three technologies Kafka Spark streaming and Flink really
+started
+to take off like about 5 years ago and you could see that with like Confluent
+like all the things that they are they're offering as well And so you know
+Hive is was really shitty
+Uh for supporting streaming workloads It was just terrible right And we're gonna
+talk
+about that here in a second like the Hive was so bad at supporting streaming
+workloads
+that like a lot of companies like they built this thing called a lambda
+and uh more and more companies are actually shifting towards CAPA architectures
+now
+uh for their pipelines uh
+and like you'll see like just how shitty Hive was like when you see the
+difference
+between lambda and Kappa architectures We will be going into that in like the
+next
+slide so don't worry if that if you have no idea what the hell I'm talking about
+So the Hive DDL like the create table statements of Hive were
+Not great because
+Partitionings in the file path right So when you create a Hive table right it's
+like a folder so like you can think of like a partition as a date and it's a
+right within that and then like it's actually that that value is in your file
+path
+of like where that data lives So like the actual data about the data is in the
+So the data about the data is in the path right So that is terrible for a bunch
+reasons like one of the big reasons why that's terrible is
+one of the slowest operations that you can do on S3 is S3 list S3 list is like
+of the most painful obnoxiously slow operations that you can do
+And if you need to do S3 list to get all of the metadata about your data
+Like there were some I remember there was some there were some really really
+interesting
+use cases at Netflix where like we had to like work around that because S3 lists
+was
+too slow and um we that's where like
+that's where Iceberg was born right I when so for me like in 2019 I that's when
+Iceberg
+started because we were seeing these like
+we were seeing these uh you know
+Problems with Hive that like uh and Delta also Delta like all this stuff was
+late 2010s is when a lot of this stuff really started to be noticing Um some
+other
+big important drawbacks of Hive right is the order of columns matters so like
+Like the index of the column like so it's like you have to when you run your
+insert
+the columns have to be in the right order versus like you know like in SQL like
+if
+you do like insert into and you put the value statement and you actually you can
+map
+the columns the way that you want Hive didn't work that way Hive the columns had
+be in the right order and if they weren't like
+It was so interesting because if they weren't
+sometimes you would be saved because the data types were wrong but other times
+would not be saved and the insert would go successfully because but then like
+data would be wrong because it would just be the like the column name would be
+for some other column
+Absolutely maddening I forget sometimes about how much we suffered as data
+engineers
+back in the day but then the last and definitely one of the most important is
+can't append to partitions So once you write a partition in Hive it's immutable
+The
+only way that you can update it is by overwriting it which is that last uh bit
+what
+I just said is why Hive is so shitty at supporting streaming workloads
+thinking about this on a just like a very high level right Hive was a file
+system
+first right If that's what Hive was and then Iceberg Delta Hootie are metadata
+first
+They do not store any metadata in the path They store metadata in JSON files We
+saw
+that in uh Tuesday's class with Delta with the delta log how they have just
+dozens
+and dozens and dozens of JSON files that store the metadata instead And then
+keep the path relatively simple
+So uh let's talk about lambda architecture and like why this works and like how
+works right So lambda architecture is where you actually create two pipelines
+So you have uh the you see at the bottom there you have a streaming pipeline
+might be with like Spark streaming or Flink or Kafka Consumer That's
+that's literally it It's that's gotta be one of those three and then uh that
+writes first to your data lake
+And then uh and it writes in a reduced latency fashion and then that data gets
+merged
+into your data lake
+And then on an hourly or daily basis the batch pipeline will run again and fix
+any
+errors from the streaming data So like uh this was uh you can kind of see that
+architecture is designed as a compromise like Where it's like why do we have two
+pipelines
+and the only reason we have two pipelines is for correctness right We want speed
+correctness That's like the big thing But remember like the the part of this
+was gigantic pain was reconciling this like reconciling like OK this data in the
+because of the fact that the partitions in uh remember the like Partitions are
+immutable
+So if the data is coming in a stream you can't just do insert one row What you
+to do is you have to read the entire partition and then add the record and put
+back right Which is
+very inefficient very inefficient So a lot of times there would be an extra like
+caching
+layer here that would then be read on some sort of cadence and dumped into the
+lake There's like it's a very interesting
+uh lambda architecture pattern that like was kind of built around the
+um
+The complexities of Hive and the the the the drawbacks of Hive that was that was
+very
+interesting So then if you look like at like here's the Kappa architecture
+Right this
+I hope you just realized like like this screen doesn't make your eyes bleed Like
+see how this screen kind of makes your eyes bleed a little bit You're like what
+hell is going on There's like a lot of arrows a lot of green a lot of a lot of a
+of icons and then here you have just 3 This looks like standard
+pipeline logic right So we have our you know our events on Kafka they get
+streamed
+to uh something like Uh like Flink and then that data becomes just immediately
+available
+in Iceberg So like uh this simplified version that like Iceberg and Delta all
+support
+because they support append right You can add data to a partition without having
+overwrite it You can add new data
+So this version of Kappa right is if you guys have worked with Confluent at all
+Confluences
+the the Kafka company They've built their entire company around Kafka
+And uh they actually have a thing called table flow where table flow is so
+simple
+where what it is is you you point table flow at a Kafka cue and it will turn it
+an iceberg table for you or it will turn it into a delta table for you right
+You can see how this process is very simple now right That's the whereas before
+this process was not simple This process was so annoying and like I hated it
+Anytime
+I was working with lambda architecture I was like this is the most painful and
+annoying
+piece of shit I've ever worked with
+So uh just be grateful because back in my day you know when I had to go to
+school
+I had to hike up the hill both ways in the snow and now because we have these
+new
+OpenTable formats that support append uh we our streaming workloads have become
+dramatically
+simpler That's a very important thing to think about right So
+To really put this home right Open table formats blur the line between batch and
+right There was this old world where streaming pipelines belonged in Kafka batch
+belonged in Hive That's what the old world said and then you had to do complex
+reconciliation
+logic to get to get it all into Hive at the end of the day
+Painful super painful So this is said this is actually said another way
+So historical queries and incremental updates can live in the same storage
+This is something that is new This is something that is very new This is
+something
+that like is less than 5 years old right Like for the most part like this new
+world
+where like analytical real-time historical all live in like one
+spot They're all just vibing together now and it's like I I I think that's one
+the reasons why I am so bullish on Iceberg and Delta is because they have taken
+us
+to the promised land It's kinda like
+you know how uh Postgress Postcress is a good example of like Postcress hasn't
+changed very much in the last
+I don't know 10 years There's some updates here some improvements here but like
+for
+the most part it's a it's a great example of a technology where it's like if it
+isn't
+broken don't fix it right And uh one of the things is is we are getting to that
+Place That's where we are reaching with this type of formatting and with this
+type
+of stuff is we are reaching a new standard So iceberg and Delta are gonna be
+standards
+that are gonna last for a very long time a painfully long time because we have
+solved
+all the problems There is no more
+There's no more problems to be solved really for the most part like everything
+every other problem that we have with Iceberg and Delta now is uh a marginal
+problem
+There isn't any crazy breaking problems anymore with these formats and that is
+Like revolutionary that is innovative right And that's something that we need to
+be
+grateful for like and and especially grateful for the suffering of your data
+forefathers named Zach Wilson and other people So
+I'm done with that Now I'll talk about the catalog wars This will be also
+right So Hive Hive slowly falls off the edge right That's like what we've
+noticed
+like it's still around and Hive will be around for decades to come as well It
+just
+will become it's just like cobalt and other things where it's like it will
+slowly
+uh kind of like get migrated and and then some people will just refuse to
+migrate
+and they will stay on Hive forever and that's fine Those people can be that way
+So we created these new formats Hootie Iceberg and Delta great But like one of
+things that like the big boys Data bricks uh AWS and Snowflake realized is
+OpenTable
+format is kind of like
+It's kind of like a terrible thing as well It's like both right Cause it's like
+when
+you think about like
+In a company's in an enterprise
+situation right and you're like
+And if if I told you my data can be accessed by anybody
+Like and it's my private you know corporate data that like is super valuable and
+sensitive
+Like some of y'all will be like sir like
+we need to lock that down like we can't just like let everything be open and
+flimsy
+right But that's what is so interesting about these formats right Is there's a
+tension
+that exists right Because
+everyone knows that there's uh uh an extreme amount of desperation to break down
+silos
+We don't want like sales data in uh in a CRM and we don't want you know
+What order data in another place and all these things in like these different
+systems
+We want like all of our data in like one spot because if we get the more data we
+can
+get in one spot the better synthesis we can do right And that's where like
+breaking down data silos We want openness in that aspect of breaking down silos
+that's business value that's business insight right But In that same vein right
+if the openness is also like just
+Unconstrained then like now it goes from breaking down silos to just opening the
+gates
+to everybody and that's not good either right That's like another uh thing that
+we
+need to work on and like so many companies like there's
+the number of catalog companies like it's it's it's too much it's too much Like
+catalog
+is just literally like
+A list of tables
+uh uh but like with with controls right It's not anything fancy I guess It's
+fancy It's both like it can like catalogs can be really fancy but they also like
+at
+the very like at their
+most simple incarnation it's literally like it's a catalog just like you know
+you open up a magazine and you're like oh I want that one or that one it's just
+Yup there's your tables There you go And so that's when uh DataWorks was like oh
+shit
+we need to build Unity Catalog AWS is like oh shit we need to build Glue
+Snowflake
+is built you know built its catalog too and uh So we went from chaos of the
+openness
+and now uh we have
+met the middle ground right Of
+data needs governance but data data doesn't like silos but it needs governance
+And
+that's where Unity catalog really like
+It's really good dude It's really good and I wish I could buy Databrick stock
+But they're freaking they're gonna be a Series Z startup but I don't know man
+they're doing weird shit So
+OK So uh I wanna just talk a little bit more about catalog wars because this
+stuff
+is super interesting to me Uh so Databricks you know paid over a billion dollars
+acquire uh Tabular IO to get Ryan Blue
+This is Ryan here Ryan's Ryan's a great guy I worked with Ryan at Netflix Um
+They did this mostly as uh uh we're gonna see this in the lab because OK so they
+spent
+a billion dollars to essentially get Iceberg right To get Iceberg into Unity
+Catalog
+And one of the things we're gonna see very painfully as we step into this right
+Is
+Iceberg is still very behind
+I the icebergs and and keep in mind this it's been two years It's been two years
+since
+they they bought this This was June of freaking 2024 It's been almost two years
+the Iceberg support in Data bricks and Unity Catalog is still very behind Still
+very behind It's very interesting They do allow it but it's like uh it's so
+we'll
+we will see
+All of this stuff as like Data bricks is kind of moving forward I have some
+theories about that but like it's like why did they do this They have their own
+format Why did they spend a billion dollars and you know Tabular was not making
+money They Tabular makes Tabular was making as much money as Data Expert makes
+It's like freaking and as much as I make my one me as my one person So you know
+wish I could you know
+sell my Data Expert for a billion dollars That'd be great
+uh but I'm not in that position But anyways
+Let's go on
+So how is data bricks becoming like Snowflake in like I don't know man like this
+something where I kind of feel a little bit betrayed by data bricks but I also
+understand
+where they're coming from
+So Data Bricks is kind of known for being too technical right Where you have to
+manage your own servers you have to freaking manage like so much stuff to manage
+these knobs you have to manage like OK what configuration should you put for
+Spark
+right And one of the things that's becoming really beautiful about Spark is that
+a lot of this stuff doesn't matter anymore like that That much and uh we will be
+know next week we will we we will be going into the into like the weeds and the
+details
+around like what stuff in Spark still does matter cause it's not nothing there's
+still
+some things that matter in Spark uh like in terms of like tuning and
+optimizations
+but like it's a lot less than it was like 10 years ago
+And so they want to be less technical and more usable which is like OK
+So they're adding liquid clustering which is like OK we don't need the
+partitioning
+anymore right But
+the thing that I love about data bricks versus um Uh Snowflake in this regard
+why
+why I like liquid clustering over micro partitions is in Snowflake you literally
+can't
+partition They do not allow you to partition Liquid clustering actually allows
+to do both You can do you can partition at the high level and then you can
+liquid
+cluster within a partition which is like kind of the best of both worlds Like
+just like see that's where I could could have busted out Hannah Montana again
+It is what it is So then you have like unity catalog governance layer Data
+bricks
+is becoming less like open and more constrained because they want to like be
+thought
+of as like a very serious and trustable place to put your data
+right Uh they give a lot of shit about their Data Brick SQL engine now where you
+know
+they were very deep in Spark and PySpark for a long time which is like why they
+more of like the engineering brand whereas Snowflake has more of the analyst
+brand
+You know then serverless everywhere I like that Honestly the serverless
+everywhere
+is something that's nice where you just you just slap a button and then like it
+works and then they're they're you know every every company has to have their AI
+positioning
+or then they you know they have agent bricks which is like Snowflake's cortex
+So like
+one of the things that like I'm like all I'm trying to say here right with this
+whole
+slide is like
+this is
+with AI
+and this together it's making like data bricks way more accessible right It's
+make and we're gonna see this over and over and over again as like we move into
+new world is like
+I think these companies like what they really want right is like They want to be
+able
+to have people manage data without very much expertise at all right That you
+want
+to be able to do this all like you can just as long as you know how to create a
+table
+and like you know SQL right then everything else doesn't really matter like
+that's
+their I think that's like their vision for the future Uh and it's it's
+it's interesting cause that's something that like I didn't Anticipate from Data
+as much as I thought that about Snowflake for a long time but like now the
+worlds
+are converging in a lot of ways right Which is I kinda hate because it's like it
+feels
+like this is shitting on all the technical skills that I built up for many many
+years
+but it is what it is
+So what is liquid clustering So liquid clustering
+is an automatic reorganization of your parquet files based on the access pattern
+So um in the book club Matt and I were talking about indexing and how like
+sometimes
+you set up an index and it's good for the the access pattern that is initially
+supported
+by the platform and that's great It's like awesome like uh but then what ends up
+happening
+is the access pattern changes and then you have to change your indexing and
+like painful and annoying And so uh Data Bricks is like well like how about you
+don't index at all and we will automatically reorganize your parquet files to be
+fast as possible
+I like this but I hate it
+I like it but I hate it because it comes back to like this is also something
+like it sounds like good
+It sounds amazing right It's it's one of those things that sounds really good
+it's also not um like and here's why I don't like it is like it feels like
+you're
+ceding control right You're giving control back to data bricks which is fine
+just kind of like you know kind of like you know do you drive an automatic or a
+manual
+car and it's like we trust our automatic transmissions pretty much You know I've
+been like oh no my automatic transition isn't going to change gears right But
+the difference between an automatic transition and a manual transmission and
+situation is Datari makes money from this right So they have a pervert they have
+a
+perverse incentive right Around like OK how often are they gonna reorganize your
+parquet
+files They get paid for that right They get paid when they make your data as
+fast
+and optimal as possible Versus like if you control it and you design it well you
+have to move the data because this is a false like it's a false dilemma because
+people
+say that where they're like well partitioning if you partition your data it's
+painful
+to change it and it's like bro like like I can count on one hand how many times
+my 10-year data engineering career that I got the partitioning wrong
+Like OK so so I'm like so that's a pain that happens less often than once every
+2
+years That's how often and so it's like because we experience pain once every 2
+in in data engineering based on partitioning we should instead just give up
+and let data bricks do it uh and and and and essentially trade right The trade
+instead of um paying that You know once every 2 years paying what we do instead
+we pay the pain every single day to Data bricks so they can make things as fast
+optimal as possible
+right So I mean it's a trade This is this is the exact same argument I have
+against
+micro partitions and freaking background processes I just my perspective is is
+if you design it right if you design your data sets right with the right
+and the right sorting and the right Z order like You don't need to reorganize
+them
+That's just like it's just data bricks trying to like run up more compute right
+don't know like I would love to see how much like like what the trade there is
+Where it's like does data brick because that's the thing I also don't like about
+right It's like are they optimizing things that are not We that much like are
+just optimizing everything Like it's like cause you you have no control over
+You have no you have no control over how often Data bricks reorganizes your data
+That's not they don't give you that knob right So it's like you have no idea
+how often it's happening So that's like And based on my experience and with
+people like it it does add to the bill but it does make your data sets faster So
+like it's an interesting trait All I'm trying to say is that like it comes back
+designing things well is great This is the other thing I love about data bricks
+though
+versus Snowflake though is
+in Snowflake
+You have to You have to use micropartitions You have to right Whereas in data
+liquid clustering is optional It's an optional field You can you don't have to
+cluster
+You don't have to do this These background processes are not required Even
+data bricks really does encourage you to use them which is so it's great It's
+one
+of those things where like I can still be my boomer self and be like no we can
+freaking do our partitioning and you know set it and let it go So uh this is
+liquid clustering is you know it is Data Bricks' answer to snowflake
+micropartition
+and they're trying to make data bricks more usable by like not having people
+have to think about partitions which is nice
+but it's better than snowflake partitions for a couple of reasons right Um
+because one is if you have data that's liquid clustered it's still in parquet
+files
+and can still be queried by Trino It can still be queried by these other
+platforms
+You don't get the benefit
+Like so this is this is where it's important that Trino does not get the benefit
+liquid clustering though It doesn't get that benefit That is something that is
+Delta
+Just in Delta right That is in data bricks and in Delta Where it's like if you
+an outside thing query it This is why I like partitioning matters the most right
+if you have an outside engine query your data then partitioning which is those
+remember
+like the it's the big chunks like most of the time partition is just you
+partition
+by day It's almost always just what the partition is like 95% of the time that's
+the partition is and that allows for uh
+A good combination right Where then you can have outside compute do things
+versus
+uh with Snowflake you just
+Outside compute can't do things like it it's like it's so weird Like it's like
+one of those things where like I was talking with the guys at Snowflake and they
+were
+they were trying to tell me like that that that it is better and I'm like no
+not Like I get that like there's some companies where that solves their problem
+that's all they need but then other companies might want to use other tools so
+like and like
+that is one of my favorite probably my one of my favorite parts about Data
+as a platform right Is that they are like
+Don't you aren't that locked in with Data bricks you really aren't Like you like
+they set you up in a way where like you can leave you can leave if you wanna
+leave
+like which is I like that With Snowflake you like it's painful it's it's really
+because their their features are not really supported outside so I don't know a
+a lot to think about
+So um
+Remember oh it's the same
+Same slide I need to delete that slide So remember like when we're tuning liquid
+right You have partition by and cluster by Partition by is legible by both data
+tooling as well as outside tooling for Delta If you're reading Delta from Trino
+reading Delta from other tools
+So uh that's awesome and then you have cluster by Clusterby is gonna be only
+within
+data bricks So that's uh like a a thing to be thinking about where you know
+With uh like Data Brooks recommends if you make new tables to just use cluster
+by
+And so uh let's just talk a little bit about these two right So
+Partition by is almost always just date partition by the date of the event or
+date of the snapshot but not always Like so I'll give you an example
+So when I worked at Facebook in notifications right So notifications there's
+5 ways to send notifications
+So you have push notification email notification SMS notification And two others
+I didn't really work with as much but like
+people only ever wanted to look at one right They wanted to look at email push
+or
+SMS So like and you see how that's like a very low cardinality column it's like
+4
+values 3 values right So
+We uh partitioned on both date and channel like SMS email push as another
+channel
+cause that's the shape of the data that people cared about So like when you're
+doing
+that partition level it's like the big thing that you want to be asking is
+when people are querying the data set what are the obvious things we put in the
+wear
+clause And there's almost always a filter on date And then maybe there's almost
+always
+another filter and if there's almost always another filter as long as that other
+filter
+is low cardinality low cardinality meaning like less than 100 values then that
+will
+be a good candidate for a subpartition
+so you can have the the main partition be date and the subpartition be the low
+cardinality
+column
+That is
+Useful but also rare Again subpartitions are like 10% of the time 90% of the
+time
+it's just on date like you're done It's easy brain dead right And so uh cluster
+columns
+are also things that should be in the query a lot but they are not low
+If you cluster on low cardinality columns it's a waste of time It's like not
+good
+So like cluster columns are good in the middle right They're like Goldilocks
+So you don't want things like booleans true false or stupid but you also don't
+things that are completely unique right So you you don't wanna you know like
+event
+timestamp so you have a time stamp down to the nanosecond That's gonna be a a
+value
+that is completely unique so you won't get any compression if you add that into
+your
+cluster by So you want something in the middle right So you want like usually
+medium
+to high cardinality Like you see in this example account and user ID are really
+examples of things to cluster by
+Remember this all right
+There's a big thing to be thinking about when you are thinking about OK what
+how do I partition how do I cluster So partitions are for big amounts of
+skipping
+So it's like we're cutting out years and years of data right We're cutting out
+large
+chunks of data because like we only want to care about data that happened today
+yesterday or a year ago right We're selecting one piece of of of a moment in
+and we're ignoring 99% of the data right Because that data is too old or too
+recent
+or whatever you're doing with your query So think of like partitions are for
+macro
+level data skipping
+macro level large skips So that's the thing Clusters enable micro-level skipping
+like when you're within a cluster you want to like throw like so you're within a
+day
+of data Now you want to skip even more data and the data that you want to skip
+like you want to skip to a specific user ID or you want to skip to a specific
+account
+ID and then you can kind of throw away all the rest of the data You can skip
+data because it's not part of that it's not part of the cluster So that is
+awesome That's really awesome and that's the way that you can be thinking about
+like when uh like these things work right And so remember like with OpenTable
+formats
+you only get that macro level skipping which is great
+I personally think that the the micro level skipping is not that useful It's
+useful
+and makes your queries faster for sure but like it's not like oh my God so
+And then uh remember uh like
+Your Unity catalog might not even have liquid clustering enabled When I was
+setting
+up this lab I realized that my Unity catalog did not have liquid clustering
+enabled
+like the so you have to you have to run this alter table command alter or or
+alter
+catalog command alter catalog enable predictive optimization So this predictive
+optimization
+is what is going to allow for liquid clustering to optimize based on the shape
+usage of the data
+Right And so that's gonna be uh super important So make sure that you actually
+do that like uh obviously we we don't need to do that in our stuff now because
+are all gonna be working on the same uh Unity catalog but that is um yeah that's
+essentially
+what I had for the uh lecture today Uh I want to definitely give uh people some
+to answer some questions about like
+what's going on and like where what where people are at but Uh definitely uh any
+does anyone have any questions about liquid clustering snowflake data bricks Uh
+Claudia
+was saying does it make sense to partition on columns that are often used in wee
+clause
+Preferably uh a relatively low cardinality column So only
+I would say
+Uh that's a good question So like you want to think about it like this like so
+It's you
+It's only when it's used like all the time right Do you want to partition right
+It's
+like if that is like almost like a a fundamental
+uh part of the data access pattern do you want to add a subpartition That's what
+saying is like when we filter by date the date is a fundamental aspect of the
+access
+pattern It's fundamental right So like that's what's gonna be happening here as
+right It's just a fundamental part of the access pattern So um like and so like
+is like
+And that's a and remember that's a high bar It's not like oh it would be nice
+queries with you know where this where this field is a partition because it will
+make
+this one shape of queries faster Bad bad example bad like you don't want to be
+that It it the the bar the fund has to be a fundamental part of the access
+pattern
+How the liquid clustering architecture works internally That's a good question
+it recombines parquet files right So like you can think of it as like so you
+parquet files in Delta right And then like it will it will move the data around
+it will put all of
+data of a certain like flavor like all of certain uh certain account uh certain
+IDs will be in one Parquet file versus another parquet file It will split
+everything
+based on like that and it will put it will cluster similar account IDs and user
+IDs
+together if you cluster on those two columns and then it will move over right
+Yeah
+Liquid Cluster uses multi-dimensional data into one dimensional space Yup
+exactly
+recombining recombining parquet files That's uh that's exactly right It's like
+a lot like uh if you guys have ever worked with an OLAP cube it's a lot like an
+OLAP
+cube what what they're doing behind the scenes there
+Awesome Well everyone uh thank you so much uh for showing up today Uh we will uh
+back here in about 15 minutes at about 7:10 and we will go on to um do the lab
+Uh
+make sure that you have have pulled right Is it kind of similar to vector
+database
+I would say no not similar to Vector Database actually That's vector database is
+complex data types Complex yeah vector database is like gnarly So awesome I'll
+I'll
+catch you I'll catch you guys back here in about 15 minutes

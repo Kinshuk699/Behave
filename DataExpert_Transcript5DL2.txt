@@ -1,0 +1,1040 @@
+OK
+Can I get some thumbs up that you were seeing me
+And that you're seeing my screen
+Uh is your reaction folks OK awesome
+Awesome
+OK so the idea here today and again thank you so much everybody for for joining
+and
+this is our 4th and last lecture I appreciate your patience and feedback and
+collaboration
+Uh the idea here today is to talk about how we go from demo into video we're
+getting
+this into production
+And as you see like I probably work with 100 customers every month
+And a lot lot of lots lots of customers are doing demos of data breaks and other
+platforms
+but very few customers are actually going to production with these solutions
+And I wanna give you some secret sauce on how you make sure that your
+uh agent goes to production and once it goes into production it has a success
+That's
+the idea here
+I have a lot of content here to cover on the lecture We have 4 labs
+Uh live today I'm probably gonna cover 2 and I'm gonna send you a a video on on
+with the other 2 just because we have a lot of content and I want to add a few
+things
+And I also wanna when we go into lab time I wanna review the last lab from
+Tuesday
+because some of you
+Because like I mentioned
+uh we didn't have a feature enabled in the workspace so if you try to complete
+that
+lab it wasn't it wouldn't wouldn't be possible
+so now it is possible
+That being said today some of the technologies we're going to learn here we're
+gonna
+learn about database model serving we're gonna learn about guard rails we're
+learn about different tables we're gonna learn about MF flow evaluation and
+asset
+bundles
+Here just to recap and give you some some data points is basically
+80% of the GNAI projects I've worked on they have never gone into production
+Can anyone guess why what is the main reason why
+G AI projects don't go into
+Just go and say don't don't need transfer permission
+Can't even not not not answering the questions
+The way it is expected or incorrect answers
+I I value your you you trying versus trying for perfection
+Oh so so you're saying uh I thought you were asking uh
+OK so you're saying they don't go into production because the the the quality of
+the
+answers are not correct
+are not the best OK
+OK that's part of the the the the answer Good good good suggestion Anybody else
+I have already um sent in a text
+What did you say Let me see it
+So cost
+I love your answer
+Yeah uh uh and also it when it comes to it depends on industry right Humor if
+a trust and safety uh I mean trust is like the big uh barrier
+And safety depends on the industry
+Good one Yeah these are all good dances like accuracy cost uh hallucinations
+Hello Yeah I can hear you Go ahead
+Yeah I mean uh data there can be data problems also No we don't have the data I
+mean
+without data then there is uh AI uh it will not be Supposed to work So kind of a
+fuel
+is like uh the data for it So if you if you don't have good uh data or if you
+have
+like so many data I mean which is not a proper so many missing data So for those
+of projects if you try and build and you might not get the uh right uh right
+answers for your uh questions So I think data is kind of uh main thing over here
+You are spot on is garbage in garbage out
+Uh when we spoke about context engineering we saw that the quality of our chunks
+quality of the embeddings is what dictate the answers Yeah I think you all hit
+uh
+very good points
+The way I see and I I learned this the hard way because like I said I had a nice
+startup
+and it was an algorithmic trading startup and we tried to do a a conversational
+UI
+for people to actually operate using a chatbot
+Guess what guess what if my agent uh answered something wrong or did one
+wrong one financial operation one trade wrong
+It could mean that my business would go out of business because of one
+hallucination
+or one
+Bad context my my agent received
+So you all capture all the good points and the way I would summarize it is that
+bad hallucination it kills user trust it can kill
+your company's um
+credibility
+And in some scenarios it can occur um
+financial losses right
+And the other thing people don't realize is observability meaning monitoring
+tracing
+evaluating what
+The quality of your answers is very important and to come to your CEO and do a
+POC
+and present
+an agent is easy but monitoring tracing uh seeing how your agent evolves in
+production
+is not easy
+So again I see a lot of people who are showmen who are demo folks
+but once these agents go into production keeping them
+Um
+That to keeping them to continue to deliver value is not an easy easy thing to
+do
+These are some of the things I'm highlighting here
+And I like this one the the quality bar it felt good in the demo but once you
+put
+this in front of the users
+it's it's not a it's not the the the same quality
+Believe it or not I've worked with a company They built an agent The agent went
+live
+and the moment the agent started talking with customers guess what happened The
+agent
+recommended the competitor
+So imagine you went into the data bricks website This was not with data bricks
+but
+imagine you went into the data bricks website
+You asked for the best platform for running a spark which is true
+but the agent actually mentioned the competitor
+It would not be cool right
+I don't know I can show you data points if you're doing this based on data
+Um but that is like discussing politics or religion right We don't discuss it
+uh I like the the joke there
+And
+but yeah you don't want your agent to to recommend your competitor
+You wanna you don't want a hallucination
+Especially around pricing and dates
+And this one is very important
+If your agent has access to all your data sources
+all your rule tables how do you make sure that it's not exposing that there is
+no
+data exfiltration that especially around PII
+How do we make sure that all these things uh can be controlled and you can
+deploy
+your agents um
+to production with peace of mind
+So can anyone tell me what is the silver bullet How do we overcome all these
+challenges
+I mentioned here
+Can we go again into production with peace of mind
+Unity catalog restricting access
+That's part of the solution
+That's part of the solution Even if it's not data bricks right you can use UC
+catalog
+with
+running on prem running running UnC catalog can be the the governance for any
+any
+Yeah even Snowflake we are using actually unity catalog You may not like it but
+that's
+not happening
+It's OK man Uh what is the uh unity sorry uh what is the unity catalog I mean I
+I'm not aware of
+Are we no so so basically remember Unity catalog is is a governance layer for
+your
+delta tables for your iceberg iceberg tables
+You can use
+UNIC catalog even if you're not running your compute even if you're not doing
+engineering within data bricks
+So for example you could run DXGB
+On premises connected to Unity catalog in data bricks
+This is a kind of a common scenario Let's say I work with many large enterprises
+80% of their data could be in data brief but 20% could be
+in
+AWS or Snowflake In that scenario they would prefer to use uh Unic catalog as
+governance layer
+So think about UIC catalog almost like as the active directory
+For your data
+So in other words it's a control plane uh
+I I want to use the word control plane because in data books we have something
+else
+called control plane and I I don't want people to memorize that but you you
+could
+you could say it's like it's the it's the law enforcement is everything in terms
+of
+access control for data for compute
+happens in each catalog and that access control could be to manage resources you
+in data bricks
+resources you have on premises or resources you have in platforms like Snowflake
+Or or AWS um
+Athena
+Or or even Google
+Uh uh and you can you tell like how that thing happens I mean on the shot like
+that architecture is like what is it like storing some kind of a a key value
+pair
+or something so that if we go and search uh it goes to the right direction finds
+out
+and gives back the information So any I mean I was
+I mean I was into PR training and all recently but they thought of bringing
+because
+DBT got integrated with Pyron
+So I mean again Pytron is a closed model uh and DBT is an open model So uh I
+uh we are not going into that so that if any issue happens then again we need to
+depend
+on Pytron uh third party So any insights you have on the
+on how the thing works
+Yeah so uh first thing I would say
+is it a closed model or like it's an open
+I think Unity catalog is a kind of closed right You cannot go No that's that's
+what
+I'm saying Unit catalog is open source
+You can actually run Unic catalog on premises
+And look at the logos here which are using a Unity catalog
+The thing is similar to ML flow when you run Unix cataloging data bricks you're
+going
+to have out of the box integration
+There is a very cool scenario where again you use DEX GB on prem
+And you use uh each catalog as as your governance as your access control access
+management
+layer
+In the cloud or on-prem
+OK so let me just move on and I'm gonna explain some of the some other
+components of UHC catalog and when we go into QA because I have lots of things
+to
+cover we can dive deeper in UH catalog
+And I think in the first class I also mentioned it but
+Again when we talk about the UII catalog
+everything you see here on the left
+Right your
+Your schemas
+Your schema
+to let me go to mine
+Your tables
+Your volumes
+Your functions your models which is the one we're going to deploy today You do
+permission
+management you do grants you do the nice
+So in each catalog has a database that says OK for all these different types of
+objects
+tables volumes functions models
+The user you are
+has these permissions
+That's that's the main purpose of Unic catalog There are many other things that
+it
+will do like delta sharing
+And also exposing all of this as an MCP endpoint
+But you can think of Unic catalogs as the the access management access control
+for assets in data bricks and outside of data bricks
+So can anybody else give me an idea or another feature in Databix that is going
+be the silver bullet for overcoming these issues when going into production
+Let me see if someone wrote something
+See uh I we we have in our current project we are constantly deploying to the
+with the agentic insights and our dashboards also get the agentic insights for
+top 10 worst performing road routes and
+um absent routes right um at the TurboTax TurboTax for example
+But we have an abstract layer We don't we don't have uh data breaks We only
+persist
+to data data breaks afterwards We do all that But however how do we do it The
+insecurity
+it it'll never we don't even use Amazon Bedrock for example So we have our own
+dev
+portal
+And it's all abstracted and everything is secure because we have our own IDPS
+secrets
+management uh not only the AWS level at our own organization level So before
+even
+to um authenticate AWS also we have one more layer of protection because it's a
+sensitive
+data the tax uh users' tax data which is very sensitive yeah And we have to
+follow
+a lot of policies Even AI agent has to have a lot of policies included in them
+uh the tax uh user tax the details which is filed in US cannot be shared across
+at
+say European region etc Likewise there are so many
+GDPR and uh data sharing policies everything is there but but I do not know
+about
+the data breaks
+thank you that's helpful and again this number here 80% I'm not talking about
+just
+data breaks I'm talking about industry right uh
+I've worked for Microsoft before I've worked for other companies and this is a
+common
+problem This is not
+Just data bricks OK
+So folks cutting to the chase here the the good news is the combination of uh
+model
+serving
+The combination of um
+Guardrails
+And ML flow
+is what these are going to be the silver bullets that are going to allow us to
+go
+So how is this gonna happen
+Mosaic AI
+that's the feature one of the features in the snowflake
+Yes so it's it's it's a combination of features right so Mosaic AI is an
+so there are several features we we are gonna use
+to deliver on this and that's what I'm gonna explain this slide right So
+you all are gonna develop your agents uh in your laptops
+something like link chain or la graph like we did
+And then we're gonna wrap the the implementation in an ML flow class OK
+And as you're gonna see once you wrap your agent in a in a flow glass
+you start getting things like logging tracing and so on
+And once you wrap once you you implement your your agent as a as a
+As an ML flow uh by function you can actually register that agent in Unity
+That is what the log model does so the moment I register my my agent is gonna
+up here under models
+Then I can start controlling who has access to
+Call that agent
+Then just registering the the agent in the new English catalog doesn't expose
+agent to the word to your users
+Then what do you do
+You create an endpoint
+Which you can think of an endpoint as a web
+A URL an API that exposes that the model that is on the Unity catalog
+That model serving endpoint again is gonna make your agent available as an API
+It's
+servers it's out of scale you can manage access control
+you can do AB routing
+And in front of the serving endpoint you can add a guard rail
+And guard rail is something that can restrict what data gets into your agent
+data gets out so the example I don't know if it was Nayana who gave the example
+uh an agent that covers taxes
+We could add the guard radio to restrict that once the agent outputs something
+it cannot never output PII information Like if by mistake there is a
+or the developer does something wrong it will never output the Social Security
+number
+here in the US for example
+So that's the flow we're gonna follow That's what we're gonna learn today Uh we
+built
+the agent uh on Tuesday using Land graph
+What we need to do now we need to wrap that that agent using this class for ML
+flow
+Then we use log model to register in Unity catalog
+Then we go into the model serving endpoint and we say we want to expose this
+for Unit catalog as an API
+And then we had a gateway
+Which is the way we filter what gets in what gets out and we can even do things
+like
+rate limits to avoid uh denial of services attack uh in our agent
+Another good thing about the UNHC catalog is like we saw on Tuesday
+we are storing our logic for our agents in tools in UNHC catalogs So like we saw
+when
+they go in functions like the functions to get
+to get the summary the my traveling expenses summary
+I can say who has permission to execute this function
+So what we could say here is that only employees of DataExpert I owe
+Should be able to call this function
+And similar to how we did this through the function which becomes a tool I could
+the same thing to the vector database
+So I could uh
+Ensure
+That in this vector database here
+Because this one is is covering out the course content and syllables we could
+give
+permission to everybody
+That's gonna be the beauty of UH catalog
+You're gonna store your model there your agent but all the tools that your agent
+uses
+is also going to be managed by UH catalog
+And then once your model is available once your agent is available through the
+guardrail
+you can connect your agent you could add that agent as a Slack bot you could
+build
+a a frontal end application a mobile application
+or you could connect a Cursor or cloud or any ID to your model
+and just like I said uh your model becomes a a a rest endpoint
+Any questions about the the flow we're going to follow to get our model from our
+laptops
+into production
+So how how are we mimicking that which environment is uh production here in our
+demo
+like what
+How do we know that it is
+Yeah good question Uh I'm gonna do a demo you're gonna see how that works So
+basically
+what you have here uh you have registered the module
+OK and you will see that I have different versions so the first thing you can
+version
+your agent OK so this is our agent
+At the end of the day our agent is a Python class
+OK so if we click here
+This is the implementation of our model
+If my computer helps
+This is the implementation of our model It has all the dependencies
+The classes I need but it's a Python class
+And then I can deploy this this uh version
+To a server OK What is a server
+is in here in database in serving
+You can create a serving endpoint
+This is what dictates the compute
+The server that is going to serve the model to users
+Let me move this guy over here because I want you all to see something else OK
+So in here
+Who asked the question Was was you Nayana
+Yes yeah thank you
+So you see here the moment I say I want to create a serving endpoint it gives me
+a
+URL
+OK So this is gonna be a server The server can scale to 0 so you're not going to
+be
+paying if you don't use and in here is where I can say which models I want to
+expose
+in this URL in this API
+and here I can select a model
+from UHH catalog
+And I can say Zachy
+Model
+I can say scale to 0
+And I can limit who uses it
+meaning a user cannot call this agent
+100 times in one sequel and I can save all the requests that come to to this
+endpoint
+I can save that to a table
+How do I do the guardrail So if I select a foundational model
+So I'm going to select here foundational model and I'm going to select lemma
+So think
+And what I'm doing here is kind of edging a proxy in front of Lamma
+from Meta which is an open source model that we serve in data bricks
+And what I'm gonna say here I'm gonna say that I wanna add a guard rail
+And in the guard rail I'm saying in the input
+I want to detect if the user is trying for example to do prompt hack
+to say similar to how we can do SQL injection you can try to do prompt injection
+So I can block it and I can also block PII to your comment before
+Um hey I'm working with sensitive data or I'm working with with HR data I can
+block
+the users from sending that to me
+Is the input
+Or I can block the the agent to output this information like PII information
+Go ahead and ask your question please
+Uh
+when we say PII detection
+Is it inbuilt feature or do we need to define that one in the data when we
+actually
+do the model
+Very good question It's built in You don't need to to define it
+There are ways if you have something very unique you can define regular
+expression
+but by default data bricks is smart enough to know
+Social Security number date of birth email uh is you know But that is
+Yeah Snowflake uh sorry go ahead
+No no no it's just a but that is a risk right You know like you know if you say
+and that is why right now most of the Gen AI products are not going through
+not going to
+how does data bricks can and like you know prove that it it it works
+Can you repeat your question I'm not sure if I understood your answer So if data
+books
+can detect it automatically so not every company follows the same structure Some
+companies
+uh like you know uh uses hyphen Some companies don't use hyphen
+and you can define sin however you want to Some companies actually split the SIN
+into multiple columns just to avoid any uh like you know any uh security
+breaches
+So in that case how does it can detect it is a PI
+There is a list of how
+what type of PII data we detect let's say Social Security number
+uh date of birth There is a list I can send you the link and again you can
+define your your regular expression but the key point I'm gonna mention today is
+how
+do you test You're not gonna trust You're right you're not gonna trust any any
+pro
+your job with any provider right
+So what we wanna do within our flow is to allow you
+To build experiments and automate the unit test of your LLMs
+So the first thing you guys should be thinking when you're building an agent is
+is going to be your evaluation data set
+You should always start let's say with a list of
+50 100 questions
+that your agent would get and what is the expected output
+Then you want to use ML flow You want to use a strategy to validate the agent
+you
+deployed
+Is answering based on your evaluation data set
+So the answer to your question yes we publish what type of PII data we can
+identify
+And I would also recommend you build an evaluation data set you leverage the AL
+capabilities for testing So just like when we build software we build uh we
+deliver
+uh unit test we deliver a stress test we want to do the same thing with your
+Somebody else had a question
+one thing we
+I mean I think in Snowflake for this PII we have uh the low-level masking and
+column level masking but here you're saying it can be auto detected or else we
+can
+also write the logic Both are available
+right Both are available Remember what I said on Tuesday right You can define
+filters
+and masking for your individual
+rows or columns in your tables OK That is always possible
+But folks remember if you are the platform I mean
+And if you're building agents you you are not just returning data from tables
+The developer the person who wrote to the agent
+could be calling an API from your HR system and just outputting that to the end
+users
+So that is not coming from a table that you manage that you have masked
+It's coming from another system
+But if you use this platform as the gateway for how our agents talk to the world
+These can be your final guard rate
+But you're right if you want to do the masking if you wanna
+Do that at the table level that's totally
+fine And how this when you when you try and decode I mean in Snowflake uh the
+developer
+they will know the logic like for this 1st 3 I've done the clicks
+but in in data breaks if you have taken this auto detection thing then when you
+decode it you will have some kind of a function written right to decode uh
+function to decode what what you have
+And and for it
+Are you talking if you do
+in the guard rail you can mask and you can block
+right
+So you can say
+If if you have an input or output that is PII you can block so the user is going
+get an exception it's going to fail or mask and yeah there is some simple code
+on
+how you get the mask data
+Yeah when you mask OK let let lock is fine When you mask it then how will you
+can you read that if someone developer wants to read that thing how can he or
+she
+There is uh some sample in the SDK that shows how to do that
+And also today's lab is like what it's a continuance of like day 3 day 4 or like
+only
+from the Tuesday every every every lab is built on what we did before So if you
+didn't
+complete 1 you're not going to be able to complete 2 and 3 right So
+everything is building upon what we have done before
+OK folks I'm trying to make this uh lecture that is not only showing slides so
+I'm
+showing these slides and show you how it works in the UX OK
+Uh but I do have more slides I want YouTube cover So what I just showed you in
+UX is you're gonna have some Python code that is an agent that can be built in
+La
+chain or any other platform
+You register that in Unity catalog
+then you expose that model that is in Unic catalog as an API
+And that API you can add card videos that's going to be the flow
+So just like a covert uh here we talk more about um
+Guardrails so we don't need to go into this in details
+The other good thing about
+About
+The model serving is that every input the agent gets and every output you can
+save
+that into a table
+Can anyone tell me why this is important
+Saving every questionnaire agent gets and every output why is this important
+model evaluation right
+Exactly
+For example you can start your POC your development with no evaluation data set
+You build an agent
+You get the basics very basics started
+Then you send it to your business users as a private preview as an alpha even
+before
+the bed
+And you start seeing what the users are asking
+And then you can use that as your evaluation uh data set
+So this is gonna be very helpful for you for auditing like some of you mentioned
+also for you to measure quality and improve your model over time
+Just be aware some LLMs they don't allow you to fine tune based on the results
+model gives
+Uh so just keep in mind depending on which model you're using you might not be
+able
+to use these results as a way to fine tune the model
+OK I don't want to get into details but just keep that in mind If you're trying
+fine tune a model
+Uh using the data that is stored in the inference table just make sure you read
+the license of the model you're using that it's allowed
+we have one lab that I show how you can uh combine data from
+The inference table
+Data from billing
+And you can actually see how the latency I have we're going to combine data from
+usage
+inference and billing and you're gonna be able to see what is the time it takes
+agent to give the first token to measure latency
+And we're also gonna see how you see the cost per token based on different
+models
+And what we can also do here that we have a lab I don't know if it's working
+I made some changes but you're gonna have it working by by Saturday is you can
+use
+LLM as a judge
+So what it means here is you can save your users' questions and answers from the
+LLM
+in a table
+then you can use another LLM to judge the quality of the answers
+That's another very good thing about ML flow because ML Flow has a built team
+Any questions about inference tables
+And how is this in the UI In the UI basically when you are creating the
+The model
+You can
+Not for this type of model yeah here
+In the AI gateway you can say I want to save this on an inference table
+in the inference table if we go into
+Here you can select the schema
+Folks needless to say everything I'm doing in the UX we can do that in code and
+I
+have an example of how to do this in the SDK
+So I'm explaining this visually first then in the lab we're going to see how we
+create
+this uh using the datarick SDK
+Any questions about uh what are inference tables and how helpful they are
+Are they kind of like intermediary tables like how the data flow
+Is that the one
+Yeah it's like they are the your logging tables
+One is slide boot camp exclusion This is slide What what was what was Rajesh
+What
+was your observation there Was this slide is amazing It has end to end This
+itself
+is like a whole boot camp
+The slide that you're presenting
+Oh the inference tables yeah
+OK Thank you
+Glad you're here Take a screenshot
+I hope we're gonna get this slides
+So it's already there It's already there Yeah I haven't seen this OK
+I posted
+OK thank you
+OK so the other thing we have in the platform is ML flow
+So ML flow like we saw with one line of code everything gets logged in the in
+database
+And just like we have our pipeline with Zakki that is using multiple tools
+everything that Zakki
+does because we've added the the trace it's going to be saved in in in
+In ML flow so when you go under experiments and you click Zakki
+We are gonna see the questions that are being asked from the agent Let me select
+The one that is my
+This one everything that is asked is here under traces
+And we can actually see which tools are being called which what was the result
+We
+can see the timeline It is very helpful for for troubleshooting
+And if I go back here
+What is good about this is that based on the traces you can add LLM as a judge
+score
+Are your answers grounded
+Meaning
+Are the answers the LLM is giving based on what you got from your tools and what
+got from your uh vector databases
+This is the best way for you to try to measure hallucinations
+Are the answers uh safe
+Uh is it following some guidelines you've you provided
+And is it correct
+against when we measured that against um
+E evaluation data set
+So you can define in code
+Which
+rules you want to validate
+you can provide an evaluation data set and we are going to output ML flow is
+to provide an output with the values
+So that's why when you go here into
+Into ML flow
+you have judges
+And you can you can create a judge uh using custom code
+or you can rely on one on one from data breaks
+From window flow and you can even uh select what is the scope
+And I'll say um test online
+We can describe
+what we need in the input or output
+And I would just create one here
+Let's select
+Fluency
+OK so this is just giving a data and hey measure if this is fluid it's not
+sometimes
+talking like me sometimes I'm choose low because I want to make sure you guys
+are
+following So can I say let's transcribe Yar's uh teaching and make sure he's
+talking
+a little bit faster Um we could do that here If you do the next agent is not
+Zaki
+it's Yar
+You could do that
+So we have uh this implementation in code
+uh with one of the labs
+This is LLMs as a judge is a built-in feature of ML flow
+It's available in data bricks
+Uh this feature uh ML flow GAI evaluate I think this is only available in data
+If you're using other platforms you might have to implement the LLM judge by
+hand
+so in the bricks to get this out of the box
+Why I why do I like this feature and why do I see the customers using this in
+Because this can be a neutral
+evaluation of what you're implementing You might be using OpenAI you might be
+using
+cloud
+you might be using Lama and this can be the independent opinion There is a paper
+talks about that LLMs if they are judging themselves they have a bias
+So let's say if a GPT model is evaluating the output of a GPT model is going to
+higher scores versus if it was a GPT was evaluating lemma
+Or a model for philanthropic and I like this because there is a lot of science
+there
+is a lot of uh investments that are books made to try to make this uh a neutral
+part
+a neutral evaluation
+Um human in the loop is also important
+when we are bringing our agent alive
+Another benefit of of uh ML flow is we're automatically going to get an
+evaluation
+app
+We're going to see one of the labs
+You get an app is a UX
+where the user can chat and review the questions and the user can give a thumbs
+or thumbs down
+And say if the answer makes sense if it was too verbose if it was too succinct
+we're
+gonna see
+uh how we add a human in the loop
+Again the way this is implemented in data bricks you just have an evaluation app
+which
+is a chat where the user can give the thumbs up thumbs down and do some scoring
+the good thing is
+uh you can connect the traces you can connect your inference table into this
+app so your users can give a thumbs up thumbs down You don't need
+a custom application a custom process for your business users to evaluate the
+quality
+of your
+of your uh agent
+Any questions about this
+Do you understand the importance of human in the loop
+And how this built in
+review application is going to help your users
+Your business users give thumbs up thumbs down
+Uh so I have one question Uh you might So depending on the user feedback thumbs
+up
+does it do model a reinforcement learning
+Good question The user feedback is going to be saved in a table then it's up to
+how you want to use that
+You could do reinforcement learning with the output from the user
+So if you get into if we get into details you can't just just do reinforcement
+learning
+What is the reinforcement learning you're gonna use What is the strategy What is
+algorithm
+So normally what I see companies they look at the data the responses from the
+And they use the attribute a model that
+can use reinforcement learning or just go back and optimize the the prompt of
+agent optimize the chunking strategy optimize the retrieval strategy to align
+the user feedback
+Doing reinforcement learning fine tuning a model is going to cost way more money
+it's
+going to spend you're going to spend way more time Yeah that that's where I'm
+to get into For example let's say we received like you know 80% for one of the
+responses
+saying thumbs up
+Now when we are responding either similar or same prompt next time
+How do we ensure that we give a response which is like like by 80%
+Good question So I think this is a is a
+Is a feedback loop
+The most important thing you need here you need to make sure you have an
+data set with the question and expected answer
+Based on your users' feedback you're going to update that evaluation data set
+And you will be running these judges over time
+And you want to make sure if your 3 showed you're always gonna get 80% 90% If
+you're
+getting the judges are giving you below that
+What is the process you want to do You want to create a ticket for your
+to reevaluate if the problem is the chunking strategy if the problem is the
+retrieval
+is the system prompt
+Then if none of those solve
+then you can consider going to a strategy
+like reinforcement learning from human feedback
+Or doing a fine tuning
+In your mode
+so uh but again I just wanna just wanna emphasize just wanna emphasize something
+majority
+of customers
+You optimize the chunking strategy the retrieval strategy the data you bring the
+metadata
+The retrieval you can get a lot of results versus going to
+Reinforcements from human feedback or fine tuning a model because that's going
+cost you way more money and you're going to make your solution sometimes way
+more
+complex than it needs to be
+So so again we are actually opening a Pandora box here Basically if you say
+reinforcement
+like you know based on the training that's again it's kind of the AB testing
+or AB testing scenario Oh OK which chunking strategy is actually giving the
+better
+optimal better results
+So we need to have a multiple
+uh multiple uh endpoints to compare that
+You can have uh A B testing with model serving but I I'm I'm just being a little
+bit
+cautious because reinforcement learning from human feedback
+is a different discipline is a different strategy for building agents
+because basically when you use that you are creating a new model you're fine
+tuning
+a model
+and none none of the strategies we have discussed here we have fine tuned the
+OK so
+everything we covered in this boot camp
+You've seen we have not fine tuned the model we have we haven't generated
+for the model
+We are basically optimizing the data that gets seen
+and the parameters we pass to the model because the moment you go into
+It's a different discipline
+And there is something Data bricks we have a lot of papers on doing this You can
+reinforcement learning from human feedback
+and you can put an LLM at the center and generate some synthetic data
+to fine tune a model
+But just want to emphasize everything we we covered in this boot camp there is
+fine tuning We are not generating a new LLM
+Because that gets expensive that gets complex and that's not where I'm seeing
+industry customers going
+Sorry I'm gonna go back to my question humor once again Yes please go ahead So
+forget
+about reinforcement learning that I understood it's a completely different beast
+altogether
+to build a new model itself But here so we are giving the same model
+For every user and we are getting different prompts from different user
+but we are taking the feedback from each and every response whether it is uh
+you know uh it is good or not
+Then
+based on the result
+how are we tweaking it How are we tweaking the model For example let's say you
+said
+chunky
+So it's the same model At the end of the day we have done the chunking for the
+entire
+data set but it is giving different results
+In that case like basically the MLAs what MLOps when when we do envelopes what
+do is we basically adjust the parameters of the model whether it is a
+or like you know how
+uh like how how how much randomness we need to add
+to such kind of things
+But
+But here how do we get from the same same set whether we have a like we have we
+dislike and and that is a like you know again it depends on the prompt prompting
+Good question I think someone has their hands up Uh let's see if the person
+wants
+to help answer the question or has another question then I'm gonna go back to
+question Who has the hands up So it's an interesting question Question First
+question
+is that he's he's saying
+uh same model is giving different uh answers is what he's saying because the
+prompt
+will be different the way you ask the prompts
+So the questions will be different
+Right so it's not like I'm I'm not saying that the the prompt should be a very
+English or not like that It has to be concise It has to be like has some
+conditions
+to get exactly what you want So when a user
+For the same models same chatbot or anything so however prompt is being given so
+developer has to give the proper prompt and if it is open to the end user so
+however
+the end user end user is gonna do whatever they want That's one thing Second
+thing
+is asking What is it uh same question is giving thumbs up and thumbs thumbs down
+didn't get it Like uh
+what is it No
+So so thank you
+My question was what I'm trying to understand where are we capturing the value
+Yes
+I understand Like you know model is responding Not everyone would be giving the
+same
+prompt to get the same results There would be deviation in the prompts So
+depending
+on the prompt there would be deviation in the output And show you the table Keep
+Keep going I'm gonna show you the table how this is captured
+You're gonna yeah and depending on the model parameters it can return the same
+like you know deterministic answer but it's uh unlikely uh given the parameter
+settings
+and everything and it it can also give random answers
+but it's a
+no hold on
+you which one which value you were saying what value you you mentioned one value
+on the value which value
+No there is a temperature you can set it up and uh uh and the repeatability
+That's very important That's very important So that's why that's let me just
+stop
+you here because you capture a very good point
+Everything all the parameters you set for your agent here let's say Zakki with
+temperature with the system prompt that is going to be captured as a version as
+version of the model right So let's say this version 6 has the exact system
+and temperature
+And the chunking strategy is just like if you're shipping an application a
+software
+Out of this logic you create a version for that That's what we're going to do
+That's the implementation Users are going to ask questions the same question in
+different
+ways and LLMs they are non-determination They are always going to answer the
+question in a different way just like human beings
+But what you are not doing you are not serving the same model with different
+parameters
+different temperatures different system system prompts to different users
+You are encapsulating that in a version Now if you want to do A B testing that
+OK that's supported right You might have done an optimization
+improved the system prompt you change the temperature That's the difference
+between
+your version 5 and 6 So that is OK You can do A B testing
+In terms of the review app keep in mind that this application we're going to see
+Built in application is not what your end users see This is you can think of
+this
+more as your super users your experts They are evaluating
+What users are asking
+And they're evaluating what the LLM is inputting and they're kind of giving the
+golden
+answer if the LLM is getting it right or not
+So to make it a little bit more tangible
+when we look at a table here which is the inference table
+So what this is gonna have uh this is gonna have all the the requests that come
+into
+the endpoint
+It has the message the request from the user
+OK here so I ask this question who is Zach Wilson
+And this was the request
+And the model that I use so it has the version of the model In the version of
+model you have the configuration
+And then you have to answer
+Which is actually here already
+So
+What you can do then you can present this question and answer in the review app
+then your experts can say for this version of the module
+I like this answer or not or you could do side by side comparison right You
+say for the same question
+How did version 6 versus 5 compare
+So so this is a standard model evaluation process
+Standard model evaluation process I mean like you know and so the way you
+fine tune the model is you keep on testing until your responses are actually
+with your expectations
+The minute you see the uh like you know deviation from your responses so that's
+peak and that's the version everybody wants to work with
+Correct
+Correct that's why you you can't measure success if you don't have a benchmark
+If I say hey I'm gonna we built Zaki the agent how do we know if it's good or
+The first thing we should have done I have in the in the
+in the lab is I define an evaluation data set with 5 questions
+And then I'm gonna create the agent
+and I'm going to run the judges against our evaluation data set If it's good
+good
+we're going to go into production Now once it goes into production
+data change over time
+Data change over time or we might change the system prompt so we need to be
+running
+the evaluation data set over time and once we see a drift just like in
+traditional
+machine learning we capture drifts in the R squared we want to do the same thing
+here
+but it's going to be a different strategy because in MLMs we don't have our R
+squared
+We don't have a single number that measures the model drift
+Because LLMs are non-determination
+Cool
+Who else has a question
+Uh hey quick question anymore so
+When you expose the end point you did talk about the inference table where you
+record
+everything which records everything like every request and so on
+but the
+User feedback or the user interaction is that also something that can be
+Say I want to record those user responses in a particular table Is that
+something
+It's another table
+Yeah it's another table You have another table with Is it something that can be
+set
+in the UI or is it done behind the scenes in the code
+It's only through the code
+Yeah it's a good question
+The user feedback is another table Yeah thank you And there is that is not in
+UX so
+nobody knows I I thought this is one of the best kept secrets in data breaks
+Nobody
+knows that you can actually get an evaluation app a review app to send to your
+Let's see if I can do that uh get ahead of myself here before I go into the the
+the break just because I wanna bring this point home
+And then we're gonna go to the break Let me just try to run something here
+Uh human feedback I think this was the one
+Uh bear with me here folks
+I'm on lab for human feedback
+And I'm running on VS code for now
+Is everybody seeing my screen too Are you seeing VS code
+so what I did here I'm connecting to this endpoint which is the the endpoint uh
+from
+the agent bricks I'm gonna talk more about when we come back to the the the
+The lunch from break but just know I have an endpoint for an agent here OK
+Then I'm telling ML Flow hey I want to use ML flow in data breaks and I wanna
+an experiment here
+so it gives me these endpoints
+And then
+I just run this line of code here ML flow GAI get review app
+The moment I do this some magic's going to happen
+We have this
+Where I can ask a question so
+USA
+Person who created the agent you didn't have to build this app you didn't have
+do anything you just call three lines of 3
+Can anyone tell me a question you wanted me to ask about the Chuzaki Zaky so you
+know
+that I'm not lying
+Tell me a question you wanna me to as the agent
+What what data you have
+Oh it's a good one
+Also one more thing uh we wanna we don't need to wait we we can we can avoid
+stop words and all right so that uh we don't exhaust the token limit Uh so I
+think
+many might not be aware I mean
+uh the way we type in English we just do I mean if we can avoid like stop words
+those
+all of things so that we can avoid the additional
+uh token cost uh
+Uh we can avoid what Sorry I didn't get it Maybe I don't have experience in what
+saying Uh you want to avoid the number of of tokens the user inputs outputs
+What are you saying I mean generally we use like uh give the that uh
+uh when when we are typing it so that we can avoid it uh
+Huh
+I mean unnecessary cost we can uh uh reduced
+You're correct and the thing here uh I like your question because
+this is the UX
+database is giving you but normally you build an agent you build a UX you're
+to build an application that stores that is
+The entry point for your endpoint
+You want to have suggestions for users on the common questions the top they
+execute
+so you lower you decrease the number of tokens in the inputs and you get your
+questions
+that because let's let's let's be real users don't know
+what you ask When you give them a black conver
+they don't know what you ask
+So in your UX you wanna provide suggestions
+with very succinct questions to to
+To your um agent So here's the answer we got
+And from the agent what are the different um sorry this was the one I ran before
+So it said I'm your assistant these are the data we have
+And is this a good answer or it's not a good answer You can give the thumbs up
+thumbs
+down
+And I have an error here which is going to be solved by Saturday
+And this is going to be saved into a table
+And then you could do additional analytics
+OK so I said I was hoping
+For the 9 of the tables
+And because I'm the expert evaluating this
+So I gave a no actually
+And I'll say not helpful
+And I can click it on and then there is a table where this would be stored
+And we could do some additional analytics
+Folks I wanna go to the break but I wanna see which questions uh you guys had
+I go to the last question So in the review app can you also determine which
+of the app that you're interacting with I know I mean there was Zachy V1 up
+Can you also change that to
+V2 or V3 or V6
+I love the question Uh the reason you where you define the version is in the end
+point
+So when I create the the model serving endpoint
+Here
+I'm always defining divergent view
+All right OK thank you
+So I'm not creating I love your question I'm not creating the review app for the
+I'm not actually creating the view web
+for the server serving entry that has the version
+OK folks let's do a 10 minute break
+And then we're gonna come back to review the labs
+I love the questions Thank you
+Let me stop the the presentation and the recording

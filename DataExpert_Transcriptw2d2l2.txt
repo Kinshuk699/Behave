@@ -1,0 +1,848 @@
+Awesome Welcome everyone to Apache Spark Day 2 lab Today we're going to be
+looking
+at uh performance tuning We're going to be looking at uh incremental data
+processing
+We're going to be looking at
+a couple different um examples like that that should really really kind of
+Show off a lot of these best practices right So make sure like you know if you
+go
+to your workspace you're gonna need to do the same thing where you like create a
+get
+folder and then this is gonna be our workspace where we start with We're going
+to
+start here with uh partitioning and performance So
+um we actually have uh a volume of data from
+Twitter
+It's actually quite a bit of data I think it's like it's like like 50 gigs or
+something
+like that of just like tweets I was able to like just harvest a ton of tweets
+So um
+So we're just gonna uh run this guy and like kind of show what this is gonna end
+up
+doing here It's it's pretty cool
+And uh it all runs on serverless so OK So that is just you know setting up some
+names
+here Now this is gonna give us our data frame
+that uh is super important here And uh remember uh like I know based on the
+volume
+here So remember these are CSV files right And CSV files are annoying because
+they're
+not like really like splitable So
+Even though this is where this is where this can be very confusing with Spark
+right
+So you see how we're setting the number of partitions to 500 The default is 200
+by
+the way Uh but if we're setting it to 500 you would think that this data frame
+here
+would be 500 right You would think but it's actually not It's actually not 500
+Uh
+it's actually 54 That's how many are in this um
+In here There's actually 54 uh
+partitions not 500 and you're like you're probably like Zach like where the hell
+where's
+that 54 coming from And the 54 comes from the fact that there are 54 CSV files
+in
+this volume
+right And so it comes back to like remember the initial parallelism of Spark
+like
+the initial parallelism of Spark is based on the upstream and like how much you
+read
+It's a very important thing to remember It's like if you can just like That
+that's
+one of the very few things that you need to remember from this entire lab is
+that
+the initial parallelism of Spark is from the upstream So we have 54 partitions
+even
+though we set it to 500
+So
+here is our um schema of uh of of our tweets We have you know lots of tweets in
+So what we're gonna do here is we're gonna see what happens when we try uh
+repartitioning
+here This 500 doesn't really matter We don't need this line We don't it doesn't
+So uh we're gonna run this and we're going to look at like what this ends up
+doing
+cause like we want to see a couple different things like we're gonna we're gonna
+be
+doing a lot of performance testing here
+because I just want to show like what happens like there's kind of like a
+Goldilocks
+zone when it comes to partitioning right Cause you have like you know if you
+have
+one partition
+you are not you are not leveraging parallelism at all and you are just
+Doing everything sequentially and like you're being a slow you're you're not you
+know
+you're not like leveraging teamwork at all
+But then on the other side right you have um
+Uh like
+say you you can't just like
+set partitions to a million and be like OK
+like I can just have uh each Spark task process one row of data and then call it
+a
+day Like that doesn't work either right Because then like the problem with that
+is
+then you have network overhead because then you have all like you you remember
+there's
+a cost to putting Humpty Dumpty back together again It's not free to put Humpty
+Dumpty
+back together again So
+There's a middle point somewhere between not being distributed like in having
+one
+partition and having 10 million partitions there's somewhere in the middle and
+know that this number actually depends on the data right Some there's honestly
+data
+out there where I say you're processing 10 rows of data
+Yeah One partition is the right number because it's small enough that
+distributed
+compute doesn't matter right And so that that's the thing to remember is that 1
+can
+be the right number a million almost never is but 1 actually can be the right
+number
+on data that is very very small
+So OK so we repartitioned and then we ran uh so we repartitioned and then we ran
+group by and all we're doing is collecting all of the text uh by username
+And uh you'll see this group by took
+about 30 seconds with 100 partitions
+Keeping in mind here like
+this repartition here is called a round robin repartition which is like where
+you
+get the with round robin you get the most fair and the most uniform partitions
+cause
+it's not uh it's not um
+It's not impacted by SKU at all
+But you can also do partitioning based on like a column right So you can be like
+repartition
+username 100 and then group by So this
+is gonna because we're partitioning by user ID and then grouping this is gonna
+dramatically superior to the round robin because of of the fact that we don't
+to shuffle twice Cause remember repartition is just another fancy word for
+shuffle
+Right Remember remember shuffle from uh uh from Tuesday's class right This is
+just
+shuffle and reorganize the data by user ID into 100 chunks
+And then this is saying like if we get rid of user ID and we just say
+100 now this is saying reorganize the data into 100 equally sized chunks
+OK That's literally all repartition is doing OK So let's just run this again
+with
+the with the username in here and see like does that like make a substantial
+difference
+So what we had 29
+Is it like did I miss something
+I know that there's a way to do it this way
+Is it like 00 my bad it's the other way You you put the number first and then
+the
+column That's fine
+It's got to be
+It's a 100 username like that
+So we saw 29 seconds right 29 seconds is what we saw uh in the previous example
+Hopefully this is less
+We would hope that it's less because like
+Otherwise like I don't know Spark and like if it's more that would be really
+crazy
+to me
+Um
+We will see here just in a second if we are gonna get more or less or what the
+going on here
+Why
+Very interesting It's taking
+And it just keeps going just keeps going OK I can I can explain why this is
+happening
+uh like
+Wow this is dramatically slowed
+the the reason for that is because this um
+Way of doing things OK so what we have 36 million rows Is it is it gonna go
+Come on That should be not so slow
+OK there we go So it took 78 seconds Why OK so here's the question that I think
+some of y'all are probably like why was that so much slower if like we are um
+doing two of these right So the main reason for that is because like
+We had to like put all of the 100 so the like when it's just 100 like this right
+And
+we're putting them into equally grouped segments right That's gonna be like each
+uh
+segment is gonna be less
+prone to skee right
+Because of the fact that it's there right And it's less prone to skew Obviously
+group buy is gonna still cause some issues but like when we put the 100 in there
+this
+is probably gonna cause like it's gonna make it like even more skewed and that's
+why
+it took even longer right So you'll see it still took like what
+2 2024 gigabytes I'm surprised there so it's like cause we're stacking SKU here
+that's why it took a lot longer and so that's why like when you make it uniform
+first
+and then group by it's gonna be faster So um
+let's go over some more examples cause that was probably a little bit confusing
+uh like and we will kind of look at like some of this stuff in the Spark UI
+because
+some of the stuff actually does show up This is some of the Spark UI bits here
+as
+well So um let's uh let's look at
+What's happening here when we look at
+partitions right So this is gonna actually look at the partition IDs of the
+actual
+data sets and we can see the the distinct count of each one And like when we go
+into
+here can we actually like is this open in the sparky way I think it is
+OK there we go Awesome So now we can check out the spark UI and we can see like
+We can see OK so
+Remember one of the things that we talked about in class or in the lecture right
+was
+we had the idea of um we had the idea of CPU time versus wall clock time like
+time So you'll see here so this job took 25 seconds to run right Which is like
+OK
+that makes sense And if we uh if we scroll down there should be uh does it say
+many uh
+It should in in here somewhere right We have our OK no that's just the where
+it's
+coming from and we have
+OK Yeah and so you can look into this This is a simple simple operation So does
+it
+say operations from this Can we like actually jump into this and see like OK we
+actually see like where in the job is uh fast and slow So let's go back I
+actually
+want to look at this in the Spark UI but I wanna look at like
+that thing that took a minute I think is actually this is more interesting to me
+this is like we should be able to actually look at this in the
+OK let's go into this guy
+You know that's the source My bad Let's go in here
+And so uh wow Dabs like this is actually pretty awesome Like we can see the
+see the longest operating So
+OK So we can see inside of here This is how much remember this is not uh uh the
+job
+only took 1 minute right The job only took 1 minute and a half So
+Some of this stuff you're probably like well OK if the job only took 1 minute
+and
+a half minutes what how the hell did the job spend 2.1 minutes on Shuffle And
+comes back to the idea of so the reason why it's able to spend 2.1 minutes on
+Shuffle
+on a job that only took 1 minute to run is that is the difference between CPU
+time
+and wall time right Because of the fact that we have multiple computers running
+parallel
+We can have CPU times that are more right So we can see here based on the
+bottleneck
+of this job that like OK so it was clearly taking a lot of time on on that
+So let's go back let's go back and rerun this uh rerun this same thing and
+hopefully
+it takes about 30 seconds and we can actually like see this running but like
+let's
+actually look at the job running in um
+OK so this is gonna be the job where it's actually running Can we see it running
+oh cool cool This is where you can actually see the um
+This is where it's actually running right You can see this is the uh like it
+currently
+is vibing So OK So it just finished it just finished right But you'll notice OK
+One of the things you might notice here that is gonna be very very perplexing
+This
+is gonna be something that's very very perplexing about
+wall time versus CPU time
+Um that like is gonna be super annoying right So you might notice this job
+has
+More
+it has more CPU time a lot more actually right You see how it has the um
+Uh we have like what 4 minutes we have 5 minutes probably 5 minutes maybe 5.5
+minutes
+of CPU time here And in the previous job like when we did partition on user ID
+we
+didn't have 5 minutes of CPU time we had like 3 minutes of CPU time
+Uh and the reason for that is because we avoided that second shuffle step right
+That
+second shuffle step it wasn't necessary because everything was already grouped
+user ID because we repartitioned on user ID so everything was already all the
+usernames
+were already co-located so we didn't have to have that second shuffle step
+So why was this um
+Why was this job faster
+even though it can so this job obviously consumed more compute
+significantly more compute but it was faster
+So the reason why this job was faster is because of the fact that it was more
+evenly
+distributed So it was less skewed Cause remember like the way that Spark jobs
+work
+is Spark jobs the wall time of a Spark job is as fast as its slowest component
+So the more skewed a job is the slower its slowest component is
+The the the slower it goes So that's sort of like spark jobs generally thrive
+the more uniform the distribution because then like all the workers are sharing
+same amount of work right There's no worker who's like doing a lot and no worker
+who's
+doing a little It's like we have mostly people doing about the same amount of
+and that's where when you know you've probably heard the phrase many hands make
+light
+work That's like a very common uh phrase that is used in you know English and
+And so Spark really does handle that as well So uh and it's only when you have
+disproportionate
+work based on SKU
+that you end up having an issue So uh that's um so we uh let's go down here a
+little
+bit further and I want to look at
+One more example here of where we're gonna do some benchmarks here where we're
+do the same tweet collection So we're gonna try to see here if what if 1050 100
+200
+or 500 what partitions like what is gonna be the right like what is the
+zone for this data set And uh it will be interesting So we will be able to see
+all
+sorts of uh this is gonna take a little bit of time obviously cause it's like
+You know we're we're working with like 50 gigabytes here right This is not like
+a a small data set by any means I'm I I really try to have my uh lab examples
+not
+be dinky toy examples OK So we see 10 partitions
+Took
+14 seconds
+Interesting
+And then like OK there we go 50 partitions
+About the same a little bit faster Just a little bit faster
+What is it gonna be
+100 it's probably gonna be it could be slower even right Like it comes back to
+remember like it's a trade of parallelism and network overhead right So that's
+like see look at that So when you go to 100 when you go to 100
+We are now
+a lot slower but you would think it's like well like can't we just like isn't
+more things going in parallel and it is but it's like it's taking more time Part
+that is also like uh data bricks can only fire so many tasks in parallel right
+It
+can only like can we see that Can we actually like step into like how many tasks
+are
+running
+So we can actually understand like OK like what is going on here Can we see the
+I think oh this finished OK we got it we we we have to like see it in in the
+flesh
+like see it actually running
+OK that's um here Let me see the performance here of this job
+OK so um oh I just finished OK there we go So
+We have our uh examples here uh like you see how it
+Like
+It looks like 50 is probably the right number Somewhere between 10 and 50 is
+probably
+the right number which makes sense if we think about it right 50 really does
+uh uh I think like the guideline is like 100 100 megabytes or 200 megabytes per
+So that would 50 is probably the right number between 50 and 100 it's probably
+75 is probably the the right number Um keeping in mind that like this is not
+always
+an apples to apples comparison It looks like it is right You see how like the
+of rows the number of bytes are all equal but it's not a complete apples to
+apples
+comparison because of the fact that like there is latency on the data brick side
+like um
+Uh give you these numbers like cause it's like OK I'm just gonna copy these
+and put them into like text edit real quick so we can see like OK so this is
+gonna
+be our um this is our like 1st 1st run and we're just gonna run this one more
+cause I just want to show you that like
+This is not necessarily um
+Always
+Gonna work the way you expect right Like that like each there is uh like latency
+changes So you see what we got 12.9 What did we get last time
+Last time we got 14.1
+Like that's a big difference That's like that's like 10% It's a 10% difference
+just like because part of that is like we're working with data sets that are
+smaller
+right That these these these data sets are not like
+So big that like we run out of um
+like or that like the the data shape is the problem So 00 that time we got the
+exact
+same on uh 50 and 100 right So that's
+like it it goes to show what what uh you see now now we're now we're slowing
+down
+again Now now it's and I I bet 500 is gonna be uh it's gonna be even uh it's
+be even worse right
+Yeah OK So this is again though like one of the things OK so one of the things
+I'm
+I'm trying to show you here is like OK so
+why is this one so much better Well part of it is caching Part of it's caching
+So like these uh these data sets and and these like why is it so similar now
+Cause
+most of these are pulled from a cache right So like that's why like these
+numbers
+now when you run it again it's like Um server list probably has a lot of this
+cache
+somewhere It has to There's no way that like they're all the same right Or for
+most part these are
+within a standard like you know from a statistical perspective these are gonna
+all the same right So like that that's where like you want to be careful
+sometimes
+when you run these uh tests to uh see like what's actually happening So
+Anyways I'm just trying to show you that there is the main point I'm trying to
+say
+here is that like there is a Goldilocks amount of partitions It's not like one
+or
+infinity it's like there is a sweet spot It's kind of it follows kind of a
+parabola
+bell curve in terms of performance
+OK So we're gonna be looking at um we also want to look at the difference
+between
+um
+OK so this is gonna be uh just explained plans So let's look at the two
+plans here to kinda understand
+what's happening So
+Remember round this is called the round robin This is just like basic
+but like OK so we read our CSV and then we shuffle This this shuffle here is
+be that first repartition and then we shuffle again and that's gonna be the
+group
+by right So you see how we have uh we have two sets of shuffling that happen um
+this uh round robin versus keyed uh version of the of the data frames right So
+have two sets of shuffle We have that first shuffle and the second shuffle
+Sometimes shuffling can be good though because it makes it so that the data is
+more
+uniform and it can actually be faster
+Then let's go into OK so then let's look at the you'll see if we repartition
+based
+on username
+now all the data is co-located and you'll see our we only have one
+shuffle right We we shuffle first on username and then all the data is
+co-located
+and then uh we're good to go right This is uh this can be a very powerful way to
+kind
+of like
+like this is a good example of where like
+Because our data set is still fairly small like 40 gigabytes is not that much
+It's um like like we saw well like we saw that like doing this repartition was
+more efficient It used less CPU
+right Even though the round robin was better for wall time by by quite a bit it
+better for wall time But the but the repartition by this was was way better for
+CPU
+time It was like 50% less in terms of um CPU time because of the fact that this
+comes
+back to these damn plans right Where like generally speaking the job with the
+fewer
+number of steps is gonna be more efficient just like from a just like a kind of
+First principles perspective but
+more importantly than the fewer number of steps is the fewer number of shuffles
+The
+fewer number of shuffles is the thing that matters the most
+So um that's going to be a big thing to be thinking about So let's um I want to
+look
+at these two explained plans because I want to look at coalesce and repartition
+well because these are uh different um ways of looking at things So
+Remember this repartition this was exactly the same right We have our two we
+our two
+shuffles right We get the first shuffle and the second shuffle Repartition
+shuffles coalesce never shuffles right
+So um if we go down like we should be able to go down right OK there we go So
+see with with uh with coalesce
+So we now have uh our
+We have a much simpler plan
+with actually no shuffle here because we have our object hash aggregate So this
+gonna be um
+Uh like we have more of a risk here for SKU because of the fact that uh the
+reason
+why there is uh more skew here is because uh we we don't know like what 10 here
+we we have one of these 10 is probably gonna be uh
+Um have significantly more data than the other partitions That makes sense Like
+going to be another big thing to be thinking about So let's um OK so I think the
+rest
+of this is gonna be just other examples that you can potentially look at that um
+this this this one is good though This OK so let's um let's let's read in um so
+is just going to show uh like
+Same idea like uh plans but let's actually go look at like an example of a SKU
+a SKU ratio So this will actually look at the the genuine number of uh
+Of of of
+Of rows in each partition You'll see like we actually are grouping on the
+ID
+So this will give us like OK what like what partition how many rows does the
+biggest
+and average partition have You'll see like we have like our min max and average
+we're comparing max rows to average So this will show us like how skewed our
+set actually is And this is going to be another beautiful way for us to know
+oh we are um
+Gonna be able to like look at this and understand like
+Like the shape of our data How like how much is actually how much can we
+like know about this
+OK so you'll see with round robin so here's our round robin after we we we
+we repartition wait you see this first one we're just looking at repartition and
+we're
+and you'll see with round robin like
+It it it's it like these numbers are basically the same They're basically the
+same
+They're within like one or two of each other right
+But we partition
+Based on user ID where we actually co-locate all the username data together then
+you'll
+see we actually do introduce some SKU
+The SKU is uh it's
+It's gonna make the pipeline run a little bit slower because of the fact that it
+one of the workers is gonna do more work
+but it it should make it more efficient too because like we don't have to
+again We don't have to like keep doing more shuffling OK so that's essentially
+what
+we had for uh the first part of our partition and performance um segment So
+uh let's go into um cumulative
+Uh a cumulative example because this cumulative example is gonna be super
+important
+Uh remember like you gotta go back to day one and ingest uh the data to Delta
+I did update that so if you uh can pull from Maine um the the bug from that is
+fixed
+So let's uh let's go into this This is gonna be a very different way of thinking
+about
+things but we are this cause this is like how to solve performance problems from
+Uh how to solve performance problems from a data modeling perspective not from a
+tuning
+perspective because we just looked at a tuning perspective and literally what I
+showed you that that one number the number of partitions that's literally the
+only
+knob that you really get in data bricks nowadays So this is gonna you get a
+bit more control here So what we're gonna be looking at here is we're gonna
+create
+a a daily table So this this is just gonna be our our daily metrics It's gonna
+our daily metrics Um we're gonna aggregate up and we'll have our daily metrics
+for
+Um our table here Uh remember we have our minute aggregation This is gonna be
+our
+cumulative cumulative table uh that we will be using to do things more um
+Remember we're gonna do this more like one day at a time We're gonna build up
+cumulative table one day at a time So first things we wanna do here is we want
+build our daily table right So in the daily table we have uh we're gonna group
+trade date and we're gonna build out this daily table really quickly So this
+daily
+table like
+Uh you'll notice we cluster on trade date so that will make it more efficient
+we definitely should be clustering on trade date As much as I am not that big of
+fan of liquid clustering we are going to be using liquid liquid clustering here
+So um let's go ahead and build out our um daily metrics So this will give us uh
+good idea of like how much data we actually are going to be rolling in here
+Should
+be like I don't know it it shouldn't be that much I think it should be like 10
+10,000
+or something like that or 2000 So we have 2000 daily summaries of different
+stocks
+So that's gonna be we're gonna be pulling from this data set uh going forward to
+of understand this one is like gonna be a little bit more uh like of an
+overoptimization
+for this scale but like
+for the rest of this part of the lab just think of this number instead of 2000
+think
+of it as like 200 million and it will it will make this uh uh pop a lot more
+So now what we want to do is we want to look at the naive costs So we're gonna
+and we're gonna look at the daily data and we're gonna look at how many rows and
+how
+many days of data If we did remember like we're we're we're we're trying to
+count
+the number of days of data where a stock is above a certain price or like we're
+looking at like the monthly aggregates of a stock or like the the yearly
+aggregates
+of a stock right So we let's look at the naive cost here which is just where we
+We just scan right We just scan So we can see here
+um that there are like there's actually 273 trading days in this um data set and
+have 8 right We have 8 to 10 tickers So that means that there's gonna be like
+about like you know there's like 2000
+rows of data that we're gonna need to be thinking about right And then you know
+over
+a year it's gonna scan this much right So
+This the cumulative table is only gonna scan 546 So this is gonna be a massive
+gain
+when we look at cumulative So
+Let's go look at what what we can do here So this is gonna be the way that we
+do our join right So remember uh the the essence of a cumulative table is gonna
+we use full outer join right That's what we're gonna be doing here We have our
+join
+and this is gonna be like we you can also put full outer here just to be very
+explicit
+And we're going to join on Ticker in both the today um uh we have our we have
+snapshot data set and we have our today data set So this is going to be our new
+cumulative
+update that we will be creating and this is going to be doing like what if you
+remember
+from the slides we we use the we use this little slice use a little slice
+function
+that we're going to be using and then uh so let's uh run this and this is going
+give us uh this is going to define our cumulative update
+And then we have our initial snapshot So uh the initial snapshot is just gonna
+um like cause every cumulative table right It does that weird full out or join
+yesterday and today right But one of the things you got to be thinking about is
+at
+some point yesterday
+needs to exist
+right The very first run of the pipeline needs to exist And so this is this is
+the seed run This will be the seed run
+that of like what we're going to be doing right So we have our we have our
+initialized
+snapshot which will be the seed run
+OK so now we can enumerate right And we can actually run
+uh today yesterday you know or like it's like two days at a time You have
+yesterday
+today today tomorrow kind of like you always like kind of merge two days at a
+So or or like January 1st and December 31st and then January 2nd and January 1st
+January
+3rd January 2nd right You always are like it's like almost like think of it as
+a sliding window right where you have the historical date the historical data
+which
+is yesterday data and then you have today's aggregates and today's summary Right
+that's what we're gonna be doing here where we're gonna be uh running our
+accumulation
+and we have our we have our data for today
+And then uh
+one of the things to remember is like some of y'all like probably were taught at
+some
+point that full outer join is like a shitty um
+Way to do joins and it is most of the time Most of the time fallout or join is
+pretty
+terrible Like it's not something that it it it has very few use cases overall
+is one of them and the reason why it's one of them is because if you think about
+stock market right So you have stocks that uh IPO like you know uh you have like
+Figma
+Figma is a a stock that recently IPOed And then you also have stocks that get
+So you have a stock that can go from existing to non-existing and you also have
+stock that goes from non-existing to existing and then you also have stocks that
+are both right They they exist every day So full outer join allows us to keep
+the history right Both for for for stocks that come on as well as stocks that
+fall
+off So that's why you need to use full outer join versus using like a left join
+a right join right Cause inner join is not gonna work because
+if you have yesterday and today
+Then there's always gonna like when a stock
+every stock has to IPO right Uh there has to be a starting point for every stock
+if it's not in that yesterday data and you're using interjoin it's just gonna
+filter out and like it will never be able to get onboarded right Then you have
+the left and right joints right Those those have the those are the problem
+essentially
+of any any stocks leaving Those are the the leaving problem right Uh and it's
+OK well if stocks uh end up falling off then like we lose them in that case if
+use left or right cause we only preserve one side of the joint And so that's
+be like why we use full outer joint here is because we're able to collect
+history
+let's go ahead and look at our benchmark here
+just so we can like actually understand like OK what is gonna be the difference
+The the difference here might be really small because we're working with
+thousands
+of rows of data but um we're gonna we're gonna we're gonna try it out We're
+see like this is uh literally computing each of our snapshots right And we're
+Like like we are uh updating and calculating each of our snapshots here and this
+gonna be essentially generating a bunch of jobs right We are doing our full
+recomput
+count full recomput count and um
+You'll see here we have our snapshot count snapshot count snapshot count right
+this is gonna be doing our full recomput count So um we should get our uh
+OK so
+OK so why is this the case right here Um uh like
+uh it it doesn't it it looks like the case where these numbers are like opposite
+of
+what you would expect because of the fact that like we are working with such a
+small
+data set but like as the data set grows this becomes um a much much bigger thing
+we only have oh this is over 20 days right Not oh and it's like oh well over 20
+days
+like Why is it so much less or why is it so bad right And it's like um it's
+we're running uh like like we we probably have some caching and some other
+things
+here We're like
+The the incremental is gonna be better and this is uh I need to update this with
+A much larger data set to kind of prove out that like the incremental is way
+better
+But like intuitively it makes sense right That you're processing one day of data
+a time and you're not processing the entire window every day So that's gonna be
+um the big thing here even though these numbers are a little bit off I will I
+want
+to update this lab with a a data set that's a little bit big a little bit bigger
+like we will uh be able to see that That's like the speed up is is wrong This
+is wrong
+OK cool We do have time for the last example I'm very glad that we were able to
+through all of this So um
+We're gonna
+work with we're gonna create a shitty file a shitty um
+Uh non-splittable file that we can work with here that will essentially allow us
+show the the differences of like
+Like why you don't want to use um non-splittable files right And especially
+non-splittable
+compression formats Both of those things are freaking annoying
+So what we're doing here is we're just gonna take all of the we're gonna take
+of the data all of our stock data and we're gonna um we're gonna create a GZip
+Of all like we have like OK so we have 1.7 million rows and we're just gonna g
+zip
+it all into one nasty piece of shit CSV file We're gonna like be like what delta
+table
+We don't need delta table We're gonna we're gonna create garbage because we like
+garbage So we have our garbage here 36 megs 36 megs is our um our garbage file
+Fantastic OK I'm glad that we have our garbage 36 megs
+Now uh what we can do here is I want to show
+what happens when we try to read this in right So
+Here here we're gonna read in what's gonna happen and like you'll notice if we
+like can we like step into this guy
+Actually
+This guy is gonna be
+you see he has one partition See the number of partitions here is one because
+It can only be one because it's a non-splittable file right It's like a
+nasty file and this problem here it only gets worse as like you um make this uh
+data set bigger 36 megs is probably
+still pretty fine to actually have just 11 non-splittable file but if this is
+100
+gigs then you're gonna suffer You're gonna suffer a lot
+So let's uh let's look at this So another option that you can do right So a lot
+people are like well OK let's repartition we're going to repartition to 16 So
+We're gonna take our uh our like this is if you have no control over your file
+format
+this is the best you can do where like you have to just read it in single
+threaded
+and then you can tell Spark like OK now split it up and then let's do our
+right That's gonna be this is gonna be the case like when you have no control
+your output or your source um
+Your source data if you have like a bad file that you have to like read And so
+then this is where
+you see the the read is still single threaded but aggregation and joints after
+are parallel
+Right So this is great So then we have our partitions and we're able to read it
+through
+and we're good to go right This is looking pretty pretty solid Um OK so
+Let's go let's talk about the different um uh
+Ways that you can compress things right So you have like GZI B-zip 2 LZ4 you
+snappy There's just like it's just like a lot of like different freaking
+compression
+codecs that you can like think about right And they're like annoying But one of
+things is that's interesting is GZI LZ4 snappy and Z standard are the more
+common
+These are the more common uh codecs BZI 2 is actually not very common And I'm
+trying to say use BZip 2 in these cases because like it might not be the best
+for you but what we're gonna do here is we are gonna create a BZip file We're
+like we're gonna dump uh a little BZip file here We're gonna like
+just just to show like why splittable files are nice cause Spark can actually
+freaking
+do shit with them can actually like work with it right So This is going to be
+the same thing where it's just like dumping all the uh dumping everything to
+a single um
+Bzip splitable file right We have our Bzip
+Be zip bars um
+I think some of these we might have to like update the path right I think for
+people like it might you might need to update these paths uh from temp to uh
+Like a volume path like these paths up here I just realized if you guys are
+to follow along that's something that we probably need to
+update
+This should um did that um did I just run OK so we just ran this B-zip right So
+ran our BZI
+So then we also have our uh like we can convert to delta or parquet right This
+another really awesome way to go right We're like we're just putting Humpty
+back together again and we're just putting them back into the into the delta
+is gonna be so like maybe we have a shitty Gzip file or we have a shitty B zip
+file
+or we like do a delta I'm just trying to show all of the different ways to do
+right So
+another way that you can do things right is you maybe you want to use GZI files
+but
+you want to use you know you want to do 16
+You know GZI files and so you you make it like
+instead of trying to do one giant splitable file you do 16 smaller files And
+is another like cause GZI is going to be a better like generally speaking GZIP
+a better compression algorithm than than BZIP in terms of just like how much it
+shrink things
+So now you'll see here we just we row out all 16 chunks So now what we want to
+do
+is we're gonna compare
+We're gonna look at all of the freaking choices right We have all of our choices
+of like OK we converted to delta we have our 16 file G zip we have our 1 B zip
+We have our reading in the 1 Gzip file and then repartitioning and then we have
+single repartition OK
+Let's go These are just going to be all of our possible ways that we can look
+put Humpty Dumpty together and back and just moving files around like I'm not
+you know I'm just
+just trying to be here right So OK so we have our um we have our GZI1 file 2.8
+2.83
+There we go So then you'll see this makes sense right The GZip plus
+So now you'll see with BZip splitable
+OK this is great
+I'm so happy
+I'm so happy when the benchmarks actually are right OK So um the benchmarks here
+looking really great So you'll see here we have our uh 4 ways of doing things um
+our 5 ways of doing things and like Uh it really shines like
+why you want splittable files right Or you can have non-splittable files but you
+have multiple of them That's the other way right Like you can kind of see like
+if
+we do multiGzip that was actually our best choice That did a little bit better
+than
+Delta It's a little bit better Uh but then BZI 2 did did a lot better right
+You'll
+see like so from our uh original example here right to to BZI 2 that's like
+More than 100% performance right Or like like you're gonna like so obviously
+these
+times might be a little bit different like like for example like
+With real big data instead of like 2.8 seconds maybe it's 28 minutes So it might
+from like 28 minutes to 9 minutes or like 28 minutes to 4 minutes right If you
+if you actually change the upstream cause keeping in mind all of these are
+reading
+the exact same data They're all reading the same files It's just like how many
+files
+are they reading How can they leverage parallelism and this is gonna be the big
+of winner uh thing that we can look at So that's gonna be the uh the other big
+thing
+to be thinking about as you're like looking through your files So we can look at
+partition
+skew This is like mostly I was looking into this and like most of like we have
+this shows like the way to solve things and the way to like uh like you can do
+like in an interesting way there Uh and it actually like skews things but like
+is not um
+Uh like this doesn't work as well because like I learned that you can't like you
+can't
+touch the adaptive execution
+And you can't touch the SKU join Like a lot of these uh configurations are
+removed from uh the current version of Data bricks So uh like I will update this
+code
+as well a little bit just the small changes that we need to update here but
+anyways
+I wanted to uh pause here and um ask if anyone has any questions about this lab
+any any any things that they are are thinking about here because um
+Uh cause it's a lot
+There there's a lot here that like
+So um how do you check the performance live Yeah query analyzer or Spark UI Yeah
+100%
+So hopefully like this is this this type of stuff is still super important right
+there's always bad practice that people are going to have and you're always
+going
+to be working with shitty upstream sources That's just the nature of the beast
+uh these are the kind of different techniques and tools that you have at your
+belt to be able to solve these problems So Um yeah I I'm I'm here for about
+another
+like couple of minutes here so we can you know answer any questions that y'all
+might
+have about this and then and we will uh like we will we will break
+We'll see I can see we got a couple of people furiously typing
+Any good book or link for Spark sequel tuning best practices I mean
+I just kind of covered it dude like I don't know like uh like I like I I I don't
+books dude like I I honestly feel like reading books on this stuff is not a good
+idea
+like it's like because it comes back to like spark sequel tuning like
+Just like what I said in the lecture right It's like it causes you to be very
+narrow
+it causes you to think about like oh this one tool that you can look at versus
+the bigger the bigger like scheme of things like maybe it's a data model problem
+maybe
+it's a uh uh it's not like oh like it's similar to a sequel like you're gonna
+the same problem right So
+Can someone who has not much Python experience day to day basis can they write
+of the code in SQL and data bricks Yeah I mean like
+sure I like
+Like but just vibe code man Like I don't know like I like one of the things that
+gotta remember is like not having much experience in something is not an excuse
+anymore
+It's not an excuse
+I can go and be a rust wizard I can go and learn freaking cobalt Remember we
+talked
+about cobalt earlier It's like I can do whatever I want now right So in the
+example you mentioned network overhead one of the factors uh uh could affect the
+performances
+I'm curious uh how does um NH play uh a role here since this is mostly compute
+Well
+like the executors have to pass data to each other right They have to pass data
+each other So like yeah like that's gonna be the um Like if you have two things
+are talking it has to talk over a network right And so um that's gonna be the um
+yeah
+so like yeah bus it's it's a communication overhead like it's not networking in
+same way of like VPC or like you know Egress or Ingress like it's not like like
+across the net across the internet networking right Right so
+Yes I agree Today's session explained a lot Shuffling sorting was a bit
+overwhelming
+Yes I should vibe it Yeah and like a lot of this stuff like honestly I um I I
+feel
+good about this I I don't know It's it's it's like it's also like a lot right
+It's
+a lot of this stuff that I have taught today I've learned over like 5 years
+Right
+and so uh it's it's not something that like you're supposed to learn in 40
+right It's like drinking from a fire hose you're just gonna get like a certain
+amount
+of it right And so yeah uh I'm happy This is actually I feel like the best I've
+ever
+freaking pulled off in terms of uh the performance tuning for Spark
+Let's see those open claw posts now Yeah I'll be getting uh my Mac Mini comes
+tomorrow
+morning so I will be I will be nerding out and freaking installing Open claw and
+all sorts of stupid shit tomorrow It's gonna be great Like um
+Yeah I'm excited guys Uh uh I hope you hope you guys have a a fantastic uh
+Thursday
+I will get you guys the homework tomorrow uh probably tomorrow um mid-afternoon
+uh we will go from there

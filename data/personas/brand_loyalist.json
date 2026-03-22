@@ -1,0 +1,63 @@
+{
+  "persona_id": "brand_loyalist_mumbai_01",
+  "name": "Ananya Deshmukh",
+  "archetype": "brand_loyalist",
+  "tagline": "Has used the same face wash since college and will not switch without a very good reason",
+  "demographics": {
+    "age": 33,
+    "gender": "female",
+    "city": "Mumbai",
+    "city_tier": "metro",
+    "state": "Maharashtra",
+    "income_segment": "upper_middle",
+    "language_primary": "Marathi",
+    "language_secondary": "English",
+    "education": "Architecture degree from Rachana Sansad",
+    "occupation": "Senior Architect at a design studio in Bandra",
+    "family_status": "Married, no kids yet, lives with husband"
+  },
+  "purchase_psychology": {
+    "price_sensitivity": 0.25,
+    "brand_loyalty": 0.95,
+    "impulse_tendency": 0.25,
+    "social_proof_need": 0.4,
+    "research_depth": 0.4,
+    "risk_tolerance": 0.2,
+    "decision_speed": "moderate",
+    "deal_sensitivity": 0.2
+  },
+  "media_behavior": {
+    "platform_primary": "Instagram",
+    "platform_secondary": "Pinterest",
+    "ad_tolerance": 0.5,
+    "scroll_speed": "moderate",
+    "video_preference": 0.4,
+    "influencer_trust": 0.35,
+    "content_language_preference": "English"
+  },
+  "emotional_profile": {
+    "aspiration_drivers": ["aesthetic consistency in everything she uses", "brands that feel like part of her identity", "quality that does not surprise — in a bad way"],
+    "trust_signals": ["brands she has personally used for years", "recommendations from close friends with similar taste", "consistent packaging and messaging over time", "international presence"],
+    "rejection_triggers": ["new brands with no track record", "aggressive discount positioning that feels cheap", "dramatic before/after claims", "brands that change their formulation or packaging frequently"],
+    "emotional_hooks": ["belonging to a brand community", "heritage and legacy", "design quality and packaging aesthetics", "'this has never let me down' narrative"]
+  },
+  "category_affinities": [
+    {
+      "category": "skincare",
+      "interest_level": 0.8,
+      "monthly_spend_inr": 3500,
+      "preferred_brands": ["Clinique", "Kama Ayurveda", "Forest Essentials"],
+      "purchase_frequency": "monthly"
+    },
+    {
+      "category": "fashion",
+      "interest_level": 0.85,
+      "monthly_spend_inr": 5000,
+      "preferred_brands": ["Zara", "H&M", "FabIndia"],
+      "purchase_frequency": "monthly"
+    }
+  ],
+  "backstory": "Ananya grew up watching her mother use the same Lakme products for decades. She absorbed the lesson that a brand that works for you is a relationship, not a transaction. At her design studio she applies the same philosophy — she uses the same pen brand, the same notebook, the same coffee. She is not closed to new things, but the new thing has to prove itself against something she already trusts. She has tried maybe two new skincare brands in the last five years.",
+  "current_life_context": "Her go-to face serum was recently reformulated and she is mildly annoyed. She might — just might — be open to trying something new, but it has to feel trustworthy, premium, and not pushy.",
+  "inner_monologue_style": "Quietly evaluative. Does not overthink but has a strong gut sense. Thinks: 'I have not heard of this brand, so why would I switch?' or 'This looks clean but is it going to be around in two years or is this another startup that will disappear?'"
+}

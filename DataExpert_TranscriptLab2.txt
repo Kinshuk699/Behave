@@ -1,0 +1,900 @@
+iceberg and partitioning and I mean not Iceberg Delta and partitioning and unity
+catalog
+and all this stuff right So if you guys remember like
+before right we were doing like create table and then it was like delta dot and
+then
+it was like
+path to table right And then it was like
+This right And then I was like ID whatever integer right What whatever bullshit
+like
+we're doing right Like if you remember from uh
+This is probably gonna fail cause it's like what kind of path is that That's a
+very
+stupid path Zach but like that is kind of like the um like wow that actually
+worked
+OK Data bricks whatever OK but like one of the things that you guys might be
+saying is like you look at this and you're like that is like the most ugly table
+name
+I've ever seen in my whole life and like because querying raw delta tables is
+super
+ugly like it's like that It's like it turns into like a a file path it because
+that's
+like the the way that you find where the data sits right But like one of the
+things
+that's cool is you can use you can use um uh like Unity catalog to fix that
+problem
+right So you'll see like if we say like create schema you say main
+The crate scheme at
+main dot is that not working Main dot OK we'll see uh main dot Zach Wilson
+I think that should work right
+Just like that OK so that worked out So now Maine is the catalog right And then
+Zach
+Wilson is the schema right So this is similar to like probably what you would
+expect
+but some people might think that this looks like a table now where Maine is the
+schema
+and Zach Wilson is the uh table But that's not how it is because like in the
+world we have a we have a three-level name space right So if we uh now what we
+can
+do is we can create a table when we say create table or main
+Zach Wilson dot and then we're gonna say like um delta on unity right
+And then we're just gonna say we're gonna like put it we're just gonna put some
+columns
+in here We're gonna say like we're gonna say like um ID is an integer
+and then like name is a is a is a string sure And then uh then we have um we're
+gonna
+have a DS is gonna be a a date
+Right And then you can say partitioned see how it's like this is like
+partitioned
+by
+DS yup using delta
+We don't need location right Oh no
+it's because this is before using it using delta partitioned by DS right And
+we can put we could put like a clustered by here and like let's think about like
+maybe
+adding some other columns of this table So let's change the name of this to like
+we're
+gonna call this um delta users on Unity right Something like that And it's like
+OK
+so we have a user ID right That's definitely in the table right And then like we
+might
+want to be thinking about like other things that might be in this data set like
+that
+like we could potentially cluster on So something that's like right I I always
+love
+country as um a column
+because uh country as a column is one of the things that's very interesting
+about
+country is that it is um it's high cardinality
+But it's not that high cardinality right In some in some contexts country is
+high
+cardinality and in other contexts it's low cardinality cause it's like that
+weird
+200 right
+So uh we're just gonna do this We're gonna say um uh user ID country right And
+not gonna do it into buckets So now this is gonna be like our we can create a
+table
+this way right
+I didn't like that
+Why is it not like this Can we like ask it to freaking
+That par syntax error
+Sure diagnose What's the problem
+This this is the right syntax like what
+This is why I like the freaking this is so interesting Maybe it's because it
+clustered
+on
+Yeah
+Oh it's cluster by
+that's so annoying It's cluster by not clustered by OK fine
+So we'll cluster by and then
+Cannot specify both clusterby and yes you can
+Is this supposed to be below then Like you can totally do this
+And it it must come before
+This is definitely allowed like that you should be able to do both right That
+it allows for both um
+Uh things
+OK maybe like so does it just want the um
+OK So it worked with clustering but it didn't work with the DS It usually like I
+know
+for sure that you can do both Like you can have like a a table that is both
+and partitioned so it's probably another another strategy there but like so we
+have
+created a delta table right And um this is uh it's interesting right How we can
+do
+these kind of like this this looks a lot probably a lot similar to like what
+you're
+used to in terms of like SQL and data engineering and stuff like that It's like
+a
+little more familiar
+So um I just wanted to show that as like as we step through some of these other
+examples
+and then we will kind of like uh we'll we'll ask people I will I I need to see
+why
+that doesn't why that didn't work That was super weird that like It didn't allow
+for
+both cause I know you can do both like so
+um
+So in this first example this is a pretty simple example like we're not gonna
+really like beat this one to death right But like the whole idea here is we're
+just
+gonna we're gonna click run on this bad boy and you'll see what this allows for
+is
+you can see the cat like this will show the catalogs that are available in this
+workspace
+which is like there's like a lot of them It's like a lot of catalogs and um you
+guys
+should be able to see um most of the stuff I'm pretty sure so And then then it's
+show like the schemas right here the schemas within
+uh like
+Within the um catalog right And then we have like our actual tables
+so many tables
+Right
+There we go And then it then it's gonna create a bunch of things So like what
+doing here is like we're just creating our schemas and creating our tables and
+you'll
+see like
+Um like this create catalog might not work for you guys because you don't have
+the admin privilege to like create a catalog That's like I I wanted this syntax
+here
+for you guys so you can kind of see like how to create a catalog and it's like
+really
+easy create catalog if not exists That's how you can get that like that that
+highest
+level name spacing right So you have like main.dataex.t like main schema.table
+right
+You have 3 layers right And that's what uh But most of the time creating catalog
+gonna be uh an admin rights thing So unless you're like a very high-level data
+engineer
+that might not be something that you can like necessarily do but maybe maybe you
+maybe you can right It it depends on where you're at and so then creating
+schemas
+and creating all this other stuff that's all this is doing This is not a very
+interesting
+example so like I don't want to spend too much time on it But it is stuff that
+I would highly recommend like going through um at another time So we're gonna
+step
+into one of the more interesting examples here of um data bricks liquid
+clustering
+So one of the things to remember about liquid clustering is that like you these
+are
+the two hard requirements right To get liquid clustering you have to be on like
+more recent version of the data bricks runtime And you have to have Unity
+enabled and your catalog has to have um predictive clustering enabled That's the
+other
+big thing Those like those are the three kind of uh ways to do things So
+you'll see um in this example we're going to be using very similar to uh
+Tuesday's
+lab where we generated data from like web events like we're going to be
+generating
+some web events data here Let's go down to the bottom here So it's like
+demonstrate
+cluster key selection
+So there's a bunch of really cool things here right So like we're gonna be uh
+this just shows like kind of like the best practices I've really thought about
+quite
+a bit of like what are the
+good candidates for clustering right So you can kind of see like the um Like the
+different
+uh ones that would be good or bad right Like because and remember like you don't
+want
+to clustering columns that are not used right Or columns that change a lot
+That's
+gonna trigger a lot of like um rebuilding of the data and reconfiguring of the
+data
+So
+let's go ahead and just run this from the top and then uh we'll kind of see like
+what's
+going on here right So
+OK so that's that's showing out the
+clustering piece of it so
+Now it's going to create this table Let's see if we can find this in the in in
+the
+workspace real quick
+So it's going to create the table and then it's gonna insert some records right
+So uh
+OK So we go from the OK this is there's too much it's it's doing too many demos
+One
+second Let's freaking comment some of these out and let's run that again
+Too much like shit's going on Like it's like hard to
+Hard to demonstrate
+Come on
+There we go
+OK so that's OK we want to do this
+Uh
+Yeah we we we will uh yeah let's look at the traditional partitioning That one
+one is actually the the right one we want to be looking at
+It
+Kill
+Oh this is the this is the demo This is where it actually does it Sorry that
+one's
+also freaking
+my brain right now
+This is this is like the end to end workflow OK so it's going to create the
+cluster
+table and then it's gonna like you know this is where it's gonna actually put
+data into the data set like we have 10,000 rows and then we're gonna get our
+file
+statistics and then we're gonna remember like when you run optimize that's where
+it's
+gonna really do the clustering It's gonna do that clustering for us right And
+see like in this um in this example
+oh wait I freaking
+went to the wrong one You'll see in this example when we create the the the
+right We we create the the the liquid clustered table right Let's just look at
+what the columns we're clustering on right So we have region event type event
+time
+So those are decent columns right To uh like and you'll notice like one of the
+reasons
+we did not uh um cluster on event ID right Is because event ID is gonna be very
+like it it's very high cardinality right It's just like it's like a UUID It's
+Uh that's why that column is not a good candidate to um cluster on whereas like
+there's other choices here that could also be good but region is really good
+Because like there's a chance that like we only want to look at North America or
+there's
+a chance that we only want to look at Asia That's very common in the event type
+like how many clicks how many conversions how many page views those are that's
+another
+very obvious like thing to be thinking about here
+And then event time can also be interesting cause it's like OK like uh we can
+filter
+down to like a specific date The event time matters a little bit in terms of
+it's cardinality as well but um so
+Here we go and like let's let's let's like step through this So we we inserted
+data and then we optimized and then we have our uh this is gonna be our um this
+before we optimize and before the liquid clusters optimized we have what 50
+What 526,000 bytes It's pretty cool
+OK so I think the reason why this is the same is because of the fact that like
+I've ran this multiple times I think that's probably what it is So I'm just
+put like a I'm gonna put one more thing in here cause these numbers should not
+be
+the same
+So it generated the 10,000 rows We have our optimized we have our optimized
+statement
+Here we go
+Right And uh that's a pretty decent number of our one file
+And then
+interesting like why is it
+This should be something that like where the the the clustering actually does
+something
+like it actually does Why is this happening again This is like so interesting
+like I want to look at how it's actually writing the table cause that's gonna be
+that I think is OK it's probably this guy It's probably like can we do an
+An overwrite here I think will make
+make a difference because it might be like
+How it's putting the data in there but we'll see This is this is probably gonna
+the exact same um exact same results right Where we have the 538
+And then the optimize maybe it's because like when it writes it I bet what's
+happening
+here is like it
+Data Bricks is getting smarter right We're like Yeah I know what it is because
+it
+has that auto optimized right So remember like this is where like depending on
+your
+version of data bricks like like how much of this stuff you need to be doing and
+this is happening behind the scenes So what's actually happening here right And
+why are these numbers the same right And so the reason why these numbers are the
+same
+is because we have uh we have an auto optimize right Um and you can kind of see
+like post-optimized compaction right here
+Right and that's gonna be the um that's the other piece of what's actually
+here And so um
+Like
+And it didn't make a difference is because like when it's being written it has
+it has that optimized layer to it right in the in data bricks somewhere That's
+what's actually like why we're not seeing this because I enabled
+so it's just because I enabled that like when I ran this yesterday right and I
+have predictive optimization on
+And this worked It worked yesterday and then I enabled predictive optimization
+and
+then obviously during the lab like we don't see a change It's because it's
+automatically right That's the uh that's one of the things it's nice it's again
+one of those things that's nice right Because it's like OK it's optimized the
+way
+we would expect it to be optimized right
+But at the same time it's something that we want to be a little bit more um kind
+of
+careful about right So I would say that that's going to be the um kind of the
+big
+thing Do we have analyzed data skipping
+Where where do we
+Analyze data skipping I thought that this was in the
+OK OK We can actually do that analyze data skipping I remember this this is
+actually
+a pretty cool thing like it actually shows so we have table name filter column
+value So we're gonna put in uh
+So our table here is going to be main.dataexpert.web
+Events clustered new
+And then we're gonna say region and we're gonna say North America So we're just
+look at like how this actually helps right Because we get we get data skipping
+from
+this right
+is not available
+It's probably an older version of Data bricks again OK let's um can we go to
+That one I swear worked So let's get rid of that piece there And I think it will
+probably
+uh give us it might just give us that data skipping
+data anyways right So we have our
+logical plan
+Right filter unresolved projection logical plan filter region
+Does it have the um physical plan OK this is this is good So like um
+The query is fully supported by OK so this is gonna this is gonna give us the um
+OK so some of we're gonna be going over a lot more about how to read these plans
+next
+week cause these plans are super important of like how to uh like know what the
+hell
+Spark is doing right What the hell Spark is doing So let's read this from the
+the so remember like these go from the like the innermost to the outermost It's
+a it's like a Russian nesting doll sort of thing Right And so like let's look at
+a very very simple example here right So this is gonna be like the very
+very first plan before it does any optimization or looking at things right It's
+OK we're gonna just count the number of distinct users right
+Then inside of this right we have like the actual columns that are materialized
+where like every column has an ID right You'll notice it has like every column
+has
+like a hash to it right That's uh it's uh because that's like the way Spark kind
+keeps track of things as well because you know how like you can have two columns
+have the same name but are actually different columns like that's like a that
+actually happen Um that's what so that's this is again just a logical plan that
+is uh what we want to happen right And then this is actually what it's gonna do
+Because we don't necessarily like this is the not the optimized plan this is the
+plan right So what's a filter a project and an aggregate right So we have our
+relation
+Relation is just our parque file right This is our parquet file OK Then we're
+filter here where we say
+Region is North America and you know because we're saying region is North
+America
+it's implicitly saying that region is not null because if it's North America
+not null right That's also true And then we are selecting the user ID column and
+we're aggregating right That's what's actually happening That's like uh what
+spark
+So this is where like you can get some very interesting um
+Uh like like as your data gets more complex you get you this is these plans are
+how you can see like oh Spark is choosing to do this or it's choosing to do that
+So this is um like a big thing to be thinking about as you're going through
+because
+then you have your actual physical plan So this is the optimized logical plan So
+this
+is the plan that the driver is going to give to the executors but then we have
+our
+physical plan which is like how the data is actually going to move from each
+place
+right So
+This is um
+Uh a pretty cool piece of it right So one of the things that you might notice
+right is you see how we have uh we have data filters and dictionary filters
+So this dictionary filter is what's gonna be um this dictionary filter is what's
+be like hitting the the liquid clusters right Because we clustered on region and
+so
+that's how we know right That that's that's what's gonna be going on here And
+the um kind of like
+The way that this is gonna kind of like step back up right That's I'm pretty
+about that That's like uh it's these things are
+Like if you ask 10 data engineers to interpret a Spark plan they're going to
+give
+you 1010 different answers but like that's uh like one way to think about it So
+all right cool Like obviously there's going to be more to this There's a liquid
+is there's it's the cool thing about it like and why the demo here is so like
+boring
+is because that's the point It's supposed to be boring So
+OK so one of the other things that we want to be looking at is uh so you can
+managed and external tables So We saw a managed table right We built our managed
+We saw how that works right We saw the um we saw manage tables work the way we
+them to work We saw that right Like that's the the if you do catalog
+schema.table
+that's a managed table right And like and it has everything's gonna have a very
+similar
+format to this where You have table name columns using delta and then you might
+cluster by or partition by and then you might have the table properties thing
+as well if you want to
+Data Bricks is really trying to get rid of these table properties as well
+again it's like one of those things where like the the amount of tuning that you
+do is actually not that important anymore That's you know
+That's where Spark is doing a good job right So the thing I want to show here
+is you can also create a table that is
+not in uh what did I say here That's not managed by data bricks Like it can be
+just somewhere else So I just want to show this example here where we have like
+create
+external table and you'll see we have this external location So you'll see here
+an external location and you'll see it's like S3 Zach Wilson's organization 522
+external
+So this is the S3 bucket right And so one of the things to remember like why
+even works Why does the freaking external uh table command even work at all is
+Data Bricks already has S3 I've already configured the Data bricks permissions
+to
+have access to this S3 bucket So like if you don't configure your data bricks
+permissions
+to have access to this this will obviously inevitably fail right Because like S3
+you need to have the permissions You need to set that stuff up You gotta do the
+IAM
+policies and set everything up right That's uh super important That's like uh
+the one thing that's like
+Everything else about this um example is actually very kind of boring with one
+The one exception here that is um very interesting right The the part that like
+actually like kind of
+amazing is you can't like when you drop
+um so if you drop an external table
+It doesn't get rid of the data right Dropping an external table just gets rid of
+reference So if you create an external table and you write a bunch of data to S3
+then you drop the table and you expected the data to go away
+You're wrong It's not what happens That's not what happens at all right Because
+remember external means not managed right Like not managed means data bricks is
+do it's gonna manage the entire life cycle of like from the beginning of the
+creation
+of the table through the the the data that's in the table to like to dropping
+deleting the table So that's a big thing to think about like obviously there are
+that you can do with external tables but like it really does depend on your
+in S3 right Where like sometimes you'll be able to delete sometimes you'll be
+able
+to just read sometimes you'll be able it it depends on your business use case of
+using external tables So like
+Um some of you are probably like well why the hell would we ever have an
+table right That's like something that uh is kind of strange right And it and
+I mean part of that might be like maybe you're sharing data with another company
+Maybe
+like you are writing your pipeline is dumping data to another company and then
+they
+are using that right And that's their it's their assets right It's their assets
+it's like You wouldn't want it to be where like if you dropped the table on your
+you just delete their data That that that's why it's designed this way even
+though
+it's not intuitive right Because when you you know as a data engineer you're
+you're the way when you design something when dropping the table
+is like killing it It's like shooting it it's like destroying it right That's
+that's the I mean
+That's the image that a lot of us have like it's like you know when you drop
+it's gone right It's gone right And so that's what it's like I think is a little
+bit
+Uh what's the word Like a little bit like
+I I guess the one nugget about external tables that like you want to be careful
+right Is that and um so
+that's gonna be the big thing to be looking through as like you're like stepping
+uh this code here and like kind of like playing around with these demos So it's
+be another uh big thing
+Then we have um access control Access control here is gonna be um
+pretty interesting because like these are all gonna be around like I think a lot
+these are not gonna work for you guys because you are not admins right You're
+not
+actual like account admins on like how to grant the access right So one of the
+that I think is important to be thinking about here with the um with the access
+controls
+right So let's go down to like the actual freaking uh OK so we have our uh We
+our we're like we're just gonna run this one from the top right
+OK so remember like there's so many remember how we were talking about how unity
+gives you like so many um
+Uh patterns right Like or so many like
+controls like what we were talking about in the lecture right How you need to
+like you can you can have catalog access schema access table access column
+access
+right And this is just going through all of those as well as like you know you
+like external locations and functions and There's like a lot of different things
+be thinking about as you're like stepping through this but like and then you
+have like grants right All these different grants that can happen where like
+cause
+remember like there's roles and users right To be thinking about where it's like
+you an analyst a data engineer right That's like a big thing to be thinking
+but like is there like where do we actually can we do like the don't we do have
+an
+an an access here Access demo complete So OK So don't we have a table here We
+a table here right
+Main daily OK so let's go look at this table real quick I wanna just open up the
+SQL
+editor We'll open this in a new tab so we can kinda see like what what what what
+hell is going on here So if we say like select star from uh this this table here
+Cannot be found What do you mean It's it's definitely uh
+We created it We created it like
+OK so we have our create here and then we go down OK create or replace table
+using
+delta OK we have our full table name
+Oh it's Web events secure OK It's the um so Web Events secure
+See what this is about
+OK So one of the things that's really cool about this data right I so this is
+be all of our like columns that like we have that is secure Obviously I'm uh um
+I'm an admin so like I can just see everything cause I'm in like God mode of
+data bricks console right But then like one of the things that we get from this
+uh Like you see how we add a tag right We're adding tags to columns like because
+like how um sensitive is the um the column name
+So I think what we can do here is like we can actually look at that right We can
+say
+like describe
+Does have like isn't not like extended
+Let's add the tags There's no
+I swear it's in here where you can like actually like see the tags of the
+So like
+What is this doing to add a tag
+Altar table columns set tags
+OK so you have to do it from
+OK So you do it from the system information This is how you do it OK Like let me
+let's
+let's like let's just try this guy out
+See what what this is gonna do So we have our table name
+And then we run this guy we should be able to see like
+What
+show tags is
+OK I I I think I think I know what it is I think I know like is it like what if
+just don't put the filter
+and we just run it that way Is that actually
+OK so this puts a tag on the delete This is old data though This is gonna be
+like the last boot camp OK That's that's amazing That's amazing that that is um
+here and it's like those are the the table tags but so these table tags are not
+getting added So let's go back and see like what's actually going on there Add
+add
+tag the column
+Alter table So this uh this seems like this is not running So I wanna uh
+Let's um let let's let's see what actually happens here because this is uh so we
+like main.dataexpert.web events secure right And then we have uh we're just
+put alter column user ID and we're gonna say set tag PII
+Uh true
+Cause this is like
+OK so that ran but then is it not showing up here
+OK OK Like um OK I wanna ask Chat something real quick cause this ran like this
+ran right You see all that like it it says OK it's successful right I need to
+Chat real quick It's like how to look at a table's tags in Daris I thought like
+I
+had this right I'm sorry guys
+Oh it's because it's a column tag That's why I got it OK I I was just I was a
+little
+bit off It's because it's a column tag It's not a table tag it's a column tag
+There
+they are There we go So now we have our tags right that we can see That are for
+those
+columns and then this is what we can use to like help manage our audits right So
+we're like OK we know where all the PII is right We can like literally see it We
+see
+it right here right here We have it in these two columns right We know for sure
+is where our PII is right And so that's gonna be the um
+way that you can kinda like go through and tag all of your data right And this
+a super common thing that like is like
+missed all the time by the way just missed Like this is something that's like
+new and is gonna allow for uh like because with this this is where like like
+when
+you have this like list of tags like it allows for like Um people to know right
+And
+like you're you're make informed decision about like where to put data cause
+PII maybe we're like OK we know we need to anonymize this soon right There's
+be a lot of like valuable things that you can do through tags right So that's
+um essentially what I had for this um uh thing I want there's like some small um
+some
+small things in this that were were not like working the way that like
+I um thought they would but uh like what's show lineage We have we have show
+lineages
+in here Hold up
+OK because this is gonna be oh no that's just the print Yeah that's just the
+because that hits because you can do the the rest catalog like the oh then you
+column lineage OK hold up This is yeah this is the other thing we want to look
+So it's like let's go back into here and we're gonna look at uh we're gonna look
+at
+web events secure data expert right
+What's that No column lineage OK It's in it's in here Web events secure
+It's like that
+So this is just going to show like OK where did this column come from OK So the
+reason
+why OK so one of the reasons why you guys are probably like well why did that
+show anything And like that table has something in it but like maybe the table
+other things in it We want to look at the column lineage real quick of the table
+OK so we have our um OK let's see in here what we can do right So
+This is like every freaking
+Oh it's probably because this is OK so we have our source and target table right
+remember like when you're doing lineage right Lineage is just a set of like like
+sinks sources and sinks right So you have your or sources and targets right So
+in
+this case we have our um
+We have our source and we have our target
+So this is gonna be all of the um kind of
+Things that we're seeing here are these all just null
+Can we just like look at uh target column OK There should be target table names
+also wanna say where target table name is not null
+So let's just look at this real quick and see
+Cause we should have something here
+OK cool It's actually like now this is gonna be uh uh yeah these are gonna be
+more
+from like actual pipelines cause one of the reasons why like our data doesn't
+uh lineage right Is because it's not written in like a pipeline or a notebook
+It's not like it's kind of like and it's kind of being ad hoc done
+Right So you'll see here we actually have like we know where this data is coming
+We see like OK so the source table here is you know bronze companies and then
+gonna turn into silver companies right We see like what the upstream data is So
+one of the things that I I want to show you that is actually really powerful
+with
+this right Is you can actually be very good about this So we can say target
+name We can say array ag source table name right And we can say group by target
+Cable name right So this hopefully it's a Rayag It's probably it's probably not
+It's
+probably something dumb
+OK I got it right Amazing Sometimes like I freaking
+OK So one of the things that's really cool about this right is now we can see
+what
+are OK so we have our data right And we can see what are all of the the oh this
+not looking that great Let's let's put a distinct in there Let's put it you know
+put
+a little distinct in that bad boy It's like a lot of like duplicate values
+like there might be two different flows of the table or two different like reads
+the data So OK cool This is gonna be like all my students like old capstone
+projects
+and like what they're building and
+That's amazing There's actually like a lot in here So um
+one of the things that you might notice right is this is going to show you like
+so these two data sets went into this data set These two data sets went into
+data set right And we can reconstruct this right We can reconstruct this all the
+back right That's one of the things that's really cool about like using data
+bricks
+is like
+this is like The fact that we just get this for free like out of the box with
+lineage
+is like really cool right That's like something that like I hope that you guys
+have like a deeper appreciation for because then like we can know like where
+data came from automatically and then you can build you can build tooling around
+right And I'm sure Data Bricks has other cool dashboards and stuff like that I
+always
+like to teach at the like the query level so you can see where things are coming
+And so like you might notice some of these are like have no source right You
+notice
+that like they have no source at all and it's because these are gonna be the
+Lineage in data bricks only goes to the through tables right So like if your if
+data is um not sourced from a table it's like sourced from an API or it's
+sourced
+from like Salesforce or like some sort of External thing then obviously like
+outside of Data Bricks and Data Bricks doesn't track that That's an interesting
+that like that was uh something when I was working at Netflix I was trying to
+figure
+out was like how do we get like the entire lineage like not just tracking um uh
+tables
+but also APIs and logs and uh like from all the way from like where the data is
+generated
+all the way down to where the data is consumed like uh that was
+Very complicated very complicated But like the the good news is is like for most
+pipelines this is good enough Like you have the you have what you need using
+data here and that uh is is really great It's a really really great way to kind
+like step through and understand like how lineage works So cool We have um we
+two more here I want to go to uh yeah let's go to traditional partitioning So
+is this should give us like some examples of when to use um
+Uh partitioning versus uh like cluster by and liquid clustering and all that
+kind
+of stuff right So let's go down to the bottom here to kind of show like OK so we
+our decisions We can show our anti-patterns and then we have our um our our
+streaming
+pattern
+So let's go look at our anti-patterns real quick first and then we will look at
+demos as well So so anti-patterns right So
+you don't like when you're partitioning you don't want to partition on user ID
+User
+ID is way too much right Like when you're partitioning like you should think
+OK I'm gonna have
+Thousands of partitions at the very most like not even like tens of thousands is
+right on the edge but like if you're in millions or billions like you are cooked
+You
+are so cooked like no
+get out of town right
+OK So um and then this is even worse even worse right Because you are now on two
+that have the cardinality is now billions and that this is going to make even
+Remember how like we were talking about the small file problem before If you
+partition
+like if you partition on High cardinality columns you are asking for the small
+problem You're asking for it right But like uh clustering is fine because then
+you
+just put similar values together You don't split the values right You don't you
+don't
+put them in separate files You just put them in you you you co-locate them right
+why it's OK for clustering but not OK for partitioning right So um right This
+one
+is interesting right Uh
+Right so like
+Remember uh like partition by region is not that useful unless like you know for
+sure
+that all the queries use region right So that's where like in this case you want
+use cluster Cluster is gonna be much it's gonna be a much better option It's
+be way more performant Otherwise it's gonna have to suck up a bunch of um extra
+partitions
+and a bunch of extra files and it's not gonna be good So um
+Sometimes like when you want to just drop a partition and as opposed to like
+deleting
+stuff right Because one of the things that's cool about partitions is like you
+just like drop them right
+So uh that's a very efficient way to get rid of data right Because you just cut
+off and you're done right Versus like doing because remember like with delta
+Deletes aren't real
+They're not real right Because the reason why they're not real is because of
+travel right So dropping partitions is not a delete It's just removing the data
+And so this can be a very efficient way to do retention
+right That's like why that's an anti-pattern like if you want to have a drop
+partition right That's uh and then Uh you know definitely the last one is like
+external tools you want the like I would not this is a bad example This should
+date right Partitioning on a region is just like not like that good uh a good
+idea
+unless you know for sure all the queries or most of the queries are going to
+by that column
+OK cool So let's go and look at like the actual the actual demo of like all of
+happening together so you can kind of see what is going on here right So what
+gonna do here is um we are gonna create our table create the this is gonna be
+partition table web events partitioned
+And then uh we're gonna do web events by region partitioning and then uh we're
+look at the partition pruning What is what's in partition pruning Let me just
+make
+sure that that's actually like what we want to be doing
+OK that that should be right That should be right OK cool So um let's go and um
+know let me just comment all this out so we don't have to like see it We can go
+It's building a lot of data It's thinking about it
+so remember in this first example we're doing year month So like if you're doing
+12
+Oh like we're getting null Partition distribution is like that's that's like
+wrong
+OK like but we have our one partition OK there we go Now this has a good
+distribution That looks right
+Yeah 4 regions those are great
+There's just a lot of like nuance to this stuff right So uh this is gonna be
+good
+Like I I I find it interesting um that like they might have gotten rid of this
+hybrid
+use case This is something that like Data Bricks is changing stuff all the time
+but
+like uh cause we tried to do this hybrid use case right And it didn't let us do
+right Uh I was I want to ask Chat 11 time can you uh partition and cluster on
+same delta table
+And data bricks
+Partition by cluster by
+If you if you should not partition OK
+Dynamically or partitioning can cause small small file SKU
+I mean it's not gonna cause small file SKU if you like partition on low
+cardinality
+columns though
+Like OK like
+file dynamic file layout and auto maintenance OK so that's interesting It's an
+thing where like uh like like I I need to like do like oh I bet it's in here I
+to ask here real quick and say like can you partition and cluster
+By on the same column
+Why is that not supported Cause it should be able to do that right Cause it's
+you you you manage the parquet files within a partition and that should it
+should
+collapse them
+And that's like I I totally thought that that would work and then it's just like
+you can't And it's like fine I'll try and walk around you then Data bricks
+And like
+It's it's very interesting how like these things are changing right So
+Cause it should it should be doing this And then like uh from that we will uh we
+will
+walk out we'll walk in So um
+Yeah I tried this OK you got that to work Joey OK that's great Um
+OK so
+I fixed your SQL query
+Handles
+why it's not supported Liquid clustering replaces partitioning It's designed as
+modern alternative that solves partitioning's limitations Different physical
+layouts
+Partitioning creates directory structures while clustering optimizes data within
+files
+Partitioning creates fixed boundaries clustering dynamically or reorganizes data
+But like can't it dynamically reorganize within that date Like
+Interesting OK I guess I guess I guess I'm wrong I guess that was something that
+uh not the case Uh like it looks like you have to pick It looks like you have to
+either
+pick partitioning or dynamic or or liquid clustering That's uh it's not
+supported
+OK That's that's very interesting that you can't do both Uh I would I would I
+would
+have expected that you could do both actually so um
+Anyways uh yeah that's what we had today uh like there's one more uh lab there
+Uh on like Iceberg not really being supported very well So but uh anyways I
+wanted
+to open up for questions for one or two minutes if anyone has any any thoughts
+what was covered here because obviously that was like quite a bit of just
+material
+and thoughts right Um
+But if not like we can uh like we can end a little bit a little bit early here
+we will uh be back uh next week on Spark and Spark Week's gonna be awesome Spark
+gonna be really really awesome I'm I'm really excited about it Like understand
+like this first week is a little bit slower because like we're just literally
+working
+with data at rest all the time like and it's just like there's only so much you
+talk about in terms of like DDL but as when we move more into that right Will we
+get
+permissions to try these features uh like
+Um when will homework be posted Homework will be posted tomorrow probably uh
+late
+morning tomorrow Um so you should be able to like I mean like this is where uh
+we are really pushing Data bricks to it's like kind of limits here so you should
+able to do these things like uh like if not like like we definitely want to get
+things right
+If Data bricks is always optimizing then why uh if Data bricks is always
+optimizing
+then why use delta tables Like I mean it's it's it's a trust thing right Where
+like data we trust Data bricks that they're gonna like like optimize it the
+way versus like just partition and sort yourself right That's the other way to
+it like where you don't have to like just don't give don't don't use the cluster
+keyword and then Neon if you don't want the auto optimized just don't use the
+by keyword right And then then you're good Right and you can just have your uh
+more open open table right And then that table will be out there and ready to go
+yeah it's uh it's it's very interesting Wait wait is there a no to clustering
+partitioning can't be done You're saying it it it can't be done You can actually
+it to manual and schedule Oh you can Rajesh yeah I mean that makes sense There's
+uh
+That's very interesting It's very interesting I I I I definitely wanna like do a
+bit more research to see if partition and cluster can't happen together cause
+was my interpretation that you can do both uh but like uh that's and then Data
+Bricks
+just screamed at me and I was like no you can't So I'm like well usually if Data
+doesn't let me do it I'm like OK that probably probably means you can't do it
+uh that yeah they they are mutually exclusive yeah So yeah you either have to
+or cluster OK that makes sense That makes sense Interesting
+Uh maybe that's the maybe that's the change that needs to happen It's like you
+you keep everything within the folder and then you you optimize within that axis
+Because the part the partition is one axis but you still have a lot of
+constraint
+within that axis as well so Yeah thank you Rajesh for uh for teaching us that as
+well
+That's why that's why I love having experienced people like who are also really
+because this is definitely for me like like when I think about like all of the
+lectures
+of this entire boot camp this is where I have like the least experience and it's
+changing
+really fast so um it's it's good to see good to see
+They're like pick You can't have both
+Partition is iceberg thing too Rajesh not just hive At least iceberg keeps it
+around
+Wait I'm a little confused again What's the difference in cluster by and
+optimize
+Sorry if it's dumb just uh many keywords
+Good question So uh optimize is going to uh kind of combine files and it might
+that Z order as well like it can do the sorting and the um combining of files
+what optimize does Cluster by right is gonna
+tell you the specific kind of
+the the keys that you want to be optimized and how optimize will happen as well
+cluster by It will also happen um uh and so it optimize is like
+You can think of it this way Clusterby is telling you that this table has liquid
+as liquid clustering and then what happens behind the scenes is optimize gets
+ran
+along those axes whatever the axes are like if you pick like region and user ID
+or
+like or and then it also looks at the query patterns that are coming in That's
+other thing it looks at And so so cluster by and optimize are related They're
+related
+like in that like clusterby is set in the DDL So clusterby is set in the DDL to
+tell
+Data bricks to do more things around uh behind the scenes right And then
+is the command that actually has data bricks combined files and put things
+together
+So yeah that's what's going on like uh I'm I'm Rajesh is that right I'm I'm
+pretty
+sure that's right I'm I'm like I'm like
+Data Bricks is moving away from Zorder like well like they're they're getting
+rid
+of all of it right They're just like only doing liquid clustering They're
+becoming
+snowflakes That's the whole point of this right Is that is they're like OK we're
+do we're gonna do um liquid clustering It's very interesting It's very
+because it's like not that useful for uh external axis like so it's like Data
+is like we are we we support OpenTable but then like they design it in such a
+that like it's not open Right It's not actually open like or very open like that
+where I think you wanna like if you do it external tables that's where it's like
+kind of interesting so hopefully uh like we we see some other good stuff here So
+hopefully
+you guys learned some stuff here Good thing here is liquid liquid clustering is
+super important thing to learn so
+Are they trying to imitate the bad parts of Snowflake too I mean well they're
+trying to make it more usable like cause partitioning and Zorder is just are
+that like are there right And um like I I mean Rajesh I don't know if I like
+agree
+that like Zorder is more expensive than liquid clustering I I I I don't know if
+actually true right I think that that's like uh like cause what else would they
+doing Liquid clustering has to be sorting the data and then putting the the the
+The
+thing is in there right It it's yeah liquid cluster is delta right And like but
+the order is the the sort right And getting everything it's like kind of like a
+global sort right Or a sort within partitions versus like liquid clustering is
+same thing right Except like not within the partition
+Yeah oh Z order is global sort OK that's the difference So it's like so liquid
+is gonna kind of like combine things in a way that doesn't require a global sort
+that that makes sense Makes a lot of sense That's like uh um like Zor can't Z
+order
+can't be within a partition
+Whatever like that's like I I I I I still feel like that is the ideal way to do
+things You partition and then the data within that you sort like and I guess
+lost on the the data engineers of the future right
+Yeah it rewrites the entire partition but it's but it's a global sort within
+partition right
+Yeah wild
+OK Anyways guys thank you so much for showing up today I really appreciate it Uh
+we
+will get you homework uh and then we will um
+Uh we will go from there right And we will uh see but uh tomorrow like late
+morning
+I'll probably get you that homework and then we will uh go from there Thank you
+so much for showing up today Really

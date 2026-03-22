@@ -1,0 +1,1052 @@
+Welcome everyone to streaming pipelines day two today we're gonna be talking a
+lot
+about Delta Live table We're gonna be talking about um kind of the history a
+little
+bit more of the history of these pipelines and uh real-time streaming Hopefully
+from
+uh the first day's lecture you guys got a pretty good idea of like when to use
+streaming
+and when not to use streaming I like to start
+Teaching streaming in that way because that is the most important thing Uh we
+are
+gonna be kind of layering in things today Uh you know two days ago we talked
+about
+Spark streaming and went over some Spark streaming labs Today we're gonna be
+going
+over Delta Live Table which is an abstraction on top of Spark streaming Should
+be
+pretty great so let's uh let's get into it
+So what are we talking about today Uh just 5 things Uh
+so
+for a long time in data engineering there was this kind of mistrust of streaming
+kind
+of rightfully so because the
+the um the technology just hadn't gotten there and it it is there now We have
+arrived
+we have arrived and so there's this debate between lambda versus Kappa
+architecture
+and we're gonna talk a little bit more in detail about that We talked a little
+bit
+about that on Tuesday but we're gonna go deeper today
+We're gonna talk about uh Python UDFs and why they suck and uh run some numbers
+on
+that
+Uh we'll talk about how Delta Delta table makes things easier We're also gonna
+about why Delta Table um kind of sucks and then we'll talk about the different
+types
+of windows So there's a bunch of different types of windows that you can do in
+Spark
+And uh we will go over uh exactly what those windows look like and uh there's a
+bunch
+of architecture diagrams and stuff in this lab uh or in this lecture So
+hopefully
+it's gonna get a little bit technical but it's also gonna be um hopefully pretty
+useful
+There's there's some there's some goodness here Streaming is always one of my
+favorite
+things to talk about
+So
+Oh I gotta move this guy a little bit There we go So um
+OK let's just roll the clock back to um 2012 2013 like you know
+13 years ago Uh there was essentially there's a big debate on like what is the
+way
+to serve your data and process your data where um
+Lambda which is uh where you have your data gets processed both in batch and in
+So the streaming layer like causes the data to arrive quickly and then the batch
+layer
+allows the data to arrive correctly So there's like the you have the streaming
+for
+latency and the batch for correctness That's like what lambda was all about
+Um I hadn't I haven't seen even at even at Airbnb I saw a lot of lambda
+architectures
+at Meta and at Netflix when I worked there but uh by by about 2022 2023 Lambda
+has mostly died out um because now uh
+our streaming and uh
+Our streaming technologies are better and more reliable as well as our
+actual data at rest and our data lake uh technologies are significantly better
+Lambda was amazing because lambda optimizes the latency and correctness but it
+doubles
+The code base right
+And it's but it's also easier to insert data quality checks on the batch side If
+go back here like one of the things that's kind of weird about streaming is that
+like
+There isn't the the contracts and we're gonna see this in the lab today as well
+The
+data quality contracts that you get with streaming are weaker They're just
+weaker
+They're like and whereas the data quality contracts that you get with Batch are
+a
+lot stronger and that's uh something that's just inherent to the systems and
+that's
+uh that's still the case uh with CAA nowadays uh and Uh a lot of this stuff is
+going in that direction That's why they've wanted to optimize for correctness
+but
+it's like
+But
+really the thing that really murdered Lambda is like
+having two pipelines that do the same thing is super annoying And then there's
+know there were things like Apache Beam and a couple other things
+that tried to kind of essentially make it so that like you could do a streaming
+or
+a batch pipeline and it was this one code base to try to unify
+That's what Apache Beam was all about They're like you can unify your
+right You can use batch or streaming it doesn't matter And nowadays like a beam
+looks
+really weird It looks like a weird technology for the most part where it's like
+no
+nowadays it's like either just do streaming or just do batch like there's not
+uh as much of a win So one of the reasons why this is super important is like
+batch
+like the Hive Metastore didn't really allow you to append
+So like you usually have to like use another technology to like like if you're
+doing
+a streaming you have to do another technology to collect an hour of data and
+then
+put it into the Hive metastore That was a super common pattern that had to be
+done
+And so that was uh one of the way one of the reasons why like batch was just
+architecture was absolutely required back during the Hive metastore days because
+you
+couldn't append You could only overwrite There's no append So because there's no
+append
+we have to freaking uh we have to we have to have a batch This is how it works
+uh that's uh lambda Keep in mind lambda is kinda like kind of on the way out So
+The uh Kappa Kappa is great right Cause Kappa is one code base great latency
+right
+Um you get some uh interesting minuses with Kappa right Because it's like
+There are times when you need to like replay data and you need to rerun data
+uh and that is um something that was just really nasty to do with Hive Metastore
+as
+well because like things were like stuck in partitions and uh Like but companies
+Netflix uh and Airbnb like one of the things that they do now is they take
+iceberg
+tables and they can pump iceberg tables through Flink or or or Spark streaming
+keeping
+in mind that like like sometimes I might say Flink sometimes I might say Spark
+in these presentations They are literally the same at this point but like it
+enables
+like one of the more painful it enables like The streaming architecture to
+handle
+one of the more painful use cases that was that was
+before used to be you know given to the batch uh the batch side of the lambda
+So that is nice that is nice and like uh the big thing here is Delta uh you know
+table we saw this in week one it allows you to append right So it makes the The
+the
+Kafka to Delta like data in motion to data at rest
+that transformation is just so much easier and so much more maintainable and
+just
+so much cleaner
+So uh the big thing here to remember is like we we have the streaming
+have seen a lot right So
+Kappa architecture the whole idea of like wow like we can just do streaming we
+don't
+need to use batch at all
+Kind of this is this Kappa architecture is what birthed the idea of Delta Live
+table
+It's like OK can we just work with Delta tables but they can be live they can be
+live
+because there's there's some sort of source in there somewhere that is like a
+source that we can work with that is live And so that is what uh these these
+are doing and uh that's what Delta Live table's all about and it's like a living
+breathing
+Delta table
+So uh before we we will go back to Delta Live table but we want to talk a little
+about UDFs This applies both to Spark and to Spark streaming and to anywhere
+you are using uh different things So um if you're in the book club uh you might
+might have heard that like uh
+Python is 50 times slower than C++ and 30 times slower than Java So something
+takes 1 2nd in Java takes 30 seconds in Python Right or like something that
+takes
+1 2nd in uh in C++ takes a minute in Python So like
+That order of magnitude that order of magnitude is obscene That order of
+magnitude
+is really really really bad And so
+What that means is if you're gonna write UDFs in if you're gonna write Python
+UDFs
+like it's not gonna work at scale for the most part like if you have terabytes
+and
+terabytes of data like you can't write Python UDFs It's just it's it's a
+It's a um it's a luxury that you are no longer given Like it it it gets removed
+your tool belt at a certain scale So if you know that about Python UDFs Python
+are inherently unscalable and it's actually much worse than 50 times slower
+because
+why is it so much worse is because there's a translation layer between Java and
+Python
+So it's not just that the the Python code runs 50 times slower There's also it
+has
+to go Java serialize to Python send the serialized bits to Python run the Python
+code
+serialize the code back and then send that code back to Java See 12345
+There's 5 arrows and 2 there's there's there's 2 serialized and deserialized
+steps
+and 5 arrows
+So just that process of passing data between languages
+It is also obscenely expensive This is why it's very important to remember if
+you're
+writing PySpark code you are not writing Python code You are writing either C++
+if
+you use if you use Phon you're writing C++ code right Or if you are using Scala
+open source Spark then you're writing Scala code right You're and and like
+either
+way PySpark is never writing Python code The only Python code that PySpark
+actually
+writes is Python UDFs Everything else actually turns into a high-performance
+language
+So that's why it works That's why you can use like cause Python is a terrible
+slow
+language and so like you can use Python at scale because
+almost all of the Python that you write is actually not Python It's either C++
+Java or Scala right
+So um given both the nature of Python and this 5-step serialization
+deserialization
+process that is actually used for Python UDFs this makes it so that like um uh
+you compare the two Python UDFs can be 200 times slower Uh then built-in Spark
+SQL
+functions and Scala UDFs So uh that's really bad like but like keeping in mind
+doesn't necessarily mean that you can't use them right Cause
+just because something's 200 times slower doesn't necessarily mean that it's bad
+It could it's just a little bit slower and that's fine Like that's uh um
+something
+to be thinking about
+So uh thinking about this from a hierarchy when you're using functions and UDFs
+Spark and uh Spark streaming is so Spark SQL functions are the fastest These are
+to be your baseline speed Then Scala UDFs are fast They're going to be a little
+slower like about 50% slower than your your built-in Um so Scala UDFs are even
+slower
+on um Uh photon This is this is there's actually this interesting use case with
+where uh open source Spark can actually outperform photon Spark if you're using
+Scala
+because photon is written in C++ and that's Data brick Spark right And then open
+source
+Spark is written in Scala So if you have a Scala UDF and you're using open
+Spark it's Scala all the way down So then the cool thing about being Scala all
+way down is you don't have this stupid uh serialization deserialization
+five-step
+process of like translating between languages because when you're on Phon it
+is that way right So like you end up having to do the same thing where C++
+serializes
+passes the data to the JVM The JVM is still very fast The JVM is dramatically
+faster
+than a Python interpreter And then it runs and then it it does the same
+back to C++
+So that is why it can still be a little bit slower than the built-in functions
+if you're using the Spark SQL built-in functions those are natively written in
+C++
+One of the things I learned here that is very interesting to me about the Data
+Bricks'
+position here is
+You cannot write It is actually Data bricks does not allow you to write photon
+So you cannot write C++ UDFs It actually they don't let you do that Like it's
+just like they're like don't do it They you you can't It's just not possible
+They
+want you to either use a Python UDF or a Scholar UDF even though both of those
+have
+this uh translation layer problem that That uh doesn't work at scale So uh
+just a big thing to be thinking about Then you have pandas UDFs 100 times slower
+then you have like native normal plain Jane Python UDFs which are gonna be
+dramatically
+slower and that's why you go from cheetah to sloth right So just be just be
+mindful
+when you're doing these things We're gonna be doing some benchmarks to actually
+look
+at that
+At the end of the day
+this is this is all that you really need to know about UDFs is try your best to
+use
+built-in functions and minimize UDF usage So like a lot of times like you can
+the built-in Spark functions that are in C++ and that is gonna be where you're
+gonna
+get the most optimized pipeline just Out the out the gate right There's gonna be
+cases where you literally cannot do that Like you literally can't Like we're
+use a Python UDF in the lab today We're literally gonna do that We're gonna both
+one for a benchmark and we're gonna also use one to do um IP lookups like you
+know
+actual um uh geo geolocation lookups so it should be pretty cool
+Um OK so
+Shifting back to Delta live table So Delta live table
+is very similar to uh liquid clustering in some ways
+It turns something
+like managing a streaming pipeline
+From something that was pretty complicated into something pretty easy It's just
+really
+easy and we're gonna see exactly how easy it is uh like we will deploy and build
+Delta
+Live Table pipelines uh today So um remember that like this is uh Data Bricks is
+giving
+you the the easy the easy mode way of doing things which is great because it's
+it it also lowers the bar for streaming it makes it so that like we can do more
+pipelines That's actually one of the reasons why I I'm more of a fan of Delta
+Live
+Table than I am of liquid clustering because of the fact that like Delta Live
+Table
+definitely does lower the bar for streaming pipelines and allows there's cases
+now
+where like oh like if I was gonna build this with Spark streaming I I just
+wouldn't
+do it with spark streaming because it's gonna be too complicated but with Delta
+Table it's like wow OK now it's managed pretty easily and uh you can whip things
+up
+pretty quickly
+One of the things to remember
+Because this can get very confusing can get very very confusing is really you
+there's there's 6 layers to a pipeline
+6 layers right And uh some people can get confused about where Delta Live table
+fits
+cause uh it feels like Delta Live Table is a compute engine
+but it's actually a pipeline framework
+So uh let's go through each of these So you have your data sources
+This is obvious right Kafka S3 APIs um Azure blob storage you know Google Cloud
+storage
+all those like you know Postgress whatever right There's like it's wherever you
+your bytes and you need to move your bytes into another location
+Then you have your ingestion layer This can be uh sometimes the ingestion layer
+is
+the compute layer Spark streaming kind of flattens these You can actually have
+your
+ingestion layer and compute layer be together
+Sometimes not like uh so this is called auto auto loader which will look at it
+an S 3 folder and it will it will automatically process any new uh
+files that are dropped into that folder uh which is really cool Uh that's a
+a feature that I wanna add to a future Data bricks bootcamp Uh it's really
+awesome
+Uh you can have Kafka consumers like anything that's like specialized for like
+data landing zone is gonna fit in that ingestion layer Then you have compute
+This is gonna be where you have Spark or Spark streaming or Flink or Trino or
+Snowflake
+or BigQuery or freaking DuckDB or like there's like 5 trillion different compute
+engines
+out there in the world and they all process data And so those are awesome and
+those allow for us to and then pipeline frameworks So keep in mind each layer
+here
+is essentially one to many Always remember that right So like
+An ingestion layer has many data sources A compute engine can have many
+ingestion
+layers A pipeline framework can have many compute engines
+Like generally speaking So like in this case where we have Delta Live table
+that's one of uh and other things in the pipeline framework are like airflow
+Dagster
+data bricks workflows like prefect mage like all of those freaking you know
+different
+ways that you can essentially run something like Delta Live table is a little
+because it is running continuously You can do that with airflow as well like
+there's
+actually uh you know how there's like at daily at yearly at monthly In Airflow
+can do at continuous right So what that does is it just runs back to back to
+to back to back and that's uh and that's essentially what Delta Live Table does
+it it's an at continuous cron orchestration engine So that's like what's
+going on behind the scenes That's what Delta Live Table is all about So then uh
+you go down then it's like OK where are we putting data Like some of the things
+in
+the storage layer are also in the data sources layer right Those things are they
+essentially the same thing It's like where can we put data right That's the same
+uh
+layer of things where you have Iceberg Delta Huddy Postgress you know whatever
+And then you know you have your serving layer where it's like oh let's look at
+data let's like actually you know harvest the value out of our data right That's
+the I wanted I had if I had a little bit more time I would have built this into
+really nice um
+uh diagram but I think you guys understand what's going on here
+The key thing to remember about Delta Live D
+DLT
+is like the airflow of the streaming world It doesn't replace spark streaming
+on top of it So like
+You could think of Delta Live table as a spark streaming orchestrator
+Right You could think another way to think about it is like spark streaming is
+a violin player and you might have 5 or 6 violin players who we're all doing
+and then Delta Live Delta Live Table is like the conductor who is making sure
+all
+the violin players are playing at the right time to make good music
+That's another way to kind of like think about like some analogies here
+So like that's the key thing here when you're working with Delta Live table
+Remember it does it also manages the dag for you So like if you have a
+dependency
+tree of like your bronze so your silver your silver stream depends on your
+bronze
+stream and your gold stream depends on your silver stream
+Delta Live Table manages all of that for you It's pretty awesome like especially
+when
+you see all of it running in real time and it does DA management in real time It
+does make make it look like airflow It makes airflow look like we're rubbing two
+rocks
+together like we are not like We are so far behind with uh this batch processing
+you know I like that but like at the same time understanding that batch
+processing
+still matters a lot Airflow is not going anywhere but uh for uh the actual
+latency
+of the data Delta Live table looks really really good
+OK
+OK so
+We have medallion architecture This is something that my students asked me to
+All of the time And this is literally the first time I have ever put medallion
+on a slide And uh
+Essentially this is roughly speaking what you have right is you have bronze
+silver
+gold
+The main things here to be thinking about is bronze is raw bronze is just like
+slurped the data off of Kafka You might have done like a light you know
+light transformation Silver is where you do joins to bring in whatever other
+context
+you need to make better uh data And then gold is where like you validated a lot
+of
+stuff
+Gold is very valid Gold is has a lot of checks Gold essentially is like
+You're slapping like the we trust this
+onto this data set So
+some of you are probably like
+Zach like why don't you like medallion architecture Like what like that sounds
+very
+straightforward Well like
+I don't like this for a couple of reasons Uh
+one reason is uh this really does make it seem like every single pipeline has 3
+There's the bronze step the silver step and the gold step Every pipeline is just
+3
+steps which is stupid That's like if you feel like you need to fit every
+pipeline
+into 3 boxes then uh and and you wanna be very narrow-minded about like how
+designing your ETLs and make sure everything fits medallion architecture because
+this is what you know how things should go You're gonna have a bad time because
+it's
+understanding like OK like more like OK what's the what's fact data dimension
+data
+right Facts and dimensions are good right Then you also have like different
+views
+like one big table data vault modeling right There's like so many things that
+you could be thinking about that like don't cleanly fit into this architecture
+This architecture works for a certain percentage of pipelines and that's great
+it definitely there's a lot of pipelines that do not fit this architecture as
+well
+So um like I I I I'll I'll I'll just give you guys an example I'll give you an
+here of like one that I worked on right So
+OK Airbnb So I was working on the pricing pipelines right So uh the first step
+get all of the pricing rules like the raw data pricing rules OK so we have
+pricing
+rules OK great And then we have the next step right which is gonna be get me all
+the listings and join all the listings with all their pricing rules right And
+that will give us our uh next step right And then what we want to do is we want
+to
+project out a year so we know what is all the prices for an Airbnb on every
+night
+for the next year and that's the gold data right But here's the thing that's
+interesting
+about that like there's also like if and that was that was exactly how I
+designed
+it That was exactly how I designed it 33 buckets 3 buckets right And um OK we
+can
+join everything project it out and do that right Uh but there was actually a
+staging
+step in the middle It's actually it's actually uh like uh that dramatically
+the pipeline right So one of the things that I think is very important to be
+thinking
+about here right is it's not really about what's bronze what's silver what's
+It's like where is all the work being done Cause usually in one of these steps
+gonna be like so like almost always in a pipeline like there is One step that
+does
+90% of the work and then the other steps are very simple I thought like there's
+this it's like the Parito there's a Pareto principle to when you're building
+ETL Usually that's gonna be further upstream like in your bronze or silver layer
+gonna be like or that's where most of your work's gonna be done but that's where
+you might have two bronze tables right There might be or like you you'll have
+not like like the reason why I don't like this architecture is At the end of the
+day
+Pipelines can very much be more than 3 steps
+Like
+And they should be more than 3 steps like that's like the nature of how this
+works
+right They they can have more than 3 stages That's just like how it works right
+And
+understanding that like that's why and that's also why like I don't like
+medallion
+architecture because it's like oh like You can debate what is what because it's
+what if you do a bunch of really good quality checks and that silver data it has
+very enriched and then people are people supposed to query that if if it's high
+quality
+and it already has all the checks like why not
+It's arbitrary right It's like oh but it's because we haven't called it a gold
+right There's like even though like it's high quality so there's like there's
+a lot of like Like if you poke holes if you want to poke holes at medallion
+you can poke holes very easily but with that being said it's a very good uh like
+I don't know like it's a good marketing term because one of the reasons why this
+a good marketing term for data bricks is like uh well like look you can go from
+data and then you can in real time become a winner Because bronze silver gold
+the same as 3rd place 2nd place 1st place right So it's like oh we can take our
+shitty
+raw event data and make gold data and be rich because gold also is implied with
+money
+It's like with money with being a winner right So like there's a lot of things
+like so their their their whole perspective is like with data bricks you can
+become
+golden and become a winner if you use Delta Live Table and medallion
+And that's a very uh succulent and a very good um
+Marketing term it is but as practitioners
+I'm not a marketer I'm a practitioner and I understand that like not every
+is gonna fit this marketing narrative Not every pipeline is gonna fit Delta Live
+like and like
+understanding the architecture trade-offs is super important versus trying to
+fit
+something into some medallion architecture narrative
+Uh and if you ask Joe Reese about this you ask Bill Eman about this all the
+other
+greats they're gonna tell you the exact same thing that medallion architecture
+not a real architecture It is a marketing term
+That people uh want to believe They want to believe that that data engineering
+this easy They want to believe that it is this clear cut that we go from raw to
+cleaned
+to master data They want to believe that it's just 3 steps They want to like and
+an over
+oversimplification of what data engineering actually is So let's go into it
+though
+because I know we love to talk about this So what makes good bronze data So like
+You
+know we are um we are moving to a world where we aren't doing as much ETL and
+doing a lot more ELT
+So like a lot of times like that's exactly what you should do right Is just
+data should just be a direct dump Maybe it's a snapshot from Postgress maybe
+a direct read from Kafka right And it's literally just nasty ass Jason and you
+put that into Delta and you call it a day That's actually like it sounds lazy
+it's honestly pretty good Uh that could be one way to do it Uh sometimes that
+Jason is just too much and too encumbering so you need to do some minimal
+transformation
+So there's actually another pattern called ETLT where that where you and you
+might
+notice that that first T is uh A little t because it's you do some light
+on the raw data to make it fit and to make it maybe a little bit smaller to make
+a little bit more compact
+so you can actually have good bronze data that isn't going to blow up your cloud
+budget
+At the end of the day think of bronze as a dump from source It's the rawest form
+the data because you want to keep as much raw data as you can because then if
+change your mind on definitions you can go back to the raw data and recalculate
+like if you don't if you throw away some of the raw data you might not be able
+recalculate because that that field or that column got lost in the you because
+severed that column off cause it wasn't necessary for one definition but it was
+for another definition So that's why I like keeping this data pure and raw is
+good
+Like it's like you can think of this as like the forest right It's like the
+first
+layer of the forest It's like keep your trees green don't try to hack them off
+OK silver data OK
+So silver data is enriched silver data is cleaned up Uh usually silver data is
+with important dimensions You can have like you know like what country
+something's
+in You have the contextual information You can do like most of the time if you
+a silver if you run a group by query on a silver table you get good results
+Usually
+you get good results And cleaned up usually means like I like to do a lot of my
+quality in the silver layer The silver layer is gonna be a really good place to
+do
+data quality because you want to do like the goal or the the bronze layer the
+main
+thing that you want to do here for data quality is like duplicates like that's
+main one just because like duplicates are not good You want to get rid of
+duplicates
+right because duplicates are just not gonna freaking serve you at all but like
+Everything
+else can be kind of shit like even bad row bad emails whatever like everything
+else
+in the bronze layer should be raw right And then then you go into the silver
+where now you're looking at those rows and maybe throwing them away and maybe
+being
+like OK I don't want this row I do want this row Like what are what what does
+data look like Like how are and what what constraints are you putting in your
+To allow you to clean up your data right And so sometimes when you're in silver
+joining with important dimensions So like that could mean that you're reading in
+Spark table that you need to pull in It could also mean that you're streaming in
+dimension table because uh we are moving into that world right Where um
+dimensions
+are not necessarily snapshots anymore Dimensions are now um are streams streams
+changes So that is and like if you have everything as a stream that can be
+powerful So uh that's a big thing to think about So at the end of the day think
+silver as usable but not blessed usable but not blessed Like if if an analyst
+goes
+and queries some of your silver data you shouldn't be like oh shit Like if
+they're
+querying the bronze data you can be like oh shit but like it's not I mean that's
+it it like that's the whole point of bronze is it's supposed to be rough right
+then silver data like if they query a silver table it might be inefficient but
+should for the most part be able to get the correct answer So like and I've
+had that happen where analysts on my team they query the upstream data because
+this
+is oftentimes less aggregated and there's actually more uh there's more things
+can do with this data like cause you might be able to bring in other dimensions
+do other aggregations on top of this data cause this is usually at the entity
+grain
+So it's gonna be either at this is gonna be at the entity grain or still at the
+fact
+grain It's still gonna be at the the the entity or event grain Both of those can
+silver data Uh depending on what you're doing Then you have um you know then you
+your beautiful gold
+Uh goal data is like this is the this is what we do This is what's super
+important
+right So um
+metrics and master data
+So this should be ideal for almost anyone to use
+Like even the least technical people should be able to get value out of this So
+like for me I I made it so if you run Select Star on the pricing data at Airbnb
+it
+was it made a lot of sense It was like this Airbnb
+on this date had these prices And it's very easy very straightforward right It's
+ideal
+for almost anyone to use like your UX of your tables and the UX of your data
+models
+should get cleaner and cleaner and easier and easier right Another another very
+hallmark of good math Master data is if someone says can I export this to Excel
+should be clean It should when you when you export it to Excel it looks amazing
+It
+looks amazing right And so that's another way that you know that you've made
+master data
+Then you have uh like
+OK There's also things around like
+definitions agreed upon by stakeholders made in collaboration So one of the
+things
+that can happen here is the silver the silver layer right is you as a data
+engineer
+collecting all the cleaned up context You're gonna give it as collecting all of
+necessary business context that you need to then build the gold layer The gold
+Is the context layer right And this is where you have to have conversations
+You have to have conversations So this is where you need to talk with all the
+stakeholders
+understand what definitions they want to use what flags and what columns they
+find
+necessary This is where like the the more that you this is think of this as like
+last mile right The last mile of like uh cause when you think about like
+Uh uh here's another perspective to be thinking about like um if you think about
+OK say you order something from Amazon right You order something from Amazon the
+the first couple bits of that order like it goes to a warehouse and then gets
+put
+on a truck
+All of that those processes are like that process of it goes to a warehouse and
+gets
+put on a truck
+is exactly the same
+For every single Amazon order right Every single Amazon order is exactly the
+same
+but the last the last step is not right because then they have to drive to your
+house
+specifically and then the Amazon guy has to get out and like ring your doorbell
+And then like and your doorbell might be different than some other guy's
+doorbell
+right And then it's like and there's a contract there right And that contract is
+messy
+we see that right Because sometimes Amazon drivers don't deliver the boxes right
+then they get stolen by porch pirates or whatever right And what that and that's
+what that that degrades the customer UX right That last mile of
+getting all of your data infrastructure to now be used by the customer That last
+mile
+is messy And that and like if you try to treat it like it's not messy you try to
+it like the warehouse you try to treat it like it's a silver or bronze layer
+there's just one best answer and one best way to do things you will be a worse
+engineer for that and you will not grow as quickly as a data engineer right
+Because
+you need to be able to work with stakeholders to come up with the right
+definitions
+that meet their needs because And if they feel heard and they are actually using
+data they're actually querying your data that is the value
+because if you can't do the whole thing you can't do bronze silver and gold then
+Go work as something else like it's not you gotta do all of it You gotta go you
+take it the whole mile otherwise like you're not gonna freaking get the value
+looking for
+Um master data is super important This stuff can define business strategy for
+years
+to come right This can make uh I know for me like when I when I updated the
+master data at Airbnb it actually ultimately raised prices on Airbnb by about 6%
+right And so changing the master data actually changes the business
+Like and you gotta understand that like that is amazing It's amazing because
+what
+we're doing is we're we're allowing businesses
+to pivot based on truth We're we're allowing businesses to pivot based on what
+reality not what they think is reality And that is why good master data is
+amazing
+but it's also very human because like there is this interplay between intuition
+reality and intuition and data Like I mean I saw this at Airbnb a lot There was
+moments at Airbnb where Airbnb is like a design culture where they think like oh
+the design is better the design trumps the data and there was definitely some
+moments
+there where I threw my hands up in the air cause I was like guys like
+I I worked really hard on that pipeline and you're telling me that like we're
+gonna go the other way we're just gonna ignore the data It's like all right bro
+do you you do you Mr Design Hopefully you're right and and you'll notice Airbnb
+stock
+has not recovered right It's still like it's still down like almost 50% from uh
+from its IPO price and I don't know this might be one reason why that's why you
+I don't work there anymore So uh we have think of gold so think of the gold
+as digital gold for the business This is literally like when people talk about
+as the new oil it is all three of these like you know we have our bronze layer
+is like
+we just pulled it out of the ground
+And then the silver layer is like we're refining it and we're at it we're in an
+refinery now And then the gold layer is we are
+in a Chevron or we are in a freaking you know Conoco and we have like a gas
+station
+there that might have snacks because our stakeholders are hungry OK Just
+remember
+that that's snacks in this case meaning like shiny dashboards or like you know
+that make it very easy to consume this oil So uh that's like one of one of the
+about this should be gold up here Um
+awesome Let's talk a little bit more about like how to refine data with Delta
+table All right So we have our data on the left in the queue that's all I don't
+if you guys recognize about these people in a line This means like the Kafka
+it's like the Kafka data set and then uh Delta Live table can you can you can do
+thing called DLT.expect
+And uh you can do DLT.expectan fail DLT DLT.expectan drop
+uh and you can do uh DLT those that you can do expect and fail expect and drop
+just expect Those are the three things that you can do And so let's let's just
+go
+about the happy path right So we have a row of data that comes off the Kafka
+queue
+It runs the check And you'll see on the top there see checks pass We get a nice
+thumbs up Looks good And it writes that data to production We're good
+OK so like OK that that that that path is easy that's like when data is clean
+is not always clean you know data engineers and data scientists spend 80% of
+time cleaning data So uh what about the other times when the checks fail So when
+checks fail like you have 3 choices as a data engineer So uh the bottom one is
+Delete the bad data
+Be like it poofs it disappears and it's gone And it's like it doesn't exist It's
+bad data And there are cases when that's actually what you want to do There's
+cases where that's like the the smart thing to do OK Uh the second one here is
+kill
+the pipeline fail the pipeline That is gonna be uh like
+There are cases where that's necessary There are cases where like you need to
+stop
+everything and like that's like depending on the type of check because uh
+data quality checks and different data quality errors have different levels of
+severity
+So like there are certain checks where that is the solution is to fail the
+because you don't want to propagate bad data You want to just freaking uh and
+you also don't want to make that data disappear Like because maybe it's you need
+high
+accuracy and high you know everything needs to be high value and high accuracy
+that's sort of like killing the pipeline to allow the engineers to troubleshoot
+instead
+of just letting the pipeline continue is potentially the best option right Uh
+I don't know In my experience I've never done that option in all the streaming
+pipelines
+I've ever built I don't really kill the pipeline because the reason why I don't
+because restarting streaming pipelines and getting everything to come back
+online
+from checkpoints and all that stuff is a giant pain in the ass So like uh there
+better
+be a very good reason to do that if you wanna deal with that level of pain
+And then you have uh I love I I'm just so glad Canva had this icon But uh you
+quarantine the bad data right So what you do is instead of making the data
+magically
+disappear you put the bad rows in a different table right So you can actually
+the bad rows and then you can understand like and then maybe you want to
+reprocess
+those bad rows separately or you want to understand what's going on Generally
+speaking
+like if it's bad data like
+Making the bad data disappear is not necessarily the worst thing but it's
+like one of the reasons why like I don't like making it disappear is like
+why Cause a lot of times like you can have 10 checks and you don't know which
+one
+is causing the data to disappear You don't know which one is is doing that So
+a big thing to be thinking about as you kind of go through this process
+Let's just go uh summarizing this right
+You really don't want to stop the the the the streaming pipeline restarting is a
+pain
+Quarantining or dropping bad data is preferred That's gonna be the the the like
+thing called a dead letter queue dead letter queue That's essentially what we're
+be building today
+So Delta Live table
+um is great but it also sucks It's not like remember just like everything I'm
+I'm
+I'm more independent in this space I'm not trying to sell you on data bricks
+even
+though you're taking a data bricks boot camp Uh Delta Live table is like if you
+low volume it's gonna be extremely expensive because you have something running
+of the time So the compute of running all of the time it's gonna be
+Thousands of dollars a month right Thousands thousands of dollars a month to run
+low volume uh um streaming job That's not necessarily the best way to do it So
+it it it the the value that you get from this real-time data better be worth it
+This
+is this is another example of where like why something like batch would be
+because then like with a batch pipeline it might only run for 15 minutes a day
+might run for 15 minutes a day instead of running for 24 hours a day and instead
+costing you $10,000 a month it costs you $100 a month Like it's because 15
+minutes
+out of 24 hours is
+Very small that's like 100 times less
+So uh that's a big thing to be thinking about when you're like weighing the pros
+cons that but that that you know that con is not necessarily
+Specific to Delta Live table that's more specific to like streaming jobs in
+general
+that that you would you would you would run into the same minus there if you did
+custom Spark streaming job It's like remember what I said on Tuesday right
+jobs are not like batch jobs like one of the big problems with streaming jobs is
+they
+are like servers They're servers right They run all of the time and since they
+run
+all of the time That's just that's that's a lot right And then you know they
+aren't
+like they're hard to debug lack of configuration like we saw that uh like like
+we're
+gonna see today like It
+if you want to use Delta Live Table like a lot of the Spark streaming
+configurations
+are removed If you're doing really complex joins Delta Live Table doesn't
+support
+it And if you run it if you are picking Delta Live Table you are locking into
+bricks because Delta Live Table is not supported anywhere else It's not open
+It's not something that you can take with you So uh that's those are going to be
+minuses when working with this technology even though this technology is very
+powerful
+just like every technology it has its trade-offs so that's gonna be your
+trade-offs
+in this case
+All right we're almost done here guys So
+Uh in the in the cases of
+Um I'll try to say here in the cases of streaming you have
+3 types of windows 3 types of windows that are available to you right The the
+most
+Uh
+intuitive type of window is gonna be that tumbling window
+You have the tumbling window and then you have sliding windows and session
+windows
+So let's uh let's go over each one here because tumbling windows are the like
+windows line up with batch very very clearly You can even see it right The blue
+the orange batch the yellow batch but these other two are a little different So
+let's
+uh let's go into it So tumbling window
+Right OK Fixed size It's like a 5-minute window or a 10-minute window right And
+no overlap between the windows You'll notice there's no overlap right So uh this
+very similar to hourly data very very similar but you can you can do this in 5
+minute
+increments or 10 minute increments or like this window can be as big or as small
+you want it to be Uh so in this case it's great right It's fixed size no overlap
+similar
+to hourly data great for chunking data right So it's great for like putting data
+into
+little buckets and being like OK this five-minute chunk this 5-minute chunk
+Um it's it's good This is a good way to translate This is like using tumbling
+is a very easy way to translate from streaming to batch right Because it puts
+the data into a batch right It takes a stream of data and puts it into batches
+That's
+what a tumbling window is
+Sliding window All right Sliding windows like I've only ever used this one time
+my whole career and I use it at Facebook but like the whole idea here is you
+different windows uh so the windows are of fixed length but they do overlap
+So then you can see like all of the possible like
+Uh like windows of time but one of the things that you might notice here is
+like double counting So like if you try to like sum up all the sliding windows
+gonna double count you're gonna double count all over the place right But if
+looking at windows
+In like isolation what you get is this is a great way to find like peak use
+sometimes like in the tumbling windows like you you make a cut at the wrong time
+It's
+very common like uh at Facebook when we're measuring daily active users
+depending
+on when you define midnight you actually get a different daily active user
+number
+and so this is a good example of like well how like how would you figure out
+OK if you want to uh if you worked at Facebook and you're like OK
+what what 24 hour window
+Should we use to maximize our daily active user count
+Well we don't know and what you could do is you could do uh you could do you
+could
+create like 24 or 25 windows of uh all with like like just 1 hour overlapping
+Or or there's 1 hour that's not overlapping and 23 hours that are and then you
+kinda like spread them across and then you can kind of be like OK which time
+zone
+it's essentially like it it's an optimization problem to figure out which time
+actually gives you the best daily active users And so sliding windows are pretty
+cool
+They're pretty cool and that's the main and I that but keeping in mind like
+cool but also very very niche right Like cause in my 10-year data engineering
+career
+that's it That's the only time 11 time in 10 years So like uh keeping in mind
+that's uh that's how sliding windows work
+Session windows are freaking really good Uh I needed to fix this Um this is
+the wrong image I need to update this but like so session windows how they work
+it's based on an individual user So
+the the the window begins when the user starts their session and the window ends
+there is a gap right So like uh so how this session how session windows work is
+not
+They're not fixed sizes A session can be very long actually but a session can be
+long or uh very short It can be both So like how it works is a user they they
+log
+in they create their first record that starts the session
+Then when they log out there's some period of inactivity that you define like
+can say is a 5 minute gap a 10 minute gap a 20-hour gap whatever you want to
+define
+as a session Then like after there's been 20 hours of no activity then that
+session
+window closes and then that is like one block or like one event for a user right
+it's like what did they do in that one period of activity and these windows will
+very variable in size They're not fixed in size they're very variable in size So
+windows are very powerful to understand like how when when a user uses our app
+how
+long do they use it for
+Right When a user uses our app when they pick up and pick up the app like how
+many
+likes do they make in a in one session right In one usage of the app right So it
+give you it can give you a very clear picture of how your apps are being used So
+one is super important like so I use this one at Netflix to determine what was
+normal
+employee behavior So it's like when an when an employee logs in for a day And
+they have like all of their things they do They access all of these different
+apps
+and they access all of these different things They have like all of their logins
+their different activities that they do and we we put all of that into a session
+like a working day session And then what we do is we say OK that is what a
+session looks like And then what we have is uh we we take all that data and then
+when a new session comes in and that session looks very different from the
+sessions that gets flagged as an anomaly and being like hey this user might be
+hacked
+because they're behaving very differently from how they normally behave
+So that's where that was the uh the good session window that I uh worked on at
+Netflix
+that had a lot of impact and uh this these types of windows are a little bit
+less
+niche So like when I think about the three windows right so tumbling windows
+common sliding windows pretty uncommon session windows kind of in the middle
+they're they're they're common but not as common as tumbling windows So uh those
+gonna be your uh 3 types of windows
+So I I we are gonna cover watermarking I did talk about this a little bit on
+Tuesday
+So remember watermarking is a set of minutes that will when you're in a window
+a set of minutes that you will wait
+for any out of order data So let's just talk about how a session how how
+watermarking
+will work with a session window So a session window is like
+OK there's been 5 minutes of inactivity and say we do a 2-minute watermark right
+we do 5 minutes of inactivity and a 2-minute watermark That means that like
+7 minutes after my last activity that's when the session will close and we will
+ride
+it out And that will because the the the the there's that 2-minute tolerance
+because there's data that can be late There's data that could have Happened
+within
+that window that could be late And so this holds windows open so that's what
+watermarks
+do It holds windows open
+for late or um late data So that's the big thing that watermarking is all about
+So and remember it also works with idleness so it's like no data is coming
+through
+it will still watermarks will still close So um
+that's uh watermarking And uh we're we're gonna be looking at 3 big things today
+the lab We're gonna be looking at how to create a medallion architecture DLT
+We're gonna uh we'll run some benchmarks for UDFs and then we will also uh see
+to quarantine bad data and we'll we'll we'll quarantine bad data with uh with
+with
+DLT So it should be pretty awesome
+Um but I do want to open it up uh for questions here uh if anyone has any
+questions
+cause uh
+Yeah
+What alternative to delta tables in those low volumes or if you have to do those
+complex
+join scenario Um so complex joins uh you you're gonna want to use Spark
+APIs directly and you because you get more of the customization that's gonna be
+like that's gonna be the big thing If if you want to use other alternatives uh
+in the low volume cases uh I like uh there's a bunch of things that you could
+potentially
+do I like Kafka Consumer APIs like you just get out The data bricks a little bit
+you freaking use like the Kafka consumer APIs you just don't use Spark right
+Cause
+if you're in low volume you don't need to use Spark right Because it's like you
+need the distributed nature of Spark That's like you're it's kind of like you're
+you're using a bazooka against the fly That's just not like necessary right So
+um
+that's uh and and it's expensive to use a bazooka against the fly So uh for low
+that's what I would recommend is just not use not use data bricks like uh or
+use batch right That's if if but like if you need low volume and low latency
+you're gonna probably want to use uh like something outside right
+What happens when the same user opens multiple tabs Well it's based on activity
+Nayana
+The session is based on well like it depends Nayana so like you can key your
+like so your session can be keyed on uh the tab ID and the user ID So your
+can be based on both of those together or if you want to look at like tab-level
+behavior
+or you can just key it on user ID and then if it's in multiple tabs then you're
+fine
+right It it it's just based on when was the last event Right and it it it makes
+difference right So uh I I I would say that like that's but like you can key it
+way like it depends on like what you're looking for
+Um so Shrini is saying so watermarks pick late arriving data only within those 5
+even though the session becomes inactive only after 7
+So yeah so the 5 minutes is the the gap for the sessions right That's gonna be
+session gap right 5 minutes of inactivity where it's it it's waiting for that
+there's a like if you set a 2 minute tolerance on the watermark then you you
+you'll
+get 2 more minutes at the end of that because that's gonna be where you're
+waiting
+for the late arriving data
+That's uh essentially how that works right So there's both right There's like
+that's defining how long you want to wait for no data but then you have the
+tolerance
+for late arriving data That's how session definitions work Our our sessions are
+read
+from cookies or separate data store
+So sessions here are defined literally just by like frequency of events not this
+different sessionization here is different from like the cookie session
+You could you
+Rongan what you're talking about here is like it depends on like what your goal
+what you're measuring here is like because in some ways this type of
+is better because if I'm like say I'm on Facebook or I'm on an app right and I'm
+my laptop and then what I do is I immediately go to my phone right
+And then like
+that's really one session that's one session right That's gonna be the um
+Uh like that you would be able to kind of connect all of those things in there
+So uh like uh but like you could use the cookie session you can use that kind of
+you can like hash that value and look at just the session like in the browser or
+the session in the mobile app and you could key on that as well but like you
+have to do that This is where this this is where the word session is a little
+blurry right It's blurry in that way right So um it is what it is So Vikram's
+saying
+at higher levels where data engineers work on pri uh business problems like
+is Java Scala majority use then uh majority used in Python since optimization
+speed will be the one primary requirement at such tasks right
+I
+no I I mean like
+That was the case at Airbnb uh for what I worked on
+and then even throughout my time at Airbnb we moved more stuff to Python So uh
+kind of the idea here right And so like you
+You like there are roles out there that are gonna be Java Scholar heavy right
+sure and a lot of those roles are in big tech because like it there is like at
+very high end of scale like you you run into the issues with Python that can be
+of annoying Uh but like at the same time like these UDFs are pretty rare right
+Where
+it's like PySpark so like think about it this way for 97% of pipelines PySpark
+Scala Spark
+are exactly the same
+Right they're exactly the same right because they like PySpark causes Spark to
+a plan that then is executed right And it's executed in Scala or executed in
+photon
+and and and it's that that planning step can be in Python because it doesn't
+matter
+right Could you share how you uh uh how you did your model for streaming So I
+mean
+uh in the case for uh user behavior at Netflix so it was keyed on um employee
+employee ID right And uh we we we were looking at all the sessions right So we
+we
+we looked at like What Google Drive stuff they were accessing what um
+applications
+they were accessing how often they were logging in
+employee or user Employee employee right Cause I was I worked in corporate
+security
+so I was like monitoring uh but keep in mind there's still like 30,000 employees
+at
+Netflix It's not like a small data set right So uh because we were looking to
+see
+like if an employee's laptop got hacked right And it's a complicated problem by
+way very complicated But um and so we're looking at all those things to
+like how uh these so then we look at those sessions and the cool thing is is
+then you can bring in like OK this is like an HR person or a different type of
+person
+and then that will um Then you can actually use AI to be like OK this is what a
+day or a normal session looks like for someone in HR versus like someone in data
+versus
+someone in executive because everyone has different access patterns right And
+it's like so when someone gets hacked like then you can kind of see like oh they
+if it's an HR person and then they're like going to AWS console
+not good you know so Anyways uh I'll I'll uh Srini I'll uh I'll answer your
+question
+and then we'll we'll take like about a 10 minute break and we'll be back
+Yeah DLT has orchestration and uh data quality checks Do we have other
+orchestration
+tools offering both I mean Airflow like I don't know like like there's uh yeah
+we're gonna be looking at both uh uh Data Data Bricks workflows does as well One
+the things I really like about DLT is it's like one of the few streaming
+engines that like really does it's very data quality first So uh yeah It is what
+is So cool Awesome everyone Thank you so much Uh I know this one was a little
+long uh but like we're gonna be back here at 7:20 7:20 and uh we'll take 12
+here 7:20 and then

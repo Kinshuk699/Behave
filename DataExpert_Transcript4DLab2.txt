@@ -1,0 +1,831 @@
+Awesome Welcome Uh we're gonna be talking about uh Delta Life Pipeline today
+Um so you'll notice like if we do the same like create a git folder and then we
+go
+in here and one of the things uh you'll notice like this opened up uh a a DLT
+pipeline
+Like so if we like open up this guy right
+You'll see that uh it's saying this file is part of a pipeline
+switch to the associated pipeline Cause like if you try to run a notebook that
+tries
+to import DLT you'll notice if I like if I like click here
+It's gonna be mad right It doesn't like it It doesn't like it doesn't it doesn't
+let
+you do this
+And uh the reason why it doesn't let you do this is because uh you see it's like
+Delta
+live table module is not supported on this cluster You should either create a
+new
+pipeline or use an existing pipeline to run Delta live table code
+So we need to create a new pipeline right That's what we need to do So uh but we
+we
+we're not gonna create a new pipeline We're gonna switch to the associated
+OK so this is gonna be our associated pipeline We are now in our like DLT um
+OK let's go back to this guy to look at like what's actually going on in this
+DLT
+pipeline code uh looking at medallion architecture right So we're going to do
+silver gold using delta light tables So
+Uh this is very similar to uh yesterday where we have the same Kafka topic We're
+doing
+the exact same uh uh lookups like we're setting things up the exact same way And
+then
+we have our raw Kafka stream So you'll notice here this is our raw table right
+This
+is gonna be and one of the things I want to really emphasize here in this bronze
+layer
+table
+is that this bronze layer table is actually um
+Uh like not OK 11 thing to look at here right is this bronze layer table is not
+doing any wear clause you know so there's no wear clause
+There's no there's not really even very much transformation going on here The
+only
+thing that's happening really is we are adding uh the only the only actual
+transformation
+this is all just Jason parsing But then we also have a little bit of
+here of turning event time into uh An event timestamp right So that we can
+actually
+like work with it as a timestamp and uh be it's gonna be a lot better for uh
+Live table to do that in particular So um let's just go ahead and uh let's just
+So one of the things to remember is like with Delta Live table it always has to
+within a schema And you'll see here we have uh we're gonna do uh we're gonna be
+in
+the main bootcamp schema like uh that's where we're gonna we're gonna work with
+So um let's go ahead and uh we're just gonna run Let's just see what ends up
+happening
+here
+So this does take a little bit of time to like actually see OK so we we click we
+run and now it's uh it's waiting it's like essentially waiting to set everything
+And we can actually um see what's happening here There we go Now now uh we we
+have
+our initializing
+And this takes about like one minute to like actually like really stand up to to
+do
+like a test run
+And uh while this is uh while this is running I'm gonna open up a new tab here
+uh
+for the SQL editor so we can look at that too
+So OK so now uh it's running and we can see our uh it's doing our three tables
+right
+We have our web events DLT
+we have our web events silver and we have our web events gold
+right So we'll see that we have um one of the things you might notice here is
+that
+uh there's expectations
+The expectations here are gonna be like the data quality checks
+So the data quality checks that we put into the table
+It's pretty cool stuff And then we have uh we're gonna have our um
+Uh after this is done running So this this you'll notice the the bronze step uh
+outputted
+1300 rows
+And then we have the silver step here which is going to uh
+um there we go So now now we have our output records here uh from the silver
+step
+which gave us 1300 records
+And now the the bronze step is running So what I want to do is we're gonna go
+look at this So we're gonna go look at selectar from bootcamp.com and we have
+web
+events silver DLT
+So if we run this
+Right is uh we're gonna have a pretty cool
+set of data to work with here
+And let that run And uh you'll notice uh we actually even got some output
+records
+in the gold layer too So we have our gold uh we have our gold traffic that
+244 records
+So here is what we ended up getting from
+our actual data And you'll notice like we have uh we have actual country and
+region
+So let's just go ahead and look at that real quick So we say country
+we're just gonna say count one
+Yeah a group by country
+So this is gonna be uh from the silver layer right And like remember silver
+stuff is usually pretty good or
+OK so now we have all of our countries
+you can see um so we have like United States Canada you know all these different
+oh like I love I love the long name the United Kingdom of Great Britain and
+Northern
+Ireland I love the like the full name there like it's just so long
+Um but like
+One of the things you notice is like this is our kind of uh way of looking at
+different
+things But one of the things that we could do right is you can also put in a
+host
+here right Cause host was another column in the table
+And now we can see like where people are actually visiting right And you'll see
+like
+OK like Then you can see like you know like for example for data expert we have
+391
+in America right But you'll see uh for the cyber instructor he is like he's like
+50/50
+United States and India like 50/50 Uh his his uh his uh breakdowns a little
+Whereas like for me here's data expert down here in India 22 Versus 391 in the
+US
+right I'm actually I have a bigger presence in Canada and the UK and Singapore
+than
+I do in India here right But obviously this is a small tiny fraction of my data
+uh one of the reasons is like it's probably just like uh kind of early in the
+morning
+in India right And that like that's why the traffic is the way it is but like
+That's essentially what this is doing but like let's go back to the Delta Live
+so so we see it's working great But like let's go look at like something in here
+cause
+was there uh was there OK you see how there was actually a record here That um
+was
+null We actually did get a null record here for um for country There was
+one that failed the lookup There's actually a coup uh uh uh a bunch of countries
+failed to look up So let's go look at like
+How to set up some good data quality checks on this so that we can understand
+what the hell's even happening So you'll notice we have two on the silver table
+Remember how I said silver table is where you want to do like a lot of the heavy
+for your data quality checks
+So OK so we have DLT expect or drop and then we're gonna add one more here We're
+gonna
+say DLT expect or drop and we're gonna say valid country
+And I'm gonna say country is not no
+OK And then we're just gonna run the pipeline from the top And uh let's see if
+can get some uh
+Different expectations here right That that should give us um uh different
+things
+like so we have our three defined expectations
+We have our 11 output rows
+OK so all 11 did meet the criteria this time because we only have a very small
+number
+of uh cause it's only doing the
+um the most recent uh data right Cause it's all it's it's running and it's it'll
+just
+keep running and doing more recent and more recent data So uh what would
+normally
+happen right is um if we go if we go look at our other pipelines so like if we
+look
+at our um
+So in here
+You'll notice we have uh this pipeline here that is doing so like I wanna show
+OK first off let's go look at this thing called the DQ monitoring just to kind
+understand what's actually happening uh behind the scenes here So we can see uh
+different data quality check events So what I wanna do is I'm gonna take this
+query
+and I'm just gonna I'm gonna go back over here and then I'm gonna put in we're
+say boot camp
+Bootcamp.web events silver DLT
+right And then we're gonna say limit 100
+So one of the things that's really cool is this
+Query right
+OK so
+You'll notice in here
+this is gonna give us
+Every time Delta Live table every single time Delta Live Table runs a check
+Right Oh it looks like it's from so it actually has the data set in here like in
+the
+expectation It's like
+It seems like OK
+flow progress is the oh and then you have expectations It looks like it's
+the table name should be it's actually in the nested stuff that that part is a
+little
+bit off but like you'll notice here that like we're looking at the event log of
+this
+table and we can see how many records passed See how we have like this one
+we had that 1200 records out a valid IP right And we can see all the like how
+many
+records are passing right You can see how that's uh Um like uh it's a pretty
+good
+uh way of checking uh like
+like this is so what you can do is you can actually take these and you can you
+can
+create alerts on this right So we can actually be like if there are failed data
+sets
+right So we'll we'll we'll come back to this in a second because the uh Delta
+Live
+Table doesn't actually do a good job at setting up alerts for you but this is
+gonna we're gonna show exactly how to um
+See the uh the failures right We will see the the actual failure um data and
+is this is gonna be this is gonna give us a way that we can actually we can set
+up
+an email
+where we can run this query every 10 to 20 minutes and then every time there's a
+failed
+check then we will uh we'll we will be alerted we will be alerted and we'll be
+able
+to be aware of that right
+So
+Key things to remember here right When you do the checks when you add the checks
+like these checks end up um coming down and then they end up uh doing different
+right So uh
+These checks like one of the things that you might notice about these checks
+sucks is uh and this is like one of the things that's bad about streaming in
+is that you can only really do like
+Row count I mean you can only do row level checks Like for example like maybe
+there's
+a bunch of bad data in the stream and there's like a bunch of like there's an
+anomalous
+amount of data from India or there's an anomalous amount of of data from
+wherever
+right There's like a there's like a bad like there's just too much data like
+that that can also happen like it's like an overwhelming row count
+And uh that those types of data quality checks are just not going to show up in
+streaming
+They're just not going to show up in streaming That's just uh
+Uh how streaming works So and one of the things you might notice here is um like
+we can we can make all of our rows very great but then uh like the the other
+types
+of um
+data quality checks we need to set up in another sort of way And that is gonna
+be
+through other types of alerting and quarantining So let's go look at like
+How we can look at quarantining data as well cause uh quarantining can be really
+really
+cool to actually um do this with
+So if we go look at uh this case right where we have the exact same This is
+literally
+exactly the same um before But one of the things to remember here is we we we
+you
+see how we have that expect or drop
+Well all we need to do is create another delta table feed
+Right We just create another delta table feed And what we do is we give it a
+quarantine
+reason You see how like in this one we have uh we say delta uh uh we we we read
+the stream uh the just the the silver stream right And then we're saying OK if
+country is null then the geolocation failed and we are gonna keep this row but
+is gonna be in a new table called Web events Quarantine
+Right and we'll be able so this is gonna kind of check that uh way of knowing if
+actual like problems with the data So does this does this one actually run I
+don't
+know if this is gonna run Doesn't does this actually I don't think this one
+I think this still
+this is still gonna run the I think we have to like link it here
+Yeah OK so this is still gonna run the um
+See this is not this is only running so what what what like when you're doing
+these
+Delta Live pipelines we have to link this um
+this quarantine ingestion
+right So that we can have it be a part of the um the pipeline as well
+Um
+is it gonna include
+OK It's included now So now now when we run the pipeline uh the actual the
+actual
+code here should run
+so what we want to do here is uh we do need to rename some things here Um this
+is
+Oh yeah this this was wrong I remember now OK so let's just call it like so we
+don't like cause we already have web events silver right We already um this is
+already
+a table that is created So we don't need to define this table here as well
+because
+the quarantine table already has it Same with this web events in Right This is
+this is just the the silver DLT table right So we don't need this is I put it in
+in case you want to like run it separately And same with bronze right We don't
+need
+bronze either right Because all that is gonna be in so this will be we just need
+guy and then the stream here is gonna be web events silver DLT
+right So that's gonna be where this is gonna be reading from because like
+And then from this guy this guy's gonna read from WebEventt Silver DLT as well
+And
+so
+We also are creating a table here that is going to give us other expectations so
+can look at like OK um like cause remember how I was talking about the row
+counts
+and it's like how do you do row count data quality checks in a streaming
+environment
+And uh you can do alerting But the thing that's very hard in a streaming
+is to create a contract So this can look at the silver this can look at the
+silver
+data and like tell you how many rows are there and do an aggregation and you can
+see
+what's going on in this aggregation and it will let you do things But like this
+more of an alerting thing It's not gonna prevent the excessive rows from being
+put
+into the gold table or put into the downstream But it is useful as a data
+engineer
+to have awareness
+around what is actually going on in your pipeline That makes sense So then oh he
+got
+changes one to DLT here and then
+yeah OK cool So and then this one is doing the same thing So like I did some
+simple
+ones where it's like every hour uh there should be at least 10 records from the
+and every hour there should be at least 1 record from India
+Like in the whole data set just every hour That's like uh like that like it it's
+be very weird in my business if there's not 11 web hit from India and the United
+States
+every hour
+So now when we hit run pipeline you saw how we linked the quarantine exercise
+Now
+all like Uh Delta Live Table is actually very smart at being able to connect all
+of
+these streams and it will see like oh web event silver DLT is in the other file
+then it will create this one Now we got to get rid of those the the schema thing
+actually um
+not right right We got to get rid of that That's uh
+OK cool
+It's I needed a poll I I I updated this I just didn't update it in data bricks I
+always
+forget to do that
+OK so now we're running this and we should be able to see um all of the tables
+running
+together There should be see now it's saying setting up our Delta Live tables
+So now you'll see OK it knows to run bronze first Now it's running silver right
+you you'll notice it determined it figured out what and so after silver you see
+how
+all the quarantines all the quarantine data is now out and running right So it
+looks
+like uh it looks like Web events quarantine actually did output data
+Um so let's uh like
+Let's go ahead and um
+Let's go ahead and look at that data while the rest of these checks are running
+let's go back into here and say like select star from bootcamp.web events
+And like let's let's look
+see what the hell's going on
+It's very interesting
+The thing that's interesting to me is that like this outputted events right But
+this says that uh it's like yeah
+They all passed
+So um OK so here are the events Oh yeah this is right You see the country is
+null
+So uh yeah quarantined app So so the geolocation failed for these records on
+IPs right So uh that's pretty cool It's pretty cool So like but like
+I think we made a mistake somewhere cause like this
+this should have failed too Like the three met here should have failed So did I
+say
+like I probably
+Valid country country is not Noel
+Yeah it's right there
+Expect or drop valid country Country is not null right And we have country down
+country right here
+That's so weird
+That like uh
+that this like cause this read in 9 this actually did say that there's 9 records
+were quarantined right So uh it's interesting cause it's like uh like you would
+think
+that this check would also do that and it should like that's very strange like
+like this check is not um
+Uh doing what it's supposed to cause it's like if you look at the expectations
+you're saying fail rate failures only And it's like nope it's all good It's all
+And it's like no it's not
+OK so um it's very very interesting to me that like that was uh why like that
+it actually did quarantine
+something So let's just run this one more time and I wanna see like
+if that like triggers the same
+the the same checks right The same uh data quality checks because uh that'd be
+cool
+but like you'll notice we have like a lot going on here now and um OK so bronze
+up 15 more
+Uh that's pretty cool Yup silver enriched those 15
+and then OK see Web events quarantine did not pick up anything that time That's
+pretty
+cool I wonder if it picked up like from an old run or something like that where
+it actually read the entire stream and it found the cause it found the 9 records
+from
+Web Event Silver like in all of Web Event Silver One second let's just look at
+Web
+Event Silver and that that might be what it did Uh uh
+Um country is null count 1
+or say group by 1 If this is 9 then that makes sense
+It is 9 So why OK so what what happened here right that I think is important in
+last run Remember we we saw the 44 and the 9 but it said that the silver table
+passed
+all the checks but then we saw 9 rows in quarantine is that the quarantine step
+read the entire silver table and the silver table checks were only running on
+incremental And that's why cause you see in the entire table here there's 9
+where country is Noel and then there's 1400 records where country is not Noel So
+that's
+why like even though the checks even though we see like the 3 passed and then we
+saw
+Rose in quarantine that's why that happened So um
+anyways that is like the big thing here So one of the things that I think is
+important
+to show like is OK
+Great but one of the things you might notice here is that like this just
+this just runs and dies and runs and dies right You like you have to keep
+clicking
+the damn button right You have to just like and that's how like Delta Live table
+works
+unless you freaking you know you can schedule right This is gonna be the um so
+you can actually say like
+Like how often right Perform optimizes Is there more options They should be able
+do this in
+Oh see you can do advanced so you can say simple scheduling or advanced
+So you can be like every 1 minute right That's just gonna be like yep every 1
+minute
+every 2 minutes
+That's a very minutes
+wow Yeah we'll just do every one minute I'm fine with that
+And then it gives us our Los Angeles time zone So um
+So this is gonna be uh like how you're gonna deploy right And then this like is
+be how often you refresh right And like this is again like
+really keep in mind here with Delta Live Table right Where it's like OK this is
+run it's gonna it's gonna rip everything off of Kafka it's gonna do everything
+we expect
+but like
+If we do it every 30 minutes or we do it every 1 minute like it's gonna have a
+very
+big difference on the cost right It's literally
+so like this is where like
+maybe we do it every 5 minutes right And then 0 minutes past the hour right So
+this will update every 5 minutes Like that's like uh um and this would be 5
+times
+cheaper than uh updating every 1 minute right And so the the thing I love about
+Live table
+is that it gives you a very clear contract right Where you can be like well we
+scale it up or scale it down right Where it's like how frequently do we want to
+this because it's like oh we can do it every 30 minutes right And now it's 6
+cheaper or 30 times cheaper than running every minute right And you can run into
+some
+problems every minute as well It's like you might have noticed that this entire
+dag
+actually took more than one minute to run You see how the um the gold table here
+took more than one minute to run So uh like you can actually end up stacking too
+like on your um tables So remember
+Delta Live table is just airflow It's just airflow It's just scheduling right
+It's
+like it's not it's not like a streaming environment It's not like spark
+in that way Like this is where like you know like on Tuesday when we were
+talking
+about that trigger and there was that process time and we saw that like if
+you're
+in a regular server then it will do that thing But this is gonna be like how we
+Like run things and we can get notified on success on start Obviously if we're
+every one minute we probably don't want to get notified on success right That
+a lot of emails But um definitely on failure you can see how that that's all uh
+looking
+pretty good but you can get a lot of um a lot of visibility into this stuff
+Into like what's actually happening inside of your um inside of your ETLs and
+inside
+of your pipelines So um let's just go ahead and uh we're gonna say we're gonna
+run
+this um every 2 minutes from 55 minutes past the hour OK we'll do that and we'll
+create
+OK
+So um now this will start running um in a minute right And then we can see the
+schedule
+And then so keeping in mind that this is gonna run a lot right
+And so uh this is where um you want to be aware of what's going on right And so
+now
+we have a deployed
+pipeline that's going to give us I mean it's gonna give us very interesting data
+It's gonna give us this uh This stack of data that we are gonna work with right
+That
+is actually very valuable And so um it's exciting times right And I guess while
+running while that's running I wanted to go over some of the DQ monitoring stuff
+you saw how we had the um we can we can look at some of these quarantine volumes
+And we can uh be like OK like we want to look at like
+How like how many quarantine um
+Like oh see there it goes It's running It's alive It's alive And it's and now
+it's
+running without me having to click the damn button That's great
+So uh we can actually go and grab this
+Query right We can and we can just from and then we say bootcamp.web events
+right And then uh we can just be like OK we want to look at um the last hour
+We can look at like OK
+how many uh
+Events have been quarantined in the last hour And then like this is uh good But
+like we can be smart about it right Where there should be like a
+can we like
+Save query text
+Save query text is empty Please enter and save the query before OK so we say
+this is um
+we're gonna call this um quarantine
+alert
+For DLT
+Is that what it's saying
+Saved query text is empty
+Where's that saved queer Is it like
+OK I thought I would just be able to do this Is it not like
+Cause it should be able to please enter and and save a query before scheduling
+well like I did enter the query here right This is saved
+That's um
+Very interesting and then this is gonna be
+Did I miss something
+Oh save
+Ah
+There we go it's saved now
+So um
+so what we can do here is we can actually set up an alert right So we have our
+and then we can just have this run like
+like once a day or once a once an hour to like depending on how often we care
+about
+our data quality And then this should be able to give us an alert One second
+a way that like
+You can schedule this as an alert right
+I had it in here
+OK Create a sequel alert from the failed
+set an alert to trigger with rows of greater than 0
+So there should be a way to do this like and then it's like is there not an
+in here There should be
+Another thing am I missing There's like uh is it not
+is there not an advanced tier
+OK what does this new schedule does this actually uh OK this just does a
+OK yeah we're gonna delete that We don't want to like schedule too much shit
+But um
+interesting I swear I I I saw it before I I I was
+There's definitely a way that you can like
+Have a condition on this and let it run
+and uh it should alert you like if there's um
+if there's bad rows right And then then then this query can run and then you can
+aware like OK like even though Delta Live Table is being crazy right We are uh
+we're we're doing OK right We have our um
+Like like everything is working the way we expect it to work And so uh like I'm
+surprised
+this Rajesh do you know what's what what it is there Like I'm missing some um
+import
+DLT gives the air Did Zach fix it Well it's like you you have to do it from uh
+have to create a new pipeline You have to do the yeah I I showed that at the
+beginning
+You have to create a DLT pipeline You can't do it from the workbook session
+So I I swear that there's like a there was one thing I missed here that like
+Uh that was able to actually like do alerting on this right Is there a way can I
+I say like
+Do I make an alert
+for
+A scheduled
+SQL query
+That I
+In the sidebar Oh it's down here alerts Ah
+because I'm in the wrong editor
+right Create an alert
+Write the query OK that's why I was in I was in like the wrong
+And then we can say like we can just be like and uh or this is where we can use
+having clause right So in this case we can be like
+having
+And then we can say uh
+count
+greater than 10
+Right And then this can be our um
+Like this query should give us no results right But like trigger OK so we have
+trigger
+alert when first row right
+What is it not like OK yep accept and run that's fine
+OK so uh we'll we'll we'll change this to 5 just so that like we can actually
+get
+an alert
+But OK so now we get our alert So first row
+Does it have count
+OK so because it doesn't matter because we we you can OK so you can actually
+keep
+it here right So we have the you can put the condition over here or over here So
+I'm
+gonna keep it in the having clause but like then we have count our is um uh
+great
+is there greater than or equal to a greater than or equal to
+one
+Or just one or
+yeah yeah one greater than or equal to one test condition
+Yeah alert will trigger right Because we we're putting it in the having you can
+it over there too it doesn't matter And then notify user
+And then um
+If result is empty set status to air right
+Status returns to OK OK that's that's good
+And then uh I think that should be it And then does this like
+does it have like a there should be like a schedule on this though right
+Does the alert just run or like
+Schedule here we go So then then you can schedule schedule this like
+every one hour one minute past the hour right And then it will look at the last
+um
+Yeah we'll we'll change that to every hour 1 minute past the hour and save And
+now this query will run and it will send an alert if there's more than 5
+rows in the last hour
+right And so then that will uh then that will alert you and then you will be
+oh like the geolocating you know the geolocating APIs are broken and I can see
+because of this query here this alert query here So that can be like um An
+interesting
+way that you can go about like building out these kind of like pretty cool um
+pipelines
+right And we can see like
+where things are being met where they're not being met right And uh you can you
+also query like the the actual data quality expectations so you can actually
+here as well like if you want to like
+Get more in the weeds on the data quality But uh yeah that's gonna be the um uh
+essentially what I had to show you guys today Hopefully that was um of interest
+but
+uh I want to definitely uh open it up for any um questions And there's an alerts
+on
+the on the left side yeah I is it in job not not not not worked in DLT going
+through
+uh like
+Like it worked for me I don't know like
+uh we can uh we we'll we'll we'll see uh
+uh does the triple vertical dots show anything Oh yeah we we got it But like
+does
+anyone have any any questions about what was covered here that there was a lot
+we quarantined Rose we showed you know data quality errors like we have like
+essentially
+everything in the in there right Could we have read permission on Main bootcamp
+I
+I I swear I've given that read permission to everyone like 5000 times right OK
+Oh
+like how can I give read permission
+to everybody on Main bootcamp schema
+What
+freaking I've ran this freaking query so much right I thought like I it is it
+it it feels like it's something that doesn't like stick for whatever reason I
+to learn more about like data bricks freaking ops but OK we'll just grab this
+and
+then go over here
+SQL editor OK um grant usage on schema
+OK that should be good Um you should have read permission now at least
+Hopefully that sticks like
+But yeah uh cool This actually ended up uh working out way better than I thought
+glad I was able to actually demonstrate all of the pieces of this puzzle to you
+guys
+uh and it's actually running It's like a real-time pipeline that like now we
+could
+do some cool stuff with so
+Do you mind showing pipeline creation
+Uh yeah we can go back over that like the the the top from the top of that like
+like well like so if you go into the workspace right and then you're in like
+streaming day two and then you try to go to this pipeline right And uh it will
+me it immediately goes into the DLT pipeline because I've already created it
+So um like you need to like uh if you try to run Like if you try to run it
+should
+give you that notification of like hey you need to like run it right It it it it
+give you that nudge in the right direction and then that ends up creating a
+where you have like all your files and then uh interesting that it it won't let
+me
+go back but it it it uh if you do that it it should be able OK can we do that
+the top like OK let's see if we can do that from the top in terms of uh can we
+like create a new get folder OK
+OK I think we should be able to do this as get folder name and we'll just call
+like 2026
+OK so we can actually like do this from a OK so now OK from the top we are in
+we are not in uh like so you'll see if we try to run this line
+it's gonna be like sir
+It's gonna be like don't don't do that right Don't do that right It's gonna be
+you can't do that right It's not gonna work right That's gonna be the other big
+you you see like says create it literally says like or you should create a new
+OK so then we go to create a new pipeline
+OK so we're gonna create the pipeline right And we have to we you have to pick a
+sche
+a schema so main boot camp
+right then uh then we can say add existing assets
+right And then we have our um
+Should be able to like look at this folder right
+Spark streaming lab right And then you can add all of your assets
+Like OK so we you should be able to OK we'll just select the DLT pipeline
+And then uh you also want to like add that as the route select select add
+OK so now over here so one of the things is is like remember uh we this this
+depends on IP lookup and Kafka Utils So you have to add these into the source
+code
+otherwise like the references are gonna break So uh you can just include all of
+The the DQ monitoring is not not as important These are just regular queries
+are regular Spark queries But the um these 3 or these 4 need to be created right
+now this is the pipeline that you can run right And then it should just work
+So that's the like the steps to like actually create it right So now it's doing
+its
+thing and um it should uh actually run through and
+Maybe it will fight It might it might be mad because this Delta Live table
+exists in another file but
+We'll see
+It might be like hey like you have another pipeline that's already doing this
+But uh like
+cause we have especially we have one that's like scheduled and running every 2
+this is gonna be the yup OK yup see it's like it's mad because it's already a
+managed
+it's managed by a pipeline right It's like cause uh a table can only be owned by
+pipeline So like you're gonna need to like rename these
+That's gonna be the other big thing I guess you're gonna need to do if you want
+to
+like uh otherwise the exact naming is gonna be a problem
+So but like uh because you can only have one
+working that makes sense Uh uh that's how the the pipelines work But um that's
+be the yup hopefully that was of of of use right But yeah definitely you're
+need to update those as well So yeah cool Probably should have started with that
+um anyways uh I'm glad that uh this lab uh ended up working out Um thank you
+so much uh for showing up today Uh uh and you know that like this type of
+technical
+stuff is what's gonna bring your career to the next level especially like if
+trying to find like these real-time real
+data processing frameworks and uh I hope that you guys can uh rack up some cloud
+bills
+over the next week I will get you guys homework on setting up some other um DLT
+stuff as well so you can get um some good experience in uh Data works uh
+sometime
+tomorrow So probably tomorrow evening right Oh yeah cloud bills yeah you we
+we've
+only racked up so in the boot camp so far we've only racked up like 2500 bucks
+But like if you guys if you guys don't rack up 100 like
+I'm ashamed of you right
+Awesome
+Awesome Welcome everyone to uh Spark Streaming Lab Uh we're gonna be covering a
+couple
+different things here so we'll probably actually put this in a couple of videos
+One
+of these videos should be a little bit shorter
+So uh we're gonna start off here by looking at UDFs UDFs are uh one of my
+favorite
+things
+So um you know if you get the Spark streaming day 2 lab uh there's this UDF
+versus
+SQL benchmark Uh this benchmark is pretty interesting just to look at like Uh I
+look
+at like the actual like fundamental differences between these two right So um
+Let's just like look over this code real quick Oh yeah this persists is not
+gonna
+be good
+Why was that OK Anyways uh the rest of this benchmark should be uh like pretty
+solid
+So all this is gonna do is it's just gonna like generate a random number and
+then
+you'll notice we have a UDF here So there's there's two ways that you could do
+this
+right It's multiplying by 2 and adding 7
+That's literally all it's doing And then this is defining that custom UDF where
+it's
+like using a lambda function to do the same thing So like what what we're trying
+to
+demonstrate here is OK what is the difference between if you build if you do a
+built-in
+Like this is like built-in a way of doing it where you're like using the actual
+uh
+This is like the actual uh PySpark libraries This is like this is gonna compile
+the
+C++
+And this is not this is gonna be using this is using like Python here right
+So um they are exactly the same
+But they will be um they're gonna be a little bit different right So we should
+be
+able to just run this guy and kind of see like
+what happens
+So it's gonna do this for 5 million We're doing 5 million as the row count here
+5 million random numbers
+Where did I put persist Where there's like a
+Oh this it's the cashier my bad
+It will work
+It will work either way now Yeah that's why I didn't like the
+OK So you'll see here it had the OK it it it's saying that it's only like um a
+0.2
+per uh or like it's like a you know 1.1% 1.1x here
+Really It's gotta be different every time right OK now it's cashed though right
+Is
+that the
+That's very interesting Very OK so that you you'll see like the UDF one is
+strictly
+slow like So there's some randomness to this I like that I like that So it's
+like
+OK well then it's not enough rows That's that's too it's not enough We gotta do
+we
+we gotta we gotta go more
+Can we do uh let's do 100 million not 5 million
+It's not enough
+Like I like how it's still like the same Like it doesn't that's very surprising
+me like cause it's like the um
+I wonder if this uh does anything with um
+Pi arrow That's very interesting I was not
+I I ran this earlier and I think it has something to do with uh like
+cause then we have the time and the time and then does the does this um
+It has generated the column and then we do our time and our time and then it has
+it
+here Oh I wonder if um
+If there's any is there any no I guess not This would actually be this should be
+because we have our this has the cash and then it then it should start
+everything
+So these are running
+That that very first run that like 10% like that 1.1x was what made sense and
+now
+it's like they're just like it's equal like which is OK One of the things I want
+just try here is I want to see like if we make this a little different I'm gonna
+just
+change it to like
+OK so that does make a makes a little bit of a difference It's crazy how fast
+can run Like you have this like 100 million rows like in uh like so anyways
+You'll notice like when you do some of these benchmarks like
+now I'm now now this is bothering me I like I just wanna like can we like crank
+up one more to like a billion
+OK so now OK now that's getting more like reliable like maybe maybe Spark did
+something
+it's it's
+it's too the benchmark here I I need to make a better benchmark here I feel like
+it's like essentially like we're run it the more you run it the it's gonna give
+you
+More often than not it's giving you like about a 10% speed up by using the
+functions I think that this this one's a little bit gameable It's a little bit
+gamable
+There's probably some caching and some other things in here that are happening
+are
+that are kind of hiding They're probably there's probably something here with
+select like this like
+does it OK I'm gonna try one last thing on this and then we'll be we'll move on
+So
+I wanna try actually running the the Pie UDF first and then the um the built-in
+functions
+to see if that makes a difference in like some caching stuff
+OK now that there is definitely some caching stuff you see how that like that
+made
+a difference that made it like now it's like 1.8
+It's not like
+But then what the hell I like how unreliable this is right That like it's um
+Uh
+That it's uh like for the most part it it OK it's pretty consistently about 20
+20%
+slower but as you get more like if depending on how much Python you're doing
+right
+this is honestly like a very simple Python operation right Like if this was more
+of
+a like an array operation where you're iterating Then you are gonna see a
+significantly
+more of a of of a downside We're like this is OK I'm I'm happy with this like
+slower but this is 20% slower on an extremely simple operation Whereas like if
+you're
+passing in an array or you're passing in something else like that then things
+can
+be um even more slow So anyways this was uh one benchmark I I I want to look
+into
+this a little bit more to see what's going on but that's gonna be our uh our
+first
+thing

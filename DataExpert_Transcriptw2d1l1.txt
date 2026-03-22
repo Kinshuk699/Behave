@@ -1,0 +1,789 @@
+Welcome everyone to uh day one of Apache Spark Lab So uh what we're gonna do is
+we're
+just gonna add a git folder real quick
+uh so we can like actually have this working So we have Spark Lab day 1 2026
+This
+is the one we wanna add and then we're just gonna create git folder
+Boom OK We have all of our um pieces of the puzzle here now uh in data bricks
+So
+What we're gonna start with here
+Is we're going to work through um
+Getting our like actual like
+One so like let me just kind of go from the top here like cause like my goal
+here
+is to actually get us a really
+interesting use case for uh
+Um I'll try to say an interesting use case of like using polygon right So we can
+actually
+like
+Like polygon or the massive sorry massive API they keep they renamed it polygon
+or
+they were polygon and they changed it to massive I need to go to massive real
+quick
+I need to get my API key
+OK Got my API key So in here I sent you guys an API key you just paste them in
+there
+And then what this is gonna do is uh oh let's put some other stocks in here
+cause
+like I think there's other ones I I care about Let's put Netflix Meta
+Let's put freaking um Nvidia Let's put um
+Anyway OK I wanna ask you guys what are stocks you care about I want to put like
+2
+more in here like so what what
+uh TMC is that TSM
+I'm down with TSM Let's do one more stock here
+It's just TSM The the ticker is just TSM Does anyone anyone else give a shit on
+any
+other stock
+DoorDash stock Is it Dash
+I'm guessing it's Dash
+Yeah OK It's Dash OK Well I'm down to sneak in Dash even though it feels out of
+place
+but like I'm fine with that So what this is gonna do is this is going to extract
+of these stock prices
+At a at a one-minute granularity though So like we'll just we'll just let's just
+run
+this
+You'll understand what I mean
+OK so this is just gonna run and we're gonna have this be at a one-minute
+granularity
+And we're gonna do it for we're gonna look at like
+all the stock prices at a one-minute granularity for the last year right OK So
+we
+did that and then we're gonna drop all of this data to stock bar minutes So a
+of this is just like pretty straightforward We're just gonna run this This is
+gonna um
+We're gonna have our functions here
+So now
+This is gonna um
+Take a minute because like it's a lot of data I think it's like a couple million
+rows
+So yeah we just got 188,000
+bars of data for Apple
+163,000 bars of data for Microsoft
+And it's just gonna like it's gonna like harvest all of these right And uh you
+might
+notice like uh the more volatile stocks have more bars That's like because
+that's
+just the nature of like if it's if it's unchanged it doesn't make a bar right So
+you'll
+see like see then there's there's Tesla with its freaking it it's got a it's got
+lot going on there
+So we're gonna load in all of this into
+um or maybe it's not Netflix is definitely more volatile than Microsoft so I
+don't
+know Maybe that's not what it is Maybe it's a limitation of the API but we're
+getting
+there We have like we have Meta and then we're have Nvidia and then we're gonna
+have
+um
+Uh DoorDash which is gonna be great I didn't expect DoorDash to oh there's TSM
+I forgot TSM TSM and then DoorDash There we go So now we have all of our data
+Right which is gonna be our um
+It's not supported in surplus compu I got this working before
+We have our OK so directly accessing the underlying spark
+JVM
+This this was literally how I think was I doing this with the cluster before
+OK So I think what we can do here is we have all of our um
+DFs right So this is gonna give us all of our DFs and this should give us Um
+will load OK I loaded this I already did load this into the data right Like I we
+should
+see this I'm just gonna open up another um tab here to make sure that we
+have data so that we can go to the the actual spark section of this So if you
+like select star from Maine.dataexpert
+um we should say like stock bar minutes um um and we like
+Use uh yeah just run
+you know start attach and run
+It should be quick right Why is why is this select star so slow
+OK there we go So now we have we do have we have all the data here Yup So OK
+We have like every second like like or every minute
+minute bar
+Uh I need to go and update the ingest here I thought that like I got this
+with serverless but like I guess it's not the
+um it's not quite the way I would want it to be Uh I I think that there's a
+small
+OK I know what it needs to be here So we have our DF append
+right So we have all of our data here This is gonna give us like this is each of
+the
+um the data frames that is gonna like be together
+right And then this is trying to combine all of them right So we should be able
+to
+like uh instead of doing that like We have our results here right And then what
+can do is we can just make it all we can just make it one giant Python thing So
+instead
+of DFs that append two-minute DF we just say results right
+Cause we we shouldn't have to do this right So we should be able to say results
+and
+then um
+Uh 2 minute DF um
+DFs
+Ticker schema and then uh then this should be our uh combined
+That should work I think Where what is what is the OK 2-minute DF What is the
+ticker
+even doing here though
+The lit here is not necessary because this should be um
+That is that should already be in the fetch polygon bars Is that is that not in
+this should have uh that data in it when we when we extract right here right So
+uh
+that's very interesting I bet it does actually have it in that data like um so
+probably don't even need this um
+It probably already has that data
+So uh we will get rid of that But like that's gonna be a small bug change that
+can look into Uh I will fix that uh before the next class So sorry about that
+guys
+Um so we have the data already written I already had it written and we have it
+in
+Unity catalog So um that's all this is doing is just loading that in so then we
+can
+actually go look at what we want to do next which is we're gonna be looking at
+best uh the best buy and sell time per day
+Uh like with an intraday self-join that's the very first thing we're gonna do So
+let's
+go and look at that just to understand like how we can kind of use this data um
+effectively
+right So
+You'll see in here what we wanna do is it's pretty straightforward right Like
+what this join is actually gonna be doing right So what we're gonna do is we're
+just
+gonna uh
+We're gonna load in the data just like load in the table right That's all let's
+run this should be uh
+pretty straightforward here to see like what's actually happening
+Sometimes like you know it's like serverless is like not at that not actually
+fast OK There we go And this is exactly what we saw before when we were loading
+our data
+So um
+one of the things that we want to look at here is OK we're gonna be looking at a
+lot
+of these explained plans
+We're gonna be looking at a lot of these um
+explained plans as we um
+kind of like go through um
+The rest of this lab right Cause explained plans
+show you the physical
+steps
+That is gonna happen right That's actually like it it it gives you all it gives
+you
+we we we saw this uh in the Delta Table lab for a second but like so you'll see
+have a physical plan here This is what we want to look at But you'll see like
+minute DF is just uh like we saw up here it's literally just like
+Select star That's literally all it's doing here Spark.table is the same as like
+star It's literally the same thing And so um like if you see this is very
+straightforward
+right All it's saying is we're gonna be so we're scanning the parquet table
+We're
+doing a parquet scan of this unity catalog delta table and then we're doing
+calmer
+to row And then results stage right So this is going to be the the final stage
+of
+like showing the results right That's literally um all that that's going to be
+doing
+right That's the um the final kind of uh piece of it right So
+This is like a very simple select star plan Uh we will be going into a lot more
+details
+as we kind of like get through this Hopefully by the end of this lab you will be
+an
+expert at this So what I wanna do here real quick is I wanna actually go back
+and we're gonna create one called AgDF
+and we're gonna uh we're gonna run this guy
+And then what I want to do here is I want to do an explained scan
+AgDF right And we're gonna actually hide the the minute DF
+OK
+So now OK now the plan is like a little bit more
+You might notice here we have like a lot of extra
+Like
+steps here So um one of the things that is important to remember about here
+right
+I remember like what I talked about in the um in the lecture right Anytime you
+use
+the word by
+Group by order by partition by like all of those you trigger shuffle You trigger
+shuffle
+right And uh you can see shuffle in here actually like so you start you see you
+start
+the same It's like OK cool We're gonna we're gonna we're gonna read our data
+Makes sense right So then what we're doing is we we see how we have uh we have
+one
+shuffle exchange sync
+And then uh then we have like another exchange sink and source and then we do
+another
+grouping and another exchange and then a final sort What is this like Is that oh
+it's
+because we have the order by See this is like because we have both group by and
+order
+by here right So if we look back here like so this first bit here this first
+grouping
+aggregation shuffle sink exchange to here this is our um
+First uh sort right This is going to be our first um like these 1st 5 stages
+represents group by in Spark right And then uh it it with shuffle involved right
+And
+then the these
+7 I guess 6 probably these 6 stages here represent sort or order by right So one
+the things that I want to show you though is Order By is like one of the
+shittiest
+most annoying um
+Uh
+Like constructs that you can use in Spark You see how you see how order by turns
+into
+6 stages
+That's like freaking so annoying But there's another way There's always another
+way
+right So I just want to show you guys there's another way to do stuff right That
+is
+similar but different So you see how we're doing sort within partitions not
+by all right So now what we're gonna look at the difference So remember
+before we run this explained This is a 13-stage 13-stage Spark job right Now if
+run this now it's a 10-stage Spark job and you'll notice that like
+Keeping in mind that like
+how many shuffling like how many shuffles actually are happening here Right now
+just have the the aggregation shuffle right We just have the like so but you'll
+see
+we have the sort we have the we still have that sort phase right which is
+From sort within partitions So the thing that that does sort within partitions
+what
+it does is the difference between
+order by and sort within partitions is order by seeks a global sort
+Right It's a global sort which is like
+if you're in the distributed compute world a global sort is like literally
+impossible
+It's like because one of the things you gotta think about like is like OK
+imagine
+um each of us had 3 numbers and we needed to know which it like like all 50 of
+us
+or whatever in this lab right now we all have 3 numbers and we have to know
+How to order them So we could order our 3 numbers We could order our 3 numbers
+then how do we know our numbers are ordered within all everyone else's numbers
+And so the only way to know that is if all the data goes through one machine
+right Cause that's what global sorting that's the only way that you can verify
+by having all the data go through one machine and that is uh if you're in the
+distributed
+compute world that's called not distributed Right if everything is bottlenecked
+by
+one machine So order by like I just want to explain it back to uh like the kind
+a a a a very important way to be thinking about it right I'm not saying to never
+order by I'm saying to you you should only use order by when the data is already
+If the data is already small order by is good right If you want to leverage the
+of sorting
+without having to do a global sort
+then sort within partitions is so nice because then what sort With partitions
+does
+is it says like all of us have our 3 numbers and we're going to sort our numbers
+Without having to talk to each other right And you and you can you can just
+intuitively
+understand that that is way faster than like all of us interacting to understand
+if
+like the whole global list is ordered
+So uh that's just uh a big thing to be thinking about and you saw how we went
+from
+uh just that one small change went from uh what 13 stages to 10 right And I
+know if you know you're going to get the same exact result same exact result So
+like that's a big thing to be thinking about right So when you're when you're
+reading
+these plans right the big things you want to be looking for are these we're
+looking
+for the word shuffle look for the word sort look for the word grouping Those are
+gonna
+be the big like the big keywords that are gonna be like oh shit right So um
+Uh that's like obviously there's like more going on here that like ends up being
+like you have like all this other shit that ends up showing up right And so
+This is gonna be um let let's go let's go down here and like actually see what
+our
+Our job is doing here So what we're gonna do here is we have the same data set
+twice
+We're doing a self-join right We're gonna join the buy and sell data set on the
+tickers
+have to be the same the trade date has to be the same but the timestamp of the
+sell
+sell has to happen after buy
+And it's an inner joint That's what this is an inner joint Obviously like this
+like so when you're doing like a data frame joins like this this this inner like
+actually don't have to specify this This is the same thing inner is the default
+but
+this is also where remember how we were talking about like left semi and left
+ante
+and anti and you see how like they're all in here semi-join they're all in here
+literally every joint I talked about is in here
+So like understand that I'm I'm I'm I'm teaching you guys the way to spark OK
+So we're gonna run this bad boy
+OK cool So now we have uh we have our prophet DF So let's go ahead and look at
+Explain has like more to it than just like um you know uh like you have extended
+formatted you have like a lot of things going on here So usually dotexplain is
+enough
+like I feel like I get
+Like I I I satisfy like with what's going on with just to explain but like you
+get more here like uh like a lot of people like the the formatted explained So
+let's uh let's let's look at these real quick So so we have our um OK so this is
+extended explained right which gives us like there's a lot going on here There's
+uh see this shows you like the sub query uh just there's there's a lot right So
+go down to the um formatted explain
+OK so here is our um our our our 13
+This is gonna be our 13-stage uh 13-stage
+Job right One of the things you might notice here is this is doing uh remember
+have our shuffled hash join We have this is gonna be our uh it's it's not doing
+sort
+merge joint Interesting It's doing SHJ that middle that middle example we talked
+about
+uh before
+One of the reasons why it's doing this is because the um
+Uh the remember the broadcast join threshold is um the broadcast join threshold
+10 megabytes
+So we can actually go back and we can we can force this to be a broadcast join
+we want to have this to be a broadcast join we can actually do that We can just
+say
+like spark.com.set
+spark SQL.au
+It's not gonna give it to me
+OK I just have to look one second I I just need to look at another example here
+I
+know I have it in here Where's the -1 in here
+is it not in oh it's in it's in it's in this one then
+Threshold
+OK I could never remember these freaking stupid settings all right
+Let's go back and we're gonna we're gonna set this bad boy OK So remember this
+set The default here is 10 megabytes and like this data set is more than 10
+megabytes
+So we get SHJ right Which is not like I mean it shuffles It shuffles so it's a
+little
+slow So we're just gonna be like
+We're gonna be like we're gonna set it like really high Um Data bricks might be
+mad
+at this but we're gonna try it
+Is it not gonna let me do this
+Uh is it because it's freaking um
+Is it like megabyte Does it need to have like the megabyte in there
+It's just not available That's super annoying Like if I put it as -1 is it also
+not
+gonna work
+OK what's um it's like I wanna try that real quick with the um with the -1
+OK let's uh cause it looks like OK this is
+Interesting So this might be uh a thing with serverless versus um using like the
+actual
+like real servers like
+It just yeah it doesn't like it OK So this normally works So if it doesn't work
+what you can do is you can actually hard coat it right So what you can do is you
+wrap it right So you can do this thing called you can just like straight up wrap
+it
+in this thing called broadcast like that
+Um uh yeah but it was like there's probably a way like ah like we're just gonna
+ask
+AI real quick um
+What is the path to import a broadcast
+Joined Spark
+Come on Data Brooks give me it
+Thank you
+Thank you very much So we're just gonna pop this import at the top here So this
+like how we can force a broadcast join
+No like OK whatever AI
+No we want to keep it
+Accept but no we want to keep that guy
+Import
+Where did it go
+OK I wanna grab this cut this guy
+Keep him there
+Oh then we had um by
+DFal DF alias bye
+OK does this work now
+OK good It actually lets me force the broadcast joint
+I was about to be sad like there's two ways you can do it right You could
+usually
+set the threshold as like above 10 megabytes or you can do it with uh with this
+silly
+way to do it where we're doing it with like we're like no this is a broadcast
+joint
+We're not doing it freaking the other way So remember like if we go down here
+how like we saw before in our um
+In our example here like we have uh this is our thirteen-stage
+uh we have a 13-stage Spark job right now that has like we we end up doing we we
+read
+in the we read in this job twice or we read in the the table twice then we we
+it and then we do our exchange right We we shuffle into an exchange and then we
+do
+uh SHJ you know our normal shuffle hash joint And then we just you know write
+data out So um if we look at it now
+Here one second I'm we don't need to look at like all of these other
+We can just look at the formatted one We don't have to like look at the whole
+freaking
+nine yards So now you see we have a a a simpler
+thing here You notice how like we only have uh only one side is shuffled now You
+the uh we have this side that is shuffled right And but then the other side is
+right Because uh we only need to have one side be um broadcasted in
+So that's gonna be uh um a much better way to do this right So
+obviously you can't like uh like for example like you can't like wrap both sides
+You can't like be like broadcast you can't like say you can't like just put both
+sides
+on the executor I don't think it lets you do that
+Does it let you do that If it does that's super weird
+OK but
+That didn't change anything right That didn't change anything at all OK It's
+still
+the same still the same right It's still the same uh whether you do that or not
+uh it it the um
+It only recognizes it here but you'll notice like the whole point that I'm just
+trying
+to show you guys is you see how it's not uh we have uh uh we went from um SHJ to
+BHJ
+here right And so this should perform somewhat faster like it should actually
+perform
+like at a fairly significantly faster rate And like the whole point here is that
+some of you guys are like like how do you know if Spark is freaking doing what I
+want
+it to do or like why is my Spark job slow or whatever It's like
+9 times out of 10 you're like not looking at this 9 times out of 10 this
+explained
+plan like is like where you will like so if you wanna like really understand
+Spark
+and like troubleshooting Spark jobs there's 3 reasons 3 reasons why Spark jobs
+are
+slow One is you're not looking at the explained plan and it has 5 trillion
+steps and you need to like sneak in a little broadcast somewhere or you need to
+Aggregated data set somewhere or you need to cache a data set somewhere that's
+the second one is actually just relevant to all pipelines which is that your
+data has not enough partitions in it So like you have an upstream data like you
+have like a say your upstream data set is like a 50 terabyte CSV file because
+CSV
+files aren't splittable so like you have these like nasty freaking Problems with
+giant freaking files and like that's uh the the second one And then the third
+reason
+that um Spark jobs can be slow is uh UDFs So like if you create a user-defined
+function
+that's doing something fancy and you do not optimize it like you have a you have
+unoptimized UDF and it's like
+That's it
+That's literally it Like if you look at those three things like especially
+nowadays
+like with adaptive execution and a lot of the stuff that Data Bricks does for
+like that's it that's literally it So anyways
+Let's um let's go and look at like some of the um
+Uh some of the data that we can look at here right So let's look at uh this guy
+so this is gonna be uh it's gonna be a very interesting thing here So it's gonna
+look
+at the last year
+and it's gonna look at like um uh like the best and worst uh
+Uh the best and worst trades that you can have on a on a given date
+right So uh this should be um pretty interesting
+So like you can kind of see like oh like this uh you know April uh April 8th was
+really
+bad right Cause like if you bought in the morning and then sold at night like
+got absolutely cooked right
+Whereas like you know like it depends on like when uh things are moving around
+like you can kind of see it's going through all of like the best and worst like
+intraday
+trades like so these are really highlighting like the um the really large amount
+like volatility that like you know the like these are you remember like last
+April
+when Trump was going over like he had like that like crazy like um
+uh like tariff freaking thing he was doing right And that's like why all of
+these
+days are like really shown
+Right So um one of the things that's interesting though right is like this is
+kind of a terrible way to do this right Because we have to like order by and
+we're doing this in a very like uh um there's a way to do this not in a loop
+Where you could actually like know what the best and worst days are like just
+overall
+globally like with one data frame and that's probably the better way to do it
+this is uh like it's pretty cool that you can see the best and worst days
+here So um
+So uh this is gonna be like uh like you can kind of like walk through a lot of
+rest of this if you want to There's uh but there's not that much left here in
+of like the what what's in here but this is showing us like how we were able to
+harvest
+and actually see when the best and worst intraday trades were
+OK So now we have a lot of other demos to kind of look at here cause remember
+one of the things that we uh were looking at was this uh stock bar minutes and
+want to look at remember we have to run the ingested delta I'll fix that for you
+later by the way And then uh this will allow us to actually run our stock bar
+Um
+This is gonna get us uh exactly what we're looking for And then uh
+What we want to do here is we're just gonna create uh two different data sets
+Um so that we have um just data that we can work with in in a join right Just so
+have the left side and the right side of the join right And you'll see the left
+side
+has just 1000 rows That's what we're just uh we're we're starting with here is
+now um
+An inner joint
+You'll see here we aren't broadcasting right You see how it's just 1000 rows So
+we would imagine
+Right
+that
+The join here
+Should be BHJ right Because it's only 1000 rows And if 1000 rows is above 10
+those are some beefy rows Uh those are some very beefy rows
+So um you see how like you see here how we get broadcast hash join We get our
+anyway right We get BHJ as our freaking join That's our actual like broadcast
+hash
+join
+you might see like all these like extra steps here that's from above right
+That's
+from like The way
+That it's doing its splitting right And it's doing it's like kind of uh like
+half second half splitting
+So like this is a great example of where like if you want to like understand
+just the the explained plan is for the left and right side of the join
+You need to do caching right So you can use like you can do you could literally
+like left cache and uh right cache so you can understand like what is what is
+the explained plan starting starting at this point which in this case right we
+see what it is really right It's gonna be like this photon projection
+Right And then uh we have uh this photon projection and then the the shuffle
+exchange
+source into the BHJ
+And then the rest of this is just the generation of like splitting the data sets
+but you'll see we do get BHJ here right Which is great which is great because uh
+remember it comes back to like BHJ works when uh the data set is small right And
+uh like something that's really awesome but one of the things you'll notice like
+we try this in uh
+And serverless
+persist table is not supported So like you could run this This is a great
+example
+of like where Data bricks is going right And they just like there are some
+things
+in Spark that you just can't do on serverless because you're
+if you're in a server
+like like if you're in serverless right then like you don't have a place to to
+put
+things right Your job needs to run in one shot You can't cache things Caching
+exist in serverless because there is no server Right But server if you have a
+server
+then you can actually cache data in places right You can actually store data on
+driver you can store data in your actual server and that's like you know if we
+to like switch over to like uh the data expert all compute I'm not doing this in
+lab but if we did that then cache would work right Because then we would
+be able to show off like caches and then this explained plan would not be so
+crazy
+right Because it would actually be cached and it would be It would be its simple
+self right Because it's only two sides anyways right So anyways
+Is there any difference between that and like a left a left joint So you'll
+notice
+like when you when you look at a left joint
+It's gonna be the same like like literally the uh the physical
+OK So let's um let's actually do this Let let's run both of these guys and like
+let's see like if we notice anything different So in between the left joint and
+inner joint So you see how we have what 24 stages right And um here um in the
+left
+joint we have 27 stages right So um
+Is it the same though Cause we have our DF and then we have our explained which
+gonna be uh the rows here Yeah So uh what is different here then right Is it
+be OK so
+you see here it's um
+Why is it OK it the but the only difference here right now really is that it's
+It's doing uh
+It's doing SHJ right You see SHJ here and that's that's the only reason why it's
+27
+So like if we actually put those guys's broadcast right We just broadcast this
+guy
+right And then we run him again
+Right Does that like it should be the same literally the same plan right Because
+so we have 25 now right And then up here we have 24 OK
+Interesting And then this is see it says broadcast hash joint inner and then
+we say broadcast hash joint left outer right Exactly the same except for that
+It seems like uh like there's
+Is there like OK I just want I'm just curious here now about OK so you see
+exchange shuffle map shuffle exchange Is that the is that the difference So you
+exchange zinc exchange exchange OK that looks right Is it just that like
+adaptive plan And then is it is it one of is it one at the very end
+Sort
+Why is this doing a sort here though
+This sort doesn't make sense to me Like why is it
+That sort really doesn't make sense like this like it like as it does the it
+the left joint right And then it it sorts it and then like that's OK see that's
+difference right You see like with the inner joint it's not sorting but like for
+some
+OK that's very interesting So that could be like one of the bottlenecks to be
+thinking
+about like as like you're working through things I am very confused at like why
+sorting I mean it honestly shouldn't be Like I know it's not this guy I know
+like because it's just this DF explained I don't
+Is it if it's that line I'm gonna be no OK it's not because the sort is still
+happening
+for whatever reason um even though it's the exact same data sets it's exact same
+data
+sets right So um uh
+000000 I know what it is I know what it is It's because uh we are this the
+The joint order is different right Or like we have right and left and then left
+OK No OK that's very interesting
+You would think that that extra sort at the end like after the join wouldn't be
+but that's I'll I'll leave that to the audience to like figure out like what the
+hell's
+going on there like in terms of like actual like um like differences but like
+is an extra sort here that could be problematic like after the joint in which I
+Yup This is why you run Explained blends right OK
+We're not doing the right join Right joints are stupid Full joins are gonna be
+exactly
+the same You know how full joins work right So um I want to show you guys like
+of the crazier ones like cause I think it's uh it's important to also think
+like um like how this looks like in terms of uh
+Like OK what happens if you cross join OK so remember uh we were looking at the
+other
+examples right Where you saw how um
+In uh like the other the previous examples there we had um what 25 stages 25
+uh roughly speaking and when you we're moving to a cross-join example here's our
+physical
+plan
+Right and like one of the things that you get which I did not even talk about
+is like it because it's another way that you can do a freaking join which is
+this is a great example of like if you see this in your Spark job it's probably
+means
+that like it's broken and like it's like every time I've seen this in my Spark
+I know that there's like the it's from a data scientist who doesn't know what
+hell they're doing and like Uh but like you see this broadcasted broadcast a
+nested
+loop join This is usually when you have this nested loop join when I see this
+usually pain it's usually pain Um but you see it's broadcasted though right So
+because I think the reason why it's broadcast is because these are we're doing a
+limit
+Yeah you see we have a limit here this limit of um limit N So like uh but you'll
+like if we change this to 1000
+Now uh we like we'll have like a million rows and like it's gonna be different
+You see now I like uh it already it like cross-joined like even even 1000 by
+1000
+it's still pretty good like
+Sir I don't know what's going on I'm freaking I'm freaking out man Like I don't
+know
+why you why are you making me do a Cartesian product Like just to just for the
+you know what I mean Like and like so you'll see like this is a great example of
+where
+it's like OK the spark job is hanging Oh but see it did finish It I think it's
+gonna make it
+OK there we go It made it It made it Yeah for sure
+It made it Amazing So now like you see we still get our broadcast nested loop
+right Because it's gonna be there but like generally speaking nested loop joints
+not gonna be good and you'll see like
+OK like uh one of the things I just want you guys to be thinking about here is
+before we do a show here I think we can do this right Cause don't we do a show
+Is
+there a show here
+Yeah OK we do DF.show here so like we can get rid of DF.show because if you
+remember
+Spark is actually lazily evaluated So like let's actually like just crank this
+bad
+boy up to like as big as like just like whatever limit we want it to be right
+Because
+now this will run instantly One of the things you'll notice is like this
+runs very very fast OK so
+why did that run very very fast Well because it is um
+Uh what why did that run faster Because it's not actually doing any work right
+it's planning the work It you Spark only runs when it actually has to do
+something
+like insert data show data Otherwise it's a planner right And so because we
+actually like ran anything it runs instantly So I wanted to just try here is I
+to sneak in right here We're just gonna do two I want to see if like we use both
+big
+Does that like make a difference in like what the um oh you see there then now
+get Cartesian product right That that's what it's actually called So Cartesian
+product
+cross So this is gonna be like even worse right So you can get broadcast broad
+Podcast
+nested loop join which is usually a pretty strong signal that your job is not
+performing
+and then Cartesian product again like but that like you have to do some really
+dumb
+shit to like get to this point right For the most part like you don't actually
+I don't know like some of these things are like duh right They're like yeah like
+I see what's going on here Like why why are we doing a cross joint here sir Like
+what what why you know And so like
+That's gonna be uh another thing to be thinking about But one of the things you
+notice here is it's actually fewer stages You saw how like uh like when I made
+like the full Cartesian product it's actually 33 stages instead of like it might
+be because it's like reading in It's probably just because it's reading in the
+the other side cause this is 34 right Cause this is gonna be cross build left
+Such a
+such a gnarly thing to be thinking about right So like that's gonna be the other
+kind
+of uh way to be thinking about this right And so let's look at a couple more
+and I think we will uh I think we're gonna have to let the other pieces of this
+um um into uh Thursday's class just so we can kind of like let this simmer But
+know auntie join like it's pretty straightforward left auntie here and um You'll
+here we're back to um we have our shuffled hash joint here left ante which is
+be it's it's a lot more of like a filter right This is gonna it's gonna treat it
+more
+like a filter um in terms of what's actually happening here Um so
+Like one of the things to be thinking about here though is like I think it makes
+a
+difference if the big or the which one's on the left right Does it make a
+difference
+Is that 26
+See now it's 24 See OK it does make a difference See now cause now it's a a
+broadcast
+hash joint because like it depends on if the big one's on the left or the big
+on the right
+Right So uh you'll see because the second half is the big one and the first half
+the small one right And so uh you saw how I swapped them and then uh it does
+make
+a difference which one's on the left and which one like but that's only the case
+for left joints like for inner joints and full outer joints I don't think it it
+makes
+it it makes a difference because the row preserving side is always the big one
+It's
+always the like the the left table is always the big table Table So it makes a
+too like if you're thinking about like if you're joining facts and dimensions so
+when you're doing like a left join there like your your fact table should be on
+left right Fact join dimension not dimension join fact in terms of like your
+and right right So it's like that's cause then you'll see like how that like
+made
+a difference here right Cause we have our
+24 stage right But if we go and we say left and right here then this is like how
+many
+stages
+The 26 stages right Because this ends up you know using the the less efficient
+type
+So um uh Sammy joins gonna be exactly the same kind of snooze Um so uh I I think
+where I want I don't want to go into more cause I don't I I think we want to
+operate
+from less is more um mentality here So I want to open up uh to questions uh for
+next like 5 minutes or so if people have um uh any questions about what was
+covered
+here Uh that would be awesome
+Uh the table does not exist in tabular.dataexpert scheme It's because it's
+main.dataex
+schema main.dataexpert.stockbar minutes
+That's why
+Um will we get read access to Maine.date Expert at some point Oh is uh or is it
+this one watch along I I I didn't know that you didn't have access to
+main.dexpert
+I will um I will figure out how to do that shortly I I I I I think that that's
+probably
+pretty easy to to do Um let let me just ask um
+How can I make everyone have access to main.dataexpert in Unity catalog
+It's probably like really easy
+Just like
+Do it real quick then we'll be like good to go
+OK grant use schema
+Select on schema There's probably like a create here as well we can do
+OK uh
+Yeah sorry about that guys Um
+Grant you schema select on
+Oh can we say like
+Create
+Insert does that work
+Insert is not uh
+OK OK accept and run
+Privilege use is not a
+OK I think I think we're I think it's good now OK Can you guys try and select
+if it actually works
+The greater is fire
+Are there some concepts we can use to help us build our own review processes for
+our own code Yeah I mean 100% That's uh like I mean uh uh Matt like I yeah you
+were
+in the AI boot camp before but like that's um yes it ran Thanks OK cool It's
+working
+Awesome Great I'm glad I I sorry about that guys like we're gonna I'm I'm
+on getting the you need to catalog stuff right and getting everything on a
+lasered
+in lasered focus so Um amazing Well uh thank you guys so much Uh we will uh be
+back tomorrow Uh we have Brian uh tomorrow to talk about interview skills We'll
+sure to catch the TA session as well if you are confused by any of this Um
+hopefully
+uh this made sense Um oh Haman so you had a question Having large table on the
+and a left joint for performance is also valid for snowflake table or is it just
+spark thing I mean uh I think it's just a spark thing I wanna say it's just a
+spark
+thing like because uh Snowflake is gonna like
+it might make a difference in Snowflake I I actually am not like I I
+from my perspective like I just have not used Snowflake enough to like have a
+answer for that uh like they explain that's a very good experiment to run and
+explain
+I would guess that it probably makes a difference but like they might not have
+concept of a broadcast joint So uh they might do things differently there but uh
+yeah
+so cool I'll catch you guys back uh here tomorrow uh with Brian and then uh
+we'll
+go from there

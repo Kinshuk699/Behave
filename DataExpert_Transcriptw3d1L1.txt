@@ -1,0 +1,677 @@
+OK
+We are gonna do the lab for day one
+And essentially my computer just uh
+I need to fix this one second something went wrong here
+1 2nd
+Need to reconnect
+Hopefully it's gonna work now
+Um I had to reconnect my docking station Is everybody's choosing my my screen
+the
+data bricks workspace
+Yeah perfect OK
+Vikran was there OK perfect
+OK um if we go into into the GitHub
+Um here
+I added um
+The day before yesterday
+I'm I'm gonna be publishing the the lab content the day before uh our class or
+on
+the same day
+because based on your feedback during the class I might
+Adopt the lab content
+And what you're going to see now you have uh day one
+And day one has 4 notebooks OK
+The first notebook
+Talks about the UNHC catalog I will
+Talking more details let's start high level then I go into details So the first
+one
+is UHH catalog
+The 2nd 1 is synthetic data generation
+Why is this important A lot of times when you're working with HR related data
+this is considered a PII so the the the receipts
+that your employees might upload might have their names their Social Security
+number
+even the last numbers of their uh credit cards So you want to work with a
+synthetic
+data but still build the pipeline
+And that's what I did here I was vibe coding a lot and coding a lot so we
+actually
+build some receipts by hand That's the first approach from scratch
+The second scenario
+is using a data set from hugging face
+Of existing receipts
+And using data bricks to process them uh at scale
+Then the last part is using the data bricks AI_functions We have 5 of them
+To parse those receipts the synthetic and the real ones
+Using these different AI functions
+That's what we're covering on the lab for today and you guys are gonna have us
+homework
+so you'll follow along and then I encourage you to do this at home on yourself
+Uh starting with volumes then we generate um some receipts
+And on the synthetic data generation I want to emphasize you'll see
+how we use Spark the right way to process things in parallel
+without making the driver the bottleneck
+Especially if you want to move intoerless which is my recommendation you want to
+use
+Serless the latest it's easier to manage simplifies data bricks
+You wanna make sure that you are making
+you're processing things in parallel
+but there is the right way to process things in parallel I'm gonna talk about
+that
+in more details
+So
+Just starting um
+The structure you're going to have
+everybody
+Everybody is gonna when they run the notebooks under this uh catalog
+everybody should have access to this workspace this bricks workspace by now
+Everybody's gonna create
+oh I love this I see Christopher and Reagan already created their their schemas
+so
+everybody's gonna get one schema
+And within that schema we're gonna be creating a few tables and a few
+uh volumes So let's do that
+If you want uh an easy way to get started but I don't I'm not logged in but you
+can
+clone this ripple directly in data bricks
+Uh let's see if I still remember how to clone this report directly from data
+breaks
+I don't know if I will have permission because I need to let's try it If I go
+into
+workspace and I try to
+Do I get folder and I do this
+Let's see if she's gonna ask me to log in
+Oh good it's gonna link my account and I'm gonna link so I'm just cloning the
+ripple
+And I'm gonna do
+Github
+Data expert
+And I'm gonna link
+Oh this is not linking the guy I wanted so that's why I did not want to do this
+And
+It's not linking the one I want this is another one
+Let me see if I'm logged into the right one
+You know what I'm not gonna clone because I have multiple workspaces I'm just
+gonna
+go with the code I have but for everybody I encourage you um you don't even need
+to
+clone this ripple locally You just go into data bricks you go into the workspace
+click create
+Git folder and you type the URL of your ripple and you're gonna have the content
+Uh on my case
+I already had it here
+11 thing to mention Tim is that everything that we are running the notebooks
+they also run locally
+Um I have the database extension installed
+Zach I don't know if you're still there On the week one and week 2 did you talk
+about
+uh using the database extension on VS code or or cursor Was this something that
+you
+covered before
+Can anyone tell me if Zach covered it
+Oh he didn't cover it
+OK So if you like to use notebooks in the database UX that's good
+but what you can also do you can come into VS code or or cursor
+you can look for the database extension
+This is the extension
+Once you do it uh you can say create configuration What this is gonna ask is
+ask for the URL of your workspace
+And I already have an existing connection
+And what this is gonna do this is gonna connect to my workspace
+I can select a cluster I want to use
+And then I can activate um a Python environment here on my machine
+Thumbs up if you wanted me to do the demo on on on the Datare UX or VS code
+Then give me a uh what do you prefer VS code or or Daba UX
+Oh I'm not gonna make everybody happy
+I regret asking that question I will try both OK I'll try both OK
+Oh Data bricks CX I think Data bricks CX will have more So I'll just spend 5
+minutes
+here and
+5 minutes on VS code and I'll go into the UX OK So what is nice about it if you
+like
+VS code
+um you can install the extension it creates uh the Python environment here and
+then
+what it does it creates a remote folder on your on your database workspace so
+all
+the changes you make here they get automatically replicated into your workspace
+you can just go into the workspace and the files are going to be there
+Um what I also like about this is using cloud code in VS code right
+So what I have you can search on on on online for this data bricks AI dev kit
+And what you can do you can install by just running the folder of your project
+You just run this this query here
+I'm going to do it now
+For people who want to vibe code with cloud
+And I install this and I'm saying I want to install cloud code
+I want to install the the database AI dev kit
+And guys this is something the AI DevK that my peers my organization built
+with customers and you're gonna see
+reason we built it is what this is gonna do is just gonna install a set of um
+Dot MG files
+for cloud to understand how to connect to data break So for example it's uh
+telling
+cloud
+That there is an MCP server for data bricks So look here what happened after you
+install
+the AI dev kit
+we generated a lot of MEG files explaining how the data bricks features work
+This
+is what the AI dev kit does for us
+The comedy you use to install you just go into the GitHub
+Databax AI dev kit
+And then you run this bash which downloads the MG files
+And you see it worked by going to the dot cloud skills
+and you're going to see all the features right So if I come here and I ask a
+question
+create um a notebook
+That creates a volume in Unity catalog
+Named Umar-Claude Test
+Just give you all an example and uh because I already had it here it's thinking
+I hope it doesn't change
+Yeah I hope it's not going to mess up what I had
+Look here it added the MCP server Let's see if it created a notebook for us
+Yeah I will create a simple notebook and because cloud code is an agent look
+it's
+writing a notebook
+And here create Ear cloud test volume
+And here it has a syntax and it already know already knows the convention we've
+been
+working on
+And it gave us the syntax
+So this is an example of vibe coding using the Databax AI dev kit
+and data bricks Now the other solution because now we're going to focus I
+already
+showed you how to use VS code how to use cloud code and the AI dev kit So from
+now
+on I'm only going to focus on notebooks
+So if you create a new notebook
+You can also vibe code here in database you just use uh generate and you can say
+create a sample volume
+Named Umar
+On the
+Boot camp
+Students
+Catalog and schema
+And drink
+with you more
+So now we are VP coding with the database assistant
+And as you can see it gives me
+The right answer
+Um OK let's go to the labs I covered the basics of using um of vibe coding
+Yeah I I I I love that Mohammad likes this
+OK let's see if I can find where my files are OK let's start with uh the first
+uh
+lab
+Here I talk about why UNICH catalog volumes like we covered in the session
+In the lecture it's gonna do
+echoes It's gonna manage uh permissions for your folder so if you were not using
+catalog volumes you would have to be using IAM policies
+across all your teams So if you have if you work for a large enterprise customer
+you have to manage the S3 buckets policies it's a mess
+UHA catalog makes it simple for you guys and it is going to audit all the
+queries
+we do on those volumes and it's going to add lineage
+For our agent the agent is going to need 3 folders the folder with the receipts
+with
+the documentation and the code samples
+Here is where we create just so everybody knows this is real Oh I I love that
+is already
+creating so I'm gonna delete my
+I want to delete everything I have for me
+Oh but I'll have to delete uh literally all the volumes OK so let's do this I'm
+going
+to delete one by one
+Because it doesn't let me delete if I have content within that schema
+OK so deleted the first one
+Going to delete
+O samples
+And I'm gonna delete the receipts
+I should have created a script to start from scratch from scratch delete
+everything
+but I didn't do it If anyone wants to vibe code
+uh that own cloud or Dabs assistant how to delete the schema
+Uh do it because you are not able to delete a schema if you have tables within
+it
+That's what I'm trying to do it I'm trying to delete all the tables
+So I can delete the schema
+OK so am I hearing you guys don't have permission to execute the the grant
+OK um
+Let me do this then I'm gonna add a permission This is Unity catalog OK so I'm
+come here and I'm gonna our account users
+Zach or any of the TAs I don't know if we have a group in data bricks for the
+students
+or I just do our account users because I need to give them
+Permissions to grant permissions
+OK for now everybody's gonna get a full power on this catalog so please don't
+make
+be careful OK
+So you don't want to delete each other's
+I schemas so I'm going to grant permissions to everybody
+Um so our account users
+And hopefully this
+We'll solve your problems The grants should work now
+Exactly
+Awesome
+We are debugging lies
+Do a refresh um ring in uh refresh your browser do an F5 your Windows or log in
+again
+because everybody should have access to
+Uh manage the catalog um
+To grant the permissions OK I'm gonna run this I'm gonna go uh cell by cell I'm
+explain here If you follow along it's OK If not you can do this at home
+So again what we are doing here in the beginning we are just
+using the database SDK
+To get the user that is logged in
+And get the the login of the user
+because we are using the SGK anytime we run workspace client this class is smart
+enough
+to know hey if I'm on a on a workspace I just get the current user but if I'm on
+VS
+code and I run this code
+Databricks is actually going to look for this file called Data bricks
+configuration
+file
+That has my credential that has my my my authentication So with this
+Standard here our code is gonna work both in VS code and in the notebooks
+because we are using the the workspace client
+class from the SDK to get the the current user
+So hopefully my my catalog and schema have been created
+Oh no not yet
+OK so we created the schema now we created the the catalog
+No I actually just got declared the variables Now I'm creating the schema Now
+I'm
+gonna create the 3 volumes
+We ran show volumes to show all the volumes we have under the schema
+Like show all the the folders we have within that
+A schema
+And here's where we are managing the grants
+So I would say on the receipts only HR people have access and on the
+code um the code volume all the students have access That's the power of
+of volumes
+I'll keep following along If you are not if you're facing the issues
+follow me and we're gonna figure out what's wrong on your environment later
+Guys if you're coding I wanted you to pay attention on this because this is very
+powerful
+I work with enterprise customers
+and they ask a lot for this So imagine you are doing machine learning on AWS or
+a Snowflake
+We want to give you the power So let's say you are outside of data bricks and
+want to read
+data from volumes you can do that So you just use the data bricks SDK
+You can list a volume
+And you can even write uh to a volume save files there and you can list the
+files
+So that's what I'm doing here
+I'm listing the content of a volume and I'm creating a file that says hello from
+SDK
+So this has been created
+so when I do a refresh here
+And I go into
+My folder here receipts you see now we have hello TXG
+and it has the hello from from SDK
+This is very powerful Imagine you had an application that does
+File management you could plug it to volumes and manage that
+Or you have an application on-prem that is
+employees can upload the the
+the documents you could use the SDK in that application to save directly into
+database
+volumes
+OK So this is level one quite straightforward Uh I suggest other things you guys
+could
+do here You could add additional data into your volumes to make your agent more
+intelligent
+And we also have this notion of an external volume So what is an external volume
+Uh in uh Unity catalog when you create a volume from the UX create volume you
+say if it's a managed volume or external volume An external volume you specify
+where the files are going to be hosted Managed volumes they're going to live
+within
+the estuary the the storage of the catalog So if we go here
+into receipts
+And we go into details
+we see that the actual location for this uh volume
+Is within this S3 and then within the catalog we generate a uh uh an IG for that
+So that's the difference between managed volume versus external volume A managed
+volume
+lives within the location of the catalog and external location could be anywhere
+Yeah Mohammed bear with me we're gonna answer that question throughout
+throughout
+the weeks but both Snowflake and and Data Bricks they have they can talk to each
+other
+Both platforms uh are open Data Bricks is more open but yeah you can read the
+that lives in in Data bricks from Snowflake and you can read data from the
+snowflakes
+within Data bricks OK And that this was my example
+This could be Snowflake this could be uh an application this could be AWS Sage
+Maker
+This is an example of how you use data bricks as your governance layer
+to store your unstructured data
+But through the SDK again could be Snowflake or or Sage Maker or custom
+application
+you access the data that lives in data bricks
+Uh why you choose one over another uh you choose external if you wanna
+Pick the exact location of your S3
+uh managed volume all the files are gonna live within the bucket
+Dead your catalog leaves
+So let's say you might not have that flexibility Maybe the IT the people we're
+working
+with they already have an existing S3 bucket
+That they cannot change the location and that location is different than the
+location
+of your catalog
+That's the main difference You want to control over the location
+That's the difference between managed and external volumes
+OK I'm gonna go into lab #2 for day 1
+Now is where this gets
+Interesting OK
+What we're going to use here we are going to use some Python libraries to build
+receipts
+from scratch
+We're gonna use um a Python library to write the actual images
+But the thing we want to do here
+we want to create these images in parallel
+If you've used a Spark before and
+You will look very smart
+3 years ago by using Mac partitions to parallellyze work
+What we recommend now is you keep things simple If you want to paralyze work you
+don't
+want to process things only in the driver you want to process things in the in
+the workers
+Don't use mat partitions because it's not going to work with Servus and there is
+a
+whole reason why it's not going to work I can explain later
+Just use a pen that's UDF It's simpler it's typed and it works with Servus
+So what we're going to do here
+Uh we're gonna use server again
+And then here what we're going to do first we're going to generate syntactic
+data
+just using some random um name of vendors and then categories and employees OK
+Um I'm just doing some randoms but if you want a more powerful library to
+generating
+synthetic data
+Data Bricks has this project called Data Bricks uh Labs Data Generation DBL Data
+G
+It's an alternative more powerful for generating synthetic data
+Um I left a link here This is something I use with an automotive customer to
+generate
+telematics data We use a GBL Dagen
+Then here is where we define the UDF that is going to paralyze the work
+So this UDF is gonna receive a
+You think of this as a list of roles
+That has all the synthetic roles that we generated above
+And based on on the keys we decide to parallellyze on
+It's gonna use these uh libraries from Python and in each driver in each
+partition
+it's going to generate the actual images and here's what I'm doing right here
+using Python
+to actually create the image and start drawing that image the rectangle and and
+and
+each information
+Then we apply that UGF in our synthetic data right So here I define the logic to
+create
+the image
+and then I apply the UGF against that synthetic data
+Just by doing this folks you are able to paralyze work you are not using under
+hood libraries like uh Mac partitions
+so you keep things simple you parallellyze and you can work with this in servers
+I'm gonna run this cell number 8
+This is just the definition of the UDF
+Here is where we say I want to apply
+This UGF to my synthetic data frame
+Of course this is lace load so on on slide on cell 12
+is where we actually run the UDF and save the synthetic receipts
+into the volume This is where the magic is gonna happen uh cell number 12
+So what triggers is remember a spark is lace loading When I do
+uh the collect
+Is what's triggering
+The UGF
+I hope uh Zach on your lesson #1 and #2 he spoke about how he sparked
+is efficient so it's lay loading it's not going to process things until you
+really
+need it
+So the moment I need to run that UDF is when I run the collect
+Mantled here
+Voila our code worked so we actually generated some simple receipts Let's go
+there
+Let's check on on the
+On the storage and yeah we have a sample we have synthetic data It is going to
+be
+very simple but it works Here we have it you see we generated the basic we sit
+the date category and the items and the summary
+Um here now we are going to save the files We're going to match the files' names
+the synthetic data into a table that we call receipt metadata
+And here we have it So we have the the file name the vendor and the the price
+and and the employee So that is on the table now
+So if you want to make this more robust you saw that my my receipt is very
+simple
+You could use other Python libraries like the
+The
+Python barcode to actually generate a barcode
+or you could actually use an LLM model uh LLM
+To from hugging face to generate the model for you so you don't have to write a
+lot
+of code like I did here to create the receipt
+You could use an LLM
+Why did they do this by hand Because LLMs they are nondeterministic You might
+the right answer you might not
+Doing this by Python in Python even though the receipts are basic
+I I'm always gonna get the same answer
+With the different inputs
+This is slab #2 I encourage you if you want to make this more advanced
+Try to add the barcode
+Or try to use a a text to image model for huggy face to generate that uh receipt
+image
+Uh using a model from hugging face
+Yeah Mohammed uh the way you avoid hallucinations is by grounding your your
+model
+on your data That's where red comes into the picture
+And using the proper system prompt
+Now the good news is I found a data set in hugging face
+That um that data set already has more real receipts because I went to more real
+So let's use that data set
+And let's see
+And here I'm downloading the the receipts from hugging face
+And now I'm going to save the images to volumes in parallel again
+Um
+And here is where we execute the pandas UGF because on sales um until cell 8 I'm
+only
+loading the metadata for the images we're going to download
+so it has the file name the company the date and the address and the total
+Now to actually download the images this is something we want to use the Spark
+do this in parallel and again that's where we use Upondas UDF to parallellyze
+work
+OK it downloaded the images
+And let's see if it's saved
+If you want to test this on the on the 3rd lab here
+If you want to test it worked
+the images the real images they are dot uh
+JPG
+so we're going to the 3rd page Let me refresh this
+So the second data set um
+The extension for the images is different I don't think I need I think I need to
+run
+cell 12 OK let me let me run cell 12
+Yeah I think I need to run cell 12
+OK I'm just gonna run this again 14
+OK yeah here is actually cell 16 is where I'm saving the images
+If you're not following me just know that we always have to save the metadata
+which
+is in a delta table and the actual image in a volume and then we need to match
+the metadata with the the volume and we do that by saving the path of the volume
+in
+the table That's why you see this mix of saving the volume and saving the delta
+OK now the files should be there so if I go into the receipts volume
+And yep voila it's there we see the JPEG files
+and as you can imagine these are more real
+this is good
+What time did I run this so this was earlier so now I need to save this to a
+And this is going to save into another table receipt metadata 2
+Yeah the earlier the the one that we generated by hand is PNG
+The one that we are using this pre-built data set is JPEG
+The one we are testing right now
+You could save them in different uh volumes I just kept the the extension
+different so it was easier
+To keep them in different
+OK so this is good We finished lab uh the another alternative to using synthetic
+What I wanted you to know is that I try to use the data sets library from
+It was giving me a lot of trouble so I had to manually download these images If
+anyone
+wants to try the dataset class from library from from hugging face
+Hopefully I didn't say snowflake If anyone wants to try the data sets class from
+hugging
+face
+Uh you can try it to download this data set
+I think
+You might have to use GPUs for that I don't know if GPUs is allowed so that's
+why
+I did things here by hand but you could also use that library
+OK now let's move into the final lab which is the fun one This is this is where
+things
+get very exciting OK
+So we build the the syntactic data we created the volumes and we had the the
+Now what we wanna do we want to use the built-in AI functions from data breaks
+to parse that unstructured data
+The two main functions we're going to use is the AI pars document
+This is a layout aware extraction from PDFs and images
+So it's able to from your PDFs and tables it's able to get to go from image to
+text
+And give you some label the bounding boxes
+And then AI extract is another function
+that can get entities from a description
+So that's what we're going to do here
+We are gonna do
+we're gonna use
+AI pars document which grows from binary files into text
+And then we're going to use AI uh extractable from text into entities
+What we're going to do here we're going to create this table called raw receipts
+And we're gonna read all the files that are in the volume You see here the
+naming
+convention volumes catalog
+everything that has the PNG extension
+And we're gonna save that on a table with raw receipts and then we're gonna
+print
+Uh the file name and the text of the file so hopefully this is not gonna
+Do you
+What is AI pars document doing under the hood Database has several
+tech uh image to text models that is opening those files in parallel using Spark
+and managing in case they fail
+and it's gonna convert use a model to get the text from those PDFs or images
+And what it's gonna do
+it's gonna return us the text from the document the raw text
+And even the bounding boxes the location of the text in the PDF or in the image
+You can see how long it's taking Uh I think I tested uh for the this has 700
+Uh it takes like a minute
+but of course if you have more files it's gonna scale and you can add more nodes
+But the power of simplicity for anyone who is listening to Snowflakes saying hey
+is difficult to use
+think about this in one line of code
+You're reading all the files you have on a folder You're scaling that You're
+managing
+errors
+And then you're calling a model
+To parse out those files and return just the text of those files
+3 lines of code in plain sequel
+Let's give it 30 more seconds
+No these are these are data breaks provided um functions
+And they are free right Of course you're using database computer to run them
+but
+Is data brick building functions
+Yeah probably a lot of people are using I don't remember how long it took uh
+when
+I rented before 2 minutes but it's a lot of receipts OK 700 receipt receipts I
+mean
+and we are not yeah it's almost there
+So he's almost there
+Yeah it worked right So look at these guys and girls if we search for this uh
+receipt
+here
+In the volume
+This is the text of the receipt uh master hardware and Electrical
+And it's right here the text Homaster hardware and electrical
+It gives me the text
+The AI parts document just got us from an image or PDF into the text but how do
+we
+extract the actual amount
+or the we want to extract from that text the vendor the amount the date the
+category
+and the currency
+That's where we use another function not a Python library another function
+called
+AI extract From text we are trying to get these entities
+We're going to run it again This should be faster
+And we are almost done 5 more minutes
+And we'll be done
+For those who need to go after 5 minutes you'll be free to go or if you have
+they can stay a little bit longer
+Correct Mohammed We bring the table the image or video into a structured table
+we keep the reference of the raw file in the table
+But yeah we want to make that unstructured into structures so our agents
+Can talk on top of that data
+You might be getting the the the feeling hey this is taking long
+Don't underestimate what this is doing This AI extract is running LMs in
+parallel
+to do a lot of analytics
+And of course if you had big data you could just add more nodes and scale scale
+this
+thing So in this case here it ran in less than a minute
+So let's see what it generated So here we can see we have the source file which
+in the volume
+And it tells us what was the vendor Look at this It found the vendor was his
+restaurant
+Jia Wei It found the amount the currency and the date
+Then we wanna match we wanna just save this to a table
+And we want to aggregate now to see
+How much are people spending per per
+Another thing we can do we can use the AI classify to say hey is this uh
+compliant
+not compliant out of policy just some built-in functions
+Um to give us that output
+Of course what I encourage you yeah here is telling us if it's compliant or not
+so let's see out of policy plastic bags this is maybe the person paid too much
+for
+Um so you could ingest more images from WhatsApp You can also use AI query AI
+query
+is another function where you can use any LLM
+So you could use another custom LLM
+To go from image to text that's another option
+Last thing I want to show you guys is that you can actually use Gini now to talk
+your data so you can
+Going to Jeannie
+You can create a a genie space
+And I'm gonna point to my to my schema
+and I'm gonna point to what was the table
+The parts receipt
+that is the one I think this is the one
+And now I can use text to SQL I can ask
+Question um
+Yeah let's see how many how many the distribution we have per vendor per store
+or
+restaurant people are going to
+Yeah and it's giving me so this text to SQL is Database genie
+It was able to answer and it gave me the raw code the code it used to generate
+And what we're going to see later is that we'll be able to expose this genie
+Kozaki
+So employees can get this type of summary on how much they've spent
+True genie
+This is what I wanted to cover for today folks
+Any questions
+Was this helpful
+I will stop sharing my screen
+Uh folks just give me one second I'm trying to realize how to stop sharing OK I
+want to stop streaming
+OK uh I believe you're not seeing my screen anymore
+And in that case I'm also going to turn my camera on
+Yep
+So 1 2nd
+Come back on camera
+so let's go through questions If anyone wants to come off mute that's OK
+Is Zach over there on any ETA Should we stop the recording or should we keep the
+Q&A
+in the recording
+You know what I will stop the recording
+so in case you want to ask questions that you don't want to be in the recording
+OK So I'm gonna stop the recording Thank you so much so much everybody for
+watching
+On uh the the session on Thursday we're gonna go deep into vector databases and
+we're
+gonna build the reg implementation of our agent OK Thank you I'm gonna stop the
+recording

@@ -1,0 +1,933 @@
+Welcome everyone to Delta Lake and Lake Houses day one
+today we're gonna be talking a little about Delta a little bit about Iceberg a
+little
+bit about
+history a little bit about a bunch of different things um in this class Uh
+between
+today and Thursday it should be pretty clear
+like
+why Delta is amazing and like the the snafus and gotchas that you should be
+aware
+of We'll be going over a lot of this stuff in the lab as well So uh let's let's
+get
+into it
+So what are we talking about today
+Just a couple of things right
+One is what is a lake house
+Like I remember like what it was like 2021 2022
+was when uh that term lake house is a very new term It's like less than 5 less
+than
+5 years old
+uh that uh we're gonna be going over but it's also really um
+Um important it's like kind of where the future is and then we'll be talking
+about
+uh how is it different from a data lake a data warehouse or a database Those
+things
+are also gonna be covered here in a second Then we are gonna talk about Delta
+versus
+Iceberg uh just a little bit between the two Uh like one of the things that I
+found
+very interesting about where the world is going is that like a lot of these
+are kind of converging A lot of these features are kind of converging and
+figuring
+out like oh like maybe it's kind of like how you know Pepsi and Coke kind of
+taste
+the same and you can kind of tell that like they are meant to compete but like
+you
+know they're kind of the same thing like unless you're a fan then they're
+absolutely
+not the same thing
+And so uh but from a distance they kind of if you squint like you know if if if
+didn't do a taste test on Pepsi and Coke and like you just had a look at two
+cups
+not branded but just two cups of the liquid and you're like OK which one's Pepsi
+and
+what's which one is Coke I don't know I don't I don't think most of you could do
+it
+right And uh that's kind of where Delta and Iceberg is going but we'll talk a
+bit more about that And then you know last but certainly not least uh we'll be
+going
+over uh some of the architecture anti-patterns and Different things like that uh
+in
+the delta table architecture So
+What is a lake house right So I mean like I think some of you guys would be like
+a
+place you go on vacation to take it easy right That's like the isn't that what a
+lake
+house is when you go like go and like invite all your friends up to your lake
+house
+and then go boating and fishing Isn't that like kind of what it is Like that's
+the at least the the old definition Now it's like a weird definition but
+One of the things that's interesting is that like this part of the
+This like analogy which I always laughed about because I was like this is so
+strange
+but there are some things that allow the lake house
+to be easier
+than a warehouse or a data definitely easier than a warehouse and 100% better
+a database
+So
+Let's go into a little bit more detail cause that's probably um
+Like what the hell is Zach talking about
+Let's think about it right
+Why are lake houses are better than lakes right Why are lake houses better than
+lakes
+Well if you think about a house right
+A house protects you Only certain shapes can fit in the house right You can't
+like in a house right You can't like
+drive a tank into your house right You can't park your tank in most houses I
+mean
+there are some billionaire houses that might be able to park a tank but like
+most
+houses you cannot right And uh another very important aspect of a house is doors
+windows protect those who come in or out And uh like for example like in the
+database
+world we had doors and windows right Around like primary key So primary key is
+kind
+of like a door right So it's like if you have two of the same value then it
+fails
+right And you can't go through the door because Uh it's a duplicate right And
+not
+just that one row fails the entire query fails right Cause it's atomic right
+It's
+acid acid compliant That's uh something that's also very important about uh how
+delta
+works
+So you have doors and windows protect what's coming in right
+One of the things that's very interesting like you think about it just visually
+right
+You have a lake right
+Well a lake like
+I don't know if you know but like I was like in Boy Scouts as a kid and like
+they
+were like you know what's the fastest way to swim You get pushed off into the
+deep
+end and then you either learn to swim or you die And like
+And I was like that's how I learned how to swim Straight up That's actually how
+I
+learned how to swim But like and so every time I think of like a lake I'm like
+well
+it's sink or swim right Sink or swim Like it's like there's no guard rails right
+The
+lake is like it's just water it's just water and like yeah you can straight up
+die
+right And there's a lot of like so uh but you can drive a tank into a lake right
+You
+can
+It's totally possible to drive a tank into a lake and you can you can there's
+can you can put anything in a lake you know that's like that's where they like
+isn't
+that where like murderers put dead bodies Like there's all sorts of things you
+put into a lake right So the the the key thing to remember about a lake is like
+that is exactly it There is no control right You things just kind of like
+Go in and that's kind of like uh in the past you know S3 has been that And do
+know how many dead bodies are on S3 right now
+That that Jeff Bezos just is like letting hang out there and they're just gonna
+keep
+charging you for
+So um that's a so in this
+Comparison right We have a house and a lake The house in this comparison is um a
+warehouse
+or more restricted a database uh and then the lake is gonna be like S3 right
+Just
+put your files on S3 and call it a day
+So um obviously um
+Like
+This is a problem Uh there's kind of both there's two sides to this that are
+problematic
+And let's let's go into that a little bit right
+So oh what
+No One second Can I fix that slide
+OK there we go We got we gotta go back There we go I was like why didn't that
+load
+OK good I was like it's super important that you guys see that Hannah Montana
+cameo
+um
+So what if we want to drive a tank into the house
+Like what if that's like like our burning desire that's on our bucket list to
+drive
+the tank into the house then uh like well we can't so we have to do something
+else
+right And uh like and we don't want to just let our lake be filled with dead
+bodies
+and uh stuff like that right So
+A new architecture comes on board right So the Lake House is essentially
+attempting
+to be the Hannah Montana of the data world So it's you know if you guys if you
+guys
+don't get the reference please uh Google uh Best of Both Worlds by Hannah
+Montana
+like and if you if you've never listened to that song
+uh or you've watched the TV show then uh please do that It's super important
+it like it's super important that you do that in in order to like be more
+educated
+about data engineering So anyways so the goal of the lake house is unconstrain
+the
+house and prevent the lake from becoming a swamp So we use kind of some of the
+constraints
+of the house but we also use some of the capacity of the lake So together
+We kind of get the best of both worlds We can drive a tank into the house and we
+use doors to prevent dead bodies from going into the lake So it's kinda like
+great
+I mean now we have uh we have a functioning system that is more powerful right
+what does that look like in practice So
+So let's talk about some specific houses So there are two houses that we want to
+talk
+about here right Is uh we have Snowflake and Big Query Those are like
+essentially
+those are like the two big houses those are like the big boys And you know Big
+Query
+has like big lake now cause they they also recognize that like they have to also
+a tank into the house Um so uh why aren't these plat why do these platforms suck
+Well
+with Big Query and Snowflake
+You have to query with their tools You have to optimize for their compute models
+have to store data in their proprietary formats You have you know like I'm sure
+some
+of you saw my micro partitions uh Um rampage like 2 or 3 days ago on snowflake
+micropartitions
+and why I think they suck And then you also have to accept their governance
+model
+like whatever they do in their platform that's what you have to you just have to
+accept
+it That's just what it is It's not open It's like you have to do it the
+snowflake
+way or you have to do it the big query way and it's like oh you want to get your
+data
+out OK you have to use Snowflake to query to get it out
+right And so like
+It's not good it's not good like uh because like that it it it's interesting
+because
+they they try to make it where it's like OK if you want to drive a tank into the
+then you have to drive like a very specific like you know like Chevron branded
+tank
+or snowflake branded tank and then you're like OK But what if I want to drive
+another tank or something else right What if I want what if I want to be
+unconstrained
+I want to be wild right So we want to break free from the chains of the data
+right So we want unconstrained So that means we want to be able to query our
+with any tool any compute model open storage format and our governance model We
+build our own custom governance model even
+OK like
+This is where uh people
+are kind of all in very deep agreement about this
+this idea that like data needs to be unconstrained And we see this like not just
+like the data engineering space We also see this with laws right Like we see
+um you know uh GDPR GDPR has that whole thing of like
+where you can do an external data request and then you can ask like what is all
+data you have on me right And you can get All of your data out of a platform So
+that's
+like the whole idea of data portability So data portability is totally possible
+Data
+portability is another really great strategy that you can use like and like it's
+we want our data to be unconstrained Like I want my LinkedIn posts out of
+LinkedIn
+so I can give them to AI and build Zack GPT Right That's like another like you
+see how like there's a drift towards that right We are like we as a society are
+moving
+towards open portable
+free data but at the same time it's very interesting because like we have at the
+same
+time we also are like but we care about privacy and PII and identification So
+it's
+like we are opening the world up but we are also locking the world down at the
+time and that's like this very interesting interplay that we are seeing in this
+world
+of um um open table formats So yeah Snowflake Big Query
+they talk a lot of good game but they're not very open
+So Delta is actually pretty open right So uh Delta Table is an open table format
+by
+Data bricks that we will be looking at in the lab today
+but uh
+uh and by open it is supported by you know 5 engines Flink Spark Trino Dremeo
+Athena and uh storage S3 Google Cloud Azure HTFS local local file system and
+catalogs
+you need to catalog Glue and Hive So uh that's a pretty good list That's a
+decent
+list honestly like Delta is like um in that way doing pretty well right Uh like
+missing some support like uh and definitely some catalogs that it it would be
+better
+to have for Delta than not have it But um let's just go into like what we also
+see
+here right So this is uh Delta is less open
+Then iceberg right So iceberg is
+Purely open source Iceberg is not
+branded in that way like Delta is so it it's built more by consensus versus
+Delta
+is built more by what Data Bricks wants Um so because of that Iceberg is
+supported
+by Flink Spark Trino Dremeo Athena Snowflake BigQuery DuckDB Impala and Hive
+And it's supported by Unity Catalog Glue Hive Big Lake Snow Snowflake Catalog
+Nessie
+and Rest catalog right So like
+The amount of integrations and connections that you can make with Iceberg is
+just
+like I'm just gonna go back a slide so you can understand you see the you see
+difference there right You see like it's like an order of magnitude almost right
+like at least double double double or triple the number of connections you can
+make
+with Iceberg than you can make with Delta
+So this is awesome but also like
+I don't want this to be like uh me dunking on Delta conversation because
+guess what like
+Do you need
+7 query engines Most companies don't Most companies like like I I just want to
+go
+back here like when I think about my time in big tech I think about my time in
+big
+tech right
+This is all we used Everything that's supported by Delta is already used in big
+tech
+and nothing more right So like Delta is kind of smart in that way where they
+support
+the big players well and like I mean with the with the one notable exception of
+Snowflake catalog missing Delta not supporting the Snowflake catalog is super
+troll
+It's super troll and like it's obviously like a business play
+But at the end of the day we have uh we have our engines here we have our
+right And uh like
+There isn't like
+Just because something is supported by more platforms doesn't mean that it's
+That's a key key thing that I want to be clear about in this presentation It
+does
+make a difference for adoption though Adoption is very interesting in terms of
+how things actually play out right So at the end of the day you can kind of look
+at
+these trends and it should be pretty clear who's gonna win right You can kinda
+How iceberg is just their their trend line is looking way better than Delta's
+And uh it's like very recently they they caught up So uh and the reason why it
+gets
+more stars right is like you can set up Iceberg and then like you can literally
+build
+on anything You can and and that's like and I think that's one of the reasons
+why
+people are a little bit critical of data bricks because of the fact that it's um
+It's the open table format right Not the kind of open table format and I think
+where Iceberg really does shine is the fact that it's like no it's truly open
+truly truly open not like kind of open And like and I know Iceberg is gonna get
+even
+more connectors and even more things over the next year or so or two as like it
+gets more and more on board Like I mean I don't know if you guys saw like I
+actually
+am uh I'm in the process right now of founding an Iceberg Data Infra startup So
+um it's my uh you say on my LinkedIn I have a stealth startup that I founded
+a month ago So we have a we have a Delaware Sea Corp that's starting here to
+look at this problem because there is uh
+within this openness and within this
+giant tool arena there is opportunity for simplicity because like it's like if
+you're
+going to architect an iceberg system And then it's like what tool you want to
+use
+And then the answer is you can use all of them and that and then then you get
+stuck
+in that like you know that Netflix thing of like you're scrolling through all
+movies and then you're like I don't even know what to pick I don't even there's
+too
+many options I don't know what to pick And that's where like I know that's where
+is kind of nice cause it's like OK you got 5 choices They're kind of like
+Delta's
+Kind of like the in and out of open table formats where it's like you can get
+double-double the the the the cheeseburger or a fry right And it's like that's
+Those are your choices And then but people love In N-Out People love it It's
+very
+successful right So it's like uh that's like another it's like and you know
+McDonald's
+has a bigger menu and like I don't know man like it's it's it's very interesting
+So uh this is just where these things are going I am not talking about Hootie as
+much
+which is the yellow line in this like I don't think that it's as important for
+your
+career Just understand that like the one thing that Hootie does better than uh
+Iceberg or Delta is it is a bit better at Working at high um at yeah um at low
+very low latencies uh like high speed low low latencies So like if you're doing
+bunch of small updates or a bunch of small deletes uh it's better at uh we'll
+we'll
+talk about this in a second There's 22 concepts one called copy on write and one
+called
+merge on read and merge on read is actually most performant in Hootie Uh it's
+uh there is a little bit more of a performance loss in Iceberg and Delta
+compared
+to Hootie That's the one thing where it really does shine But then in other
+areas
+it's not as um effective That's what's so interesting about these things is like
+they're
+almost all the same like but like around the edges there are some interesting um
+caveats
+OK So Iceberg is winning but this is a data Rick's boot camp so we don't talk
+that and we stick our heads in the sand We are we we we're talking about Delta
+here
+All right We're not like we're talking about in and out We're not talking about
+Iceberg
+That's it No more iceberg that that don't even think about Iceberg all right
+think about Delta cause we'll be using Delta for the rest of this boot camp So
+uh
+understand that I just wanted to kind of give you a perspective of like where
+world is going
+So um
+Let's think about this like from a philosophy perspective right Uh Delta like
+when
+we're trying to unconstrain the house right So Delta is let's build the best
+for Spark and then make it compatible with others And that's why it's a little
+bit
+slower It's like Delta is a lot more married with Apache Spark which is great
+Apache
+Spark is one of the best technologies that has ever been created in the in the
+entire
+history of data So it's like awesome It's great Um Iceberg it has a uh a
+different
+philosophy right The the house should not depend on who's living in it
+another way to be thinking about Delta is like Delta is like being in the Apple
+ecosystem
+You know Apple is a closed ecosystem right
+But it's amazing Like when you have your iPhone and iMessage and like you know
+all just works and you have the blue bubbles
+you love it You know you love it The Android users right now are booing me but
+know what I mean
+OK Now I'm off my soapbox about where things are going Let's get into the actual
+guts
+So Delta is surprisingly simple surprisingly simple So you have data files
+These are parquet
+Uh we'll talk a little bit more about parquet in the lab Um so what is like
+parque
+is a way of storing um data efficiently Uh keeping in mind in delta tables uh
+all
+data files are immutable So you cannot change a data file Like
+It's very interesting You can add data files You can remove data files You
+cannot
+update data files
+Very important to remember that you cannot update Update does not exist You can
+only
+add or remove
+That's how it works So uh you have data files and you can have like tables can
+have
+hundreds and hundreds and hundreds of data files or one depending on how big it
+is
+right That's that's the data Great And then you have another thing called the
+log which is really cool So the delta log is a journal of everything that
+happens
+So like if I add 7 rows right so like if I add a new data file
+it's like OK Zach added this new data file at this time And it's a journal right
+like OK we added this file we removed this file we added this file we removed
+this
+file right And then that's uh that's literally it And and then those all have
+timestamps
+Uh those timestamps are very necessary for what's called a time travel and we
+will
+be going over time travel here in just a second Time travel is really really
+cool
+It's really cool Um
+so then we have uh there's one last thing that is in the delta architecture
+which
+is checkpoints Super easy Uh because like if you think about like uh if you're
+reading
+a delta table like and uh say it has 100,000 changes like you don't want to have
+to
+read in all 100,000 delta files all these all these these these Files that
+changed
+So what the checkpoints will do is it will aggregate all of the the change files
+the change pieces and then it will make it so you can just read that file and
+then
+all of the the changes since then So it's like a you can think of it as like a
+group
+by so that you don't have to read in every damn file You can just read in files
+from
+a certain point It's like a checkpoint exactly what is in the name right And
+keeping
+in mind that checkpoints
+are only there for read performance They like you can delete them and like you
+have the same correctness you will have the same the journaling the journaling
+matter a lot because it's like if you remove an ad or you remove it uh if you
+remove
+or remove or you remove an ad Then that actually changes the the structure of
+the history of the journal which will change the correctness when you time
+travel
+right So that is a problem but the checkpoints are strictly there for
+performance
+reasons to just aggregate up the data files or the the the data change files not
+data files the data change files the journal right So uh that's uh essentially
+how
+it is Let's let's look at more of like a visual way of thinking about this
+So imagine you have uh you have two data files on the on the left here right And
+uh so you run a query it adds A.park and B.parque
+OK Then you run another query that removes B.parque
+OK And then you have a checkpoint right And so what you can do is at every step
+at every step in the delta log or so you have like add add remove checkpoint So
+each
+Each delta log each journal is uh is numbered right It's all sequential right
+Because
+delta is acid right It's acid compliant and it has acid transactions so
+everything
+is sequential right So like you can only do one thing at a time right Which is
+beautiful
+and it makes it so that every single update has a version number
+So you have version 1 version 2 version 3 version 4 At every single um delta log
+um mutation there is a version that you can go to
+So like if you're querying this data and say like you have like an oh shit
+moment
+where you deleted b.park and you're like oh shit then what you can do is you can
+say
+OK I want to query this delta table as of version 2
+As a version two which is gonna be B when when we added b.parque
+So these changes will be in but the delete will not be in
+So one of the things that's very interesting about this that is actually super
+dicey
+about this is
+when you when you remove when you when you when you add remove to the delta log
+data file isn't gone The data file stays around actually right So when you
+delete
+a file in Delta it doesn't go away It gets marked as deleted
+Right which
+for the purpose of privacy and GDPR and legal and all that stuff like it makes a
+difference That means that like if like if B.parque
+has PII in it that you were supposed to delete there's more that you have to do
+And that's what we're we're gonna be talking about that in this lecture don't
+worry
+but like this is the fundamental architecture and I like it You know what's so
+interesting
+about Delta as like an architecture
+I like it better than the way that uh metadata the metadata snapshots work in
+I actually like this architecture better I think it's like my favorite
+architecture
+like it's it's like it's so much easier to explain like so much easier Like Ice
+is has like a whole another layer to it that I don't like as much but this is
+literally
+it It's like it's just a journal of changes
+Literally that's all it is and it is so valuable though because it prevents all
+sorts
+of different problems right And this like other things that can happen here
+Is you can also have um schema management where you can add a column you can
+a column you can you can add a partition you can remove a partition You can do
+sorts of really cool things to the data as well if you uh like and and it will
+manage
+all of these things And then and then you if you time travel you'll get a
+schema right Cause you you can query the data before you ran the DDL command
+Which is like so cool Schema evolution is something that like I don't know I
+still
+it's still like it still doesn't register for me because I I feel like I'm just
+so
+used to tables having like one set of columns and that's like and this this
+schema
+evolution stuff is still it's still sinking in for me right It's because it's uh
+I'm
+a I'm I'm essentially a data engineering boomer at this point so uh but that's
+Um
+Remember
+Just because data files are immutable doesn't mean they can't be recombined
+Right
+So you can have two data files that might be tiny right You might do a small
+insert
+add 10 rows here add 10 rows there and it's like a tiny tiny file of like 5
+kilobytes
+and uh it's OK to combine these parquet files into one parquet file What is not
+OK
+and not supported is updating right You can't go in and mutate the files but you
+combine them and instead Stack them together right You can think of it as like
+almost
+like just uh the way the visual that I love to have here is you can think of
+as like Legos right So when you're building with Legos right you're able to
+stack
+blocks on top of each other right You can stack different blocks on top of each
+other
+and that works but you're not allowed to break a block in half right You're not
+allowed
+to like I mean you are but like I mean you have to like Like you're like
+like just shitting on the Legos at that point but like generally speaking as a 3
+year
+old you're not allowed to do that right And um and so like that's I like to
+think
+of it as like the data files are like Legos right You can stack them and make a
+new
+like a new Lego file like a new like combined file right Which is really awesome
+uh like
+I don't know if you guys know uh this is something you should look up and I will
+hopefully
+can get you some reading on this as well Uh so the small file problem is
+notorious
+in data engineering If you're working with too many small files you're just
+gonna
+have a very bad time Like I've never I've never been dealing with like hundreds
+of
+thousands of small files and been like ah I love my life right now Never never
+always it's always painful It's literally
+not once have I been like I'm enjoying this
+Right except when you I guess when you get the repartition right and all the
+small
+files become bigger files and more manageable and then you're like ah the world
+the world is at peace again So
+Um so we will be going over this either today or on Thursday but uh Spark Spark
+has
+this thing called Optimize
+so easy like it's just like optimize table it's like
+so easy and then that like that will optimize the file sizes if you have too
+many
+small files in your architecture because like that's a Cool thing about the
+cool thing about Delta right is it supports streaming workloads That's why like
+be talking about this in week 4 but like it has like you know Delta live cable
+it supports small inserts it supports like small updates right And that's really
+But there is an interesting thing about small updates that we need to talk about
+Which is
+What about row level deletes and updates So what if you do want to update right
+say there is a row in the table that like you know I want it to be not Zack I
+want
+it to be Zachary right And it's like OK how do I like update the row
+Remember updates aren't allowed
+Updates are not allowed deletes are also not really allowed So say you wanted to
+update
+one row you want to update one row of data right So then what you would do is an
+is actually an add and a remove So what you do is you take the new file and then
+update the data and then that is added and then and and so it's like a copy So
+the other data in the file that is unchanged
+will also be copied That's just the inefficiency part of how this works
+Um and then uh the the other thing that happens is the old the old non-updated
+file
+gets removed
+It's just removed out right Because like then then you only want the update
+if you don't remove the old data file you'll have duplicates right You're gonna
+duplicates for your update for your row-level update
+Same exact thing for deletes right You can remove the record you can update the
+record
+whatever It turns into an add and a remove
+So remember this change
+this update
+Does copy the data right And it can be expensive for tiny deletes So this is
+something
+that is very important about having optimized file sizes uh because like if your
+files
+are way too big then it will copy say say say like you have like a 1 gigabyte
+and you're updating one row then like now you have 2 gigabytes and an update
+like a needle in a haystack kind of problem right So that's where like kind of
+understanding that about your delta tables is uh super important as well so that
+uh can work on this So this process right is called copy on write
+So you just copy the mutated
+file right Copy the whole file over mutate it and then add it right So you'll
+notice
+you'd never change data files Data files are only ever copied or or or marked
+for
+removal They're never even really deleted They're copied or marked for removal
+So if you can remember that like it's just like Legos in that way like you can
+them and you can mark them for removal So uh
+OK there's more though right Because uh like
+You can also do uh like for deletes right There's a thing called you can also
+a deletion vector
+This is gonna be like especially if you're working with low latency workloads
+that
+are doing a bunch of small updates to the data deletion vectors are very very
+powerful
+because they allow because it's like if you're doing a bunch of low latency
+workloads
+and you have to like keep copying a bunch of data that didn't change that is
+Expensive
+That is expensive right That's what this copy on read is doing So the deletion
+vector
+is another way to do things where instead what it does uh instead of rewriting
+files it just adds a new file called the it's a it's a deletion vector that says
+all of these files the ones that you want deleted they are now deleted So
+this is called merge on read So there's two
+Flavors here right So one side we have is copy on write and then we have merge
+on
+read
+These two techniques
+are very important to distinguish and pick right So I'm just gonna say it now
+like 90% of workloads
+On data bricks they are workloads that run once a day that you merge right And
+and it's a daily merge one time And if it's a daily merge one time
+copy on copy on write is your best friend and I think this is the default I
+copy on write is the default So uh you have copy on write merge on read Copy on
+write
+is gonna be Uh the uh the strategy that most of you are gonna be working with
+you probably don't have to think about this Merge on read is only really
+necessary
+when you're working with low latency workloads that have a bunch of very
+frequent
+deletes and updates Like if you're in a batch-oriented architecture merge on
+is stupid It's stupid It's just slower It adds latency to your data sets right
+like having to manage these deletion vectors is very dumb It's like it's better
+it's like where do you pay the cost Do you pay the cost writing the data or do
+pay the cost reading the data And like I'm just going to let you know right now
+most data sets are read way more than they're written
+Way more right But not the this this is the edge case right The edge cases low
+latency
+data sets are written more because they write every second or every 5 seconds
+And
+so for these ones the trade-off is worth it right But for most pipelines the
+trade-off
+is not worth it because the when you have to read in these deletion vectors it
+slows
+down the read right It actually does make the read slower
+When should you choose right Just going over this one more time When should you
+copy on read versus merge on write It's very straightforward right So use merge
+read for write-heavy workloads right So write heavy like when you think about
+heavy and read heavy just think about it this way right
+Is the data set going be queried more than it's gonna be so is are more insert
+into
+commands gonna be run or more select commands gonna be run
+That's the way another way to be thinking about it right So um for merge on read
+like uh or like I mean like for daily pipelines you know daily batch pipelines
+where
+you where you literally have one insert query per day
+you're like OK select is probably gonna win There's probably like the
+probability
+that an analyst is gonna query it twice or 3 times in a day is probably pretty
+high
+So like that's why uh that is called a read-heavy data set right Or a write
+light
+data set right So it's like right light is very easy It's like like that's gonna
+be
+like it like daily pipelines are right light The interest there is an
+um middle ground here in between um
+Like streaming like real-time data and like daily batch which is like most data
+uh hourly pipelines Hourly pipelines I think are very interesting They're very
+interesting because like do you do merge on read or copy on write for an hourly
+pipeline
+cause if you have hourly then you're like OK now I have like 24 inserts and
+a lot of copying right That 24 of like what could update every freaking you know
+you know every hour So that's an interesting one where like uh like It gets very
+blurry
+Hourly pipe pipelines are definitely right in the middle of like do you choose
+merge
+on read or copy on write and like I would like the the pattern that I I've seen
+The pattern that I've seen for this example is
+for the hourly data you do merge on read right So you do you do the deletion
+vectors
+you do the small updates right And you do it because like but then once a day
+actually clean up the you clean up the deletion vectors and then you just have
+your daily data set So that you have like uh if you have a read heavy option
+you need that you that's the the other thing about the stuff that's really cool
+that you can clean up the data right You can clean up this stuff and kind of
+slow
+things down and like kind of by like you you might have to write over again and
+do
+another ad but that will add a new checkpoint and then that will uh that that
+drop the performance loss of the vec the the deletion vectors
+Remember OK let's just talk one more time This stuff's super important right So
+daily batch copy on write every time There's no reason that you should do merge
+read for daily batch and that's most pipelines right 90% of pipelines Then you
+uh on the other end you have streaming pipelines Streaming pipelines are almost
+always
+merge on read almost always merge on read uh just because the number of insert
+statements
+that you're gonna run is very high
+Hourly batch is like it depends and you can kind of do it either way You can
+of do it either way and like sometimes you can do a a marriage of the two things
+as
+So uh that's uh my perspective on these two topics super important
+So um let's go into privacy a little bit because uh we're almost done with this
+lecture but OK so
+Remember uh
+If you have PII data and you're working with Delta like
+Delete doesn't delete right It doesn't actually delete It just says
+we deleted this data
+It's like yes
+it's it's very interesting It's like we we mark it as deleted but we don't
+delete it right Because if we delete it then we don't get time travel Because
+the data is actually not recoverable right And so that's where uh Delta is very
+got to be very careful in terms of privacy and in terms of like how this stuff
+So uh time travel right Uh talking just a little bit more about that right is a
+way
+to go back in the journal and recreate the data as it was before a change or
+before
+a delete or before an ad So you can see how the data actually looked like one
+day
+ago or one week ago And then you have uh you know deletes that don't actually
+So like that means that like uh you know there's this whole idea in Europe
+like the right to be forgotten and uh
+Delta table never forgets
+Delta table never forgets It's like designed to not forget right So it's like
+what
+do you have to do in order to um actually get rid of the data files So how do
+not get sued by the European Union and not get one of those like billion-dollar
+lawsuits
+right Um so
+Uh
+You can vacuum Vacuum is very cool right So uh because
+all the the files are added and deleted you can actually uh make it so that you
+only time travel a certain time back
+And it's important to do this right Because otherwise if you're not vacuuming
+then you're gonna have all these data files that are like not used but You're
+paying the cloud bill for and like especially over time like like the copy on
+data files that like where where if you do a small update and then you're like
+I have all this dead water I have all this dead data that like I never really
+look
+at unless I time travel and then it's just hanging out I think that that's like
+one
+of the things that's like kind of gnarly about how Delta table works but it's
+good
+and bad like it's both Uh so you need a vacuum Vacuum is like a very interesting
+thing
+because it's like you you clean up all the the bad stuff You clean up all the
+that is no longer part of the like the deleted data All the removes you clean Up
+the removes right But like the cool thing about vacuum is you can keep removes
+like however many days you want right So it's like maybe you're like OK I want
+vacuum and I only want to be able to time travel for a week or 30 days or like
+retention process is uh like what is the right number really does depend on the
+company
+This is not something that I can be like yes it's always 7 days or yes it's 24
+days
+or yes it's 3 hours and 17 minutes or whatever you want to to say there It's uh
+really depends on the company's data policy and then like legal stuff right So
+I know at at Facebook it was like
+Anything after 90 days and it had anything with PII after 90 days had to be
+purged
+It's just like the like how it worked It had to be vacuumed and and gone right
+um that is uh the big thing to be thinking about
+So um you know
+Being able to time travel back indefinitely is not a good idea You are not Marty
+McFly
+Just remember that right So it's like time traveling is a cool feature like you
+think of it as like I like to think of time travel as like it's like it's your
+backup
+for oh shit moments like where you're like oh shit I accidentally deleted all
+data right It's like very good for those situations where like you need to back
+up
+the data From a from a nasty change that happened recently like
+it's not your friend to like be like oh I need to be able to go back like to
+2018
+and look at what the data set was back then like that's it's not like that right
+like it's like we can you want to time travel but you only want to try time
+like a little bit right You don't want to go back to like you know the year one
+then be like oh yeah
+There's no data here right And like that's like obviously uh like the case but
+so anyways that's the whole idea Don't abuse time travel like keep your freaking
+uh things vacuumed especially if they have PII And uh yeah so we're gonna start
+workshop here in a second I want to open it up for questions for about 10
+minutes
+here and then we will take a 15-minute break before the lab But um anyways uh
+do you guys have for me What do you guys have Uh I um
+Uh like what is the default for Delta I'm pretty sure it's copy onwright right I
+that's uh I'm not 100% sure about that but I'm pretty sure it's copy onright
+Yeah time travel is not just for backup It's very helpful to reproduce the
+issues
+Yeah you can like understand like why something is happening Rajesh one of the
+I love about time travel that like I wish I had back when I worked at Facebook
+was
+uh if you have non-itempotent pipelines right Non like because non-itempotent
+pipelines
+are very hard to troubleshoot in production because it's like they just produce
+inconsistent
+results So like uh and like
+I you know back when I was troubleshooting at Facebook like
+We didn't have no time travel This is like uh this is my moment to say like back
+I was your age like I walked to school both ways in the snow right That that
+whole
+thing but um like yeah it's very good to recreate uh uh what could have happened
+like why or like being able to do like because the cool thing is is like you can
+you can do deltas too like you can do the before and after like you can query
+time traveled version and the current version to see what's going on right
+Yeah we use marker files for item potency We don't have time travel either Yeah
+mean definitely uh like oh are you do you use like signal tables Is that what
+use Nayana That's like kind of what uh Facebook worked with was signal tables
+which is still kind of useful but like um it is it is what it is So uh yeah we
+about um like 5 10 minutes here just open questions about what was covered here
+and then we'll go further right
+Do you use describe table to see version
+If if do you uh how do you find which version it is um if it's huge right So the
+checkpoints
+will aggregate right The checkpoints will aggregate it up right And um yeah then
+like describe table is definitely gonna freaking have a um it's gonna dump out a
+lot
+if you have like a big table like that 100% It's probably like a limit command
+you can do to like look at like the most like there's a I know what it is uh uh
+wrong
+and actually there's a there's another file in the the delta log called latest
+checkpoint
+And then it will tell you the number So it's like latest checkpoint 17 or latest
+It it's just like it's there
+right So that's the um like that's how Delta works in in in making sure that you
+your latest values Like yeah it's pretty cool Like I'm I'm excited like uh like
+we
+have a lot to uh cover here in the lab Uh it should be pretty good
+Uh we're we're working with um like we have a generator right now uh for the the
+the the data but the data that we're generating in this week's lab will be real
+from Kafka in week 4 So it's and it's the same the same schema So hopefully that
+um is good right Lubo you're saying I'm using neon Postgrass For hot data and
+backblaze B2 for cold with nightly workers migrating old data Is that a proper
+production
+pattern or should I move to a proper data like that's totally fine I don't know
+the hell backblaze is like
+I mean like that seems fine to me like are you just like daily snapshotting like
+probably fine You gotta understand Lubo like it like like uh like the data lake
+stuff is usually for like bigger businesses you know like I like I don't do any
+lake architecture stuff for data expert for the most part I I do all my
+analytics
+just on a postgress replica like cause it's like
+I have all I guess it's like I'm only working with like 5 million rows so it's
+why do I need Spark right Like I don't like and I probably won't need Spark for
+many years So uh like you got right size your data analytics stack just because
+someone
+says this is the best practice doesn't mean that like you have to pick it up you
+know
+like it's uh it it's good for like it's good to build a portfolio project with
+best
+practices because then you're like hey I know I know what the hell is going on
+But
+um you know like if you're doing like an actual business like it's it's a pain
+the ass right
+When you spark for row count any ballpark figure
+what do you mean for like all of my freaking data like in all of Data Expert
+in all of Data Expert there's like 10 million rows
+I know like yeah yeah yeah Spark will give you row count for sure and we'll
+be we'll be generating thousands to hundreds of thousands of rows here very
+shortly
+So I have time for like one more question and then we'll break and come back at
+7:10
+Can optimize be used incrementally Yes optimize can always be used in the middle
+So like if you want like it it it can be just a recombine files It's uh yeah
+it's really good Optimize is like you want to be using that like you don't want
+don't necessarily need like for example like if you're doing like daily batch
+Like um
+Um oh OK I think Muhammad means well OK so like optimize is like if you're doing
+daily
+batch with Optimize like it's probably not gonna be that useful cause your your
+batches are gonna be pretty big Right Optimize is really good for low latency
+right And then I think Mohammed means that what row count does Spark make sense
+over
+relational databases Yeah So uh that's a great question I don't have a number
+there
+because like there's more it's more complicated than row count right It's like
+like also have to be thinking about like uh like there's because because row
+count
+is not you you It is not a good measure because you can have two columns If you
+two integers
+if you have two integers like you can have like 10 billion rows in Postgress and
+gonna crush it right Because the uh it's it's not about row count it's about the
+total
+amount of data right So it's like like personally I think of it as like spark
+really
+starts to shine And it really starts to be important at
+between 100 gigs and 1 terabyte is where Spark really starts to be like wow
+Why do we need optimized Can't we coalesce and write out Uh but Yogi like if
+doing low latency workloads like are you reading in and then writing it out like
+you're reading in what you already wrote and writing it back Low latency
+don't read what's already written right Low latency workloads just dump all the
+Right And so then you have to like combine it all right You're right coalesce
+writing it out for daily batch workloads is a very good idea Yogi so that you
+you optimize your rights like you optimize your file rights with like coalesce
+100%
+You only need to optimize when you are doing like it's it's it's very useful for
+low
+latency workloads because even if you even if all your entire low latency say
+Yogi say you had this case right We have a low latency workload where you
+coalesce
+down to one file But then that workload runs every 2 minutes right Then at the
+end
+of an hour right you have 30 files right
+Right I optimized similar to repartitioning It is similar to repartitioning but
+for data at rest right It's a it's for data that's already written right You
+could
+do it that way too where like you like you you read in the whole you could do it
+way like where you just read in the data you repartition it and write it back
+out
+That would be another way That's essentially what optimize does behind the
+scenes
+That's why it's so easy to work with it does essentially that where it like
+reads
+in all of the data and then it puts it into um a more sane number of files and
+it dumps it back out Yup and then it just does like math on the the numbers So
+um yeah like just Mohammed just remember row count is not a good number right
+all about data gigabytes gigabytes of data Uh 100 100 gigabytes is a very good
+cut
+off right Of where Spark is necessary We're not really going to be working with
+size of data in the boot camp but we will be working with real data from data
+expert
+from Kafka some production stuff so
+Awesome Uh thank you guys uh for coming to this Uh we will be back at 7:10 So 15
+7:10 and then we will uh we will go

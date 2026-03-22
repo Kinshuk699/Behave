@@ -1,0 +1,1013 @@
+today we're gonna be talking all about real-time fast data right Cause there's
+like
+you know there's the three V's of big data right You have volume velocity and
+variety
+So the three V's uh uh in the Spark week we talked all about how to tackle
+large volumes of data
+Uh in the AI weeks we're gonna be talking all about how to tackle large
+varieties
+of data whether it be a PDF an image a video a data table an API call whatever
+it
+ends up being Those are all available uh with AI And then today and Thursday we
+will
+talk a lot more about how to tackle the velocity problem
+All right Velocity is an interesting one
+it is something that is
+throughout my career I have seen both be wildly successful as well as disa
+disastrous
+So uh it is uh kind of polarizing in that way
+So what are we talking about today
+So we're gonna talk about what is Kafka and we're gonna look at Kafka versus
+Iceberg
+versus Postgress And we're gonna look at the Kafka consumer and producer APIs uh
+because
+those are super important They are actually kind of the underpinnings of how
+Sparkstreaming
+works
+And uh we'll talk a little bit about when you should pick streaming and when you
+should
+pick batch
+And then last but definitely not least we'll talk a little bit about uh Delta
+Live
+table versus Spark streaming So those are a Delta Live Table is the new Data
+bricks
+way of doing streaming pipelines That is absolutely fantastic I love Delta Live
+Table
+makes streaming pipelines so much more accessible and so much more easy to like
+wrap
+your head around And so uh but today and in today's lab we are not using Delta
+Table because uh we want to do it the hard way hard way first So then on
+Thursday
+when we do it the easy way you guys will have some appreciation All right So
+just remember that as like we go through this lecture
+So uh one of the things just to remember about like
+streaming and this is just this is also the case for just data collection in
+general
+uh is the actual way that uh we collect data on data on a Data Expert is it's a
+little
+complicated So when uh there's a layer that wraps our um server the data expert
+server
+You see that in the middle here the data expert server So we have this thing
+called
+a middleware The middleware sits between you and the data expert server And what
+does is it every single request that comes in
+Gets logged right So the interceptor the middleware passes to a Kafka producer
+So
+Kafka producer is where you have um data that goes into Kafka
+And then uh the Kafka producer pushes data into a queue
+So you'll see this cute data Uh so it's all data waiting in a line We just have
+uh
+people waiting and then we'll have Spark streaming
+And then uh nice real-time data in Delta in Delta Lake So that last you'll see
+the
+bottom of this diagram
+is what we are gonna like actually build in today's lab is the bottom of this
+diagram
+Um but like let's talk about like what actually happens from the data expert
+perspective
+as well So like after you intercept the request then it asks is it a web page
+request
+So are you Asking for the home page or the dashboard page or whatever page If it
+is
+then it will server side render that page It will take the uh it will take the
+HTMML
+and send it back to you If it's not a web page request that means it's an API
+and if it's an API request it needs to execute against the database So it will
+execute
+against the database it will execute an update delete create whatever it needs
+to
+do and then it will return that state to the server and update your view
+So um
+This is how data expert works like uh and this is how logging works and we're
+play around with all of this in uh today's uh lab It'll be awesome It's very
+very
+real data very real and very amazing data
+So uh yeah let's get into it So what is Kafka
+OK So
+Kafka
+Is a queue like
+you know Que UE UE a queue right Where data waits it's like uh uh data waiting
+in
+a line to be processed right Uh this queue can be split up into multiple
+partitions
+when necessary because sometimes uh you know how like when you're going uh
+you're
+at the You're at the grocery store and there's only one cashier and then there's
+a long ass line and everyone's waiting and you're like bro where is where's the
+cashier Right So Kafka is literally the same way If you can think about Kafka
+that think about Kafka like you are like your your data that is waiting to check
+out
+Check out usually means moving the data off of Kafka into a more permanent
+Whether that be postgrass or a data lake or somewhere else that's gonna be the
+other
+place that you could be potentially moving data to right So uh that's just a big
+thing
+to remember giant line of data
+Uh usually data in Kafka is called data in motion because Kafka is actually
+pretty
+expensive to store the data here uh because it's so you can access it in a very
+you
+can access it in an extremely low latency way which is not possible with Iceberg
+Delta Iceberg or Delta have You know fundamental latency constraints in them
+why does iceberg and Delta have a latency constraint
+Because
+the data lives on S3 right And S3 is slow S3 is just slow That's just how it is
+That's
+what the nature of S3 is right So but Kafka is not on S3 Kafka is its own
+and that's why you can have a lower latency uh
+Kind of con consumption versus like if you use um you know
+a colder thing like iceberg
+Remember there's really uh like 3 things Kafka has 3 things So it has a cluster
+or
+a broker
+you can think of like the broker or the cluster as like the catalog or the
+schema
+like it's like it's a it's another parallel So you have the um cluster or broker
+which
+is gonna be the the highest level component
+And then uh then you have topic Topic is gonna be like your table like
+what table you have It's it's topics and tables are very um uh similar but just
+uh with a schema or a catalog you can have multiple topics in one broker Totally
+possible
+They're all uh that's totally doable And then you have the bottom layer here
+So a partition is how many lines of data like how many cashiers do you want to
+check
+out your data
+So uh it's important to get this number right uh because it's very hard to
+change
+It's actually super annoying to change the partition count after uh if uh it's
+super
+it's super annoying to change the partition count if you get it wrong And
+what happens on the two sides right So uh if you underprovision which is like
+Say you're like OK I only want one partition then it makes sense right where
+gonna choke under load When there's a lot of load you're gonna latency is gonna
+balloon
+and you're gonna have a lot of load Uh but then you have the other problem on
+other side Say you over partition Now you just have a now you're just paying for
+a
+lot of extra space You're paying for a lot of like it's it's it's a very similar
+problem
+where it's like imagine you have 10 cashiers but there's 1 customer And then
+it's
+like you're paying all these other cashiers
+toregan uh to check people out and there's not enough people to check out So
+that
+is where you you end up overpaying for your infrastructure if you overprovision
+one of the things that's super interesting about Kafka is like
+Your data is not
+collected in a uniform fashion right
+Some hours of the day you're gonna get a lot of data Some hours of the day
+gonna get very little data But the thing that sucks about Kafka is this number
+has
+to be constant This number is constant So like you have to have the cashiers
+don't
+take a lunch break They're it's a constant number here So and it's super
+annoying
+to change That's like if there's anything that you want to learn about Kafka is
+is like one of the most important things to be thinking about
+OK So let's just talk a little bit about um
+when to use which one right So you have
+Kafka versus Iceberg and Delta versus Postcris
+So Kafka is all about collecting data It's a very good place for data to land
+It's like so Kafka is oftentimes like where data goes from an action
+to being an actual row of data So like you click a button in an app And the very
+first
+place that it shows up as data is in Kafka So Kafka is also often called the
+Data
+landing zone The data landing zone is another name for Kafka That's why you see
+use
+case collecting data
+And and to a lesser extent you can also use Kafka for Pub sub communication and
+apps
+I've found that to be kind of annoying so I actually I used to use Kafka for my
+for example like if you submitted homework it would submit a job to Kafka and
+then
+it would uh process it off of Kafka and then publish back to Kafka uh but like I
+found
+it to be super annoying and kind of like not great to work with so we moved to
+PubNub PubNub is like a managed service that works a lot better
+Uh but other people still use it for that use case but it's mostly like 95% of
+time it's used as a Kafka collection point as a data collection point That's
+Kafka's job It's like the trampoline where people where data lands
+Um then you have Iceberg and Delta right It's analytics machine learning data
+lake
+master data all that kind of stuff That's gonna be the the main use cases for
+and Delta all of your analytical use cases that we are all so familiar with
+And you have Postgress Postgress is just mostly around application logic
+Sometimes you need to move data back though like you need to move data from
+back into Postgress because you want to crunch it And then be like oh you're in
+top nth percentile or whatever and you actually need to look at all of the users
+understand where that user stands So
+then you have retention So data in Kafka just like how uh you think about like
+people
+waiting in a line right If you think about people waiting in a line you know
+like they won't wait forever
+Right Generally speaking they won't wait forever So like the default retention
+of
+data in Kafka is one week It's like the default retention Usually one week to
+one
+month is the amount You can you literally can have Kafka be you can hold on to a
+you can be forever You can actually set it to forever if you want like
+especially
+if you have lower volumes then it doesn't matter that much but like generally
+speaking
+you want to use that imagery right Of like OK if it's data waiting in a line
+that's
+not
+That's not its final resting place That's not like data waiting in a line means
+transitory right
+So generally speaking you want to move the data out of Kafka into Iceberg out of
+into Delta you need to move it somewhere else Whereas if you have Iceberg and
+Postgress
+it can be potentially forever like maybe not forever like uh if you're if it has
+PII or like you know legal issues where you can't hold on Of the data forever
+or like cloud efficiency reasons but like there's not really that many reasons
+why
+you can't right And so
+the the last thing to be thinking about here between these three technologies is
+Kafka can do tens of terabytes like and you want to read it pretty quickly Um
+you have iceberg and Delta can go petabytes like iceberg and Delta like is
+literally
+like infinitely scalable right You can think of iceberg and delta as like you
+can
+it goes to the moon like you can have as like you can literally as big as you
+right Like I've worked with iceberg tables that were 2 petabytes a day So like
+possible Postgress is not Postgress is gonna be uh a smaller boy and uh you're
+going
+to be looking at like single digit terabytes is where it's going to really start
+show its flaws So when you're thinking about storing these technologies they uh
+which of these storage technologies you want to use they each have their own
+of place in the stack and they have their own strengths and weaknesses
+OK
+Let's just look at this one more time right from a very simple perspective So
+on the Dataexpert.io website
+You click a button That creates an event That event gets passed to a Kafka
+producer
+Kafka producer is a special API that puts data into the line So now you have an
+that's in Kafka and it's vibing right It's vibing in Kafka We have our data in
+motion
+Right this is gonna be data that you can process It's like
+one of the things I've always found very beautiful about queues is you even
+notice
+how this queue is like sideways It's like literally it's showing that it's kind
+like a line and it's not like standing up straight and tall It's like the the
+also is like yo we like the the the data here needs to be processed Then you
+have
+some sort of processor right Whether that be a like there's really 3 You have
+you're either gonna use the Kafka Consumer API which is just like Kafka on Kafka
+is like one way to do it You can use Flink or you can use Spark streaming
+We're gonna use Spark streaming in the boot camp uh because that is what uh Data
+is all about They love their Spark streaming APIs
+And then uh finally we have iceberg postsgress data at rest This can also be
+delta
+table right So this is gonna be like the final resting place for your fact data
+gonna be in Iceberg right And keeping in mind that this process is actually very
+fast
+right All of this can be done in real time Like this is all very very fast
+Some things to be thinking about here right Uh like this this is some type
+script
+code that like you don't have to really worry about too much but we will be
+like this is literally the code that I have in my uh this is literally exactly
+code I have in my boot camp uh um code that like actually logs the data right So
+see we have uh uh this Json stringify message So it mostly just
+It it logs a JSON blob of whatever keys and values you want to log That's
+generally
+speaking how Kafka works is it logs a JSON blob
+Um and uh you'll notice uh down here or we have a key You'll you'll see like
+when
+when you do producer.send it actually has um every message has a key and a value
+and value Remember that key and value So
+What the hell does that mean right So well remember how we were talking about
+earlier We were talking about how like you have OK we want to split up the data
+into
+um 7 partitions OK There's 7 partitions How do you decide like because a lot of
+times
+you want all of the data for one user or all of the data for one thing To go to
+same partition so all of it can be all of it can be
+processed together
+Because it needs to be co-located like all of the data for a specific user
+be in one partition
+How does that work Well you can pass it a key right You pass it a key
+And uh then that key will be uh it'll be hashed and then it will determine which
+the seven partitions it should go to But the good thing is is like if you have a
+then it will deterministically go to the same partition every time
+Right and that's nice That's really nice because then now we can have we can we
+we
+can predictably have all of our messages from one IP go to the right uh Kafka
+every time
+That's the so it's important to set a key otherwise uh your stream processing
+get weird because of the fact that like you can have data like especially like
+if
+you try to like do like a windowing group by and you don't specify a key or you
+specify
+like a random thing here then you might not have all the co-located data that
+need in your stream So
+It's important
+Some of this stuff like what we're talking about right now is stuff that is a
+bit usually a little bit outside of the scope of data engineering and this is a
+bit more in the scope of backend and full stack engineering but uh
+If you're working with Kafka and you're working with um partitioning and you're
+working
+with all this stuff
+this can also be a place where someone who doesn't have that much experience
+with
+Kafka they actually don't provide the key or they do some weird shit where like
+key is like a random number or a a UUID or
+something like that The key should always be something in the data Generally
+the key should be something in the data that you would naturally group on So
+Usually a user ID Usually a user ID but like because in this case we can't do
+user
+ID because we we have events for users who are logged out right And if they're
+logged
+out they have no user ID They just have an IP address So we're gonna be working
+an IP address today as well
+then uh remember uh the last thing that we need to do here is we need to specify
+topic So we're gonna be working with bootcamp events prod That's gonna be the
+topic
+that we are working with today
+So that's gonna be the other big uh thing that we're gonna be working through
+right
+And this is like a table that you can kind of like set I I set up this table
+Confluent Confluent is the
+is like the streaming uh
+the streaming data company that I use to set up my Kafka clusters So hopefully
+makes sense This is the Kafka uh producer API
+So what is a streaming pipeline Well
+Like
+It's very simple but also very complicated Like the the words here
+When we're over the next couple of slides we're we're gonna be getting into just
+nuanced details around this stuff because you will in your career come across
+this
+and I I just want you to be ready so that you can actually talk with your
+stakeholders
+in an intelligent way about it So
+At from the broadest perspective streaming pipelines process data in a low
+latency
+way
+What does low latency mean It depends That word is a nasty dependent word And we
+are
+gonna get into that a little bit more
+OK what's the difference between streaming near real-time and real-time OK
+You have a streaming which is like literally a stream Data is processed as it is
+generated
+Really cool really cool stuff Uh Flink is amazing at this It's really really
+good
+at this and like it literally processes the data right as it comes in That's
+why like for the lowest latency streaming pipelines people opt for Flink over
+Spark
+streaming even though that gap over the last two years has has closed for the
+most
+part like Flink and Spark streaming are
+Essentially at the same they're like feature parity at this point They're like
+really
+really close
+So uh I wouldn't worry too much about like that We'll talk a little bit more
+here
+in a second So then you have near real-time
+So data is processed in small batches every few minutes or you could even think
+this as data is processed in small batches every few seconds
+Right And one of the things that you want to be thinking about here between like
+what's the difference right If you're processing batches every 1 2nd or you
+process
+data as it's generated like you can kind of see how like
+like those are
+there's an asymptote there right Because it's like if we say data is processed
+small batches every 50 milliseconds and data is processed as it's generated
+You're getting you're you're splitting hairs there right You're splitting hairs
+Those
+are almost the same thing right
+And so Sparks structured streaming is set up in such a way where it can run
+every
+couple of seconds It can easily run every couple of seconds This is something
+like is great and I love the improvements that Data Bricks has done to Sparks
+streaming over the last couple of years So like that actually has allowed me to
+flip
+or you know make my recommendation a little bit more um nuanced and that's why
+teach Spark structured streaming in this boot camp now instead of Flink We used
+teach Flink now we teach Spark structured streaming
+And um so remember real-time and streaming those words are often synonymous
+But not always
+And uh we'll talk here in just a second right Remember
+less technical people might think real-time and batch are synonymous
+So you have real-time near real-time streaming and batch These are 4 ways that
+can process data and they have different
+snafus and different problems with them So let's just step forward here
+What does real-time mean from stakeholders
+It very rarely means streaming
+In my career it has meant streaming twice
+And like the other 5 times when I've heard real-time it means regularly
+It usually means low latency or predictable refresh rate
+So uh
+and isn't that wild where like stakeholders will say I want the data in
+real-time
+but what they mean is I want the data reliably refreshed
+At a cadence that works for me And like
+That is good and that's fine That's just like a way like that the world is
+So we wanna like help people understand
+the nuance here So when you're having these conversations don't always assume
+cause from a
+from a data engineering perspective like from our view real-time means like
+streaming
+It means like like the the the fastest lowest latency option But that's not what
+stakeholder usually means So just remember that as you're kind of going through
+your
+career
+Should you use streaming uh like
+Generally speaking the answer is no like it's actually not it's no right And uh
+there's
+so many things to be thinking about right So many things to be thinking about
+if you're trying to think about doing streaming So uh let's talk about each one
+uh what are the skills on the team
+Uh I know uh when I was at Netflix uh we were trying to move into into uh the
+stream
+detection space and I was the only one on the team who had some streaming
+Everyone
+else on the team was a batch engineer
+So that uh causes a lot of friction because now it's like I don't want to build
+more
+streaming pipelines because I'm the only one who can maintain them
+So that can cause a lot of uh problems
+And what is the incremental benefit So if someone if the only incremental
+benefit
+is an analyst can look at the pipeline and it shows up a little bit earlier and
+they're
+like ah great my query is is up to date
+Like and they're not making decisions off of that like off of those intraday
+changes
+The incremental benefit is not there We'll we'll talk a little bit more about
+in the coming slides Then we have the homogeneity of your pipelines I love the
+word
+homogeneity which is like the sameness So if you are on a team of data engineers
+You want your team of data engineers to build pipelines generally in the same
+like and with the same technologies in the same way if that's possible It's not
+possible like but you that's usually what you want You want to have like the
+data
+engineering teams that are the most successful manage the fewest number of
+technologies
+This comes back to um at Netflix they talk about this thing called variance
+without
+value So uh if you have variance without value that is uh an anti-pattern right
+you want to have less variants because variance is by its definition more
+expensive
+because now you have a deviation in your pipeline suite and it makes it harder
+maintain So um I remember um I just have another side note here like I had some
+that I worked on at Netflix where it was processing like 500 rows and uh but
+some other pipelines in the same suite were processing like a billion rows and
+so
+I was like damn but the 500 row pipeline doesn't need Spark It doesn't need
+because 500 rows in Spark is stupid Like it's like you can we can just use
+Python
+for that We can just have a very basic Python script But ultimately I decided to
+opt
+for Spark so that every pipeline in that suite of pipelines ran the same way and
+it's brain dead simple They all are exactly the same They're all moving data
+And so like in that case even though even though like I am
+spending more Or in technical overhead it's worth it from maintenance overhead
+that like there's so many other cases like that and streaming is fraught with
+these
+types of problems where like you're optimizing for latency and you're not
+thinking
+about maintenance and you're not thinking about reliability and you're not
+about all these other things Then you have like the trade-off right
+Oftentimes stakeholders like if they want it in real-time
+Updated hourly is good enough Updated hourly is good enough Like I've like I've
+that to be the slam dunk answer for so many stakeholders is like OK how about
+updated
+once an hour Like that and that can be a good middle ground that can work really
+well
+But remember you have daily hourly micro batch and streaming Those are 4
+different
+latency ways of doing things and they get more and more complicated the closer
+get to real-time processing
+Um you also have uh how should data quality be inserted You know batch pipelines
+easier to do data quality checks because you have uh you have just standardized
+like write audit publish and uh you know those different patterns that allow you
+guarantee certain things about the data and check your assumptions Whereas with
+it's a little bit harder to you can still put data quality checks in your
+pipelines but they're a little bit more annoying to work with and a little bit
+harder
+Remember
+If someone asks you for streaming as a data engineer your default answer should
+be
+no
+Unless they have a very enticing case right It's like
+the because most pipelines are batch pipelines 90% of pipelines are batch
+pipelines
+and it goes back to like we'll go back to this slide remember pipeline
+homogeneity
+90% of pipelines are batch pipelines We want we want more right If and for many
+many
+companies
+It's not 90% They can actually literally run their entire business 100% of
+as batch pipelines and that's actually better for them It's better for them
+the incremental benefit of the low latency is not worth deviating from the rest
+your pipeline stack That's just not worth it Like that's another thing to be
+about right So
+The thing to think about here is
+OK when is streaming important Well think about this like you know Netflix they
+started
+doing that like the Jake Paul
+event like Jake Paul Mike Tyson event and they're like streaming and it failed
+But
+like now they're doing a pretty good job with their event processing like live
+event
+like they're literally streaming it right Like or you're watching the Super Bowl
+You know it would suck like if you watch the Super Bowl and it had like a
+one-day
+delay and so like the people who were there they already know what happened and
+you have to watch it one day later That sucks That's not good Like uh uh I'm
+glad
+that they don't do that for the Super Bowl right It's kind of nice that it's a a
+real-time stream right And so that's the key right is if
+the low latency makes or breaks the use case
+It's not a nice to have It's a must-have So detecting fraud right You don't want
+credit
+card fraud to have a 1 day delay That's stupid You want to stop the bad behavior
+as
+soon as possible High frequency trading They're literally making trades on every
+second based on the the swings in the market Again that's something that like if
+data is delayed an hour it doesn't work anymore because you need to make the
+trade
+right now So and then live event processing I just talked about So these are
+good Uh some other examples just to be thinking about right is um Uber surge
+pricing
+Surge pricing on Uber is another great uh real-time example where like
+You would need you want to raise prices right now because that's when demand is
+and
+that's when the surge in demand is is right now You don't want to raise prices a
+later when you when you detect that there's a surge It needs to happen right now
+needs to be in a low latency way That's another uh perspective to be thinking
+about
+as uh you are going through this is
+The the low latency makes or breaks the use case So something you get like
+another
+way to think about this is you get economic value
+from
+The the reduction in latency You get economic that's other big big way to think
+this So like with Uber right the surge pricing they can raise prices and people
+still pay because demand is so high and they get people that way right Fraud
+they
+prevent bad behavior from getting worse right That's what they they save money
+they're they they they they stop the bad behavior early So like there's always
+sort of dollar there there should be a like the
+The the the connection between building a streaming pipeline and
+Generating the company money should be like a one-step process It should be like
+build the pipeline and we stop bad behavior We build the pipeline and we
+generate
+revenue It should be it's like like it's not we build the we build the streaming
+pipeline
+so an analyst can look at the data to build a dashboard that then uh that that
+updates
+and is is fancy That's even though that's a very common failure case in this
+where or a very common like Use of uh streaming pipelines that is kind of
+incorrect
+So what about gray area So um so
+There are some use cases where uh you
+You could use streaming you could use micromatch you could use you know what I
+mean
+there's like so many ways that you could potentially do these things because
+when you have data that served the customer I don't know if you've ever if
+ever looked at your um like analytics dashboards as a creator or like you know
+there's different charts that like the customer sees and that data oftentimes
+needs
+to be pretty low latency That data is like
+Like that's just how it works because like the customer has a a pretty good uh a
+high bar for like how up to date the data should be but like it depends right So
+for example the Instagram creator dashboard does a daily batch It does a daily
+batch
+It's like we won't let you look at your creator metrics until the The next thing
+comes
+out but not all the numbers like your total like your current total follower
+count
+is a real-time metric That's a real-time metric that like they display to you
+but
+like how many followers you gained in the last 24 hours that is a daily batch So
+sometimes like you can even have it be a mix like you can have like an
+analytical
+dashboard that does a mix of real-time and
+batch processing which can be a beautiful middle ground So
+Uh I have another example here that like is important Uh so when I worked at
+Facebook
+I worked at notifications and there was a big ass machine learning algorithm
+Nudge and Nudge its job was to determine which notifications to send you so that
+were more likely to come back to Facebook That was what Nudge was about And
+12 hours that Nudge was delayed It would make 20% worse decisions So like it
+to get data as quickly as possible And so
+the middle ground here was OK we can't do daily because if it's every 12 hours
+we lose 20% that's a big dollar that's a big dollar But like also processing all
+notification data in the streaming environment was very impossible I I literally
+tried
+to do this in streaming first but the thing is is like it was like 10 100
+terabytes
+and like batch was just dramatically superior So we did it to where we did it in
+hourly
+batches and that was that enabled it to have a a latency of 1 hour or less and
+essentially removed all of the the problems that Nudge was having in terms of
+accuracy
+and relevancy and we we solved the problem here using microbatch right Not
+And uh because one thing that's nice about microbatch and hourly batches is it's
+still
+uh it goes back to like remember pipeline homogeneity If you have a pipeline
+runs daily or you have a pipeline that runs every hour those are much closer to
+each
+other than a streaming pipeline A streaming pipeline behaves very differently Uh
+streaming pipeline behaves more like an application than it does like a data
+That's uh another way to be thinking about it
+So just no go right So
+If there's no incremental benefit of reduced latency
+don't build a streaming pipeline
+And just to let you know most of the time when people ask there isn't actually
+an
+incremental benefit
+Like that's from my career my experience and other people I've talked to right
+It's
+like stakeholders just like want that They want the technical excellence but
+if there's no freaking uh benefit then
+give them it up to date If they have like usually my perspective is like give
+them
+the SLA of 9 a.m. and be like you can have yesterday's data by 9:00 a.m. and
+some
+people think that that's what real-time means
+And that's what's so weird about it right But that's like just a daily batch
+and uh that's the other thing to be thinking about here is analysts complaining
+data isn't up to date is extremely
+almost never the case You need to build a streaming pipeline ever Like say no to
+those
+requests
+So remember how are streaming pipelines different than batch pipelines So
+streaming pipelines run all of the time
+They're running 24/7 Batch pipelines only run for a very very very small chunk
+the day right So if you have a batch pipeline that takes 30 minutes to run and
+runs once a day then it's what it's running for like a couple percent of the day
+like streaming pipelines are always running 100% of the day And like uh I have
+interesting uh parallel to this So
+did you know that like um men generally speaking have to pay more for car
+than women do And uh
+And uh it's it's actually not as much about that men are riskier drivers It's
+just
+that men drive more They're on the road more And uh the more that you're on the
+Just the more likely something bad will happen
+That's just how it works right So that's one of the reasons why with streaming
+when you have something that's running 24/7 it's just
+More likely to break because it's running all the time You're managing a server
+now
+You're not you are now managing a server You are not managing a pipeline You are
+managing
+a server Just remember that right It's it's like
+they are way more software engineering oriented and that's just how it works So
+Delta
+Live Table does help with this quite a bit actually So we will we will see that
+uh uh in Thursday's class in Thursday's lab So
+Um you you and also just remember streaming pipelines they need to be babied
+They
+need to have way more unit tests and integration tests Like the
+the bar
+of building a streaming pipeline is much higher than the bar of building a batch
+because of this
+So let's move on
+Here's just another way to think about this right is
+You have on the left is the sweet spot This is what 90% of businesses do This is
+how it works You have low engineering complexity high latency daily batch and on
+right you have high engineering complexity low latency streaming or continuous
+processing
+And it's a continuum right The lower the latency the just gen generally speaking
+more issues you're going to run into That's just like how it works and that's
+5 to 10% of pipelines are streaming pipelines and most pipelines are not
+It comes back to the trade-off and the ROI on doing this
+I remember uh we were trying to at Netflix we were trying to catch the bad guy
+If
+someone like hacked one of our employees' laptops we wanted to catch the bad guy
+quickly as possible
+but like
+Real-time is kind of a myth You can't actually do that right Even if you are
+using
+like the absolute best technologies where you have event generation to Kafka to
+spark
+streaming to sync like you see how there's like 123 there's gonna be 3 network 3
+network
+calls there
+And that's gonna add a couple of seconds of latency
+because chattiness and like it's just gonna it's like I remember like we were
+doing
+this at Netflix and like we got it down to 1.5 seconds of latency
+For like doing the detection and we were like damn that was pretty good I mean
+to like our our old pipeline that took like
+70 minutes we went from 70 minutes to 1 2nd which was like good but it's not
+instant
+right It's like uh you remember that like I don't know like it's always one of
+things where I'm like what's going on here right So and then you have the 4 you
+the 4 categories right Daily batch hourly batch micro batch and continuous
+I know I'm probably sounding like I'm beating a dead horse right now but it's
+like It's super important because
+Real-time and streaming pipelines are really flashy and they're fun to build
+like a like um
+Like a shiny object ADHD perspective streaming is the funnest and best to build
+it's just really cool It's really cool to see the data come alive
+I have to give you the counterweight the painful counterweight of like yo like
+yeah
+it's shiny yeah it's awesome but yeah you probably don't need it
+Let's just talk about the pieces right Uh
+of of a streaming pipeline right So you have the compute engine
+Flink spark structured streaming
+OK cool And then maybe Kafka consumer if you're going super basic
+Uh this is the engine that actually reads in the incoming data from Kafka or
+whatever stream you're pulling in from and it will work with that
+Then you have the destination
+Right So the destination is called this uh is called a sink So you have sources
+you have the engine then you have a sink Like one of the reasons why they call
+a sink is because
+Uh you know how like there's a lot of things with data that's kind of related to
+water
+right You have like snowflake you have like iceberg you have like a data leak
+If someone's data gets out it's like leaking like a like water And so in this
+case
+like the sink is like where data where where this water lands where there's like
+in motion this water in motion lands right It's the sink it's the destination
+We're gonna be using like iceberg and Delta We're we'll use delta today in the
+lab
+Delta and uh but you can you can think of it as like there's a lot of other
+choices
+here as well right
+we're getting there So streaming has some unique challenges to it
+So 3 big ones So you have out of order events late arriving data and recovering
+failures These are the 3 big
+things that you don't really worry about with batch And uh let's uh let's step
+through
+each one here So out of order events So
+Both out of order events and late arriving data are solved with the same
+Methodology here right So what this is is called watermarking
+So watermarking is you can think of it as a tolerance a tolerance for
+the orderedness of your data And uh depending on where you live and depending on
+how
+you process your data this watermarking might
+be a big tolerance or a little tolerance And uh well let's let's go into it a
+bit more
+Right let's just uh OK actually let's go back We got OK I forgot my slides are
+a weird order right now So
+a watermarking right So say you have a row that comes in and you're grouping on
+address and then your watermark is 10 minutes then uh and your window is that
+So then like what it means is like
+We'll wait 10 extra minutes after the window after the the the definition of the
+window
+is over
+for any out of order or late arriving data to show up And keep in mind the
+watermark
+is configurable Like so for some use cases you can have a very tight watermark
+if you're working with like click stream data if you're working with web data
+you usually want a tight watermark Like you can have data that's um like within
+you can even have a watermark that's
+15 seconds or 20 seconds like it can be really low because you know that most of
+data is going to be propagating instantly And then you have things that are like
+IOT things IOT data that like there might be some more of a delay in those
+systems
+just because there's just a lot more moving parts to get data out of IoT
+So your watermark there might be more of like an hour just to kind of have um
+Uh a tolerance But keeping in mind keeping in mind that like watermarking isn't
+free
+right Watermarking is saying what is the tolerance that we want for our
+system So it's like if you wait
+if you set the watermark to an hour then your data will be an hour delayed right
+it's waiting for all the all the data to show up So why does this not why why do
+not even think about this in batch right When we think about batch
+We just like
+Run the query right And we just run the data and like
+generally speaking batch has some uh it still has this issue and we'll talk
+it and and then the next slide or the next couple of slides when we go to late
+So let's talk about recovering from failures So another one this is uh another
+that streaming and batch are different Because with batch right you run
+your pipeline like once a day with a certain set of filters right You're
+filtering
+down to a specific segment So it's like you're almost like you try to grab some
+off the shelf and if it fails you can just try to grab that same data off the
+shelf
+over and over and over again And it's like it's on a daily cadence so it's like
+easy
+That's another way that like batch is really nice Um
+with streaming you have a thing called checkpointing So checkpointing uh you can
+there's two ways you can do it right So you have offsets and checkpointing So
+offsets
+are essentially Kafka stores them So earliest and latest offset means like
+read in everything that's already in Kafka or latest the the earliest offset
+means
+read all of the data that's already in Kafka and go from there Latest offset
+read only new data from the point that we start the job
+Or you can do something in the middle right Where you're like OK read only data
+Kafka starting from this point
+And that's like common uh with failures Like you don't usually have to set the
+offset like that because Spark streaming does a really good job with
+checkpointing
+and we we will look at checkpointing here in a second to see like how that like
+the lab we will see like how checkpointing actually works So you like it it kind
+manages it it knows how far into the queue it's already read so you don't have
+like It won't reread some of the data for you So so you have offsets and
+uh super important things We will look at both of these in the lab today
+Late arriving data
+So well um late arriving data is awesome but also terrible uh cause it's like
+are you so late Why are you late Like I thought we I thought we all agreed to be
+at a specific time And uh it depends on your data collection processes how late
+data is right So like You're gonna have like like
+there's data where like the the late uh the lateness of it is actually very high
+you have things like mobile app where it's like imagine I'm on a mobile app and
+I
+freaking my my internet's kind of spotty and then like it's not sending the
+events
+and then once I come back from my camping trip I reconnect to Wi Fi and all of
+events get gets gets dumped into Kafka then Even though the event actually
+happened
+the day before there just wasn't the connection necessary
+to log the data until now So mobile apps actually have a bigger problem with
+late
+arriving data for that reason because people can go offline
+Usually you have to still set a tolerance of like what what what is too late how
+is too late Like did the data just miss the bus And there's always a cutoff You
+can't
+just hold out and wait forever You have to like
+There's there is a cutoff and uh you knowing the shape of your data is super
+important
+So the way that batch does this is it mostly does it by waiting So because we
+wait
+until the end of the day we we we give like so you you know the data that was
+supposed
+to be logged at 9:00 a.m.
+uh well maybe it shows up at 10:30 a.m. but we're not processing the data till
+midnight
+anyway Right So OK cool that data was late but like we're not we're we're
+waiting
+till midnight to process anyways But there is you could still have problems with
+Batch
+in this space right Because if um
+if your job fires immediately at midnight and uh you have late arriving data
+shows up at 12:05 then um Batch just throws it away
+It's just gone just throws it away right So you actually batch is worse than
+around the edges like this It's actually worse because it's not configurable
+So that's another thing to be thinking about
+OK we're almost done here I know I've been yapping This is a long lecture So um
+talk
+about Delta Live Table and Spark streaming So Delta Live Table is a wrapper
+around
+Spark streaming to make it easier You don't have to manage checkpointing
+clusters
+failure recovery triggers and it also has data quality enforcement
+It literally like
+all of the things that suck about streaming Delta Live Cable
+makes it
+Feel amazing It makes it feel really amazing And uh we will see that in the lab
+as we kind of like go through and see all of this stuff So like we are gonna
+start
+today with just spark streaming because I want to have you guys understand why
+sucks and then we will move on I like that
+So then we have um
+When do you use which right When should you use Delta Live Table and when should
+use Spark streaming Well
+If you're in data bricks and you want to do a streaming job 95% plus of
+ETLs should use Delta Live Cable It's it's actually a really high
+There are some interesting cases where like if you're doing some very custom
+joins and you have some like side inputs there's some uh like if you really want
+like tweak out all of the if you want to use all of the fancy features of Spark
+then Delta Live Table will get in the way because it kind of removes some of the
+knobs
+So there is still some cases where you want to use raw spark streaming but like
+It's getting uh this is just another area where streaming is getting more
+commodified
+and is getting more approachable and so that should be another awesome thing
+it So
+uh so we're gonna uh we're gonna set up uh some Spark streaming stuff here in a
+second
+and we're gonna write data we're gonna write events to Delta and enrich them
+and write a Spark streaming job that connects to Kafka and we're also going to
+set
+up secrets with uh uh Data Brick CLI but I want to open it up uh
+to questions cause obviously I just went over a million trillion things there So
+we have probably about 55 10 minutes here for questions and then we can we can
+break
+And uh but like obviously I I hope that uh that
+Um
+It is
+interesting what's it here
+I've worked earlier with Rabbit MQ not sure if it's very similar to Kafka Rabbit
+Kafka are very similar
+What if huge data flows in Well uh then you have this whole concept of back
+pressure
+Back pressure is uh using oh and partitions can't hold it That's a that's a very
+interesting
+question Like I uh with with Kafka I think it's like what will what will happen
+it falls off the end I think it's like it's kind of like a tape where like it
+fall off the end but I'm not sure on that right Like that that that
+Uh
+Zach is there a way big tech handles late data in batch processing during
+cutoff Is the data completely lost It is completely lost It's actually um
+We did uh uh it's so funny like um I remember we did um we did uh
+a POC around this uh just to prove to people on on growth about this about how
+um
+depending on where you cut the data right So it's like if you say midnight is
+start of the day midnight UTC is the start of the day or if you say midnight You
+know
+Brazil time is the start of the day or midnight uh like US time is the start of
+day
+Like you actually get pretty different daily active user counts
+because because a lot of times like if you are someone who is active
+uh so you know midnight UTC is 5:00 p.m. So if you are active on Facebook at
+4:50
+p.m. and active at 5:05 p.m. then technically you're counted twice right You're
+two
+days two days you're daily active on both days even though it's one session you
+might
+be just using the app for 10 minutes but now you're a daily active user on two
+days
+And like we actually showed that like if you cut it differently and you and you
+you you say the day is at a different point where like essentially how it worked
+was
+like if you move Moved if you moved it to IST so like cause that's where
+and Instagram have the highest density of users is in India It's like if you
+move
+the cutoff to IST time zone then uh all the people in India get counted twice
+it actually bumped up daily active users by like 100 million or something like
+So it it it honestly does matter like where you cut the data right So um So uh
+that's just like how it works uh and Yogi you're right we're like so how people
+manage
+this with that that data that's lost in late arriving data is like yeah you have
+make you always have to make a cut right You will no matter what your threshold
+you will lose data Like that's just how it works Just because like there's
+always
+gonna be like data collection processes especially with Kafka and Clickstream is
+A
+messy process that is never like super super reliable but it it it gets it gets
+pretty good It's pretty good but like uh just remember that like some of it uh
+data collection relies on the device that someone is on right And and where
+at in the world and it's like maybe their internet cuts out right Or like maybe
+there's a lot of different things that can happen with data that like literally
+just gone There's nothing you can do
+So real-time is continuously listening to Kafka for new events Near real-time is
+running
+every other minute or half hour Yup you got it right That's that that sounds
+What's the difference between real-time and near real-time yup that's it that's
+for sure And like I mean function functionally they can they can feel almost the
+same
+It's uh it's really close So I mean this is the area like where there's a lot of
+in this area And so uh like
+It's it's an exciting time
+We'll take probably one more from whoever is there Is windowing also handled by
+Life Table Yes it is DLT can handle windowing Yup sure
+Where does streaming come in It's just a little confusing sorry So streaming is
+essentially right Like and that's and and that's why I like to talk about this
+That confusion that you're talking about is a very common pattern in stakeholder
+conversations
+And I and if you're feeling the confusion right that is what it is right So
+is gonna be like when you have a low latency use case that's killer like fraud
+detection
+right That's a great example Surge pricing great example right There's gonna be
+like The actual number of business use cases where streaming is great is not
+high It's actually not that high Like you have to have a specific type of
+business
+with a specific type of problem right
+In layman terms is Kafka like a conveyor belt carrying data That's another yup
+great way to think about it That that's a beautiful way to think about it That's
+it's like a conveyor belt that like you can you can pull data off of and it's
+you can quickly pull data off of right Because it's a lot faster to pull data
+of Kafka than it is to pull data off of S3 So
+There's a lot happening in this domain All Java-based tools are being converted
+rust to gain performance like photon engine and data bricks Yup 100% Like we're
+moving
+into a space where uh real-time is going to be really fast and really good and
+reliable and uh it's gonna be great and it won't the thing that's beautiful for
+data engineering perspective is the tools are going to move To Rust and we're
+to see a great performance gain from that
+But our APIs that we work with are going to be the same Like we're not going to
+need
+to learn Rust like we're not going to need to learn those technologies There
+always be a wrapper for data engineers to to use either Python or SQL Like
+I I I used to not believe that I used to feel like there was definitely a moment
+my life where I was like data engineers need to learn Rust but not
+If if a streaming event fails does the next event wait until this failure is
+fixed
+or does it get processed anyways So good question Srini that is it depends on
+structure right So you can like so depending on like depending on how you set up
+Job like you might have a like you can have it be like a fail like just
+fails like especially like if you don't set up your job the right way So you can
+this thing called a dead letter queue where like if that one event failed and
+you just pass that event to like the bad data queue or the bad data table and
+can be one way to do it where it's like just um It's very fast to do it that way
+a dead letter queue kind of way of of managing bad data It's a very common
+pattern
+so that you can kind of see like what kind of failures are happening Most of the
+time
+a streaming job when it's gonna fail like that is like there's gonna be one or
+problems like it's either missing something like you're like you're doing like
+enrichment lookup and then for some reason the log data doesn't have the key
+you need to do the lookup So then in that case you're just like OK it's null or
+it needs to be null but people don't
+Code that right sometimes and they have it fail and that uh you want to be
+careful
+with some there's some edge cases there for sure to be thinking about when
+doing this enrichment but we will be going over enrichment as well today So
+awesome
+everyone Uh let's come back here at 7:15 We'll take about a 12-minute break and
+thank
+you guys so much for your questions I um um This this uh and if just really be
+patient
+with yourself with this this material because just like what I said this is the
+technical and the most like
+trade-offy material and it's hard to like talk about this without like sounding
+it's it is easy because it's not it's not easy That's just and and be patient
+yourself uh as we go through this So awesome We'll catch you guys back here in
+12

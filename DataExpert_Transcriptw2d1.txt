@@ -1,0 +1,863 @@
+today we're gonna be talking about shuffle joins and optimization and we'll talk
+a
+little bit about Apache Spark just in general
+So I wanna start off just talking about that like before we even jump into the
+slides
+So some of you may or may not know about Apache Spark
+So Spark is a technology that was developed out of University of uh you know UC
+Berkeley
+and then ultimately that the people who created Apache Spark ultimately went on
+to
+found a company called Data Bricks and that is the company that you know is
+worth
+hundreds of billions of dollars today And um anyways Spark what it does is
+It's essentially the most
+uh uh it's not the most it's not the fastest way to process big data but it's
+the
+most reliable and the most predictable and also pretty fast way of working with
+big
+data So how it works right is you know back in the day right you have like a
+database
+right And you have a database which is a computer and like that's one computer
+and
+that one computer can only hold so much data
+You know it it it caps out at maybe a couple of terabytes of data
+So what you need to do is you need to use a team of computers
+Where each computer processes a little chunk
+And then together they can all process their little chunk and then you can
+actually
+leverage more and more computers
+To be able to solve big data problems faster
+Um so this is a concept called distributed compute
+where you no longer rely on one big beefy powerful computer but you rely on a
+team
+of average computers This is what MapReduce and the Hadoop paradigm was all
+about
+Apache Spark is just the manifestation of that in its best form
+for the most part It's the it's pretty much the best form of uh of what we're
+what
+we're looking at today Uh
+And so
+We're going to be covering some of these things uh like because knowing which
+knowing
+which computer to give what bit of data is complicated sometimes Sometimes it's
+very
+easy sometimes it's complicated and when it's complicated we have to do this
+process
+called shuffle That's what is the first uh thing that we are looking at in
+today's
+lecture And then we're going to be talking about joins and optimizations Those
+are
+going to be the big things that we're talking about today Um hopefully uh this
+lecture
+is enlightening and the lab should be even more enlightening
+So
+uh there's also one other big thing we're gonna be talking about today uh is
+we're
+gonna talk about the absolute biggest pipeline I ever worked on in my entire
+career
+So there's a pipeline I worked on at Netflix which uh
+was uh 2 petabytes a day of data So uh if you don't know a petabyte is 1000
+terabytes
+So this is a 2000 terabytes a day of data
+And so and then then we're gonna then we're going to go into the shuffle and
+join
+and fundamentals Uh we're going to be kind of like this will be started off as a
+story
+around just something that I learned in my career because like I love talking
+experiences and learning and then I also like to talk about like how to apply
+these
+fundamental concepts to that So let's get into this story So
+The 2 petabyte data set was uh
+network traffic So you think about like every time you ping Netflix's server and
+you
+think about everyone pinging Netflix's server that's what it is It's just every
+network
+request that Netflix Netflix receives And uh my team was tasked with two
+different
+problems The first problem we had was measure the impact of A B tests on network
+traffic
+So like if we ran an A B test did one
+you know experiment or one
+control group or the test group did it raise network traffic and raise costs For
+Netflix
+That was one task we had that was in this space and the other one was measure
+traffic app to app communication for security blast radius analysis So what's
+app
+to app communication So at Netflix is kind of um
+Uh famous for this So they Netflix uses this thing called the microservices
+architecture
+So Netflix is actually not
+Um
+It's not one app it's actually 9000 apps
+And then they all talk to one another So like when you when you make a request
+Netflix it's it gets received by the gateway app and then that gateway app will
+route
+it to wherever it needs to go like the login service or the streaming service or
+you know all these different services and there might be uh layers in between
+uh there might be like a a login Block right It's like oh this is behind a
+paywall
+and so that's a different service like uh an interstitial service So there's all
+different services 9000 of them by the way So like when you make a request to
+that request might end up going from one service to another service to another
+service
+to another service to another service to another service back to you right So
+means your one request actually propagates and becomes 8 Requests in the Netflix
+cloud
+before it comes back to you and that's the and what we're looking for is the app
+app communication So which app is talking to which app and this is important for
+security
+because then we're saying like OK if this application got hacked what other
+applications
+is it talking to so then we know what is what is the downstream impact of a
+vulnerability
+OK let's get into it
+So um these two
+problems had fundamentally different business needs right In a very
+important way in a very very important way Even though they're working on the
+same
+data set they're both working on this networking data set right
+Remember before you tune
+before you look
+Before you uh like
+try to play with partitions or play with executor memory or play with any of the
+The
+things that Spark gives you Understand
+business needs right Cause uh I remember like when I was looking at this I tried
+solve this AB test on network traffic first and I was like wow this is gonna be
+very very expensive pipeline It's gonna be it's gonna cost like $10 million a
+year
+to get this one data point I was like is that gonna be worth it Is that gonna be
+it Maybe not Maybe it's not gonna be worth it So um What would make it worth it
+let's uh go into it right So
+One of the things that was different between these two
+problems the AB test problem and the app to app communication problem is the AB
+test
+problem is actually where
+The exact precision
+didn't matter
+It like because it's an AB test So we only need to know like the directionality
+is
+like is is this gonna impact 10% 20% Is it gonna add cloud costs Because if if I
+say
+9% or 9.48% like from a from a decision-making process it's the same right The
+the precision doesn't matter that much right You only need maybe like one
+significant
+figure not like seven And so uh like you don't need to pay for the exact number
+This
+is something that like
+data engineers I think get wrong a lot
+because they think they and and and for good reason for good reason because it's
+like
+data engineers also value truth They value correctness So like when I was
+looking
+at this A B test problem I was like well like to get the actual number the
+correct number then uh we would need to spend $10 million a year
+And to process just the whole enchilada that's what we have to do And I was like
+well
+and it felt wrong to me but then I was like but like
+if we want to give something that is that is meaningful we want to give like an
+uh
+an AB test metric that's meaningful that has ROI right Where it's like because
+In order for that $10 million to pay off like there this this this metric would
+need
+to catch so many AB tests and change so many decisions and it probably isn't
+gonna
+change that many decisions right That's where it's important like when you're
+talking
+with your stakeholders to understand like how much precision matters and like it
+turns
+out for this problem like precision didn't really matter that much right So
+instead of um
+Uh
+Having it be uh 2 petabytes a day we took a 0.1% sample right of the data set So
+instead
+of uh processing two petabytes we processed two terabytes of data And then
+of being $10 million a year it is now 1000
+$100,000 a year for the pipeline It's still actually like not like a a cheap
+pipeline
+by any means like it's still like actually
+Like for a lot of people that's still like it's
+it's like a full-time employee right
+That's why Netflix is a crazy company but like one of the things that's
+interesting
+about this sample though is you got to be careful about how you sample right
+Because
+you can't just take like a random 0.1% sample of the rows You have to sample
+0.1%
+of the users You have to take a random 0.1% sample of the users or the IPs You
+can
+either you can you can do it by IP or you can do it by user Otherwise like
+you're
+not getting the whole telemetry because like if you take 0.1% sample of random
+rows
+if you just like take every you know you can't just take every 1000th row
+like that will like cause like that data set is just going to be really weird
+cause it doesn't have like the whole like user story right It doesn't have the
+completeness
+of that user's network traffic
+So like you want to have like when you're looking at sampling this is like and
+Honestly like when you're in this space like this is not something that I made
+decision about right Uh how to sample This is a great great place to bring in
+your
+analytical
+uh counterparts like your data scientist or your you know your machine learning
+engineer
+or whoever whoever else is there who might be a little bit better at statistics
+stuff than you are as a data engineer So ah we ended up going with a 0.1%
+sampling
+so it made it so that like now we're paying $100,000 a year for the pipeline and
+it's
+um
+A lot better right It's a lot better just a dramatically better uh um amount
+Isn't
+it crazy though to think about that like it's 2 like so we're taking a 0.1%
+sample
+right And this this data set is still like on a yearly basis is still almost a
+It's like 800 terabytes and it's not even 1%
+It's it's like that was something that stunned me about working on this project
+project
+but like it also dramatically increased our value right
+Um when we realized that we could take a 0.1% sample we built the pipeline in
+two
+weeks and even though we initially scoped the project uh for two months because
+now
+we just
+You know you know what's the easiest thing to do in data engineering uh than
+build
+a scalable data pipeline is to
+process less data right If you can just process less data that is gonna be
+better
+right And so and that's like remember the important learning from this use case
+The output data set is about directionality It's not about absolute truth
+there are cases where you need absolute truth and you can't do this right So
+let's
+uh let's go on
+The key thing here right Sometimes the right solution to data engineering
+problems
+is to not process all the data
+OK that's
+That's just like it's it it's interesting because
+In data engineering like we think of a data pipeline as our hammer and whenever
+we
+have a hammer everything is a nail and then it's like OK we try to we just try
+make it work We try to tune it and we try to make it as scalable and as best as
+when it's like sometimes it's the constraint like you have to
+Challenge the constraint challenge the ROI and that can be like like I noticed
+in
+my career every time that I questioned a business requirement was when I was
+growing
+as an engineer When and whenever I was like being painfully like trying and
+the distributed compute gods to make my pipeline better that's when I was
+struggling
+as an engineer So like uh it's a it's an interesting trade
+But what about the second use case
+App to app communication when we're looking at security vulnerabilities
+So this case was actually different
+Different right
+So we do need to process the entire data set Why do we need to process the
+entire
+data set Well it's because like you're working with a needle in a haystack
+problem
+right Because app to app communication might only happen rarely It might only
+happen
+like Like 0.0001% of the time but
+we need to know that for security reasons right Because that means that that
+that
+path is available that path is working
+And so like that means that that network request was was valid especially if
+like a 200 where like the network request was accepted
+then uh it's a valid request So we do need to process the entire dataset So we
+can't
+do
+We can't do the sneaky thing that we did with the AB test because in this case
+directionality
+doesn't matter truth matters
+OK
+Shit
+Right
+Looks like we're gonna be it looks like we're gonna be spending 10 million right
+it's like
+well can we like make that work for us How can we make this work for us in a way
+is going to be
+good and reasonable and possible right And like it's so interesting
+because
+The pipeline
+It was absurdly simple absurdly simple It's literally one join It's not like you
+know
+you know when you look at a lot of those pipeline diagrams they have like 37
+boxes
+or whatever and this is literally it This is a $10 million pipeline right here
+right
+And so what it is is we have VPC flow logs and an IP lookup table because it's
+whenever uh and so this join happened on both sides because the VPC flow log
+would
+have a a to and a from So it uh the request is coming to it's going to an
+address
+from an address right In in the VPC VPC stands for virtual private cloud which
+like the the area of your cloud in AWS where you can have your own servers that
+talk
+to each other Virtual private cloud VPC
+Definitely looking into it It's really cool stuff So it's a it's it's like two
+joints
+right We join on the left and we we join on the two we we join on the from and
+look up what app was running
+what app was running on that IP at that moment in time
+That's it That's straight up it So
+Let's get into it
+It's pretty straightforward right So the lookup table we have like OK we have uh
+have an IP address and it's valid from this time to that time and then it it and
+then
+it has maybe some metadata of like is it internet facing What operating system
+that application running
+Is it is it connected with any vulnerabilities right That's like this lookup
+table
+and then you have the um
+Uh like so this is like almost like a time-based lookup a time-based lookup I
+promise
+we're gonna get the spark here pretty soon
+The lookup was this lookup table was also pretty big
+because uh it was 14 gigabytes uh for one hour of lookups
+because of the fact that uh Netflix's um cloud environment was just so dynamic
+uh the number of uh AWS EC2 instances that are spun up and spun down every hour
+at
+Netflix is like 50,000 Number of like servers that literally exist and then
+don't
+exist They like blink in and out of existence It's kind of crazy how like
+the the whole the way that their whole thing operates is there's a lot going on
+make it super reliable
+So um that's good but it has a problem right
+We look at this right and then we can do the joint right So we have our IP from
+IP2
+and we have a timestamp So we need to do like a between so we need to like join
+on
+the IP and then we need to say like OK
+uh uh
+and then this timestamp the event timestamp is between these two values
+Right and this is gonna log like essentially all of our network traffic
+Remember this network traffic table was gigantic
+200 terabytes an hour
+I've never
+I I've never worked with anything bigger since This was like the pinnacle I
+peaked
+This is when I peaked 2019 peak peak big data for Zach
+Remember right Let's look at the 3 this is now
+Augmenting the data set with like the actual volumes So you see we have the flow
+logs
+200 terabytes IP lookup table 14 gigabytes and then our output table here is 13
+megabytes
+Like the other thing that I found very profound about this um
+this pipeline is that it uh was the biggest like crunching of data You notice
+like we're going from 200 terabytes to 13 megabytes That's like such a such a
+profound
+drop right That's like a million it's not it's like it's like a million x
+Like more I think it's more than a million x uh drop because you you know you
+have
+the giga in the middle and so um
+anyways like OK so
+how do we architect something like this in Spark Because there's still problems
+There's
+problems with how to like to do this join in Spark This is closer though right
+OK so we're gonna talk about that but
+I want you to put that in the back of your back of your head as we kind of go
+into
+Spark fundamentals and we will uh talk about joins here for a little bit
+because joins are super important Uh joins are probably the most important and
+most
+misunderstood part of Spark So uh thinking about that giant pipeline we will be
+uh we'll be talking a little bit more about like how this works Um but uh we
+will
+uh let's let's let's let's get into uh how Spark actually works right So
+So you got some first off we're have a logical join types So uh
+You have your inner left right full outer Hopefully you guys know inner left
+and full outer joints Like if you don't like
+You didn't you didn't read the prerequisites of this boot camp Uh then you have
+semi-join
+and anti-join Those are gonna be the two that you probably don't have as much
+experience
+with Uh let's uh let's get into it So
+When you think about these join types right So you know inner left right outer
+they
+they all behave very similarly They really do
+Semi-join is different right So a semi-join is more like a filter It's like more
+a filter So if you do a left semi-join you only uh you only keep the you keep
+matches you keep the matches It's kind of like it exists So it's like where
+exists
+right That's gonna be like the other way you can do it You can do like an exists
+or
+not exists That's the um those are the two ways that you can uh potentially
+out a semi-join or anti-join table or a a semi-joint anti-join um
+Way of doing things Uh that's uh like how it works right And so remember with
+interjoin
+you can duplicate rows if like if the if the join key isn't d-upped right You
+actually have duplicate rows that can happen With semi-join and anti-join you
+cannot
+because it's a it's a filter It's not it's it it looks like a join but it's
+a filter so
+OK Some of these uh I I'm gonna go over really quickly uh but like so you have
+an
+inner joint Uh so you have the left table and the right table and then the the
+intersection
+This one is
+The poster child it's like
+keep all the rows that match and throw away everything else So only keep the
+that match OK
+Cool
+Then uh left joint This is also right join You just if you want to use the other
+side
+and be weird I don't like right joints I like left joints Um uh so you have left
+joint
+is on the left and you see it's green So you keep everything on the left and you
+take what's from the right that's matched and then you throw away everything on
+right that's not matched
+So I know this is like
+some of you are like Zack
+Sir this is like sequel 101 Stop it
+So let's get into a little bit more full outer right
+Keep all of the things right Just like you just keep all the sides If they match
+if
+they don't match just keep everything
+OK So
+So semi-join looks a lot like an inner join It really does uh with the there's a
+couple
+of caveats here The semi-join is like a left join or an inner join right
+Um but it's uh it only keeps what's matched on the left right
+So it's like a filter right That's like you think of it like a filter but like
+not quite like uh inner join because an innerjoin can cause duplicates
+So that's uh the way to be thinking about how semi-joins work
+Anti-joins are like this is the last possible configuration Well besides all of
+them
+being red which would be like keep no rows and then it's like what are we doing
+here
+you know But uh an anti-join is where you keep only the rows that don't match
+All right So you throw away the rows that do match So if they're this is a very
+common
+um sequel interview question actually where it says like give me all of the
+who have not posted something
+And usually what you don't use an anti-join in the interview you use a um
+you use a left join where not exists right Or left join where
+post ID is null or something like that right You do you do that you do the left
+plus a wear clause and that's how you actually get this anti-join But like the
+anti-join
+is uh like a kind of a a shortcut way of doing that right It's like it's similar
+that not exist clause Antijoin exists or anti-join as a as a construct exists in
+Spark
+right And we will be looking at it in the in the lab today
+So some of you are probably like Zack like I've been doing data engineering for
+freaking
+10 years and I've never used a semi-join or an anti-join and you probably don't
+to use them very often like but they are uh interesting right Because
+That this is like a very um
+There's like a lot of things going on here in terms of like Sammy and Annie join
+things to be thinking about right So one of the things that you gotta learn
+is uh
+Like you have in and not in These are like really weird with null Like you want
+be careful with null right When you're working with those in and not in
+So uh it's interesting cause it's like if you use the exists keyword it actually
+just
+turns it into a left semi joint
+Literally just turns it into one So like uh you can just that's the canonical
+spark
+turns it into a canonical left semi-joint anyway right So uh this is where it
+is very interesting Uh that's why I like semi and anti-join because they're
+the um canonical spark way of doing these existence checks Um it's pretty good
+So um that's why uh is distinct from is pretty good uh because uh
+Like it's better than does not equal right So this is where uh you know does not
+equal
+and is distinct from
+interesting they almost they they work exactly the same except for uh in the
+case
+of Noel right Because if you say Noel is distinct from Noel it's false right
+Noel
+does not equal Noel is true
+Right Which is like weird right So that's like that's why it's like uh
+N is a very weird edge case for a lot of these um uh join types So like just
+when
+you're thinking about this stuff like so if you're ever doing an existence check
+maybe consider using a semi-join You can also keep it as exists because it comes
+back
+to like
+sometimes it's better to write the SQL or write the Spark code in a way that is
+more
+understandable to less technical people and exists is gonna be
+Exists and not exists is gonna be the more
+Consistent and reliable way to do things But like as long as you as the data
+understand that those actually turn into a semi-join
+that is the more important thing that I'm just trying to teach you about
+OK cool
+Now let's move into the part of this where we will get back to my random story
+Netflix uh here in a second
+So OK
+Just because you have logical join types doesn't mean uh like there's not other
+types
+of joints So logical joint types are just like logically what should the data do
+Physical
+join types is like how is Spark gonna actually move the bytes Because Spark will
+move
+the bytes differently
+than uh what you might expect because remember this is where like physical join
+in like uh like Pogress
+Don't exist Physical physical joint types and Postgress don't exist for one
+reason
+right And that's because Postgress is not distributed
+Postgress is you could there's just one physical join type which is just join
+It's all you got right It's because it doesn't need to do this because it does
+cause
+so when you're in the distributed world of multiple computers you have
+trade-offs
+that you have to think about when you're joining two data sets because now that
+involves coordination between multiple computers
+Let's get into it before I get on my soapbox about physical joints
+Remember uh one of the things I was talking about here is uh how
+Sometimes when you are working with these computers when you're working with a
+of computers it's easy
+To split it up and other times it's hard to split it up uh because um
+The reason why when it's easy is when like the computer doesn't have to have a
+guarantee
+of what data is on what machine
+And like that's easy like for example like if you're doing simple select like if
+if you're doing like a wee clause
+very easy It's like if you're doing anything like
+just like a simple select a simple read then you don't really need any of this
+Um you do need to use shuffle when you start to transform the data right So
+the easy way to remember this is like anytime that you see the word by in a SQL
+statement
+that means shuffle Group by order by partition by right All of those and and
+there's one that's like sneaky and that's join Join is also join is also a
+shuffle
+shuffle-inducing
+But not always Join can sometimes not induce shuffle and we will go over that
+edge
+case here in a second So remember
+Uh we have these shuffles where like each table has their partitions right This
+like however the data was written to delta it's like each of the individual
+files
+you can think of each of these partitions as like individual files and then uh
+They
+might need to be joined and moved around to then be joined together right
+Depending
+on what the join key is right Because the files here might be uh written out by
+user ID and then the join might be on time And if and if the if the files are
+based
+on user ID and the joins on time we have to mix up all the files so that the
+can be ordered by join ID so then we know that like all of the you know join
+time
+one and join time one will be in the same bucket They'll be in the same computer
+that then when we do the comparison
+It actually works right We actually we did it right right So this process this
+process is one of the most expensive parts of distributed compute It's like
+painful
+but it's also amazing The reason why it's amazing is because we can still
+leverage
+the power of distributed compute with data that has no guarantees right We have
+data
+that has no guarantees about it right We could just have because the thing
+cool about table B and table A is that these tables can be CSVs they can be
+delta
+tables they can be iceberg tables they can be like any data frame There there
+there's
+so many different things that they can actually be So like this process even
+though
+it is inefficient is also phenomenally important for big data right So don't get
+wrong when I say that shuffle is like slow because it's also very important So
+both slow and very important It's both of those things together right That's the
+thing
+to remember as we go through this So
+SMJ
+sort merge joint This is
+the poster child So like assuming that there is
+nothing uh like changing about your data right There's like uh so it this is the
+default
+path that Spark takes It it says OK we're going to shuffle both sides We're
+to shuffle both sides and then we will uh we're we're gonna merge we're going to
+both sides and then we're going to merge each partition with a joint right So
+that's
+why it's sort merge joint right So then that will allow for all of the data to
+kind of zipped up and do it right But understand that sorting and merging is
+kind
+of an expensive operation So this is the default path for Spark So why does this
+not
+work Um for Netflix right In the Netflix case Well because as your data volumes
+grow
+Um sorting becomes more and more and more expensive right As as your data
+volumes
+grow naturally right Because it's like you have to sort more and more data right
+It's
+it it
+cause sorting generally speaking sorting does not grow in linear time Like I I
+the best case sorting grows in n log N time which is like slightly worse than
+linear
+right If you have like the right sorting algorithms but that's like best case
+Worst
+case is like uh the sorting algorithm will perform in N squared time Which is
+you know that's a parabola when your data grows in a line So like
+when you get to the extreme ends of scale
+Shuffle becomes a non-starter Shuffle becomes something that like you
+essentially
+can't have It's just not like it becomes way too expensive to use
+So uh let's let's go into the next one So
+This is another way that you can do things right So
+say you're like OK I um I don't like that sort I don't like that sort part right
+That's
+where you can use a thing called SHJ
+shuffled hash join
+Right So this is good when uh both sides are still big
+but one side is significantly bigger than the other So like you one side of the
+you you build into a hash table and then the other side runs through the hash
+and it looks for the um
+The right values right So the the trade here right is that like you end up
+a lot more partitions and that like can create increase network overhead and can
+it to be more expensive in a in because like you need to do uh the you can't the
+hash
+tables have to be small right They have to be kind of small because like they
+can't like just put
+All of your big data in a dictionary and call it a day right So you have to
+split
+it up even more and that's the um that's going to be the big minus of SHJ That's
+going
+to be the the second kind of strategy This this can be a good strategy if you
+unequal unequal data of big but where both are big So this strategy almost works
+for
+um Netflix because uh it removes that sort that sort is problematic but the
+here is that the number of partitions and the network overhead was still way too
+high
+for Um the the pipeline to be reasonable reasonable to run Like I actually got
+it
+to run with this joint type I actually got it to run But when I ran the cost of
+this
+so I got it to run and I uh I when I actually ran the cost metrics on this it
+have been like 50 mil
+a year And I was like I was like that's that's ridiculous That's like a
+ridiculous
+freaking um amount of cost right to uh like to work with So it's not like it was
+way
+too much
+There's another way
+That you can do things right
+That like this is my favorite So if there's anything that you can learn from
+lecture is this right Um
+Is that the broadcast hash join BHJ is gonna be your it's really the best option
+when you can use it like if it's possible to use right And it's not always
+possible
+to use because of the fact that you have to
+just put the entire table on the work node So like one side has a partition and
+the other side you just put the whole table on it
+And you so you just don't even split up the data
+Yeah you just
+you just
+You just ship the whole table to all of the worker nodes
+So this only works if one if if one side of the data is 8 gigabytes or less
+The only way this works because otherwise like
+Uh your worker nodes So Spark has this very interesting um problem right Where
+uh you can only allocate up to 16 gigabytes of memory for your worker nodes 16
+is the most that you can allocate That's just like the it's like a fundamental
+limit
+of the architecture And so uh if you have 16 gigs and you have to load this
+in the memory that's going to take 8
+It's half and then you need like 2 gigs of memory for like operations and then
+can have 6 gigs for the other side right You have the other side of data right
+You
+have the other side that you need to join to So like
+It's 8 is not like a a fundamental limit but like if you try to push it above 8
+you you start to run into memory problems and failure you start to run in these
+really
+weird failures where like your worker nodes will essentially run out of memory
+If
+you try to like if you try to broadcast joins bigger than that So one of the
+things
+that I want to
+proposed to you guys is if you remember the the lookup table at Netflix was 13
+gigabytes
+And I remember working with my team on this and we were like damn it it's so
+close
+but also so far away It's so close but so far away in terms of like getting our
+Um getting
+getting our ability to actually use uh BHJ
+because like when we kind of like we we we shrunk down some of these data sets
+to see what the um what the potential cost would be and this was like we we we
+got
+it a little bit under 10 million It was like 8 mil which was like way better
+like this one which was like 50 mil right Which is like OK OK we we can do we
+deal with this we can deal with 8 right And so uh this was um
+A very interesting thing but like we were very stumped for a little bit on like
+how
+to actually like set this up in a way where like this will work
+So how do we solve the network log problem
+Sorting didn't work right Building a hash table worked but it was way too
+expensive
+So we needed to do something new We needed to do we needed to like we we knew
+everyone
+on my team knew that we had to get BHJ to work We had to get it to work somehow
+some
+way right So what what were we gonna do right We needed to get somehow we need
+get that 14 gigabytes down to 8 Right or less so that we could actually use the
+broadcast
+joint and you know
+remove all of the you know extra partitioning and shuffling that happens in
+We actually did a very interesting thing here uh where we
+didn't use a table We actually turned it into a thing called a tri This is a tri
+structure to compress the lookup table down to 6 gigabytes which was
+Like
+Even to this day I was like I can't believe we figured it out I can't believe
+this was so amazing When we actually got this to work I felt like a freaking
+genius
+I felt like I was like wow like we we we we like we tamed the behemoth we tamed
+beast So
+Um how does that work So
+Um how it works right is you when you're doing IP lookups you can actually put
+these root nodes right So like
+so you you create a try which is like this is very often used in type ahead like
+you're like typing uh like and it's trying to do autocomplete on your type ahead
+is this is the same data structure that they use like on Google Search and the
+data structure that they use in a bunch of other places called the Tri TRIE
+We're like for our lookups what it was was our root node would have the the
+first
+number of the IP address then you have the 2nd number of the IP address and then
+3rd and the 4th number of the IP address And then at the root like or at the at
+leaf the leaf would have the app and it would have the time Right And so then
+would give us what we need to like actually look up things right And then we we
+know what app was at what time uh
+given this and this allowed for our lookup table to be half the size
+which allowed us to actually use
+broadcast join which made it so we didn't have to shuffle we didn't have to do
+anything
+and it just worked
+It just freaking worked And it was like wow OK That was definitely like one of
+biggest aha moments right So
+this allowed us to broadcast the tribe
+To every executor
+and avoid shuffle So keeping in mind we still had to
+because this is a a a gigantic big data job we still have to crank up the
+executor
+memory because I think the default executive memory is like 4 gigs or 2 gigs
+like 2 or 4 gigs and so like you have to crank it up all the way So obviously
+our
+executive memory was 16 gigs We had to use the whole space and then we just
+the um
+uh this tri data set to all of the executors Which are you remember the
+executors
+in this case are the individual computers that process a little chunk of the
+So this allows them to do the join and do the lookups without shuffle and
+without
+sort because you like you can't sort 200 terabytes It's just not going to work
+even shuffling or building a hash map also is just not going to work It's not
+That's what I had uh for um for you guys today in this presentation Um I wanna
+open
+it up uh for some questions and then we will be doing a lab here uh where we are
+be looking at like
+the best time to buy some stocks uh with Delta Table and uh we will be looking
+a bunch of these different join types So um yeah I wanna um
+See what we got here
+OK Does Data Brooks automatically decide what join type of join to do between
+sort
+versus shuffle versus broadcast How do we determine the cost of the of the of
+join So I mean how do you determine the cost right Well that's complicated Like
+I think there's I think there's a way you can actually do that in data bricks
+where
+you can actually like measure the cost of the join right
+Um so uh like how it works is um like you look like you run a job and then you
+see
+how much compute it used right Yeah the the tags you can actually do it Rajesh
+is gonna know more on exactly how to like measure the cost of a job on data
+specifically but at least for me on AWS right with um uh Netflix had an
+infrastructure
+there where it's like you ran a job and then you saw how many compute cycles
+Uh how many compute cycles it was boom done right And that was the that was the
+main
+way And then uh Shrini you're saying does Data Brooks automatically decide what
+type
+of join to do So Spark does Spark automatically does decide what join to do
+on a couple different things So this is where um I'm I it'll be I'm very curious
+see uh if if this is also changed but like Spark how it works is broadcast join
+uh has a threshold right So the default threshold is 10 megabytes So if your uh
+your small table is 10 megabytes or less then it will broadcast otherwise it
+shuffle right It will do the uh sort merge or SMJ right
+So um
+Little confused regarding the use of try Was the table loaded into uh loaded in
+structure
+at every run or was the table stored in tri-structure It was loaded into the
+at every run loaded and compressed right Because the lookup table we still
+needed
+the lookup table in like normal row column format but we loaded it into the try
+right And then that would be kind of like how it works So like
+tri-data structures are um uh like not something that I I don't want you guys to
+like super caught up in this but like you could think of it as like if you say
+you know A uh points to N points to T right And that gives you
+right That's that's kind of like if we go back to this slide right A points to N
+points
+to T or A points to N points to D you get and and ant
+Right But you can think of it as like 192 points to 168 points to 0 points to 1
+you know like kind of like that right It's like and then at the end of that
+lookup
+is your metadata right Which in and in that metadata would be like the timestamp
+the to and from timestamp like when when it was valid and then also what app it
+was
+right And then that compresses it down And allows you to look things up faster
+For uh what we're doing for the for the data sets It's pretty cool It's pretty
+cool
+stuff that's uh like essentially like how it works right
+You're saying can you give us some
+insights on what is AB testing I have been hearing this term quite often Is it
+of a data science term
+OK A B testing is where you do two things So I'll I I'll I'll show you guys a
+beautiful
+example of an A B test that I'm running right now
+All right You guys are gonna love this All right So I have an AB test running
+now OK
+So here is an AB test that I'm running right now Don't tell anyone all right
+So I don't know if my subscription product is priced correctly I I I have a
+theory
+that it might be priced too high right
+So what we do is uh we give uh we give users two different experiences right So
+I've
+on Data Expert I have given 26,000 people the control experience and about 3000
+people
+the variant experience right And so the variant experience here is we make a
+small
+change
+And we see how many more sales or how many like how we move metrics right So in
+case right so I'm dropping so in this case I dropped the price 53% and I'm like
+I'm dropping the price 53% How many more sales am I making So and that's my one
+metric
+here that I have is OK well if I drop prices 53% I make 200 to 36% more sales
+And like the the break even point for me is actually 104% So like obviously like
+on this AB test like uh people are price sensitive and I make more sales if I so
+I rolled this out to the rest of my subscription product right I would probably
+make
+about 100% more money from my subscriptions
+Roughly speaking like there's more to it like lifetime value There's like other
+to be thinking about here but like an AB test is where like you have a product
+want to make a small change to that product and then you want to measure the
+metrics
+So the these metrics are where data engineers do very well right So in the
+example what it is is like I wanted to add a metric to an experiment where it's
+how what was the cloud cost change Right what was the difference in cloud cost
+right And that's gonna be what an A B test does right So like I would say that
+going to be the the way to think about it
+So you converted try to structured form to join Yeah you got it
+Well well no it's structured form into the tri right Yeah and then the tri
+was the it was like a UDF essentially
+So uh that's what an AB test though is it's like a small tweak right You give
+options small tweak like red button blue button two different prices right
+Remember ifL block for A B testing Yup you got it Rajesh You got it right And
+AB testing makes the world go round A B testing because it's like we let users
+decide
+what experience they like better right And then we then we then we go from there
+we go and see like what ends up happening over time right So that's exactly
+That's exactly the way that we want to be doing things and so um
+Yeah
+But you see you get a lot of like business insights from doing AB tests right
+As many who are from price sensitive country like Africa Asia might start using
+product more Yeah I mean I offer the uh I offer some people a PPP though right
+purchasing
+power parity and so like it's not that like 90% of my traffic is from America so
+like it's actually not that but I mean
+Yeah there's a lot of theories on like you know it makes sense though supply and
+demand
+you lower prices you get more demand right
+anyways um great Uh thank you guys Uh I I'm excited for uh the lab today Make
+sure
+you clone it I sent you guys a link to the repo for that Um we will be back here
+7:10 uh for the lab and then um yeah it should be should be pretty great I'm
+excited
+for it

@@ -1,0 +1,900 @@
+Welcome everyone to day two of Apache Spark Today we're gonna be talking about
+memory
+tuning partitioning uh like a lot of interesting things that are very important
+in
+Apache Spark Most of these knobs uh I've been testing around with data bricks
+just
+to make sure
+cause I didn't want to have the same snafus as the Delta table week to be like
+hey
+check out all these knobs and then Dabricks is like
+these knobs don't exist and I'm like damn But the knobs that like I I tested out
+here
+actually do exist so we should be good In terms of that But let's get into this
+cause
+like
+Nobody likes a slow spark job and Data bricks still can't help you completely
+So what are we're talking about today We just have one nice little bullet here
+makes Spark jobs slow That's it That's it Not talking about anything else today
+That's
+all we're gonna do and uh it should be really really awesome By the end of this
+lecture
+you should be very very aware
+So
+All right There's only 5 reasons a Spark job can be slow
+That's it 5 reasons and uh we're gonna go over each one here uh step by step by
+step
+So you have data model bottlenecks source file bottlenecks platform
+misconfiguration
+congestion bottlenecks you have job misconfiguration bottlenecks and then you
+have
+output file bottlenecks
+That's it
+There's no other magic There's nothing else here There's not like uh it's it's
+interesting
+cause data bricks is making some of the stuff easier One of the examples that I
+had
+around SKU
+I learned that data bricks is just like nah SKU is solved now So SKU is a very
+problem that we will be looking into today That is mostly solved There was a lot
+of
+really interesting ways to solve SKU back in the day but now it's literally just
+a
+solved problem by data bricks so that's nice but we're gonna go over each one of
+these
+because some of these are gonna be uh not around tuning cause I think a lot of
+people
+think oh my Spark job is slow because it's tuned badly or my Spark job is slow
+it doesn't have enough memory And honestly that is like
+Like the fifth most common thing Like it's it it is a thing tuning your job
+matters
+a little bit but like it's not it's that usually is gonna be something that
+gives
+you the last 10 or 20% It's not gonna be something that like gives you 100%
+speed
+up right So it gives you it's it's a it's a marginal benefit not necessarily uh
+comprehensive benefit even though it is like the poster child of slow Spark jobs
+is
+like well if your Spark job is slow it's not tuned properly and it's like no
+it's
+it's more complicated than that So let's go into like the first example here So
+OK so
+Uh you have a data model data model bottleneck Uh you're processing too much
+that isn't changing Uh you read a lot of data that gets thrown away
+Uh this is actually
+extremely common And like I wanna I'm gonna give an example here in just a
+second
+but like
+Like
+The whole idea of like a a full refresh of the data set versus an incremental
+refresh
+of the data set
+is the main bottleneck here right Is that like there's so many people out there
+doing
+full data set refreshes when they need to be doing incremental And if they just
+did
+incremental then their pipeline would run
+not 10 times faster or 20 times faster but maybe 100 times faster or 1000 times
+faster
+because like if you're doing a full like the like when you look at like a a
+slowly
+changing dimension pipeline
+On any given day the number of records that change is going to be like less than
+1%
+Like it can be like 0.5% of the data changes and then the other 99.5% of the
+data
+doesn't change
+And so it's like OK if you just process the 0.5% of data that changes then wow
+look
+at that You now have gotten uh like you are processing 1/200 of the data 1/200
+if you're processing 1/200 of the data you should see about a 200x speed up If
+it's not complete linear right Data volume to processing time isn't a completely
+linear
+relationship but it's a mostly linear relationship So uh understanding that
+about
+data is like OK like if your data model has a bottleneck in terms of like you're
+processing
+too much data that is gonna be the thing right So
+What we want to do here right
+Remember
+read the smallest amount of data to get the job done That might mean
+processing one hour of data at a time or one day of data at a time In the book
+Neyana had a really beautiful uh Um real-world example of a lot of this stuff Um
+so also use incremental strate incremental strategies So this is going to be uh
+change
+data capture slowly changing dimensions cumulative table design pre-aggregated
+These things are going to be uh pre-aggregated like daily data Those are going
+to
+be the big ways to minimize the amount of data that you're reading in in your
+model So we're going to go over uh a beautiful example here in a second but
+Remember like when you're processing data and you want your Spark job to be
+you have this thing around like
+well like should I do daily hourly every 10 minutes Should it be streaming
+it be batch Should it be whatever
+And like there's this interesting kind of like trade when you look when you're
+trying
+to make this decision And this this trade is actually changing because
+serverless fundamentally does uh change this a little bit and it makes the it
+makes
+the trade uh a little bit nicer in terms of lower latency pipelines Uh but for
+the
+most part you see this chart on the right so
+When you process daily the the job is processing a lot of data You're processing
+full day of data and it's going to take a certain amount of time right And then
+if
+you process an hour of data it's going to take a lot less
+But you'll see this this red this red line here
+starting a Spark job is not free Starting a Spark job takes time
+Starting and deploying a Spark job takes time usually like
+The budgeting is like a couple of minutes like I like to say 2 minutes 2 or 3
+minutes
+right And so if a Spark job takes 2 minutes to start and you're processing 5
+of data then like the job has to finish in 3 minutes right Otherwise the it's
+going to be worth it It's not gonna be Worth it and you're not going to see the
+latency
+gains that you want and you're gonna have a lot of like up and down you're gonna
+a lot of like overhead costs right Because
+if if you if if it takes 2 minutes to start to stand up and then it's a 5-minute
+process
+that means 40% of your processing time is overhead 40% of your processing time
+just spark starting which is like from a a perspective of compute That's not
+good
+That's not good because like that means you're gonna be paying a lot more
+whereas
+like if you think about it daily right We think about from a daily perspective
+you
+have way more right You get like 1400 minutes and 2 of those 1400 minutes are
+Then it's like OK that's that's that's nothing right It's like going from every
+5
+minutes to once a day that's a very big difference 2 divided by 1400 versus 2
+divided
+by um 5 is such a big difference right So if you're processing daily your your
+your
+overhead is so low
+With this being said uh overhead is going down right In terms of like
+serverless versus like a a Spark server So if you're using like the actual Spark
+server
+then this is uh this red line is even lower right It drops even lower and like
+it
+it which is a good thing right That actually makes it so that like
+Lower latency pipelines aren't just spending such a large percent of their
+compute
+on startup costs which is really powerful right So the key thing to remember
+is that like
+for most pipelines you're gonna want either daily or hourly Let's just like in
+my
+whole career in my whole career
+Of pipelines that I have created that actually delivered value not pipelines
+were experimental cause I did a lot of experimenting with 5 15 minutes and 5
+but pipelines that actually delivered business value they were either daily or
+hourly
+I never had anything less than that It was either daily hourly or streaming
+Not daily hour it's like once you're below the hourly cadence it's just like it
+a lot of times it makes a lot more sense to move to a streaming architecture
+trying to make batch work by running cause it's like if you're doing 15 minutes
+right
+now your batch job is running like 100 times a day Right and that's just like a
+lot
+of like it's a lot of like uh up uh start up and spin up and spin down like
+costs
+that are like with all of that overhead there can be other failures and other
+problems
+that like you like
+that you might not see because they're rare uh and like cause OK think about it
+this
+way it's like if you have a job that's running 100 times a day That means that
+2 days that job has already ran as many times as a daily pipeline would run in 1
+So like
+if you will notice like if there's like weird things that are rare like rare
+startup
+errors that happen they might happen like 1 in 1000 maybe it happens in 1 in
+1000
+startups right Well if you're running 15 minutes that means that once every 10
+days
+you'll feel it right Where versus if you're running daily
+It's gonna be once every 3.5 years and it's like
+Once every 10 days versus once every 3.5 years is a very big difference in terms
+like rare outages or rare things that can happen So um that's uh those are kind
+like the minuses of like trying to go below hourly That's there's just there's
+uh like
+Uh what's the right word Interesting kind of gotchas that are are very uh tricky
+kind of like even wrap your head around So the key thing here is our thing here
+like we're trying to process the least amount of data possible
+OK like another important thing to remember just like what we were talking about
+earlier
+is what's the difference between wall time and CPU time
+one way to think about this right I
+OK If we have a pipeline that is running we'll go back here We have a pipeline
+running every 5 minutes and then that means that the daily batch is gonna be
+ready
+a lot sooner than uh if we run it every day right Because at midnight we just
+that last 5-minute batch we have to process and then the whole data set's ready
+Versus like if we have daily at midnight we have to process the entire day of
+and that's gonna take longer that's gonna take like whatever it's gonna take 100
+taking 5 or 3 right But remember you have overhead right With the with the Spark
+cost being almost 30 or 40% overhead
+you're gonna be paying more because your job is running so much more and you're
+paying
+all those overhead You're gonna pay like a 40% tax on like Spark uh uh like it's
+the CPU time the CPU effort
+of running all the time of those 100 jobs that are running all the time You need
+uh you have that dead weight that is gonna be extra even though you're
+the same amount of data So in that in that case uh
+Jobs that run more often than daily are going to be more expensive
+But they are gonna more consistently meet SLAs They're gonna be more
+on time They're gonna be more consistently available when they're needed So this
+an interesting optimization
+where like you can spend you can always spend more compute to get your data
+there
+Just remember that So it's like generally speaking the more frequently you run
+pipeline the more compute that you spend and the the sooner your data is
+available
+That's just like a versus like the other way around is like you and and and it's
+painfully
+obvious right If you think about it from uh a different mindset of like if you
+like a daily pipeline versus like a yearly pipeline right Where it's like oh do
+want one day of delay or do you want one year of delay And it's like if you run
+times
+there's gonna be some dead weight versus running once So uh this trade is a very
+trade uh and
+generally speaking generally speaking in my career I've found that uh
+SLA matters more like operational stuff matters more than cloud budget
+But not always not always It's like a there's a tipping point It's kind of like
+an
+optimization curve right Where like uh if at a certain scale and a certain
+volume
+like the cloud budget and the cost of having the data available sooner is
+actually
+not worth it because it's just too high of a cost to run it that frequently And
+so
+uh that's just an interesting trade when you're thinking about speeding up your
+You you pay something to do it You pay something to do it right And this is
+where
+like it's very interesting because if you move into uh a different architecture
+One with less dead weight right Which is like a streaming architecture When you
+move
+into a streaming architecture you actually pay less Yes like like you you don't
+pay
+as much of a tax versus like running a job 1000 times a day right Like that's
+like that that makes sense intuitively right Where it's like if you just are
+running
+it almost like all the time then you don't have like that bursty startup cost
+that
+happens every single time you fire a job So
+You want to balance these things and like when like this is a great example of
+not all Spark jobs need to be fast not all Spark jobs need to land as soon as
+possible
+they should be slower and that's OK because like you're able to um like you're
+able
+to get your data reliably
+at the lowest cost and that's good enough And that's actually good enough for a
+of use cases That's like Oh another way to be thinking about this right when
+trying to understand these trade-offs is
+When should you trade CPU time for wall time Well
+when
+The wall time when the when the consequence of the wall time miss like a a wall
+SLA miss is painful and like
+Well like what does painful mean right Well
+If you have like I'll give I'll give two examples so it'll makes sense So when I
+worked
+in uh notifications at Meta
+I had uh I I I worked upstream on the data set that
+powered the machine learning model that determined which notification to send
+And for every 8 hours that that uh model was stale it became 25% less performing
+So you needed to have very fresh data in there otherwise it had an immediate
+business
+consequence
+It'd slap you in the face So
+for a use case like that
+Wall time all the way because it's like
+we'll spend the CPU cycles to directly impact the business like duh duh right
+But
+in other cases it might be like oh you have an analyst who wants their data at 9
+a.m.
+to look at and that's the that is the use cases it's like
+Exploratory data analytics right And in that case like it's not worth it because
+like oh sometimes the data shows up at 10:00 a.m. or 11:00 a.m. and it's like
+the the only business consequence is that the analyst has to wait 2 hours That's
+There's no customer impact there's no other like
+obvious impact on the business besides like the analyst has to wait a little bit
+That's a good example of a data set that shouldn't be optimized and shouldn't be
+up It should be done you know at the most cost-efficient way it can
+And so like if you can understand this balance it will make your life as a data
+engineer
+so much easier
+Here I just want to go through an idea to kind of test you guys' incremental uh
+strategies
+incremental pipeline strategies So we have uh we have a table called posts right
+And
+then uh the question here is how many posts have users made in the last 30 days
+That's the uh the question and like some of y'all like if you are um you know if
+you're
+a junior a junior or mid-level data engineer you're like I know the between I
+know
+the between syntax And I know that I can say select user ID count one as number
+posts from posts where date between and then we look at the last month of data
+And like one of the things that you want to be thinking about here is is this
+gonna
+run every single day Are we going to run this today and the next day and the
+next
+day And one of the things you might notice is like
+the posts that you're counting for today and the posts that you're counting for
+tomorrow
+there's a massive overlap right If we're looking at the last 30 days there's a
+massive
+massive overlap between the posts that we're counting for today and the posts
+we're counting for tomorrow And so like we're kind of reprocessing a bunch of
+that we already processed
+And so this is a great example of like uh if you see a very junior engineer they
+they
+will slap this as their as their query and they're like whatever I don't care I
+I
+don't care if I'm going to process 29 29 out of 30 days of data that haven't
+changed
+I'm just gonna do it this way because it's easy and it is easy This this query
+extremely easy and very easy to understand
+And and I think that's one of the big uh kind of seductive things about not
+incremental is
+the non-incremental way to do things is very seductive and very like brain dead
+and
+very like OK that is the easiest query I've ever written in my entire life
+what does it look like Like wrong right We don't want to do that because that
+29 days of data that have not changed
+And there's only one new day of data right And then the rest of it is going to
+be
+the same And so we're going to be constantly
+processing the same overlapping data set over and over and over again And that
+just super painful super super painful So this is where accumulation is going to
+better right So what we do is we create a little table here where we have user
+ID
+right And then we have user post count and this is an array of big in and this
+has
+the last 30 days of data in it
+We're going to be going over this in the lab if this is gonna be this is a lot
+put in slides by the way I I I don't generally put SQL in slides like this And
+then
+you have date which is going to be the date that this is is going for So
+What does that look like So then you end up doing something like this right
+So uh you you count the posts for today right You count the posts for today and
+you also look at uh what what was accumulated from yesterday
+And then you just add the count to today right So now this is gonna be
+an unbelievably less amount of data compared to the the other example right Of
+we're processing 30 giant fact data set partitions and here we're processing one
+giant
+fact data set partition which is gonna be posts
+So this is just a dramatically better approach right And so
+Remember ah this process is the much smaller dimensional data once and only
+scans
+one day of large fact data So
+compared to the brain dead solution we saw earlier this solution is 30 times
+more
+efficient
+roughly speaking maybe 28 times more efficient but it's a it's it's it's very
+dramatically
+more efficient And one of the things you might notice is that this uh the longer
+time scale you work with the more efficient this becomes So if instead of like
+asking
+how many posts did they make in the last 30 days if we ask how many posts did
+make in the last year Y
+Now this goes from being a 30x improvement to being a 300x improvement right And
+I'm just gonna let you know right now there's no spark tuning there's no knob
+tuning
+that you can do to get a 300x improvement on your data pipeline It doesn't exist
+right It's it's because if you get the design right the rest of the pipeline is
+because you're processing just the data that you need And that is the part that
+if you can put that hat on as a data engineer and you can put that hat on and
+being
+like OK I only want to process the data I need and you think about it from a
+perspective
+of not just a single run of the pipeline but also uh What does yesterday's run
+like and tomorrow's run and what data are they processing and is there any
+And if there is overlap you need to freaking figure out a solution and
+accumulation
+is one of a couple different solutions that you can do to minimize overlap
+OK moving on Thank you guys for uh uh that's my soapbox I will die and
+cumulative
+cumulative table design is one of my definitely one of the things I am very
+passionate
+about So
+Uh source file bottlenecks uh like the symptoms here are your upstream data is
+uh
+too many small files or too few non-splittable files or your source files are
+annoying
+There's stupid file formats like CSV or JSON They're like super annoying piece
+shit formats that like Like you know people love and they you know especially
+is such a weird one because it's such a bad data format but also one that
+everyone
+uses So it's a very interesting one that like I we all can agree that JSON is
+obviously
+stupidly like non-compressed and has a lot of problems but CSV is one that is is
+very
+interesting So let's uh let's dig into this a little bit So
+What do we do if we have source file bottlenecks Uh we mostly need to work with
+upstream
+teams to change the file format or the number of files This is not always
+because sometimes the upstream team is not
+like is not at your company or the upstream team is like you know somewhere else
+or
+like the upstream team doesn't want to change it or they like they have they
+haven't
+designed that reason for a reason
+right So uh that's
+And that can be terrible and like in those cases there's nothing you can do
+it So I want to talk a little bit about an example I had uh when I worked at
+Airbnb
+I was working at Airbnb and there was uh a smart pricing We're looking at the
+competitive
+pricing data sets right And um one of the things was was this Hive process uh
+upstream Hive process outputted a single compressed CSV file that was 250
+gigabytes
+And like
+The thing about like if you have a single compressed CSV file you can't split it
+you you get no parallelism So you have to download it just 111 process at a time
+like that's very slow because I don't know if you know have have you guys ever
+tried
+to download 250 gigabytes onto your laptop
+It's slow
+It's very slow because that's just how it works for your laptop as well as you
+can't
+like split it up It has to be downloaded kind of as like one chunk right And so
+downstream Spark job took 4 hours to read it in because like it it's a single a
+single
+executor had to read in the whole damn thing and it's just hanging out vibing
+And it's like not even good So what does that look like in practice right So
+Um
+the the Smart pricing team
+uh spent weeks trying to optimize their Spark job because like they were very
+sure
+that it was the tuning or the partitioning or the memory or like it was
+something
+wrong with Spark right And um
+I don't know if you know but like they didn't pinpoint the idea of like hey
+Spark
+is downloading 250 gigabytes single threaded
+And that's like that was the problem right So but there's nothing you can do if
+upstream data is shit right There's nothing you can do right Like you're at the
+mercy
+of your upstream data especially if it's a lot of small files or big
+non-splitable
+files So
+What did we end up doing here Well
+You know I identified the bad practice It was so interesting and this is a great
+of where like why data engineer expertise still matters but I identified the bad
+practice
+in the high pipeline and so instead of uh having to output one ginormous CSV
+file
+we had to output 50 parquet files
+And the uh the results were absolutely dramatic
+because when you find the bottleneck you find the you're you're able to let the
+rest
+of the distributed compute magic happen
+And it happens the way it's supposed to So after we made this change now instead
+taking 4 hours it now takes 50 minutes or I mean not 50 minutes it takes 5
+It goes from 4 hours to 5 minutes And this is a very obvious like mathematical
+thing
+right Because it's like if you think about it
+What 4 times 60 right is gonna be the uh like the number of minutes that it
+would
+take right But it's 4 times 60 divided by 50 right 4 times 60 divided by 50 is
+be about 5 minutes
+So uh and and because that was the bottleneck the rest of the job was trivial
+The
+rest of the job was actually really really fast So this is another great example
+where spark tuning did nothing
+And there's no repartition or coalesce or anything that you can do right It's
+the it's the upstream data you have to look at the actual upstream data not
+necessarily
+like what your spark configuration is
+So let's just talk about the the file format hierarchy right So you know text is
+worse
+than XML is worse than JSON is worse than CSV OK And these are terrible choices
+If
+you're storing your data in text XML JSON or CSV get out
+Just get out like no I don't like you I don't like you don't store it in these
+formats like there's very like there's no like there's no reason that your data
+lake
+should be stored in these formats XML and JSON are transfer formats They are
+for communication between server and client transfer formats Text is a bullshit
+format
+Text has no guarantees Text is like
+The text file format is like if if if string was a file format it's like OK
+text is like we're gonna give you some bytes
+And that's it That's that's the guarantee is that you have some bits and that's
+right So don't ever use text either If you use text get out of my boot camp So
+you have CSV CSV is like at least we're getting somewhere now right We have rows
+columns and we have delimiters We have a little bit of structure right So CSV is
+little bit better than the other three It's still
+Absolutely terrible for uh Data Lake It's it's it's right on the edge That's why
+like it's the best of the bad options right Where then you have good choices
+you could choose Avro ORC Parquet and then obviously you have Delta and Iceberg
+Delta and Iceberg are just rappers on Parque that's all they are So Avro is
+than ORC is worse than Parquet I mean there's some interesting debate between
+ORC
+and parquet There are cases where ORC is actually more um
+performant and compresses better than parquet It's not like
+completely cut and dry but for the purpose of these hierarchies it is So Avro is
+than ORC is worse than parquet is worse than using delta and iceberg So like
+using
+managed
+File formats using open table formats is the best choice Don't just put parquet
+on S3 don't do it
+Every time you put parquet files on S3 Zach is sad Just just remember that
+just me crying sobbing on this call
+OK so we have more bottlenecks Remember this spark tuning can be a red herring
+Sometimes
+people will waste an unbelievable amount of time on spark tuning when that is
+not
+the problem And this is where the Explain plan and the spark UI are gonna be
+that really allow you to look at like what the job is actually doing and that
+will
+allow allow you to see like oh like if if if the if the machine learning team at
+would have looked at the Spark UI they would have been like oh the first step
+one executor has one task and it's very slow and it and then you look at the the
+rest of the shape of the the the the job and you'll see OK it's very slow here
+we will be looking at the Spark UI a little bit in uh today's lab And remember
+because you can tune something doesn't mean you can overcome the bottleneck
+because
+the bottleneck sometimes is the problem and you have to you have to you have to
+overcome the bottleneck and you can't tune you can't tune around it
+All right moving on So this one is there's not um very much here that like you
+can
+do uh like in terms of stuff but like so you can have platform misconfiguration
+congestion So this is where like if you have a fully optimized job and it's slow
+jobs don't even start and like you just see waiting waiting waiting and there's
+any amount of like Like thing that you can do to like let your Spark job run
+This
+is very common in big tech when there's like a big outage So if there's like a
+big
+data quality error that needs to be backfilled and we have to rerun 100,000
+then this will kind of uh absorb a lot of that compute cost and uh the symptoms
+are that the jobs that are good and optimized are slow and then because the main
+main thing here is that there's not enough resources There's just not enough
+resources
+to go around like you're bottled up right So um this is a very easy thing right
+part of this is wait until congestion dies down This this problem your spark job
+slow because of this problem is literally like getting stuck in traffic It's
+what can you do You can wait right Or like so you can wait and go at a different
+when traffic dies down You can get a bigger cluster which is like add a lane You
+add a lane right You can increase the utilization of the cluster because
+sometimes
+uh uh some jobs are hogging and their uh their executors are actually dead and
+they're
+they're holding on to executors that are actually not active and because like
+their
+job is requesting more executors than it needs so that can be another uh way
+you can you can find like jobs that are like hogs or whales that are taking too
+much
+of the cluster And then the last one is like the HOV lane right You can add you
+make one lane special which is put critical jobs in their own resource queues so
+can create a lane for the most important jobs so that like they are more immune
+the resource constraints of the cluster Uh this is very good for like your
+absolute
+critical like tier zero tier one pipelines that are like mission critical for
+business you should put those in their own queue and that will allow for this
+know getting caught this this problem of getting caught in traffic It won't
+happen
+for those jobs because those jobs have a helicopter right And they can just kind
+fly over everything else cause they have their own dedicated uh compute They
+their own dedicated queue
+So OK we're getting there Now we're finally to what most people think of when
+think of a slow spark job which is you have um your your your job is actually
+genuinely
+misconfigured So
+symptoms here are you have an overly complex Spark job Remember Spark jobs do
+better
+the simpler they are like it's better to like and and Data Brooks recognized
+like In the old versions of Spark like uh and like and still in the current
+versions
+of Spark but not on server list
+So on like if you have a Spark server you can do things like caching and
+data and like writing it out and like having a long-run Spark job that like uses
+cached
+data That is like
+Painful and annoying and you probably shouldn't do it And so uh you want like uh
+want jobs that are smaller and
+broken up right So if that happens like instead of using like dot cash or dot
+persist
+or whatever you're trying to do in your Spark job
+write a job that writes to a staging table
+and then have another job that reads that staging table And then if you do that
+is gonna make your job that's gonna make like your spark tuning so much better
+now you have you can know is it like oh is it the staging step or the downstream
+that is the bottleneck and then you can you'll have two jobs that are separate
+you can get different telemetry on That is just gonna be better right So like
+do not like have super complex Spark jobs Just it's not like it used to be a big
+back when like we had like modular scala code and it was like that was kind of
+way things worked but now like Spark jobs are generally supposed to be pretty
+simple
+And then you have uh like the the common spark job misconfigurations and all of
+configurations are for the most part still available to you on data bricks You
+too many partitions not enough partitions not enough not enough executor memory
+enough driver memory and then the last one is you're doing stupid shit on the
+driver
+Uh and you're passing too much data or too much stuff to the Spark driver and
+that's
+overwhelming the Spark driver Cause remember that like in the Spark uh in in
+you have one driver and many executors So if you're ever doing stupid shit on
+driver that is based on the data itself that is gonna be a one-way ticket to a
+slow job
+And then you know mismanaged Job SKU This is not as much of a problem nowadays
+as it was in the past because Data Bricks has this thing called AQE adaptive
+query
+execution which we will be going over in the lab
+uh there is very very easy things here
+To look at It's it's it's it's so easy Like it's like this stuff is not hard So
+first one don't have complex jobs Break up the job like have a staging step like
+put
+that like in the pipeline You will be so grateful that you have a staging step
+your pipeline and then just having another data set that is in the middle so
+your pipeline like uh Parth uh if you were in part of the fifteen-week challenge
+Parth
+uh he's like the head of Gen AI data engineering at Meta He talked about how
+Data
+engineering is all about putting things in boxes and knowing what boxes to put
+and like a lot of times it's like people try to think of their pipeline as like
+one
+giant box and it's like no it can be a bunch of little boxes and that's good
+if you have a staging step that is successful and then you have a step after it
+fails you don't have to rerun the whole pipeline You just rerun the step after
+staging
+and so like it makes your pipeline more resilient to failure as well as more
+performant
+So it's like it's a double whammy and it's something that like I am a big fan of
+It's the trade there is a trade The trade is that like you you spend a little
+bit
+more on storage but remember like storage is is is like storage is the cheapest
+part
+of your cloud bill and it always will be The storage will always be the cheapest
+of your cloud bill so like don't worry too much about it Uh then we have uh if
+have too many partitions or too few partitions you can change
+spark.sequel.shuffle.partitions
+One of the few freaking things that server-less this is one parameter that
+serverless
+still lets you touch
+You can still you can still tune this it's pretty great
+Uh do not use dotcollect So if you do data frame.collect
+You can there are cases where DF.collect is like necessary to bring data to the
+to know what the next steps of the pipeline are This is extremely rare in my you
+in my entire time in big tech that uh I I needed to call DF.collect one time The
+rule is like if you're gonna call DF.collect there better be a limit on it Don't
+all of the data to the driver because if you do DF
+DF.collect what it does is it's gonna bring all the data on all the executors to
+So like and most of the time there's gonna be too much data on the executors for
+driver to even handle it So most of the time what happens if you call DF.collect
+without
+a limit is your job dies
+It just dies and it's like what the hell is going on So it's just bad practice
+Uh configure the memory settings on uh of your cluster Uh remember you can set
+executive memory and your uh driver memory Uh uh they can go all the way up to
+16
+gigs I think the default is like 1 gig
+and then enable adapt adap adaptive execution Uh uh you know what's great about
+last one is you don't have to It's on data bricks especially if you're on the
+most
+recent version of Dabricks Uh it's enabled by default so you don't have to worry
+OK so how to tell if your data is skewed This is gonna be a little bit uh
+important
+for if you're on older versions of Spark or older versions of data bricks Uh the
+most common thing here is uh you get a job uh the job goes to 99% and it takes
+forever
+and ever and ever and then ultimately it dies
+Uh that's
+or you open up the Spark UI and you see that one task
+is spilling a lot of um stuff to disk
+That's another uh very common sign
+You know if you want to be more scientific about it you can like do a box and
+whiskers
+plot to actually look for any extreme outliers I've like never done that though
+always like for me I just ran my job and I was like oh shit it's like it's
+skewed
+It's at 99% Something's broken there's weird data The shape of the data is very
+extreme
+Cool we're almost done You guys are you guys are hanging in there So uh we have
+output
+file bottlenecks So uh
+the these are very straightforward uh wrong output data store So sometimes like
+know there's kind of like data bricks really nudges you to write to Delta but
+you might need to write somewhere else You need to write to Iceberg or you need
+write to like I don't know like Druid or you need to write to Uh post grass or
+need to write somewhere else and that uh like knowing like sometimes
+That design can be messy and then you know again just like with other things is
+you have this Goldilocks zone of writing too many or too few files Luckily uh
+with
+uh liquid clustering and adaptive or predictive optimization
+these things uh are mostly solved but they aren't completely solved like it's
+still is something that Like if you do your if you tune your Spark jobs right to
+a best guess on how many files to write then your liquid clustering and
+optimization will be cheaper on the data brick side as well So it's not like OK
+knowing
+the right number of files to write is completely worthless because data bricks
+handle it but like if you write like one File or 30 million files uh on the
+extremes
+right Then uh bringing splitting the file up or like putting Humpty Dumpty back
+back together again that's going to be the most expensive uh liquid clustering
+optimization versus like if you write the data in a way that's almost ideal
+already
+You're good you know
+This one is not too bad uh
+You have uh think about the concurrency constraints on your output store So uh
+can be a problematic if you are like trying to write to Postgress right So
+imagine
+you're trying to write to Postgress you have 500 partitions your Postgress data
+store
+can only handle like 10 connections at once and then uh you overwhelm it because
+have too many uh connections Uh it can do pooling and manage some of that That
+but that can be a you can kind of end up hammering the the the the data store
+depending
+on what data store it is like like it's important like to like when you're
+writing
+out your data that you want to be thinking about that cause most of the time the
+at which you process your data and the concurrency at which you write your data
+it's very rare that those numbers are the same number because like The reason
+why
+it's rare is because like especially nowadays with like splittable files and
+everything
+like that it's like you want higher concurrency when you are transforming and
+running the job and you want lower transform uh lower um uh parallelism when
+writing it out so you have fewer number of files because uh when you have like
+middle kind of that Goldilocks zone number of files then you get the best
+compression
+just the nature of it and you know
+Iceberg uh we'll we'll we'll be looking at coalesce Coalesce is another example
+Spark where you can cut down on the number of partitions It's pretty cool I like
+All right So um any questions We're gonna open it up to to questions here Uh
+we'll
+see what what people have One second I need to plug my laptop
+Uh
+OK so Shri Zakin
+does Data Bricks automatically estimate the optimal shuffle partition size using
+AQE
+when using Serverless Yes Any any scenario where manual tuning beats using AQE
+No I don't think so It's like manual tuning uh is uh gonna be AQE does have
+overhead
+but Data Bricks has made it so that the the overhead of AQE is so low that like
+it's it's hard to Uh kind of do manual tuning and you know little tips and
+tricks
+to get around the uh thing right
+Can we just go ahead and use only delta iceberg formats as the gold standards
+not use the other ones That's not that's not a realistic thing to say It's not a
+realistic
+thing to say Like it it it it really depends Like it like it's like are there
+other
+data stores that you might need to use in your career Absolutely absolutely Like
+like uh and will you use other things besides Delta and Iceberg in your career
+Absolutely
+absolutely like and like I I'm not like like are should you mostly use Delta and
+Iceberg
+Yes yes but like what I'm trying to say is that like Like you don't want to be
+guy who like is like given a task and then it's like oh I have to only write to
+Delta
+and then like you don't meet your stakeholders where they're at and so then you
+provide no value because your stakeholders don't want to use Delta
+It comes back to that thing of like you know where uh you know the the the the
+engineer busts his ass you know making a very awesome pipeline and then the
+stakeholder
+asks can I get this in Excel And like if you just say no then like you know
+that'd
+be uh yeah
+Yeah Can you give some percent which format is used and when I am not from a big
+background It depends
+Mohammed that's a that's not a question that I I can answer because like it it
+comes back to like what company
+What company right Uh Ron in saying uh I agree JSON XML as communication data
+What's your opinion on MongoDB Mongo is an interesting edge case of like uh a
+store that like tries to optimize for no schema like no schema is the whole
+point
+of Mongo Right And that like that's where JSON is like there is an edge case
+like where that is the case Uh not that many I guess like I'd never used Mongo
+my whole data engineering career I used it like in my application development
+but
+I never really used it as like it's like if you're building analytics and you're
+analytical stuff which is like most data engineering roles you're not gonna like
+not gonna be
+writing JSON to Mongo DB because like
+Have you ever tried to run a group by query and Mongo Like
+Oh my God it's like pulling teeth It's like ripping your eyes out It's terrible
+If you work with banks you will have to deal with awful output file types and
+zero control over what they give you Yeah I mean and that's the truth that's the
+truth
+and those jobs have to be slow They just have to be slow That part of the job
+to be slow Like it's like if you can't collaborate with the person who gives you
+data that like and that you can't ask them to change the file format of what
+what you've been given then like yeah you just have to accept that like
+This is slow and this is a this is not an engineering problem anymore This is
+now
+uh this is this problem is now different right
+Can you give us some good architecture technologies which you can use ideally
+each process end to end
+Do we have some blueprint to go to and use Yeah data bricks
+Like I don't know about data bricks Like it's like OK so at the front right when
+building your pipelines right You have a landing zone a place to collect data
+gonna be Kafka like 9 times out of 10 that's gonna be Kafka That's where you
+and collect data
+And then you have after that you have
+A process that rips data off of Kafka either a stream process or a batch process
+rips data off of Kafka and puts it into Delta And that's gonna be your first
+bronze layer data right That's gonna be like your raw landing data right Then
+you clean it up a little bit and that gives you your silver data and then you
+it with dimensions and that gives you your gold data
+And then that is all done with Delta right And well your dimensions might come
+from
+like Postgress or your dimensions might come from like MySQL I don't know Like
+probably
+a production database maybe MongoDB maybe they come from Mongo It depends on
+what
+your production application is doing
+Right but um then you that's all delta right Then you have on the other end you
+are going to be moving into
+places where this data needs to be tracked So like you might have a metric store
+it needs to be tracked in like you might be using something like statsig or mix
+panel
+or like
+Uh like uh uh some sort of AB testing framework that's gonna be a very common uh
+a a final output destination and then you also have like dashboarding right So
+dashboarding
+usually is gonna be using something like Druid or like uh
+Looker or like You know there's there's a bunch of other like uh kind of OLAP
+cube
+technologies out there that you need to like kind of dashboard effectively and
+gonna be the other part where you need to like kind of that's that's gonna be
+another
+spot where you're not just gonna be working with Delta table right You're gonna
+working with another freaking technology right Yeah
+So I think you mentioned that AQE handles Data SKU but when do we use salting to
+Data SKU
+Is it only if SKU persists even after enabling AQE I mean
+Shrini uh
+AQE solves skew right It's it it is it it is doing salting
+essentially that's what AQE does underneath the hood is it does salting That's
+So uh like
+salting is so
+why like so salting was to handle skew we use salting for like
+5 years where like essentially what that does is like uh it it breaks up the the
+outlier data set like the outlier skewed rows or the outlier skewed keys by
+random
+numbers right
+Yeah yeah now it doesn't use the old salting
+Yeah I mean it it does yeah it it it yeah it does uh yeah but it breaks up maybe
+whatever
+it's doing is it's breaking up the the skewedroe into smaller chunks and
+it It's like Whether it's doing it with salting or hashing or whatever it's it's
+something to break up and make the the uh making it so that one executor and one
+task
+isn't so overwhelmed with such a large percentage of the data That's all it does
+So Mohammed's saying what major differences you see between snowflake and data
+bricks
+Do you see data bricks winning the race Winning is a terrible word Winning is a
+terrible
+word It's not like I don't I I hate the word winning It's not like uh it's not
+be something that like Uh is the case it's kind of like saying who's winning
+Pepsi
+or Coke like they're both winning right It's like
+Coke has a little bit more market share OK but they're both winning Who's
+winning
+Anthropic or OpenAI They're both winning right It's like not like you can it's
+ever gonna be one right Ever ever gonna be one right Um so uh AQA was creating
+pipeline because proactively doing broadcast hash join Yeah I mean that's very
+There's yeah there's gonna be some cases where uh I I I've wondered about that
+AQE that like it's one of those things that might have like unintended
+consequences
+that like I like I don't have a ton of experience working with AQE I I know it
+works
+I know that it and we will see it working in action in the lab today but um yeah
+I set a defaults you know what's interesting Diana You cannot on server list you
+cannot
+set AQE defaults You can't
+You you literally can't set it to false if you're using Cerber-less You have if
+it's um 00 you I mean the broadcast asteroid oh yeah so like yeah you also can't
+set
+that to false in uh you can't set that to -1 in Cerber-less You you have no
+control
+over that Like you you can you can you can force it but you can't you can't uh
+can't say don't use it you can't disable it You can but you can force it like we
+saw
+in uh In on Tuesday's lab right So yeah it's it's interesting the knobs and the
+where Data Brooks is like no we're gonna well you don't know what you're doing
+we know what we know better than you So
+anyways uh thank you guys for coming to the lecture today Uh we're gonna take
+15 minutes here Come back at 7:10 and we will uh be uh heading into the lab so
+I'm
+excited

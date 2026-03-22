@@ -1,0 +1,701 @@
+OK you all should be seeing my screen now can I get a thumbs up um also you see
+my
+screen I'm sharing all my screen here
+Is everybody seeing my my browser OK awesome
+So
+Have to find a way to make this guy a little bit smaller
+Yeah way smaller I'll make bring it over here
+Awesome
+So what are we doing today
+We are gonna make Zakki a real agent and the way we are gonna do that we're
+gonna
+use tools we're gonna use orchestration strategies and integrations
+We are gonna to do that we're gonna be using um unit catalog functions We're
+be using lang chain and I have a surprise for you
+Some of you asked for land graph
+I said that when I did my startups I didn't use Lan graph but I realized that I
+was
+old school so I am going to do the demos the labs using Lagraph because for what
+we
+want to do in terms of agent orchestrations that makes our lives much easier You
+could
+still do that with lang chain but language graph is the new way is the easy way
+to
+So we are gonna learn about making this an entry and agent with unit catalog
+functions
+with land graph and data bricks We're gonna learn about the managed MCP in more
+details
+and finally we're gonna understand how agent bricks with the supervisor agent
+allows
+us to orchestrate multiple agents These are the topics I want to cover for today
+so
+I promise by the end of today this will be a real agent that can answer
+questions
+about code can answer questions about The core syllables and can even answer
+for the employees like what is the amount of expenses travel expenses that Ya
+or Zach have had in the last year and even uh submit uh expenses through a
+custom
+MCP server I'm hosting on
+Data bricks apps That's the goal for today
+Just a little bit of a recap of what we saw last week uh two weeks ago actually
+uh
+I spoke about the difference between reg and agents I spoke about regs are more
+for
+hey here's a question
+Give me an answer based on my vector database and to build a rag you need raw
+data
+you do some transformations you use chunking strategies you save that in a
+vector
+database
+so based on the user's question you can translate that into a vector You go into
+your
+vector database you find content that is similar to the user question then you
+use
+an LLM to give the users the answers right
+What we also spoke about is about agents The agents is a more comprehensive
+platform
+because agents not only they can answer questions they can act
+they can have multi-steps they can call different tools
+So the way we use um
+Agents
+we're gonna allow LLMs to reason on our behalf
+reason in terms of breaking down the user's question
+Into a different set of problems and understanding which tools can be used to
+solve
+Tools in our context could be a SQL endpoint to run a query it could be an API
+submit an expense report
+or it could be querying a vector database to read some of the content we have
+already
+prepared
+The good thing about agents is not they're not only read only because they can
+call
+any tools they can write to a database like we're gonna see here we can write to
+a
+volume and we can write to a table
+And agents they normally have memory and they can call sub agents Like I
+mentioned
+today we're going to take Zaky who for now is only a reg uh chatbot and we're
+make it a real agent that can call tools
+around travel and expenses uh
+In coarse content
+I tried to make a joke here I don't think it it came across uh so my boss asked
+me
+why it called it 24 times I just said hey I was being true
+Uh I I know not a good joke but it's just the idea uh Reg just answer questions
+agents
+actually do things
+So we have an agentic week where we're gonna be doing things with Zacky
+So far so good Everybody remembers um the concepts from first week in terms of
+difference
+between reg and agents because now I'm gonna go get deep into more concepts
+Give me a thumb thumbs up if it's all clear awesome thank you David
+Anybody else
+Uh please go ahead and ask your question
+Uh are you able to unmute yourself Matthew Do I need to unmute you
+Matt Oh OK wrong word OK nope not a problem
+Um
+So what we've been learning and I'll make this zoom here a little bit bigger
+What we said is that we want Zaki to be uh one agent
+which has one graph of knowledge
+But these agents should be able to work as 3 different personas
+It should be able to help the persona of a prospective student
+So as a prospective students uh we want our agent to be able to leverage two
+databases we
+have built in terms of the content the syllables of the the course and another
+another
+agent we're gonna see today
+So another tool So as a prospective student when the agent is helping
+prospective
+students we want to be able this agent to leverage the vector database the
+um index we created on week one
+but we also wanna we also wanna call an MCP server that can even provide some
+sample
+code for the user We're gonna see how
+Then for the
+students that are already enrolled on the course I've created another vector
+that actually stores the files
+Uh the lab notebooks
+And when this agent is working helping employees we wanted to call some UC
+to get uh to run some queries around travels and expenses We wanted to get a
+status
+of receipts
+and we also wanted to be able to actually um execute an action against
+submitting
+uh uh a receipt on behalf of the employee
+So what do I want you to take away from here is that we have one agent that
+should
+be able to discern where to go which tool to use
+So my million dollar question to you all
+Whoever gets the answer correct is going to get a sticker somehow
+is what are the tools in the market I can use to build one agent that can
+orchestrate
+calls through different tools and execute different actions based on the user
+intent
+Nayara you are close lang chain you can do that with lang chain but it's a lot
+of
+work It's a lot of code you're gonna write
+OK so David got it so le graph is the first option we can use to do that
+N8N is not wrong but we are not using just um low no code strategy and I'm not
+going
+to talk about the competitors We are here to learn data breaks
+So we have two options folks
+We can either go with
+Agent Briggs
+And within agent agent bricks we have a supervisor agent
+This is the low cold no cold route
+Or we can go with lang graph
+Everything I've spoken so far I've always given you the easy way and the more
+comprehensive way So the easy way to do this is agent bricks The more
+comprehensive
+way where you can control all the knobs is land graph There is always
+trade-offs The more you go to the right the more you go into land graph the more
+you have or the more management you have to do more monitoring you have to
+to manage endpoints
+With the supervisor agent we are using a platform as a as a service here
+so all the plumbing all the monitoring the tracing is already managed by the
+Just to make it very tangible what I'm talking about here I'm talking that when
+you
+go into the databas UI
+You go under agents What we learned on week one was the knowledge assistant
+So the knowledge assistant uh we can
+connect to a bunch of files in Unit catalog or we can point into a vector search
+database and this can become a rag solution We can answer questions about our
+documents
+What we are talking today is about this guy here This is the billion dollar tool
+want to learn which is the supervisor agent
+What we can do in the supervisor agent we can create an agent that is going to
+multiple tools
+So Ginie could be a tool So remember Gini is how you do text to SQL we could
+make
+that as a tool
+We can also add
+Uh you see functions as the another function another option here So let me add
+the
+function we created
+let's say to get um
+Some code here
+And then I can define and I can give a description for this agent I click create
+and
+roll out This is another another agent
+And based on the user's prompt based on the user question
+the supervisor agent will understand oh the user wants to know something about
+expenses
+I'm going to call this genus space Oh no I actually want to know something about
+accessing
+the files from the labs so I'm going to use this function that I've built before
+That's
+the idea folks This is this idea of building an agent that can route the user to
+different
+paths This is the easy way Again the more comprehensive way we do everything by
+code
+via a lay a graph and that's what I'm gonna be walking you through both options
+how we build these in details
+Is everybody with me so far And I'm speaking a little bit fast I know first week
+I
+was intentionally going slower since we were introducing new concepts Now I'm
+move a little bit faster than week one
+OK
+Getting lots of thumbs up
+We will see different ways to orchestrate our tools
+but the main idea is that our tools our agents they need to bring data uh to our
+databases
+or we don't build a vector database or we leverage IMCP server
+to outsource that capability We saw that we can do web crawling we can do the
+ingestion
+we save data into volumes and we created chunking strategies
+Another strategy to bring data in is connecting to APIs in real time
+So what we can do we can create a Unity catalog functions that just call a web
+endpoint
+The benefit here is we are always looking at the data fresh We don't have to do
+any
+chunking strategy but it's a way for you to bring data in without actually
+storing
+that data in the database
+And the third way is the plug and play approach which is leveraging uh MCP
+As the end point where our agents can talk to
+So when we go into the UI
+We're going to go into the UI again
+What we are talking about here
+Make this guy all the way down
+We are talking about that in catalog
+When we go into boot camps um students I hope each one of you are following the
+convention so for Zakki
+everybody should have uh your schema with Zaccore your username
+What I'm saying is that we have functions here and these functions they are
+to be exposed as an MCP endpoint
+And what we could do in one of these functions we could actually call
+end point
+To get data from the outside
+So in my case here I have a function that is going into GitHub
+OK so when you look at this function
+You pass the name of a file
+And the name of the repo
+And I'm gonna go create a HTP request and I'm going to return that file straight
+from
+GitHub so no need to ingest it's real-time query
+Uh how did I do this So I have the code for the functions in one of the labs One
+thing
+you need to know is to connect to any external sourcing data because you have to
+create
+a connection So I have already created a connection to GitHub
+which says how I'm going to access the GitHub and even the permissions on who
+can
+access it
+This we are talking about the using UC functions with HTP request
+What is the beauty of this When we go into data bricks and we click into
+And you click here into MCP servers
+What you're gonna see now is that our
+Everything we build in data bricks becomes an MCP endpoint
+including our functions So if I click here on my schema UC functions
+you're gonna see that all the functions are created including the ones to to
+fetch
+the the MCP to fetch a file from GitHub Has become an endpoint and this is the
+main
+convention so let's say if cloud code or your application wants to talk using
+MCP
+you can just use this endpoint
+And voila your function can go into GitHub Everything is managed by Unity
+catalog
+and you have automatically exposed this function as MCP
+Again we have different strategies to bring the data in or to connect to data We
+learned
+a lot about part one
+We are going to see some examples on UC functions and a managed MCP server or
+our own MCP server is always an option
+Here is an example of how you actually create that function So here I'm defining
+function
+that gets the travel and expenses summary You pass an employee email you give it
+um
+the year
+and I'm gonna return a table that has 3 columns category total amount and
+receipt
+And here I'm just encapsulating I'm just abstracting uh query
+What's the benefit of this We saw this is governance by UC by UC
+You have lineage is automatically discovered This becomes uh MCP endpoint and
+this
+is again is the way we are using um Zakki
+to perform some some actions This submit a receipt uh when we talk about
+normally they are read only
+So I actually changed this I need to update this slide so the submit receipt is
+no
+longer a UC function it's actually an MCP endpoint
+where you can pass the image
+and you can pass a description and I'm gonna save that in a in a volume
+and in a table OK so normally UC functions they're gonna be read only so the
+submit
+receipt is no longer gonna be a function it's gonna be a custom MCP endpoint
+Um again here's what I just mentioned with Data bricks Unity catalog
+automatically
+exposes your UC functions in an MCP endpoint uh discoverability out of the box
+here's an example of how cloud code would be able to discover these tools from
+workspace uh by configuring um the JSON file for cloud code for example
+I want to talk about length graph but before I go there let me see if there is
+Any questions
+Any questions besides the size of the monitor
+And I'll make it bigger
+But it's gonna be too big
+Yes correct Discovery is going to be able that's the benefit of of uh UC You
+only
+have access to the resources you have been granted access to
+So again you could build an MCP server and host that host that on Azure
+or uh AWS EC2 instances but then you would have to build the CICT pipeline You
+have to manage permission
+UC is doing everything for you And to Mohammed's question uh yes what we have
+here
+is that Unity catalog is actually a web server that is exposing these functions
+Unity catalog is a server that is exposing these functions you wrote in Plain
+SQL
+as an HTP endpoint that any tool can call your agents or IGs like VS code or or
+or
+or cloud code
+So yeah in that context um
+you see X as the server with MCP
+this is a very important one
+like I mentioned in the past you could use chain to build an agent and call
+tools
+Just know it would require a lot of code When I built my startup around
+algorithmic
+trading fully conversational about 2 years ago uh we built using link chain and
+data bricks and OpenAI We had a lot of code to manage memory to manage the tools
+manage the
+The flow of information What length graph is able to do
+um it's a graph with the all the tools you have with some memory with nodes and
+will know it will try to based on the user's intent it will it will route your
+question
+to the different node It can have multiple turns It has memory
+And it's much simpler to implement and you'll see
+that in one of the labs
+What is the beauty of this is that I have a lab here that explains the
+between data bricks and language graph
+So the core classes you're gonna need to use to build Zakki using language graph
+is
+you need to chat data bricks as the class that can talk to your LLM and in our
+case
+we're gonna be using Lemma
+We need a class that is able to give you the endpoints the URLs that are coming
+here so Data Bricks has a helper which is this Data Bricks multi-server MCP
+client
+Uh we need a class the database MCP server which has all the URLs and then we
+the land graph to build the nodes
+And of course everything we do here we want it to be tracked in lang chain and
+want it to be tracked in ML flow with the logs and the history
+What is the beauty of this We can see here with about 10 lines of code There
+there
+are more lines here
+Uh we have the lines on the left and the lines on the right So on the left I
+declare
+what are the vector
+databases what are the MCP endpoints or GD rules I want
+to expose to my agent and then on the right I actually build the agent using
+land
+graph exposing um exposing all the tools Uh I have on the left
+Don't worry about memorizing all the the source code here we have a lab that
+will
+walk you through this
+So I can define a system prompt in here You are Zakki uh you are a data expert
+AI
+assistant
+so you are serving 3 user types prospective students enrolled students and
+employee
+and use these tools to ground your answers never make up facts
+And
+land graph will do some magic here and we'll be able based on the user's
+map to the right tool
+I wanted to keep presentations very short today I want to do a little bit more
+demos
+here and then we're gonna do a quick break and we're gonna come back to all the
+5
+labs I have for today
+So before I show you more things on the Datare UX any questions so far
+You don't need an MCP server for everything in data bricks Uh data bricks is
+expose a lot of the vector data We will expose the vector databases the genus
+the agents from agent bricks They're gonna be automatically exposed uh to
+so you don't need to manage any servers in data bricks You're just gonna get a
+URL
+for your functions for your vector databases So you just need to make sure that
+agents know which URLs To find those tools and this is what this class here the
+Data
+bricks multi-server MCP client is doing How it's doing it's giving the URL that
+agent needs to use so what that class is doing it's giving this URL here
+To your agent
+So let's test this scenario here Um
+we have if I go into agents and I go into MCP servers we see that everything
+that
+everything here gets exposed on an MCP server so you don't need to manage
+everything
+but you have an endpoint
+So let's call one of these functions here
+And I want to call the function to see my my the status of my
+So what I'm gonna do I'm going to try using the playground
+And what you're gonna see here um
+in the databa playground databix has automatically selected that MCP server
+which
+is all my functions and here I wanna use a Lemma because lemma is normally the
+more
+most affordable option
+Because it's open source
+And I just
+I made something wrong here Let's let me go back
+So MCP server
+And I want to go into this function
+I'll try in the playground
+I have a function here
+So let's just say um I want to know
+The expenses for user
+you are
+is my email
+And I got an error here because I don't think GGPT supports um what we are doing
+So I use this endpoint yeah the tool is there So I'm going to use cloud Sonet OK
+I'm gonna ask the same question I want to view the summary of expenses
+you and I will put my email
+And we'll see the agent thinking here We haven't built the the agent here
+but data bricks we will understand we are
+Oh you see here my function actually needs to I forgot this that the function
+gets the summary of expenses
+needs uh a month and the agent here was able to understand based on the
+signature
+of my function it needs a month here So I've already provided my mail uh I want
+view expenses
+Let's just put March 23 I don't know if you're I'll put March 17 I think I think
+is old
+Let's see which
+So here we can see that the agent was able to map my question to the get the
+summary
+A UC function
+And it's probably now calling that
+and you can see here uh these are the summary of expenses for my user
+and these are the category of expenses I had 2 receipts
+Uh in March 27 2017 uh with this amount that I was not I did not categorize this
+well
+and for food I spent only $14 probably I was traveling to Brazil Food here is
+very
+affordable
+And what is very very beautiful about this is if you click on view trace
+We're gonna be able to see my question
+OK and what cloud
+Our agent here Sonnet did
+Here is the tool it called
+And again the invocation
+The output
+In what the user received we can see this more as a timeline
+This is very important for for troubleshooting folks the tracing especially if
+are using uh if you're using an agent that needs to use data from the internet
+knowledge of the LLM
+sometimes your LLM will hallucinate and you can use the tracing to see if the
+agent
+is actually basing that answer on what come back from your vector database
+Tracing is very important for troubleshooting
+and of course for if you want to trace down let's say the user was talking to
+customer service agent
+and the user was giving you a very harsh feedback on the responses from the
+you can save this trace to a delta table we'll see on next week how we can save
+tracings to a delta table and you can use this to improve the quality of your
+You can use this to understand Uh the type of conversations your users are
+having
+and the accuracy of of your agent's response
+Um same thing I did here for the UC tools Now let's do the same thing for the
+database So again I go into MCP servers
+And I am going to use now I want to use the vector database
+And what you guys don't know is that one of the labs I'm actually saving
+indexing
+the code
+Where is it do I have it in the wrong one GitHub uh docs index so this has all
+source code
+So let's ask some things about code
+Of the the labs
+And let's add another tool here I'm gonna add this tool here get GitHub file
+OK save So now we're working with two tools One is the vector database another
+one
+is is is so let's say I want to see some examples on how to use
+Uh AI pars document
+It's going to be grounded on the content of the labs
+Because I've indexed all the notebooks
+So let's see what it does In here it actually
+what is interesting about this one
+Uh it looked guys this is amazing I didn't try this before so look here
+It first used the first vector database to find
+Which days of the week which labs recovered AI parts document it found it was on
+week
+Day 2
+And he actually tried to to go and open that file from GitHub
+And something failed here I don't know what happened
+probably uh I did not set up this well but this is amazing right you see that
+I didn't do any prompt any advanced prompt I just said hey I want to learn about
+parts document because we have all the notebooks in our vector database
+It understood the labs and then it tried to download the file I can understand
+later
+why it wasn't able to download
+And it had a failback because it failed Let's see what was the final answer And
+see it tried it tried to download the file it didn't work
+And here's the answer is uh layout aware database function that parses PDF and
+image
+binary files Here's how you use
+Here's the function you use
+And here um it gives gave us an example based on on what we had on our source
+You see you don't need Google you don't need the debris documentation Everything
+learned throughout week one and week two if you use Zakki you can reinforce this
+these
+these concepts uh just by
+building an agent with no code low code like I did here Any questions about this
+demo
+so far
+This is amazing right I don't know if you guys are excited as I am
+To see the agent thinking and picking the different tools without a lot of
+guidance
+Let's see what else I can show you all before we go into the break and when we
+come
+back from the break we're gonna go uh lab by lab and look at this uh sample code
+OK you've seen the lab um but one good thing here about data breaks is
+when you go into agents we've learned the the knowledge assistant we saw the
+in the MCP server
+Sorry I actually wanna go into playground
+So when I go into playground and I do get um I go into tools and I click add a
+tool
+The UX here we can add the functions
+Here
+So I'm going to add a function to get the status of receipts
+And I can look for vector databases that we've already created so I'm going to
+look
+at the one that has the documentation the core syllabus
+I can then also add um
+A
+GD
+And then I can add custom MCP servers I think lab 4 I built a custom MCP server
+Uh that is they weren't able to submit expenses
+So I click save
+And now
+I I would say always answer always answer with sarcasm
+And let's ask a question here uh the agents we have here
+I forgot the price
+What is the status of the latest
+Receipt
+I submitted
+Oh you see uh I wanna use
+Uh sonnet again and I'm gonna use
+Ask the question
+what
+Let me make it fun Have I
+spend too much money
+On expenses
+In the last year
+So trying to make it fun have I spent too much money on expenses in the last
+year
+Let's see what the agent is gonna oh sure because everyone just um
+Yeah and here because you need my my email you know
+Of course if you're building your custom agent with your own UI you can
+get the email of the user that is logged in
+Here is actually trying to use the genie
+And he's running a query on Ginny
+Probably I don't have the warehouse was not started so it's starting the
+warehouse
+I had an error It tried one time and I tried with the format of date
+Let's see if he's gonna try again
+If we go into the warehouse
+If we're going to query history
+We should be seeing that the agent
+He's doing a lot of things for us
+And I ordered by date so today is the 17th
+And we can see the agent is trying to understand the scheme of my tables
+Try to run some queries
+but failed
+Yeah here is the query the agent sent
+Try to parse the date
+And try to look for receipts with my mail
+If we go back into the playground
+Or I'll have to use some back buttons here
+Yeah I I lost that one but you got the idea right Um
+The playground is going to be very helpful for you as you're building your tools
+You
+can orchestrate them together
+Um you can try them out You can give real data and it just like I saw you can
+see
+how the agent
+is thinking is trying to orchestrate
+between different tools What we're going to see on lab 4 what I did because I
+needed
+uh I needed um IMCP endpoint to actually write something
+So we're hosting an app
+We're hosting an app
+which is this MCP Izaki server
+And this app is an MCP endpoint so when we look at the source code
+We'll see this is an MCP server
+written in Python
+Design MCP server built in Python
+so there is only one endpoint here
+You call this endpoint you pass the employee email the vendor the amount the
+category
+and image as a base 64 string and then what we're going to do here we're going
+save this image as um
+As a file in a volume and then we're going to insert the record into the
+submitted
+receipts
+Uh delta table
+Can anyone tell me what would be the most appropriate resource uh type of
+to insert this uh receipt like I did here This is not
+the most ideal scenario because I'm saving as delta tables
+When you need a more transactional database you wanna go record by record what
+would
+be the ideal database here which I didn't cover just for a matter of time
+that we could use to actually save these receipts and then bring that into into
+the lake houses or Delta table
+Can I get a guess
+what is the data bricks managed version of Postgress
+What is the lake
+Lake base exactly
+So just know uh for the sake of time I built our MCP custom MCP server saving
+receipts one by one here into this delta table
+When you go into a real world scenario you would normally save this into lake
+Base
+and Lake Base you would be able to synchronize that with a delta table So what
+saying here is in data bricks
+similar to how I can
+host this MCP server
+as an app you could create a database which is just a a post grads distribution
+you could write through here just using a JDBC driver or your
+SDK of preference
+Also remember when you're using tools here I don't know if I started this server
+but when you're trying you can also point to your scenarios here you can point
+custom MCP server
+Let's see if this is gonna work
+I didn't try hitting the playground
+So how can I submit an expense report
+I didn't test this
+From here
+Yeah so here it says that you need the employee mail the vendor the category and
+photo
+So of course this agent here it doesn't have um so let's try this uh submit
+An expense for you more
+For
+You more the assist
+At Starbucks
+On
+With amount of $10
+While he was traveling
+To Brazil
+March 26th
+I didn't test from here because all the tests with my MCP server yeah it says I
+uh the the uh receipt image Let me just try to give it a base 64 here
+And see if we can get it working I didn't test this scenario We'll try it first
+time
+now
+I'm gonna go into the readme file and I'm just gonna give it um
+Fake uh base 64 image
+Yeah
+And I would just say
+You know what let's try something even more difficult OK I don't know if this is
+work If it doesn't work we're gonna try on this now I'm just gonna give you the
+I don't think it's gonna work but I will try it
+I'll give the URL of my boot camp
+I'll give you the URL of my volume
+With one of the receipts from the first week
+And let's see if it works I click here and I copy the path
+I don't think trying to get the
+64 from this image
+Let's see
+And while it does this I will look for the base 64
+Yeah uh the thing with this agent I don't think we can upload a file here
+So I'll just say just use
+Just use this base 64 string
+Right
+Let's see if the server is gonna be able to save the file
+What is happening uh when I go into the catalog
+It should land here boot camp students
+You more and we're going to post receipts
+You're gonna see
+sorry
+into volumes
+Receipts you're gonna see when I try this uh yesterday I think last night
+It's gonna go into the last one
+Uh voila see what happened 27 seconds ago let's see the the agent So yeah it got
+saved
+It saved um
+It saved
+So since we have let's add another tool here and I'm going to add the 2
+Uh which tool do we wanna hear We want the function so I wanna get
+The status OK
+And I'm gonna ask
+What is the status of the receipt
+Submitted today
+For HuR
+Yeah so you can see here now
+I am not faking anything
+It's saved into the table the path It saved the date of today
+The status is pending It's $10 Starbucks actually submitted as a meal
+And when we look here of course because the image the base 64 image was fake
+Uh it's not able to load but yesterday when I tested from an agent and you're
+to test this is the receipt I was able to upload through the custom MCP endpoint
+OK folks so this is what I wanted to show you I wanted to give you the theory
+refresh
+some concepts walk through the UX
+When we come back we are going to walk you all through the 5 labs I have for
+today
+Which basically is
+So I'm gonna teach you how you create UC functions how we bring the content from
+as a into a vector database I'm gonna compare some retrieval strategies again
+I'm
+gonna show you the
+the land graph
+The Landgraf uh agent and some guidance on the supervisor I mean the supervisor
+we have already been through the UX so there is nothing
+to cover there
+So let me stop the recording

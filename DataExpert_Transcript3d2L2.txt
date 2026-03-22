@@ -1,0 +1,786 @@
+Hey folks I just started sharing my screen
+Please give me a thumbs up
+That you can still hear me and you can see my screen now
+Awesome
+OK
+Let's go there
+You all should have access to the GitHub um the content is there
+In my case I already went ahead
+And uh clone the the ripple
+Here
+So where is my ripple
+Uh
+Let me just see where it was OK
+OK here
+OK so I found the content If you see for day 2 we actually have 5 labs
+I'm not sure if we're going to be able to go through everything in details I
+recommend
+you all go through everything in details
+Um
+Boot camp uh lab chew is the most important I would say because that's the one
+where
+I have the 10
+strategies
+so let me move it if I have questions let me move the Discord window to the
+other
+side
+OK I'm gonna make this
+smaller
+And I'm gonna close this so we are on lab one
+Can everyone confirm they can see my
+Notebook
+Is the size good enough
+What we're gonna do in level one
+the first thing we're gonna do is we are going to upload a PDF
+the syllabus into a volume
+And then save that as a
+In a table using AI pars document
+And then we are also gonna do some web crawling in the dataex.io
+Using the request library and beautiful soap
+To save that into
+the same table
+There is an optional component which is if you want to do advanced web crawling
+and
+you want to use Playwright to navigate in the website clicking some buttons and
+get
+additional information we also have it OK
+Again uh the basic um as always we are getting the name of the catalog that has
+been
+assigned to each student
+We are using serveless Everything you're doing here we wanna use serveless
+because
+it's easier for us to manage
+Then
+Here's where the fun starts
+We are gonna create the bootcamp volume uh the bootcamp_docs
+volume if it doesn't exist and we're gonna create this table raw bootcamp docs
+It
+basically has the type of document we are gonna be saving is PDF web what is the
+source
+URL what is the title what is the content the plain text
+and the JSO content
+which is the return from the AI pars document
+So I have already created this table for me I don't need to run it again
+So the cell number 8 is actually where we are saving the PDF into the volume
+So if we open it here on the right and I click on the catalog view
+for me and I go students and I look for my user
+You will see that there is now
+here under bootcamp docs I have the PDF here
+And cell 9 is the magic it's where everything happens This is 9 lines of code
+that
+if you were to use the competitor that is very popular in India
+or other solutions it would take you a a a while OK
+Uh so with these very few lines of code what we are able to do we're able to get
+all
+the PDFs we have in this volume
+And we are automatically parsing that document getting the the plain text of
+document and the Jason that defines where the the text lives in the document the
+bounding
+boundaries
+And we save this
+In the table named
+Raw boot camp ducks
+I already showed the table before I'm gonna show it again just so everybody
+follows
+along
+Um this is again is the table raw bootcamp docs After AI parse documents
+run
+We do read files we pass the volume volume path
+AI parts document
+and we go into the raw bootcamp docs
+These are the columns we have Let me open in another
+In another tab here
+You know what it's easier if we just do this Let's do this I'm gonna do uh
+Just using select
+Star from
+And we add it here and we do a limit
+one
+Uh oh because I have a
+OK Luckily the assistant is smarter than me and here we have an example of the
+web
+page and it has the entire content of the web page
+at the home page of the Dataexperts.io
+It has everything in here in the Jason content I don't have anything
+but if we do a limit 2
+we should see 2 documents now
+And now we have the PDF as the first document
+And in the content I have the plain text
+And in the Jason content I had to return from the Jason
+Again how were we able to go from the Jason into
+the plain text
+It's basically this part here
+Where I'm transforming
+The array of elements and I'm only looking for the elements uh content
+And I'm concatenating um
+A new line
+For every content
+And then uh the other the part two is where we're doing the web scraping into
+the
+website
+We just uh put here the URL and we use the requests library
+We called it a URL then we use beautiful soap
+Uh to download the content of the web page
+and then we look for the sections featured program
+Which again let's click there
+Just for the sake of the recording for people who are
+Watching again we're gonna be watching this
+We wanted the web page to index
+just for the sake of the lab I only wanna get this part of the
+Of the the web page in our vector store
+because it's 2 days boot camp
+OK here I don't need an AI parse document because I'm doing everything by hand
+so
+I'm creating
+myself the record in the table
+And if you wanna get very fancy you wanna do something more advanced what you
+can
+actually do you can try to build a script that clicks on each tab here cause
+this
+is JavaScript and actually save these images and index these images with the
+schedule
+How do you do that I in my environment I didn't do I had this Python script here
+you
+guys have to test it more times I
+wipe code it a little bit use some some of my knowledge here You please double
+test
+But the idea here is that we're gonna use this library very popular
+Playwright which uses a headless uh browser
+to actually simulate a user navigating through the website and actually click on
+different tabs to download the images and the content
+This is optional I didn't do it on mine but it's a good example on Reward
+uh for companies you work for they definitely have this type of requirement
+you have to actually pretend simulate a user navigating the website
+OK so this is lab one is just getting the the text
+Representation from PDF in a web page into a table
+You could also use AI classify or AI extract to add additional metadata in the
+table
+but this was level one
+very similar to what we did on day one
+Now lab 2 is where things start to get very interesting
+And I wanna see if there is I think Rangan wants to ask a question I will
+Allow him to ask the questions go ahead
+Thanks Sima
+So
+and then I execute on the the cell 11
+Sure OK I cannot hear you Yeah Is anybody able to anybody else able to hear him
+I'm uh
+I'm your it's not working for me
+Something is wrong I cannot hear you Uh I know it's probably the low module
+device
+that is messing things up
+Can you say again say something again
+11
+OK one second yeah I can hear you now
+What is on solo
+Are you talking about lab 2 or lab 1
+OK let's look at it Um
+This should be very straightforward Are you sure you have the PDF loaded in the
+did
+you run the the where we declared the variable
+PGF
+Uh because you wanna make sure that the volume um double check here on the left
+in the catalog
+go into your catalog and make sure
+That in the
+In the volume
+Let me let me look for for yours uh ringing is it here
+Oh yeah right here
+Volumes boot camp
+Yeah it's here It says it's here
+Did anybody else get our error
+No this is a very different lab Mohammed This is a very different lab This is
+real
+OK this is
+Getting the the content we wanted for the vector database is similar concepts
+we used on day one
+Unsupported can you click
+can you do you mind clicking on the unsupported operation data type is not
+supported
+um
+First did anybody else get the same error
+Again we are on day 2 OK and this is lab 1 for day 2
+Yeah let let's let's table that offline and uh because I tested I tested this
+night I tested everything
+And I don't wanna say it's working on my machine
+But um we can cover this offline OK
+OK thank you
+so going back again day one of day lab one of day two is different than what we
+on on the first uh lesson the first class
+because here we're actually indexing we're using AI parts document not for
+receipts
+Remember that on Tuesday we use uh AI parts document for receipts Now it's for
+syllabus OK That's what we did here and we created a different table
+Uh called what's the name of the table we are we're creating here
+is the raw bootcamp docs OK
+Day
+day 2 lab 2 I recommend tomorrow
+everyone spend some time to read through this this notebook and really
+understand
+each of the chunking strategies I have 10 of them here
+What is interesting what is interesting
+What is interesting
+what is interesting here
+Is just for the sake of uh learning I'm not gonna be chunking a real PDF I just
+pasted
+the content directly as a variable so it's easier for you to visualize what we
+are
+chunking OK
+So in here I'm simulating chunking the syllabus as a markdown file uh receipt
+policy
+and then some code
+some piece of code
+The first strategy is just like I said uh this is uh equal sized uh
+characters count or token with an optional overlap The overlap is an important
+concept
+when you're doing chunking
+you want each chunk to have some context of what happened before or after That's
+an
+important concept when you're chunking if you want to have an overlap or not
+what is interesting and that's why I mentioned we are using Lang chain here
+we don't need to implement these strategies by hand implement the algorithm We
+just use lang chain
+because lang chain already has these different strategies implemented for us
+So if I run this peep install here
+and I'm gonna run it now
+Yeah so Mohammed you can integrate cloud code with uh with data bricks uh use
+AI dev kit
+The data bricks data bricks AI dev kit
+Helps you integrate cloud code with with data breaks
+OK folks so for this lab we are using link chain as the library that is gonna
+help
+us implement the majority of the chunking strategies
+And we are also using uh NLTK which is uh NLP library natural
+Language
+A processing library
+For some of these strategies we wanna use
+It's gonna take a little while to OK it install so now I'm gonna declare the
+variables
+again Again I have just simulating the document as a variable
+So we have these invariables So let's start with the first strategy which is a
+fixed
+chunk size with some overlap
+And when I run this
+It gives us the results right so each chunk
+Has the maximum number of characters but it just breaks um regardless if I'm in
+middle of a phrase or if I'm separating the the
+If I'm breaking the middle of a word it just break by the number of characters
+of
+charts that we define in the in the chunking strategy
+OK this is the most simple one
+Now let's try this other one
+this is gonna try to do base it's gonna try to chunk
+based on paragraphs So this is gonna gonna be used using
+based on tokens
+And this is where we are using the the
+NLP library in conjunction with Linkhin
+OK so we are using a very smart library to understand the paragraphs understand
+sentences a little bit more
+OK so you see here it's breaking the sections a little bit better
+But there are some issues on
+actually breaking the words but it's better than the fixed one
+So like I described here token-based splitting is more predictable than
+character-based
+uh when you're reasoning about LLM context window
+No I really like this one because this is simple This is actually the one trying
+to
+Get a paragraph a section of a document
+Is trying to split by
+Double space then by a paragraph then an end of a sentence
+And it's called recursive uh text splitter
+Is looking for this hierarchy on how a sentence is formed
+So this is very powerful because when you look it's actually trying to only
+the chunks in actual
+Sentences or sections
+It's even more accurate than the previous one that uses the the NLP library
+So for me so far this strategy here the recursive
+Text Splitter has been the most effective You can see visually
+It's it's edging it's breaking the content
+better
+The only problem with this implementation here is that it doesn't have any
+overlap
+of what comes before or after
+So if the user asks a question
+And part of the question you need this document and what comes before
+it would be better to have some overlapping in this strategy
+Now the second one is more this is aware of the structure of the document So in
+case
+we are indexing a marked out file
+and we know the structure of the marked out file So that's why we can break down
+exactly
+in the in the structure of the file
+And again link chain is doing all of this for us we're just saying hey I wanna
+Created chunks based on these marked out files I want to look for these type of
+sections
+And Lang chain is going to try to keep the chunks the same size
+And the second one is doing
+Similarly it goes into each section of the markdown then does an additional
+chunking
+Fore 16 I have a strategy for
+chunking the HML page
+He's generating the the metadata
+For each part each chunks so you can actually save this metadata in the vector
+database
+you see it gets the content but actually gets the the title of the page or the
+section
+So when we save into the vector database we're going to be able to add the title
+the section as metadata
+So one project I worked uh a year ago I was building a chat a rack-based
+solution
+for a legal
+company for lawyers
+And
+I just went into the the US code the website here in the US that has all the
+laws
+And this basic HML header text splitter was very helpful for me because the way
+they
+structured the the law code in the US
+is very hierarchical and the HML is very well formed
+So just by using this strategy I was able to have very good retrieval and
+answers
+In this uh rack-based solution I I built for this legal company
+This is very interesting This is a magic chunking This is number 4 This is
+actually
+using an LLM
+read the entire raw document and try to chunk based on
+Based on the
+concepts that is being discussed in each part of the document
+Uh whoever let's see if someone can give me an idea on when this would be a good
+in strategy in in which type of scenario
+Would semantic chunking be very helpful
+Let's see if someone can try to give me an example
+No it's not cold
+I'll give you a hint
+When someone writes a book they structure the book very well When someone writes
+policy document they structure that document very well The US code is very well
+structured
+What type of scenario
+the document is not going to be very structured
+What if we were to transcribe my call this lab today
+Facebook is a good one
+So here's the scenario Imagine we we get the transcription from all my lectures
+lectures
+for this week
+And we wanted to chunk based on the concepts that were being discussed
+The way I talk is not very structured right We're talking about different things
+this is a scenario where using cement chunking would be very helpful
+The caveat is this is gonna be more expensive because you're actually using ILLM
+to read the text
+understand when someone is changing the topics and then breaking that in
+different
+chunks
+That's why in here
+again we are using link chain I'm pointing to a model in Dares that can do the
+embedding
+of the text uh to do the semantic chunking
+This is the most advanced one
+And here we can see it's trying to keep
+The concepts
+In the same chunk chunk so it's not breaking it's not having the same chunk
+concepts
+Yeah Mohammed this could work for audio audio video if you have the the
+You have to get a video to text and then you do
+the chunking based on the text the transcript of the video transcription of the
+video
+This is another uh insightful one trying to use other linguistic libraries uh to
+meaningful boundaries
+Uh this is an interesting one I think this also has good results
+For the scenario I ride that you can see here is breaking by
+Is the sections here are good and we didn't because the the syllables is well
+Uh this one was also very efficient
+This is an interesting one This is a strategy I'm gonna get a little bit complex
+here
+It's good for retrieval because one of the challenges with chunking
+is if your chunks are very big
+Your LLM your rag solution might not give very precise answers for your users
+so you want to keep your your chunks somewhat small
+So what do you do here you generate chunks that are very small
+but at query time you expand to include what come before and after the chunk
+a very interesting strategy
+This one I didn't implement I was getting some errors and we need to review this
+so if anyone wants to try this one
+Uh parent child retrieval so this one basically this is more also at execution
+time
+And imagine you are getting you are working on the US law code
+And you are working on a specific regulation
+During retrieval
+you're gonna have very good retrieval if you include every regulation
+But then when you return the answer to the user you might want to include all
+Hierarchy the other laws
+That apply in that scenario So when you're thinking about hierarchical content
+Using this parent-child chunking strategy works very well Again you save a chunk
+Children
+And then at query time you include the parent
+This is an important one So everything I said in terms should uh should you
+chunk save code in our vector database the good news link chain already handles
+for you
+There is a recursive character text splitter and you just inform what is the
+language
+you're working on
+And you can even include some metadata so look what this is going to do
+It was able to break the chunk exactly in the class uh the class or the method
+it even included the documentation
+So voila
+someone built a library link chain who already has the
+The way for you to chunk your code
+the chunk is gonna have the exact context in this case of the class
+or the the function
+This one is also uh using um LLM
+so it's gonna
+Is gonna chunk the document
+But it's gonna add the additional context to each chunk for example what is the
+parent
+what is the context being discussed You're trying to enhance each chunk so you
+have
+more metadata
+Um here so here we are explaining we are enhancing the chunk with the name of
+document the section
+and then we have the actual content
+And this last one here is this the
+This is a genetic chunking is actually I'm just passing the entire document
+To another LLM that has a big context window and I'm trying to to generate
+the chunks I let the the LLM to do it for me
+I didn't install a line chain data breaks here so it's not going to work for
+And yeah
+Same thing here This is uh using lemma index is using lemma from meta
+To generate the chunks let's see if this one is gonna work
+Yeah where I didn't install install uh link chain data bricks
+Uh I need to see what I did wrong where I didn't import it
+Yeah if someone when you try to run you get this error let me know I will look
+into
+this but I tested this
+Uh we should just work I probably skipped a cell here where I'm declaring the
+Link chain data breaks
+OK but again this scenario here it's basically passing the entire text to our
+LLM
+in this case lemma
+and it's it's letting the LLM to actually break down the document for us Again
+limitation is the document might be too big so you might actually have to break
+document in bigger pieces
+That fit
+The maximum of the context window of the LLM
+This can be can help you on the retrieval and answering The challenge with this
+is the cost
+Right because this you're calling LLM all the time too so this is gonna
+increase the cost
+Yeah so what you can do if you want to explore more of this
+you should save all these strategies into a vector database into a table a delta
+and you can compare
+And we you you can also use your preferred chunking strategy and build a
+pipeline
+that chunks the documentation and saves into a delta table
+I went a little bit high level but my recommendation is for everybody
+Tomorrow during the week we don't have class next week we have a break of one
+week
+before I come back for week 2 is go through these different chunk strategies
+execute
+them understand the difference
+and try to compare which one is most efficient for your scenario
+Yeah the chunk size for this one here um
+It's like
+300 tokens
+A token is about 4 characters
+Token is not a single digit or letter it is like 4
+So when you pass chunk size you're normally talking about the number of tokens
+Cool I'm gonna move into lab 3 Any questions about lab 2
+Of day 2
+Yeah 300 is a good number
+And Linkchain has a lot of these defaults for you
+Um the strategy I really liked And again it depends on you have to think the
+The smaller you go on the chunking the better your retrieval is gonna be because
+gonna be able to answer very specific questions but it might lead into
+not so good answers So it's a trait you have to find based on the type of
+document
+you're reading and you have to do testing
+So I wanna say there isn't a silver bullet
+But normally lane chain the examples you see
+is between 300 and 500 tokens
+And again in this example here is a cell number the recursive chunking strategy
+cell 11 I would say this is the most basic but the most used
+Because
+these had some overlay
+And it's able to find um a sentence until the end
+So when you look here
+You can see that we're not breaking
+So if you're kind of looking for a silver bullet I don't believe there is a
+silver
+bullet but this recursive character text splitter is kind of the one that works
+for lots of scenarios
+OK I'm gonna look on questions later because I'm running a little bit behind
+I just want to make sure
+Are you guys following along Is it clear what we covered on the chunks chunking
+Can I get a thumbs up
+Did they lose everybody
+And remember as data engineers machine learning engineers
+This is an area we're gonna do a lot of work
+So let's move now then into a vector database Here we are
+What we have done is
+We uploaded the documents uh into the volume and the the the document is now in
+raw table
+Now we want to actually generate the the chunks OK
+And here is where
+The magic is going to happen
+Lab 3 is also very important
+So what we are doing on lab 3
+And it's going to be the 2nd strategy the recursive character text splitter is
+one we're going to use here
+We are going to create another table
+That now we're going to have the individual chunks
+But we are going to keep the document IG that is coming from the table that has
+raw document
+And we're gonna have the source the title and the date it was created
+So the syntax is very simple here guys with with uh link chain
+I'm just saying I want to use the recursive character text splitter I want to
+the chunk size about 400 tokens
+I want to have an overlap of 660 tokens
+And then what I'm going to do here I'm going to look for the table where we have
+raw documents
+And then and I wrote here keep in mind I'm doing this as in collect so this is
+running at the driver
+If you were to do this with a very large data set I don't recommend doing the
+collect
+You actually have to include this in a UDF
+so you can parallellyze and run things in all the drivers OK because remember
+when
+you run collect in Spark you're bringing all your data into the driver
+OK so I'm doing the chunking here in the driver in memory
+So I just
+Got the link chain class to do the chunking
+And then for each each uh document I have in my table
+I let link chain generate the the chunks for me so these 3 cells that I'm
+creating
+here that I'm selecting this is where the magic happens This is where Lang chain
+is
+taking the entire document
+and returning an array with all the chunks based on the strategy we use
+So then I just
+Loop through all the chunks that link chain returned
+Save that on an array that has an IG for the the the chunk the document IG
+an index
+The actual text
+where it came from the title
+and the time to the to today's time
+and then I saved that into the chunk of bootcamp docs
+This is where magic happened
+So we're going to look into that error We shouldn't be getting error on lab two
+but
+we're going to look into into lab one but we're going to look into that later
+Any questions in how we went from the raw table
+Into the chunked table
+This is the main part of today's lecture in lab
+We have a table
+That has the raw documentation I'm gonna select it again
+So we have in this table we have one record per document
+And in the column content we have all the raw text in this case all the raw text
+the PDF
+Then what we want to do we want to break down this this content into multiple
+But we can't just just do that naively We need to understand where we break
+things
+down
+So to do that we use the we use
+Lang chain with this strategy that tries to look for sentences
+And then we tell Linkchain here's my entire document break it down Linkchain
+breaks
+it down
+We saved that
+Each chunk has a row in the table
+And that's what we have here the chunk index
+The actual content
+And the actual location the source
+After this we have the chunks Now we are ready to create the vector database
+Because in the vector database we want each vector to be one chunk
+Important
+Then what we say here we are just gonna synchronize
+what I had done manually in the in the demo In the demo I had come here into the
+I I I clicked um vector search
+and then I said from this chunk table I wanna create the index
+And generating bedgings
+We are doing the exact same thing here via code so the benefit of this if you
+wanted
+to automate this on a pipeline you could do it
+And here I can actually query that that uh that vector database
+In Python
+did I delete something
+Let me make sure I I run this from the top because I tested this so we should
+not
+get errors
+OK so the
+saved I don't just don't wanna yeah here is the vector database
+Oh I think uh bootcamp docs index Let me see if I I don't think I included the
+file for this table
+Let me remove the source file
+if you get this error let me let me see it
+Um I don't think in the index I include the source file Did I change it
+Let's see
+Yeah good so it worked If you all get error on cell 12 of bootcamp of the lab 3
+just make sure in the columns uh you remove source file I I used the wrong name
+there
+So here I returned the top 5 documents that are similar to my question here What
+the price of the boot camp
+what we
+Why I really learned we why I mean we why I really learned chunking strategies
+returns
+And it actually tells me
+The percentage here this number is the probability
+that these questions are similar to what is in the document
+And here like I mentioned in the beginning of the class
+if you wanna go from dance into sports
+Or hybrid you just change the query type and data is gonna do the magic for you
+It's one line of code
+I don't recommend you create the
+The index just use mine but we want to give you permission to create the index
+What we want you to make sure you do
+Is the endpoint you use here should be the Zakki VS should be the same endpoint
+But the index you should be able to create which error message you're getting
+Ringing
+no permission to create index Can you share the the error message
+Let me make sure I gave you all permission to do it That's an important one
+You know what I'm gonna look into that error later Let me finish the the other
+labs
+and then we're gonna go back and look into the errors OK
+If the people who are facing errors can stay we are gonna we're gonna review
+OK um there is also a way for you to filter the content that is returning from
+vector database based on the metadata you add
+So for example you could add as a metadata
+in the receipt scenario you could add the student IG or the the employee IG and
+could filter just like you do a work clause
+You could do that with a vector database
+So yeah that's that's uh that is it for the vector search uh lab
+I have all the recommendations for you here if you really want to understand
+more
+about the algorithms it uses filtering re-ranking
+read this documentation
+You could also add a student ID or employee ID to return personalized content
+And you can try the the continuous pipeline to see how this works with
+change data feed
+to do incremental updates into the vector search
+OK let's go back into lab now We're gonna go into lab
+2 now I just want to show you all the knowledge assistant
+I already did the the demos for the demo for you all on the knowledge assistant
+And here um it just
+What it does it just describes what you should be doing in the UI
+Like I did if you recall I came here in the agents
+I went into knowledge assistant
+Then I gave a description I selected
+the UC file I wanted the UC volume I could even point to my existing vector
+and then I click create agent This is gonna take
+like 10 to 20 minutes
+And after I have that created
+Is someone running for on my
+I suspect someone is is running on my folder and you should be cloning your own
+Please
+don't use mine
+UC is Unichi catalog
+OK so in terms of uh lab 4 it's very straightforward You go in the UX you you
+create
+it here in the agents
+In
+I'll have to update this This should not be here
+Something is off and we're in surplus
+EL flow should be in the cluster I'm gonna do a peep install here
+It should be already installed on on surplus
+OK um
+Yeah you you know what probably the reason why I was not getting error because I
+was
+doing this in VS code
+And on my VS code environment I already had ML flow installed so probably this
+be an error
+why we're getting the error here
+I'll make sure that I update the content in the lab
+Uh now we're getting different era
+Let me try something
+Restart restart
+So let me give me the
+No Does anyone remember the syntax to restart the kernel
+So it's data bricks um DBU to restart
+Python I forgot the syntax Yeah this is the one
+What we're seeing here
+this should be peep install uh ML flow
+We do this
+OK let's see if this resolved the issue If not we're gonna skip this lab I'm
+gonna
+fix the issue because I build all of this in VS code and probably my end
+ML flow was already installed and it's conflicting Yeah it works now right So
+I need to do is just peep install uh ML flow I already had that on my
+environment
+uh restart the kernel and then I import it here
+What this is gonna allow us to do is gonna allow us to
+Use the end point
+Of the knowledge assistant that I created before so it's going to allow us to
+use
+the the agent bricks that we created
+We can use it here
+I already have it here the endpoint
+And then here I can query that that um agent bricks that we created before
+And here let's see it's streaming the results
+Remember we create an um knowledge assistant agent brick It gets deployed as an
+then I can use ML flow
+Libraries to query that endpoint
+And here we are seeing the results The ML flow returns to me It's not very
+because giving me the raw Js on file
+But then when we go into the the experiments and we click into the the um agent
+bricks
+We should see the query here
+Uh with my questions
+Cool Let me go back into lab 4 So lab 4 was straightforward It just helps you
+create the the knowledge assistant in the UX
+Then you can actually query that endpoint using the ML flow library
+And if you wanna have multi-turn conversations more advanced you can have it
+OK and it talks about you could create another knowledge assistant so the last
+lab
+I forgot what is the last lab
+Oh it's embedding strategies This is just comparing
+You're gonna compare using dense versus hybrid versus sparse
+OK And all all this is doing is just squaring the vector database
+So the vector database is ready
+and it's telling me which strategies we're gonna use uh if you're gonna use uh
+hybrid
+or we're gonna use um
+The nearest neighbor and it gives us a score of each strategy
+Query type something is wrong here
+Search strategy this is correct here
+I don't know maybe maybe the the version of the databas client that I use on my
+machine
+and my environment is different and it's saying that the query type here is
+incorrect
+I tested this one here I have to double check Why is it saying a strategy
+Why is it saying query index it's saying
+So how do we learn these things We go into we go into
+here and we look for data bricks vector search
+SDK
+And we look for the documentation of that metal query index Let's see if I
+If I'm using the wrong parameter
+Yeah probably
+In my environment I had already done the peep install and I'm not doing it here
+So my bad guys uh sorry for that I'll make sure that I update the lab
+To do the peeping style
+Yeah you see the query type is correct uh probably it's the library I didn't
+import
+I'll fix it and I will upload it again lab 5 but again the idea here is we are
+just
+querying the vector database using different strategies
+And we start the results the scoring
+And we give it um
+Agreed how well it did
+So essentially what we want to know here is based on the type of question we are
+asking
+Like here this is more a conceptual question
+Are you gonna get a better answer using sparse or dense For this that is more
+code
+related are you gonna get a better answer
+using sparse or dense And same thing applies to this one And then we give you
+some
+Comparison table with the results Very straightforward
+I had some hiccups on on on lab 4 and lab lab 5 Again I'm gonna update the the
+All we needed to do is just make sure we have the right libraries there
+And you should be able to reproduce this
+Again folks
+what we learned today
+Was to go from raw document
+Raw documents into chunked documents using different strategies
+saving that into a a vector database
+then query the vector database using different strategies
+That's the manual way of doing this doing from scratch
+but we also learned the managed way the local way of doing this using agent
+I'm gonna stop the recording and I'm gonna stay here longer to take questions
+see
+the scenario someone was having or error Thank you so much everybody

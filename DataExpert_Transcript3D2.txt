@@ -1,0 +1,978 @@
+OK let me go back to Discord OK everybody can hear me so I'm gonna move my
+Discord
+window to my other screen
+As I mentioned this is day 2 of a 4-day boot camp where we're gonna be building
+Zakki
+Can anyone remind me why we named our agent
+This way
+Baby Zach uh yeah I like that one
+So the idea is that for the first week we really get our unstructured data
+In the right format so we can build the agents on top of that unstructured data
+So today
+you I hope that you all are going to leave this session
+and you can call yourselves experts in chunking strategies
+OK
+Chunking strategies
+Um
+so moving I'm gonna make this full screen
+These are the topics we're going to cover today chunking strategies data bricks
+search aged bricks and how you can integrate the link chain in data bricks
+Before I start sharing can anyone uh tell me remind me
+What is a chunking strategy
+Or actually why do you need chunking when you're working with LLMs
+Why is that important
+OK I'll let Josh explain it
+Why do we need chunking strategies when we are working with LLMs
+Can you hear me Yes Josh
+Oh OK cool um
+You need chunking strategies because when you're working with vectors um you
+have
+to break up
+Oh dang it I forgot the name of it
+When you uh you break everything up into um a vector
+like vectors yeah they're huge huge number sets so you need to break that up
+That's
+my understanding
+Thank you Good answer Anybody else
+Go ahead we're gonna say something else
+Oh I was just saying I'm forgetting the word for that Somebody will add it I'm
+sure
+The embeddings yes thank you
+We're gonna talk a lot about embeddings today OK
+Thank you Josh Good answer Let's see what Nayana wants to say
+Hello
+Yes we can hear you
+Yeah so the chunking because uh it's a nonstructured data right
+Because it could be a document or it could be a JSO file or it could be a uh
+pictures
+or anything
+so when we store it in a blob uh storage
+So we want to uh
+Divided into smaller chunks so that we can fit into the element and get the
+Process it
+Thank you So both of your answers and your uh Josh's answer they are correct
+And I would ask an additional question So
+you have an unstructured document
+You could create embeddings for those documents Let's say you have a PDF that
+has
+100 pages
+What is blocking you from saving that PDF to cloud storage seeing that in a
+volume
+And then just creating the embedgings which is to transform the instructure
+document
+into numbers
+what is blocking you in having the entire PDF as a single chunk
+Why don't we do that
+So as per my understanding if we save an entire document as videos into the
+storage
+right when we are processing it it has to be
+Um read in in memory
+So we can't do that
+Thank you for that Thank you for volunteering We're gonna answer a lot of those
+questions
+today
+What I want you all to remember um
+remember this I'm getting old OK so my memory
+doesn't fit the things that I used to do when I was 20 years younger OK So my
+brain
+cannot process the amount of information as I was used to
+The same thing applies to an LLM An LLM has something called a context window
+Has a limited
+Brain size
+It can process
+That is the main one of the main reasons why we have chunking strategies
+We're going to cover more details Remember that
+As human beings we have limited capacity to remember some things or to process
+some
+information LLMs have the same thing Of course in recent years they have become
+bigger
+and bigger
+OK compared to 3 years ago the context window for LLMs have
+have become much bigger larger
+But they still have a limit
+So
+When we talk about building a red-based solution in data bricks solutions that
+retrieval augmented generation
+Let me see if I can make this uh full screen The problem is if I make full
+screen
+my my video disappears and we want to keep that so we won't make it full screen
+I think I'm just gonna do it on the slide version OK let me see if this is
+better
+for everybody
+No it's gonna be a little bit small Yeah we'll keep we'll keep the browser
+version
+It's OK
+OK so
+When we talk about the options you're going to have to build rag-based solutions
+data bricks solutions that have retrievable augmented generation
+You have two options in data bricks The first one which is the one that's easier
+for
+you to get started is more local it's managed but it's also production ready
+helps
+you get started faster That is called agent bricks OK
+And within agent bricks you have different knowledge type You have different
+bricks
+And one of the bricks is called a Knowledge
+Knowledge assistant
+that's the one that allows you to build a rack-based solution in data bricks
+Then if you want a more uh customization you want to be able to code first you
+want
+to have custom logic you want to customize the way you do the checking strategy
+way you retrieve documents
+You can you want to use your own frameworks let's say length chain or lemma
+index
+then you can go into the agent framework
+These are the two options and again as a recap
+the way a rag solution works the user asks a question
+Let's say how much does the boot camp cost
+Um use an embedding LLM
+a neural net that transforms that text to a question into embedgings
+Then you search into a vector database
+for documents for content that is similar to that vector
+Based on the same magic meaning
+You return the the similar documents
+Then you pass the documents you found in the vector database to our LLM
+and you generate an answer that is grounded on your documents that is grounded
+on
+your content
+So one of the main reasons we do reg is to avoid hallucinations and ground
+Our AI based system on our data
+What we're gonna build today we're gonna build the
+Agent Brick
+uh using the knowledge assistant that can answer questions
+about the course will be able to ask questions how much does the boot camp cost
+Does
+it talk about uh does it teach chunking strategies What is embedging we'll be
+able
+to answer some of those questions
+And we will start building on path 2 which is the more comprehensive
+Um and I have a notebook
+that has 10 different chunking strategies
+In that single notebook so that's why I said after today because we are all data
+engineers
+or machine learning engineers you all are going to become chunking experts
+Any questions about the difference between agent BRICS and the agent framework
+For example in the agent BRICS you don't even need to define the chunking
+strategies
+You just pointed data bricks to your documents
+and data bricks is going to be able to
+Break that document in multiple chunks
+Add that document in a vector database
+make that available as an endpoint Add guardrails Add citations
+Do governance with Unage catalog and your users can just access that agent that
+solution through an endpoint That endpoint could be cloud code could be Slack
+could
+be
+Any solution
+you build that can talk to an HTP endpoint endpoint
+While on the path 2 it's more you customize everything
+you create the chunks you save the data into the vector database
+You retrieve the documents from the vector database and you generate the answers
+We are gonna see hopefully by the end of today you're gonna understand the
+limitations
+and when you would go to one versus the other
+So bear with me I hope I hope when
+By the end of today we'll have the answers for this question
+The key thing here folks is that with Agent BRICS there is a lot of intelligence
+BRICS does under the hood
+to find the best chunking strategies
+To use the best LLM
+to optimize for the goal you have for your rag-based solution
+You see that when you're creating an agent brick
+You can define a test data set
+and data bricks is going to have some a lot of secret sauce to try to optimize
+your
+chunking strategies and the LLM
+to deliver the best answers based on your test data set with the lowest cost
+So moving on to the next slide um
+If there is one thing you can remember from today's class is
+Chunking is the most
+Important aspects of a G AI based solution and at the same time is the most
+underrated
+People fly to build their endpoints to choose an airline
+And they don't spend time
+Understanding the chunky strategy
+So for example we are saying that I have a large PDF with the syllabus
+And I can't just provide an entire PDF to an LLM
+So I need to break that down What is one of the first strategy you could do You
+say hey I'm just going to break this in chunks of 500 characters
+Words
+Uh or words
+And without no overlap
+The problem with that is that your agent Zaki
+would cut answers
+In half OK because when you you're asking a question Zaki would go into the
+vector
+database
+and could return a chunk
+That doesn't have the context of the the text that comes before or after
+after today you're gonna learn that through chunking
+Zakki can return answers that has the full context
+You will see that today we're going to learn 10
+Chunking strategies Hopefully you remember them now
+And that's the goal for today
+So let's talk about what Josh uh asked and
+Was it uh
+Nayana uh in terms of embeddings
+So the way um
+LLMs work the way rack-based solutions work uh LLMs vector databases they don't
+know
+text they only see numbers
+And the way it happens is when your user again asks a question in the chat
+we use an LLM in the case of data bricks we can use this LLM
+This general text edging um LLM
+Again it's a neural net It's an LLM that is able to convert that text How do I
+submit
+a receipt appeal into a vector of 11,024 dimensions OK it's going to be just
+like
+a vector with a lot of dimensions
+Based on this
+I will have the same documents that are already in the vector database with the
+same
+vector structure
+So all I need to do is to compare the vector that I'm getting from the questions
+versus
+the vectors I have in my database
+There are multiple algorithms to compare vectors
+Um most of them they use um nearest neighbor strategies
+Because seeing similarity is the easiest one but there are multiple algorithms
+We're
+not going to focus so much on the algorithms today
+but I have references if you want to learn more about the algorithms
+And based on that we understand to answer these questions what are the vectors
+in
+the vector database
+that have chunks that are most similar to the question that is being asked
+Internally if we were to plot this in a Cartesian plan
+What we would see is that
+Topics that are related to each other
+they are gonna live close to each other in this vector space
+So when I'm talking about boot camp pricing and enrollment
+They would be in a different space versus receipt versus internal policy versus
+when
+we are talking about
+code and data bricks
+So when we are using this Cossini similarity when we are using nearest neighbors
+They are trying to match in this Cartesian plan
+what is the
+what is the closest
+How are topics related to each other
+we
+embedding creating the embeddings There are two main strategies we can use to
+create
+embeddings One is what we call dense embedgings
+This you can think as you're codifying your text into vectors
+But here we are focused on semantic meaning
+So let's say if I if I talk about cats dogs birds
+Themically they are related they are all animals
+so in this space they would be related together
+But let's talk about let's say if you're talking about code
+If I say spark Reed
+Versus spark.t
+In just by using semantic meaning
+In this context
+A dancing badging strategy wouldn't know that these topics are related
+That's when you go into more the sparse embedding strategy
+Because this is based on traditional
+ANLP libraries
+That matches um word frequency
+that matches terms that appear together
+So you can think again dense and badging is an LLM
+that is able to group topics that are symmetrically related in a vector space
+Its sparse edging is more traditional It uses NLP to count word count terms that
+are
+similar
+The good news is that the majority of vector databases including
+including data bricks vector search they can combine both dense edging and
+sparse
+embeddings
+So if I'm asking about hey show me the syntax of uh Spark declarship pipelines
+It can look for both
+Some examples we have throughout the course
+it can tell us which classes are talking about spark declarative pipelines
+But it could actually find the the the code functions that have sparked the clar
+chip
+pipelines
+So I think that the silver bullet for you most of the time is going to be to use
+a
+hybrid approach
+Between dense and sparse
+If anyone wants to understand um the algorithms that are used and want to
+understand
+the difference between
+these strategies you just go into the vector search
+documentation for data bricks
+And we explain what is a vector search
+And we talk about um hybrid keyword similarity and we talk about the algorithms
+that
+are used for example if you're doing um
+Which algorithm is using
+for dense and which algorithm is used for
+Sparse
+Any questions on the difference First I want to make sure we understand why we
+need
+embeddings how they are created that you need uh uh LLM to do it
+and what are the two strategies and that the silver bullet here is hybrid Any
+there
+Go ahead Nayana
+Yeah so I have a question So these embeddings embeddings are created for the
+question
+we asked right
+Correct
+Not for the PDF document which we are trying to feed into the LLL
+Good question We have to create the the embeddings for the uh for the documents
+and
+that's what we're gonna be doing today
+So all your PDF documents you have to chunk them You have to break them
+And then transform them into each chunk into embedgings
+So when we're getting the questions we are comparing apples to apples we are
+comparing
+vector to vector
+Mhm And then how how how are you saying that similarity search
+So these are multiple algorithms that people have been using for years that is
+to compare two vectors two vectors like this
+Both the vector that you generated from the question versus the vectors you have
+from
+the PDF documents
+So cosine similarity is the most common algorithm on how you find
+These vectors how you compare these vectors and there are multiple algorithms
+you can use
+OK probably when we go along I think uh we'll understand more
+Thank you
+Any other questions
+Uh Mohammad wants to ask a question so let Muhammad speak
+I think Mohammad just dropped
+Let me see OK
+Any other questions before I move on
+This is an important OK let me see if Regan wants to talk
+I just made you a speaker go ahead
+Yeah thanks I think
+It's similar to Nana's question
+so
+When you ask a question
+What are you embedding is the
+Is the question being embedded as a PDF
+So good one So let's say in a rag-based solution you have to
+Do batch embedging which is before you go live with the system You want to break
+down
+your documents
+into multiple chunks and for each chunk you're going to generate the embeddings
+right
+So you have to convert your PDFs your unstructured data into embeddings and save
+as in in the vector database
+that is setting up the database setting up the database
+Got it OK And that's where you guys uh data engineers you guys are gonna play a
+big
+role right Just like we build silver tables and gold tables
+A vector database is the gold
+table you need to build
+for a rag based solution
+OK I think that's a good analogy Vector database is the gold table
+for your rag-based solution
+Now each time you get a question from a from a user you have to convert that
+Into a vector
+So you can compare with the other vectors you have in your gold table in your
+Got it Thank you
+Awesome Thank you for the question
+So the good news OK I think Balaj wants to
+ask a question And folks we have time on the lecture so it's OK that we go
+through
+questions because I only have like 6 slides we're going to spend more time
+on the labs today so it's OK to take questions as we go
+Bala uh you wanna ask her questions I cannot hear you
+Is anyone else able to hear Bala
+Or is it me No
+OK I'll keep going
+OK so what is the good news for everybody
+In Data bricks data bricks has a built-in vector database
+I didn't explain it but what is a vector database
+It's a database where the format you are storing like in a transactional
+you have rows
+And in those rows you can store any text
+anything you can represent in a text file
+Uh analytical database or
+Let's say delta you have
+column-based storage
+of anything you can represent in text
+A vector database is a database but
+everything you save there is just numbers
+A vector is a collection of numbers OK
+So the good news
+Degunius
+Is that in data bres we have a built-in vector database It's called vector
+search
+And
+If there is one thing you can remember of of uh vector searching data breaks is
+you can make
+any delta table you have today
+A vector
+With a click of a button you can say I wanted this delta table that has all the
+raw
+documents the text of my documents I want to convert this table
+That table already needs to have the chunks You don't put in that table one
+record
+with the entire document so you break down each row is going to be a chunk
+Then you can tell Data Bricks Data Bricks I want you to synchronize this delta
+table
+with
+my index but the way to synchronize you actually have to generate an embedding
+So what database is going to do OK you have this delta table that has the chunks
+has the parts the different parts of the document
+And based on the change data feed of that that table
+We can continuously generate the embeddings for the the chunks
+or we can trigger that
+So again vector search is going to automatically convert your chunks
+Into vectors
+The way we do that we can leave it running all the time that's the continuous
+mode
+or we can make it something trigger that we schedule when we want to generate
+the embeddings and under the hood we're going to use an embedding model and here
+this case is the data bricks general text text embedging model
+And that is actually converting the text
+into the vectors
+Then when the user is sending the query
+We're going to get that text We're going to use the same embedding model
+We are going to create the vector on the fly then we are going to use
+Nearest neighbors could send similarity agoris to find the different chunks
+What are the benefits of using vector searching data bricks
+Like I just said it automatically converts delta tables into vectors
+And it understands change data feed to only do incremental processing
+And it has multiple embedding strategies and multiple ways for you to filter the
+data
+for you re-rank the data
+Of course everything you do in vector search the governance is also going to be
+managed
+by UNH catalog which again it means you can filter permissions etc like you do
+any regular table
+and uh everything that happens in vector search
+also gets logged
+Let me just show to you how this actually translates into
+Into
+In the UX it's going to be easier I just do a demo now
+just to make it tangible before we show the next slide so one second
+I'm gonna do a quick demo
+So what I have here I am going to go into catalog
+And we're gonna see how we generated this this table uh during the the the lab
+So I'm gonna look for hopefully nobody deleted my my schema
+So let's look into this table here called chunked bootcamp docs
+So what I was able to do I was able and again we're going to see the code for
+this
+Let me just select this warehouse
+So look here and Ayana this is gonna answer your question OK So one of your
+So what I did I have some Python code
+that is looking at the syllables PDF
+OK So you can you can see here I have this column with the name of the file
+I basically broke that PDF in multiple chunks
+How did I break this PDF in multiple chunks Don't worry about it we're going to
+learn
+later And you can see here each chunk has
+some text OK So you can see that for this first chunk
+It's actually the first page of the PDF
+The second chunk
+is the format
+Then I have another chunk that has a table that explains the personas
+And so on and so forth
+This again this is just a regular delta table where I have multiple chunks and I
+some metadata where the file is
+and what is the the title of that section
+What I want to do I want to transform this table into a vector database so we
+can
+do similarity search and we can use this in red In data breaks you can do this
+you
+don't need to use the API we're going to show in the lab you use the API
+but in any delta table you can come here and you can say I want to create a
+search index
+And what this does you can call it let's say vector search
+Bootcamp docks
+I need to provide it a primary key so I'm going to call this chunk IG and I want
+to
+say OK I also want to in my vector database I want to include in my vector
+the title and the source URL because I'm going to need it later
+And here's where magic happens
+I am going to use I'm going to compute the embeddings which is transform the
+text
+into the numbers
+So I'm going to say I'm going to compute embedding for this column the chunk
+test
+and to do this I'm going to use this module from data bricks
+There are 3 models you could use to compute the embeddings from the UX
+And here
+I can actually save the embeddings to another table if I want to because here
+I'm computing the embeddings I'm saving that in the vector database but if I
+wanted to save
+the embeddings the numbers into a delta table I could do that too
+I need that endpoint Everybody's going to be using the same endpoint for the
+demos
+which is the Zakki VS
+And then I can inform do I want to distribute triggered manually the
+synchronization
+between my delta table and my vector search
+or do I want to dis to run all the time But for this to run all the time I need
+the
+table the underlying table to have changed data feed enabled because database is
+going
+to use that to only do incremental synchronization
+Once I click here it's going to take 5 to 10 minutes to generate the index
+And Luke
+Luke
+There is a difference here I'm going to make it big Let's see who can get it
+Can anyone see here
+there is a difference in the list of tables
+Can anyone see what is different here
+I'm going to highlight
+There is a difference here
+What is different
+There's a difference
+There is a different icon here
+And I would let Reagan uh talk yeah go ahead
+How do you know one is an index
+it's by the name and also there is looks like a
+looks like a tree
+Yeah you got it here
+right The icon changes The icon changes right Good job Thank you
+So what happened is in the same and
+that's why when we were talking about the UHH catalog I emphasize the most
+part of your unstructured solution or gentric solution is your catalog
+So in UH catalog in the same visualization I have both my
+Unstructured data which they are hosted on my volumes I have the structured
+of them on my chunks in a table and now I have the vector
+version of dance on a catalog
+So look at this uh it says my index is online uh it's synchronized
+It's based on the source table
+And it has indexed 102 rules So what I can actually do here I can test in the
+playground
+And I can ask a question I can actually does anyone wants to ask a question ask
+me
+a question on the chat
+Something you wanna ask about the boot camp because I indexed every everything
+the syllabus So ask me a question
+That you want to learn from the boot camp that we're going to cover on the boot
+I'm going to type it here and let's see which answer we're going to get
+Ask a little bit more elaborated question like what are the the chunky
+we're going to cover
+Any suggestion which question you wanted me to to cover
+OK I'll start with this one
+Which chunking
+Strategies are we learning
+In this boot camp
+Yeah I like this question Um
+And what is what is cool about this this uh because I'm using the playground
+you're seeing how the LLM how the implementation is thinking about here
+and look
+This is the answer
+The boot camp includes Lab 2.2 specifically focused on chunting strategies for
+The objective is to understand implement and compare major trunking strategies
+used
+in production
+And it talks about 7 strategies we covered
+The boot camp emphasized that chunking is one of the highest leveraged decisions
+the reg pipeline
+OK what is good about it it's actually giving me the reference because this is
+grounded
+So it's giving me the citation for the exact part of the documentation it found
+my
+answer from Look here so it found on lab 2
+And he explained it
+Now let's ask the other question which days covers unstructured data I think
+gonna answer everything
+Yeah I I ran out of Mohammed I ran out of stickers but uh I'm keeping notes on
+who
+are participating and I'll I'll get more stickers and remind me on LinkedIn and
+I'll
+send to you guys once I have them
+Yeah and the question um
+based on the bootcamp documentation and structure data is covered on day one
+Um yep
+And he talks about it So now I'm gonna ask the question
+how much
+I
+The boot camp
+No I'm not keeping track on the daily who is doing well
+You all see the answer here
+It gives us the exact
+Cost for this one
+And what should be different now
+Is because the response should be coming from a web page this is not a PDF
+Um this you're gonna see later
+that this is actually coming from it's not coming from the PDF it's coming from
+A web page that I we use web crawling to get the answers for
+So this is a vector database and how it's integrated in databas how you create
+one
+of course everything I did in the UX you can do via code you can automate
+Via notebooks So as data engineers like I said you want to build gold tables
+so a vector
+Search is another type of gold table you want to build
+For all the agents you're building in your company
+Yes so the source I used and we are going to see that in the lab I just loaded
+PDF which is the syllabus and I wrote a script that goes into data export
+Doryo
+It goes into programs
+And says that as a
+As content
+In the table
+OK so for the purpose of the today's lesson the sources we're using is a PDF and
+web page
+Don't worry Mohammed we're gonna see how I loaded the the the documents in the
+labs
+but know that you need something
+This is actually a good question You're going to answer the question for me
+What I did
+I saved
+OK so let me go into Unic catalog
+It's actually a good question Let me let me I wanna send the question back to
+guys
+So what we're saying is that what we're saying is I have a table
+We are
+stopping the warehouse every 5 minutes to save money here so I have to keep
+restarting
+so give me one second
+So we're saying we have a delta table that has the different chunks the
+different
+parts of the PDF and the web page
+Like if I order here
+You're gonna see that uh here's the web page I extracted it
+So my question to you all is I uploaded the PDF
+With the syllabus to a
+volume similar to how we learned
+On Tuesday
+Question for someone who wants to get a sticker later
+How do I go from the PDF
+Into text
+Based on what we learned on on Tuesday
+What is the name of the database technology that we can read a bunch of PDFs and
+get
+the text
+Exactly
+So what I did is I was able to upload the PDF
+Get the content of the website
+I uploaded the PDF and the HML into a volume
+then I wrote a notebook that uses AI parts document get the text from from the
+PDFs
+and then break that down in multiple parts in multiple chunks
+This is what we're going to do with the lab today
+That should they lab That's the first lab actually
+Does that make sense
+Awesome
+OK so going back to the lecture here
+I'm not going to spend a lot of time on on explaining each chunk strategy here
+going to spend time in the notebooks in the lab I I will review in the lab
+But what I want you all to know similar to how when you're working
+with traditional machine learning
+Your data scientists they do hyperparameter tuning to different to analyze how
+parameters lead to a different uh output
+Of your model
+Chunking is similar
+We can do a lot of testing on different strategies to understand how better
+retrieval
+And answers we're getting based on the chunking strategy we use
+So I'm giving you 10 different strategies There are multiple strategies you can
+use
+and we're gonna see on the lab uh how each of these work using lang chain and
+results we get
+This shouldn't be scary It should be very straightforward What we're trying to
+do
+here is hey for example on the first one fixed size we're just breaking breaking
+document on a specific number of characters all the time That doesn't have the
+Recursive it tries to break the document based on the sentences
+If you are working with a Markow or HML you can break the chunks based on the
+sections
+of the page based on the titles based on the headers
+What you can also do you can use a semantic chunking which is you want to break
+document based on
+The topics being discussed in the document
+You can you also have chunking strategies if you're working with code for
+example
+because the way you chunk
+Python SQL JavaScript code is different versus how you chunk
+A piece of a legal document
+I'll keep it high level During the lab we're going to go deeper
+Hopefully by the end of today you will remember this but most importantly there
+is
+no silver bullet for every solution I recommend you try some of these different
+you measure
+you compare them
+And then you see what works best for your scenario and for your documents
+The beauty of ML flow and database is you can run these experiments in parallel
+You
+can track the results in ML flow
+and you can use that to define your best chunking strategy
+caveat with
+Agent Bricks you don't need to worry about
+The chunking strategy
+Data Bricks is trying to do that for you
+You just upload the documents and Data Bricks tries to find a way to check the
+documents
+in the best way possible to be able to answer the questions you wanted the agent
+answer
+And here I'm giving you an example on the type of questions each chunking
+strategist
+could use
+OK let me ask you a question I need a volunteer to try to answer this question
+Should you
+Store code like JavaScript Python SQL in a vector database Is it a good strategy
+store
+code in a vector database
+I need a yes or no and why
+The answer I'll give you a hint is more nuanced than yes or no
+Uh it it it really it really depends depends
+At the use case if the
+if
+the audience is searching for the best practices for coding
+And it makes sense to put the code in the vector database
+OK so I I like where you're going The question is how do you chunk
+A
+Simple Python script that
+writes you a vector database How do you chunk
+Like
+Let's say a Python function
+Is nothing without the packages it uses without the imports
+So and you might have the imports all the way in the top and the functionality
+the way at the bottom of the notebook or your Python script
+So how do you chunk
+A Python script for example
+Um by uh function names
+Other functional bodies
+Yeah you have the hint here so good answer
+Thank you for for for answering Uh I'm gonna show you some of the
+recommendations
+for code
+So there are disadvantages in in hosting um storing code in a vector search You
+do it
+It's just you need to be aware
+So first thing is if you're using the dance and badging
+Which is the one that carries a magic meaning it's not going to work well for
+code
+So just in this example we string versus the spark read string
+they are not similar
+For uh dance and badging model that carries
+But they are similar
+I always forget the second type of model for the sparse model
+And like I was saying chunking can break the context like a function without the
+imports
+is useless
+And a code when users are asking for examples you always want the exact uh
+sample
+code You're not looking for something similar
+And the other thing is this is very very important
+Keeping code up to date especially if you're talking about real scenario every
+time
+your developers commit something to into your Git ripple
+Your vector database is no longer up to date so this is another thing you have
+keep in mind
+How you're going to keep your vector database up to date
+So you can do this just keep in mind try to also
+store the documentation
+There is an alternative if you don't want to store your code you could use an
+MCP
+server to for GitHub for example
+Where your code lives so we don't need to store that in the database
+In the vector database but if you want a store for simplicity and you want to
+everything in a single place for governance
+Just make sure you are using the hybrid search which is both the dense and the
+and I always make sure that you carry you not only you break by the function you
+a doc string you include a documentation
+for for that
+And here I give an example when um when people are looking for code
+when it would use more the the dense looking for concepts like explain what DLT
+now
+sparked the classic pipelines
+What they do
+Versus if you want to show me day 3 LD file this would maybe could be more
+applicable
+to use the GitHub API MCP server to on the fly look up for that file
+But if you want to know exactly about the applied changes into syntax
+That's where the the sparse
+Uh the exact terms matches uh makes sense
+So just like I mentioned um the way we're gonna go changing topics here
+the way we're gonna go from raw PDFs into
+structured text
+we're gonna use AI pars document
+AI pars document and we're gonna see in the lab
+uh it's gonna read all the files we have in a volume
+and it's gonna convert that as an output with a variant type
+And we will understand the variant type why this is important for us
+because when we use AI parse document it's not just returning the raw text
+I want to show this to you to everybody because this is very important on what
+AI
+pars document does
+I have a column here
+Which has the raw boot camp
+Ducks
+Hopefully hopefully I saved the output of AI parts document here otherwise it's
+to be difficult to explain
+Yeah this is this is very important so pay attention
+AI pars document is not just going to return the text of the PDF it's going to
+return
+an entire j zone
+That gives you the bounding boxes the location of the text in the document
+So in this example look here it gives me the bounding boxes It says in this
+in this Y and X
+Uh location we have the the title
+And then in this location I have the logo
+Of the expert that Dorio
+So it's giving us where the text is in the actual document
+OK so remember the output of AI parts document is not just the text
+it's actually this Jason
+That I'm saving as a variant type with all the coordinates
+What I did then was using the syntax here and I think the syntax here in the in
+PPT is wrong but in the in the lab is correct because I fixed this
+but what I'm trying to do here I'm trying only to return
+Everything that is in the text section of the Jason
+So only actually in the content OK So I'm flying through all the coordinates and
+only
+getting the content only getting the content
+That is what I saved
+here in the column
+Content
+when I used AI parse document
+I saved all the syllabuss as the raw text
+Is this the best strategy to save as raw text
+Maybe
+Um but that's what I did
+for the sake of the the lab
+Uh let's see what else I have before we go into the break
+So I explained again why AI parts document is important
+The output is adjacent we could save that output as as a variant and you can
+also
+get uh the raw text by converting the adjason um elementary one array and
+getting
+everything that is content
+Again the AI pars document it understands the layout of your document It
+understands
+the tables you have the bounding boxes you have
+so it works for both PDFs and images
+What
+The managed uh knowledge assistant is gonna do for us and we're gonna do that
+after
+the break
+It's gonna be able to automatically create the the chunks
+Automatically create the vector database and create an endpoint
+That we can we can we can talk about on top of our syllables for example
+You know what let me do this now before we go into the break and it's a good
+it's
+good that we do the demo now before into the break OK So what I'm talking about
+here
+is the knowledge assistant
+which is how you do a managed raging data breaks without having even having to
+the the the vector database on your own
+So what you do here in data bricks you go into agents
+And then you click into
+knowledge assistant build
+And you give a description you can say um data export
+Expert boot camp
+Assistant
+And then I inform which volume I have my documents
+And here I'm saying in this in this volume I have the
+Slides for today's class and the syllables
+And then I can give you a high-level description I could say provides uh the
+lecture
+slides
+And syllable content
+And I have additional parameters I can give it here so I can give the parameter
+I always answer
+In a
+funny
+And informal language
+What database is going to do here after you click Create agent
+This is going to automatically going to use
+AI parts document
+Is going to then create a vector database It's going to create the chunks in
+vector database
+And then he's going to expose that as an endpoint
+So this is going to take 10 to 5 minutes to create the agent so I went ahead and
+created
+an agent yesterday
+Using vector using the knowledge system
+So you can see now
+That is deployed
+And now I can use this this agent
+That I created with Agent Briggs here and I can then ask the question
+What is thought
+On day 2 of the boot camp
+The previous demo the demo I did 30 minutes ago we were just querying the vector
+Here Data bricks actually deployed an agent actually deployed uh it's going to
+an LLM
+Connected to the vector database but remember I also gave the agent BRICS
+guidance on the language I wanted to use to answer my question So you're gonna
+see
+that it's going to change the tone
+So I just asked the question what you start on day two of the boot camp
+And by the way I was not seeing the last questions I'm gonna answer those OK So
+you can see the agent uh already answered the the the questions The tone is
+gonna
+be different It's also giving us
+Everything was created uh for me folks Uh I just went into aged bricks and
+the the knowledge system
+And so it's already giving the citations for me It's telling me where it's
+taking
+And here I can actually see where the part of the document the part of the PDF
+it
+used to generate the answer
+and I can actually go into the catalog
+And see
+Which document it used to generate the answers from
+Everything was created for me I just used the wizard I pointed to the volume I
+said
+what I what I wanted the style of the language I wanted the agent to answer
+Then Database did everything for me It used AI parts document generated the the
+created the chunks and then exposed an agent an endpoint
+that can answer questions connected to that vector database using the language
+I wanted
+What is very beautiful about this what I love about this and it's going to
+some of the questions we have on the chat
+Is that everything that Agent Briggs does is not a black box it's a glass box
+The reason it's a glass box is because everything gets logged into ML flow
+So what is again what is beautiful about this is it's using ML flow to trace my
+Exactly unlike OpenAI and other competitors
+So here you can see the tracing for my questions
+And is is telling you
+What the knowledge assistant did to get you my answer
+And you're gonna see here these are the the chunks
+The knowledge assistant used to generate my answer
+And someone asked uh does it use re rank Yes
+It's based on the columns uh the titles some of the keywords it's going to try
+re-rank for you
+Now keep in mind and the knowledge assistant is trying to hide the complexity is
+trying
+Make your assistant to be delivered well on the benchmark you provide
+You don't turn a lot of knobs you don't manage a lot of knobs It's going to do
+for you If you want to have full control of how you re-rank which algorithm you
+that's when you go into the agent framework
+But just know there is a lot of research there is a lot of intelligence that
+Daricks
+uh invested
+To make sure that Agent Briggs has a lot of intelligence
+Last thing I want to show you is that when we go into agents if I click in the
+agent
+I can give you examples on type of questions it should be able to answer and
+examples
+of of answers So we're giving hints to to to the uh to the model here
+And what else I wanted to show you
+Here
+It doesn't automatically synchronize
+when you add more records into the volume
+Agent Bridge is not going to automatically synchronize You have to click on the
+sync
+or you call an API to sync it
+This is just for cost reasons It's not going to be looking at your volume and
+automatically
+synchronize You can just schedule a job that does it for you
+And hearing this in the in the settings of the agent is where I can define hey I
+my answers to be friendly confident and a little sarcastic
+I think you all know why I why I defined this because I wanted Zaki
+To be similar to our co-founder very smart friendly confident use sarcasm
+sometimes
+What else Let me ask another question and then we're gonna go to the break
+So I'm gonna ask you what
+Who is Zaky
+Is he fun
+Uh I don't think we support
+I don't think for the agent bricks for the knowledge assistant we support Excel
+as
+of now
+That
+Yeah you you see the sarcasm here you see the the style of the dance
+Well I can tell you what Zach is Zaky is the data expert I love this one It's
+than me
+Cool folks so this is it for uh the lecture of today
+I know we went
