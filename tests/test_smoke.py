@@ -486,3 +486,33 @@ def test_evaluator_prepares_vision_kwargs():
 
     import os
     os.unlink(tmp_path)
+
+
+# ── Trend Follower persona tests ─────────────────────────────
+
+
+def test_trend_follower_persona_loads():
+    """Trend follower persona should load from disk and have correct archetype."""
+    personas = load_personas()
+    trend_followers = [p for p in personas if p.archetype == "trend_follower"]
+    assert len(trend_followers) >= 1, "No trend_follower persona found"
+    tf = trend_followers[0]
+    assert tf.archetype == "trend_follower"
+    assert tf.name
+    assert tf.tagline
+    assert tf.backstory
+    assert tf.demographics.city
+    # Key behavioral markers for trend follower
+    assert tf.purchase_psychology.social_proof_need >= 0.8
+    assert tf.media_behavior.influencer_trust >= 0.7
+    assert tf.purchase_psychology.decision_speed == "fast"
+
+
+def test_trend_follower_validates_silver():
+    """Trend follower should pass silver-layer validation."""
+    personas = load_personas()
+    trend_followers = [p for p in personas if p.archetype == "trend_follower"]
+    assert len(trend_followers) >= 1
+    tf = trend_followers[0]
+    persona, result = validate_persona(tf.model_dump())
+    assert result.passed, f"trend_follower failed validation: {result.errors}"

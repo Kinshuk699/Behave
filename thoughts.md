@@ -242,11 +242,11 @@ All run on the same core engine. What changes: context injection, questions aske
 | Brand Loyalist | Trust-first, repeat buyer | ✅ 1 persona |
 | Aspirational Buyer | Status-driven, premium preference | ✅ 1 persona |
 | Skeptic | Distrust of marketing claims | ✅ 1 persona |
-| Trend Follower | Social media driven, FOMO | ❌ MISSING — add next |
+| Trend Follower | Social media driven, FOMO | ✅ 1 persona |
 | Impulse Buyer | Fast decision, emotional trigger | ❌ MISSING |
 | Pragmatist | Feature-value calculator | ❌ MISSING |
 
-Current: 5 personas (1 per archetype for 5 archetypes)
+Current: 6 personas (1 per archetype for 6 archetypes)
 Target: 20+ (3-5 per archetype, varying demographics/city/language)
 
 ---
@@ -347,10 +347,24 @@ generate_recommendation()
 - `src/synthetic_india/agents/persona_evaluator.py` — MODIFIED: added `_prepare_vision_kwargs()`, wired into `call_anthropic()` call via `**vision_kwargs`
 - `tests/test_smoke.py` — MODIFIED: 5 new vision tests (21 total)
 
-### Remaining v2 steps (after Vision-Native Evaluation)
+### ✅ Completed: Trend Follower Persona (2025-03-25)
 
-1. **Add Trend Follower persona** — critical missing archetype for Indian D2C
-3. **Full-dump memory mode** — skip retrieval for <50 memories
+**Design decision:** Option A — Priya Malhotra, 22, female, Delhi metro, middle income
+- BCom student + social media intern — digital-native, Hinglish inner monologue
+- Key behavioral markers: social_proof_need=0.95, influencer_trust=0.85, impulse_tendency=0.85
+- decision_speed="fast", research_depth=0.15, brand_loyalty=0.15
+- Instagram/YouTube Shorts primary, FOMO-driven purchasing
+- Trend-loyal (not brand-loyal) — will dump a brand when the trend shifts
+
+**Files created:**
+- `data/personas/trend_follower.json` — NEW: full persona profile with rich backstory
+- `tests/test_smoke.py` — MODIFIED: 2 new tests (23 total)
+
+**All 23/23 tests GREEN. Zero API credits spent.**
+
+### Remaining v2 steps (after Trend Follower)
+
+1. **Full-dump memory mode** — skip retrieval for <50 memories
 4. **Tiered model support** — Haiku/4o-mini for volume, Sonnet for Critic
 5. **Tune CreativeCard extraction for Indian ads** — Hinglish copy, ₹ pricing, cultural refs
 6. **Expand persona library to 20+** after first 5—8 proven

@@ -1,6 +1,6 @@
 # Personas — Archetypes & Roster
 
-**Status:** 5 built, 3 archetypes missing
+**Status:** 6 built, 2 archetypes missing
 **Directory:** `data/personas/`
 
 ## The Three-Layer Agent Model
@@ -25,7 +25,7 @@ Past experiences shape future reactions. A persona who was burned by a brand rem
 | **Brand Loyalist** | Trust-first, repeat buyer | ✅ 1 persona |
 | **Aspirational Buyer** | Status-driven, premium preference | ✅ 1 persona |
 | **Skeptic** | Distrust of marketing claims | ✅ 1 persona |
-| **Trend Follower** | Social media driven, FOMO | ❌ MISSING — next to add |
+| **Trend Follower** | Social media driven, FOMO | ✅ 1 persona |
 | **Impulse Buyer** | Fast decision, emotional trigger | ❌ MISSING |
 | **Pragmatist** | Feature-value calculator | ❌ MISSING |
 
@@ -50,5 +50,6 @@ The **Critic Agent** validates that evaluations are **consistent with the archet
 | brand_loyalist_mumbai_01 | Brand Loyalist | Mumbai | Metro |
 | aspirational_buyer_bangalore_01 | Aspirational Buyer | Bangalore | Metro |
 | skeptic_mumbai_01 | Skeptic | Mumbai | Metro |
+| trend_follower_delhi_01 | Trend Follower | Delhi | Metro |
 
 

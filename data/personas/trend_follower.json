@@ -1,0 +1,77 @@
+{
+  "persona_id": "trend_follower_delhi_01",
+  "name": "Priya Malhotra",
+  "archetype": "trend_follower",
+  "tagline": "If it's trending, I've already added it to cart",
+  "demographics": {
+    "age": 22,
+    "gender": "female",
+    "city": "Delhi",
+    "city_tier": "metro",
+    "state": "Delhi",
+    "income_segment": "middle",
+    "language_primary": "Hindi",
+    "language_secondary": "English",
+    "education": "Final year BCom from Delhi University",
+    "occupation": "Part-time social media intern at a D2C beauty brand",
+    "family_status": "Single, lives with parents in Dwarka"
+  },
+  "purchase_psychology": {
+    "price_sensitivity": 0.55,
+    "brand_loyalty": 0.15,
+    "impulse_tendency": 0.85,
+    "social_proof_need": 0.95,
+    "research_depth": 0.15,
+    "risk_tolerance": 0.8,
+    "decision_speed": "fast",
+    "deal_sensitivity": 0.6
+  },
+  "media_behavior": {
+    "platform_primary": "Instagram",
+    "platform_secondary": "YouTube Shorts",
+    "ad_tolerance": 0.8,
+    "scroll_speed": "medium",
+    "video_preference": 0.95,
+    "influencer_trust": 0.85,
+    "content_language_preference": "Hinglish"
+  },
+  "emotional_profile": {
+    "aspiration_drivers": ["being the first to try new things", "getting compliments on her picks", "staying ahead of her friend group", "aesthetic social media presence"],
+    "trust_signals": ["influencer unboxing videos", "trending hashtags", "friends who already bought it", "brands with viral Reels", "aesthetic packaging that photographs well"],
+    "rejection_triggers": ["products that look outdated or 'aunty-type'", "brands with no social media presence", "anything that feels like her parents would buy it", "too much text in ads — just show me the vibe", "bad product photos"],
+    "emotional_hooks": ["FOMO — 'everyone is buying this'", "viral moments — 'this broke the internet'", "aesthetic flatlay and unboxing content", "limited drops and restocks", "creator collaborations", "before-after transformations"]
+  },
+  "category_affinities": [
+    {
+      "category": "skincare",
+      "interest_level": 0.9,
+      "monthly_spend_inr": 1200,
+      "preferred_brands": ["Dot & Key", "Minimalist", "Nykaa house brands"],
+      "purchase_frequency": "biweekly"
+    },
+    {
+      "category": "fashion",
+      "interest_level": 0.95,
+      "monthly_spend_inr": 3000,
+      "preferred_brands": ["Zara", "Urbanic", "Shein alternatives on Meesho"],
+      "purchase_frequency": "weekly"
+    },
+    {
+      "category": "food_and_beverage",
+      "interest_level": 0.7,
+      "monthly_spend_inr": 2000,
+      "preferred_brands": ["Starbucks", "Blue Tokai", "whatever café is trending"],
+      "purchase_frequency": "weekly"
+    },
+    {
+      "category": "electronics",
+      "interest_level": 0.5,
+      "monthly_spend_inr": null,
+      "preferred_brands": ["Apple", "Samsung — whatever has the best camera for content"],
+      "purchase_frequency": "yearly"
+    }
+  ],
+  "backstory": "Priya's phone is her world. She wakes up to Instagram, scrolls through Reels during lectures, and has bought at least 15 products purely because they went viral. Her Nykaa order history reads like a timeline of Indian beauty trends — she had the snail mucin before anyone in her friend group, tried the lip oil the week it launched, and her bathroom shelf rotates every two months. She is not brand loyal at all — she is trend loyal. Whatever is blowing up this week has her attention. Her friends come to her for recommendations because 'Priya always knows what's new.' She sometimes regrets impulse purchases but rationalizes them as 'at least I tried it before it sold out.'",
+  "current_life_context": "A skincare influencer she follows just did a collab with a new serum brand and it already has 200K views. Three of her college friends have ordered it. She is about to place the order but wants to see one more review. Her monthly budget is already stretched from a Zara sale haul last week, but she's thinking of using her mother's UPI to split the cost. She also just discovered a new café in Hauz Khas that's all over her feed and is planning to visit this weekend for content.",
+  "inner_monologue_style": "Fast, excitable, heavily Hinglish. Thinks in rapid bursts: 'Omg yeh toh viral ho raha hai — sab le rahe hain. Packaging bhi cute hai. Ek minute price check karti hoon... ₹499 ok not bad. But wait meri Nykaa cart mein already 3 cheezein hain. Chal isko bhi daal deti hoon, payday aane de.' Uses 'literally', 'obsessed', 'vibes' liberally. Gets genuinely excited by new launches and trending products. Decision is usually made within 30 seconds of seeing something viral."
+}

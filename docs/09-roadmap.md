@@ -9,15 +9,9 @@
 | 1 | Fix CLI output — print_run_header + print_run_summary | 2025-03-25 | 8/8 GREEN |
 | 2 | Critic Agent — quality gate with 4 dimensions | 2025-03-25 | 16/16 GREEN |
 | 3 | Vision-Native Evaluation — image_path + base64 + vision API | 2025-03-25 | 21/21 GREEN |
+| 4 | Trend Follower Persona — Priya Malhotra, Delhi, FOMO archetype | 2025-03-25 | 23/23 GREEN |
 
 ## Up Next (in order)
-
-### 4. Trend Follower Persona
-Add the missing archetype critical for Indian D2C.
-- Social media driven, FOMO-based purchasing
-- High influencer_trust, fast decision_speed
-- Instagram/YouTube primary platform
-- **Why:** Most Indian D2C brands target this segment
 
 ### 5. Full-Dump Memory Mode
 Skip retrieval in the **Memory System** for personas with <50 memories.
