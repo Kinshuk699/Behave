@@ -344,3 +344,145 @@ def test_print_run_summary_shows_critic_stats():
 
     assert "1" in output  # quarantined
     assert "50%" in output or "50" in output  # pass rate
+
+
+# ── Vision-native evaluation tests ───────────────────────────
+
+
+def test_creative_card_accepts_image_path():
+    """CreativeCard should accept optional image_path field."""
+    card_with = CreativeCard(
+        creative_id="c_vision_01",
+        brand="Minimalist",
+        category="skincare",
+        format="static_image",
+        headline="10% Niacinamide Serum",
+        image_path="/tmp/test_ad.png",
+    )
+    assert card_with.image_path == "/tmp/test_ad.png"
+
+    card_without = CreativeCard(
+        creative_id="c_vision_02",
+        brand="Minimalist",
+        category="skincare",
+        format="static_image",
+        headline="10% Niacinamide Serum",
+    )
+    assert card_without.image_path is None
+
+
+def test_encode_image_returns_base64_and_media_type():
+    """encode_image should return (base64_str, media_type) for a valid PNG."""
+    import base64
+    import tempfile
+    from synthetic_india.agents.image_utils import encode_image
+
+    # Create a minimal 1x1 red PNG (68 bytes)
+    png_bytes = (
+        b"\x89PNG\r\n\x1a\n"  # PNG signature
+        b"\x00\x00\x00\rIHDR\x00\x00\x00\x01\x00\x00\x00\x01\x08\x02"
+        b"\x00\x00\x00\x90wS\xde\x00\x00\x00\x0cIDATx"
+        b"\x9cc\xf8\x0f\x00\x00\x01\x01\x00\x05\x18\xd8N"
+        b"\x00\x00\x00\x00IEND\xaeB`\x82"
+    )
+
+    with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as f:
+        f.write(png_bytes)
+        tmp_path = f.name
+
+    b64_str, media_type = encode_image(tmp_path)
+
+    assert media_type == "image/png"
+    assert isinstance(b64_str, str)
+    # Should be valid base64 that decodes back to original bytes
+    decoded = base64.b64decode(b64_str)
+    assert decoded == png_bytes
+
+    import os
+    os.unlink(tmp_path)
+
+
+def test_encode_image_detects_jpeg():
+    """encode_image should detect JPEG media type from extension."""
+    import tempfile
+    from synthetic_india.agents.image_utils import encode_image
+
+    with tempfile.NamedTemporaryFile(suffix=".jpg", delete=False) as f:
+        f.write(b"\xff\xd8\xff\xe0fake_jpeg_data")
+        tmp_path = f.name
+
+    _, media_type = encode_image(tmp_path)
+    assert media_type == "image/jpeg"
+
+    import os
+    os.unlink(tmp_path)
+
+
+def test_call_anthropic_builds_vision_message():
+    """call_anthropic should build multi-content message when image_base64 is provided."""
+    from synthetic_india.agents.llm_client import _build_anthropic_messages
+
+    # Text-only message
+    msgs_text = _build_anthropic_messages(prompt="Evaluate this ad")
+    assert len(msgs_text) == 1
+    assert msgs_text[0]["role"] == "user"
+    assert msgs_text[0]["content"] == "Evaluate this ad"
+
+    # Vision message with image
+    msgs_vision = _build_anthropic_messages(
+        prompt="Evaluate this ad",
+        image_base64="aWZha2VkYXRh",
+        image_media_type="image/png",
+    )
+    assert len(msgs_vision) == 1
+    content_blocks = msgs_vision[0]["content"]
+    assert isinstance(content_blocks, list)
+    assert len(content_blocks) == 2
+
+    # First block should be the image
+    assert content_blocks[0]["type"] == "image"
+    assert content_blocks[0]["source"]["type"] == "base64"
+    assert content_blocks[0]["source"]["data"] == "aWZha2VkYXRh"
+    assert content_blocks[0]["source"]["media_type"] == "image/png"
+
+    # Second block should be the text prompt
+    assert content_blocks[1]["type"] == "text"
+    assert content_blocks[1]["text"] == "Evaluate this ad"
+
+
+def test_evaluator_prepares_vision_kwargs():
+    """evaluate_creative should prepare image kwargs when creative has image_path."""
+    import tempfile
+    from synthetic_india.agents.persona_evaluator import _prepare_vision_kwargs
+
+    # No image → empty dict
+    card_no_image = CreativeCard(
+        creative_id="c1", brand="Test", category="skincare", format="static_image",
+    )
+    kwargs = _prepare_vision_kwargs(card_no_image)
+    assert kwargs == {}
+
+    # With image → base64 + media_type
+    png_bytes = (
+        b"\x89PNG\r\n\x1a\n"
+        b"\x00\x00\x00\rIHDR\x00\x00\x00\x01\x00\x00\x00\x01\x08\x02"
+        b"\x00\x00\x00\x90wS\xde\x00\x00\x00\x0cIDATx"
+        b"\x9cc\xf8\x0f\x00\x00\x01\x01\x00\x05\x18\xd8N"
+        b"\x00\x00\x00\x00IEND\xaeB`\x82"
+    )
+    with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as f:
+        f.write(png_bytes)
+        tmp_path = f.name
+
+    card_with_image = CreativeCard(
+        creative_id="c2", brand="Test", category="skincare", format="static_image",
+        image_path=tmp_path,
+    )
+    kwargs = _prepare_vision_kwargs(card_with_image)
+    assert "image_base64" in kwargs
+    assert "image_media_type" in kwargs
+    assert kwargs["image_media_type"] == "image/png"
+    assert len(kwargs["image_base64"]) > 0
+
+    import os
+    os.unlink(tmp_path)

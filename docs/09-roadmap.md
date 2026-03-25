@@ -8,15 +8,9 @@
 |---|---|---|---|
 | 1 | Fix CLI output — print_run_header + print_run_summary | 2025-03-25 | 8/8 GREEN |
 | 2 | Critic Agent — quality gate with 4 dimensions | 2025-03-25 | 16/16 GREEN |
+| 3 | Vision-Native Evaluation — image_path + base64 + vision API | 2025-03-25 | 21/21 GREEN |
 
 ## Up Next (in order)
-
-### 3. Vision-Native Evaluation
-Send raw ad image alongside CreativeCard to **Persona Evaluation**.
-- Add `image_path` / `image_url` to CreativeCard schema
-- Modify `evaluate_creative()` to include base64 image in Anthropic vision API call
-- CreativeCard becomes metadata, raw image becomes primary visual input
-- **Why:** Cultural cues the extraction might miss (festival imagery, regional script, color symbolism)
 
 ### 4. Trend Follower Persona
 Add the missing archetype critical for Indian D2C.

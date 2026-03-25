@@ -52,6 +52,29 @@ def _estimate_cost(model: str, prompt_tokens: int, completion_tokens: int) -> fl
     return (prompt_tokens * costs["input"] + completion_tokens * costs["output"]) / 1_000_000
 
 
+def _build_anthropic_messages(
+    prompt: str,
+    image_base64: Optional[str] = None,
+    image_media_type: Optional[str] = None,
+) -> list[dict[str, Any]]:
+    """Build Anthropic messages list, optionally with a vision content block."""
+    if image_base64 and image_media_type:
+        content = [
+            {
+                "type": "image",
+                "source": {
+                    "type": "base64",
+                    "media_type": image_media_type,
+                    "data": image_base64,
+                },
+            },
+            {"type": "text", "text": prompt},
+        ]
+    else:
+        content = prompt
+    return [{"role": "user", "content": content}]
+
+
 async def call_anthropic(
     prompt: str,
     system: str = "",
@@ -59,11 +82,15 @@ async def call_anthropic(
     max_tokens: int = 4096,
     temperature: float = 0.7,
     config: Optional[LLMConfig] = None,
+    image_base64: Optional[str] = None,
+    image_media_type: Optional[str] = None,
 ) -> LLMResponse:
-    """Call Anthropic's Claude API."""
+    """Call Anthropic's Claude API, optionally with a vision image."""
     config = config or get_llm_config()
     model = model or config.eval_model
     client = anthropic.AsyncAnthropic(api_key=config.anthropic_api_key)
+
+    messages = _build_anthropic_messages(prompt, image_base64, image_media_type)
 
     start = time.perf_counter()
     response = await client.messages.create(
@@ -71,7 +98,7 @@ async def call_anthropic(
         max_tokens=max_tokens,
         temperature=temperature,
         system=system,
-        messages=[{"role": "user", "content": prompt}],
+        messages=messages,
     )
     latency = (time.perf_counter() - start) * 1000
 

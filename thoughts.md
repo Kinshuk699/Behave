@@ -329,10 +329,27 @@ generate_recommendation()
 - `src/synthetic_india/cli.py` — MODIFIED: `print_run_summary()` now accepts `critic_summary` param
 - `tests/test_smoke.py` — MODIFIED: 8 new critic tests (16 total)
 
-### Remaining v2 steps (after Critic Agent)
+### ✅ Completed: Vision-Native Evaluation (2025-03-25)
 
-1. **Vision-native evaluation** — send raw ad image alongside CreativeCard to each persona
-2. **Add Trend Follower persona** — critical missing archetype for Indian D2C
+**Design decision:** Option B — local file path + base64 encoding for Anthropic vision API
+- `CreativeCard` gets `image_path: str | None = None` field
+- Image is base64-encoded at eval time, sent as separate content block alongside text prompt
+- If `image_path` is None → text-only eval (backward compatible, no breaking change)
+- CreativeCard text stays as metadata; raw image is the primary visual input
+- Anthropic vision API format: `{"type": "image", "source": {"type": "base64", ...}}`
+
+**All 5 TDD tasks completed. 21/21 tests GREEN. Zero API credits spent.**
+
+**Files created/modified:**
+- `src/synthetic_india/schemas/creative.py` — MODIFIED: added `image_path` optional field
+- `src/synthetic_india/agents/image_utils.py` — NEW: `encode_image()` → (base64_str, media_type)
+- `src/synthetic_india/agents/llm_client.py` — MODIFIED: extracted `_build_anthropic_messages()`, added `image_base64` + `image_media_type` params to `call_anthropic()`
+- `src/synthetic_india/agents/persona_evaluator.py` — MODIFIED: added `_prepare_vision_kwargs()`, wired into `call_anthropic()` call via `**vision_kwargs`
+- `tests/test_smoke.py` — MODIFIED: 5 new vision tests (21 total)
+
+### Remaining v2 steps (after Vision-Native Evaluation)
+
+1. **Add Trend Follower persona** — critical missing archetype for Indian D2C
 3. **Full-dump memory mode** — skip retrieval for <50 memories
 4. **Tiered model support** — Haiku/4o-mini for volume, Sonnet for Critic
 5. **Tune CreativeCard extraction for Indian ads** — Hinglish copy, ₹ pricing, cultural refs

@@ -17,6 +17,7 @@ import uuid
 from typing import Optional
 
 from synthetic_india.agents.llm_client import LLMResponse, call_anthropic, get_embedding
+from synthetic_india.agents.image_utils import encode_image
 from synthetic_india.config import LLMConfig, get_llm_config
 from synthetic_india.memory.retrieval import MemoryRetriever
 from synthetic_india.memory.stream import MemoryStream
@@ -144,6 +145,16 @@ def _build_creative_block(creative: CreativeCard) -> str:
         parts.append("Uses Hinglish / code-mixing")
 
     return "\n".join(parts)
+
+
+def _prepare_vision_kwargs(creative: CreativeCard) -> dict:
+    """Return image kwargs for call_anthropic if creative has an image."""
+    if creative.image_path:
+        import os
+        if os.path.isfile(creative.image_path):
+            b64, media_type = encode_image(creative.image_path)
+            return {"image_base64": b64, "image_media_type": media_type}
+    return {}
 
 
 def _build_memory_block(memories: list[RetrievalScore]) -> str:
@@ -316,12 +327,15 @@ async def evaluate_creative(
     )
 
     # ── Step 3: Call LLM ──────────────────────────────────────
+    vision_kwargs = _prepare_vision_kwargs(creative)
+
     response = await call_anthropic(
         prompt=prompt,
         system=EVALUATOR_SYSTEM,
         model=config.eval_model,
         temperature=0.8,  # Higher temp for diverse, authentic reactions
         config=config,
+        **vision_kwargs,
     )
 
     result = response.parse_json()

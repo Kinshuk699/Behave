@@ -95,6 +95,11 @@ class CreativeCard(BaseModel):
     language_secondary: Optional[str] = None
     code_mixed: bool = Field(False, description="Uses Hinglish or multi-language mixing")
 
+    # Vision-native (v2) — raw ad image for direct LLM evaluation
+    image_path: Optional[str] = Field(
+        None, description="Local path to raw ad image; base64-encoded at eval time"
+    )
+
     # Metadata
     extracted_at: datetime = Field(default_factory=datetime.utcnow)
     extraction_model: Optional[str] = None

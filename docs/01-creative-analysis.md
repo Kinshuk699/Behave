@@ -38,6 +38,7 @@ Defined in `src/synthetic_india/schemas/creative.py`. Key fields:
 - `price_shown`, `original_price`, `discount_percentage`
 - `urgency_cues[]`, `social_proof_cues[]`, `trust_signals[]`
 - `emotional_hooks[]`, `visual_style`, `language`
+- `image_path` *(v2)* — optional local path to raw ad image, base64-encoded at eval time for vision-native LLM
 
 ## Next →
 
