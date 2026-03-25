@@ -1,6 +1,6 @@
 # Synthetic India Capstone Roadmap
 
-Last updated: 2026-03-22
+Last updated: 2026-03-25 (aligned with synthetic_india_v2.docx)
 
 ## 1. Final framing
 
@@ -46,12 +46,21 @@ Keep these ideas from the paper/repo:
 - outputs should be structured enough to become part of the system state
 - future extensibility for memory and agent-to-agent influence should remain possible
 
-Do not try to implement:
+v2 additions from 2026 tech:
 
-- long-horizon memory retrieval
+- vision-native evaluation: raw ad image goes to each persona alongside CreativeCard
+- full dump memory mode: 200K context windows mean we skip retrieval for Phase 1-2
+- structured output enforced at API level via Pydantic schemas
+- Critic Agent: quality gate checking persona consistency, sycophancy, cultural authenticity
+- cheaper inference: Haiku/4o-mini for volume evals, premium models for Critic + reports
+
+Do not try to implement for capstone:
+
+- long-horizon memory retrieval (full dump mode is sufficient)
 - social world simulation
 - persistent daily plans
 - agent-to-agent conversations
+- all 10 India-specific use cases (pick 1-2 for demo)
 
 For the capstone, use the paper as conceptual inspiration, not as the literal implementation target.
 
@@ -161,19 +170,23 @@ If not using DLT:
 
 ## 8. Agent design
 
-### 8.1 What the agent must do
+### 8.1 What the agents must do
 
-The agent must take one concrete business action.
+Two agent roles (v2):
 
-Recommended action:
+**Critic Agent** (quality gate — new in v2):
+- reviews each persona evaluation before it enters the pipeline
+- checks: persona consistency, sycophancy detection, cultural authenticity, action-reasoning alignment
+- outputs: PASS or FAIL with specific issues
+- FAIL → re-run or routed to quarantine
 
-- choose which creative to scale and why
-
-Additional supported actions:
-
-- flag high-risk creatives likely to trigger negative sentiment
-- generate prioritized edit recommendations
-- recommend which audience segment to target first
+**Recommendation Agent** (business action):
+- takes one concrete business action
+- recommended action: choose which creative to scale and why
+- additional supported actions:
+  - flag high-risk creatives likely to trigger negative sentiment
+  - generate prioritized edit recommendations
+  - recommend which audience segment to target first
 
 ### 8.2 Agent inputs
 
@@ -253,41 +266,52 @@ Deliverable:
 
 Goal:
 
-- create 5 strong personas first
+- create 5 strong personas first, expand to 20+ after validation
 
-Recommended starter set:
+Recommended starter set (done):
 
-- Researcher
-- Price Anchor
-- Brand Loyalist
-- Skeptic
-- Aspirational Buyer
+- Researcher ✅
+- Price Anchor ✅
+- Brand Loyalist ✅
+- Skeptic ✅
+- Aspirational Buyer ✅
+
+Next priority additions (v2):
+
+- Trend Follower (critical missing archetype for Indian D2C)
+- Impulse Buyer
+- Pragmatist
+
+Target: 8 archetypes × 3-5 personas each = 20-40 total
 
 Deliverable:
 
 - persona seed JSON or Delta table with rich behavioral fields
 
-### Step 4. Build creative-card extraction
+### Step 4. Build creative-card extraction + vision-native eval
 
 Goal:
 
 - convert creatives into a normalized structured format
+- also pass raw ad image directly to persona evaluation (v2: CreativeCard is supplementary, not sole input)
 
 Fields to extract:
 
 - headline
 - body copy
 - CTA
-- pricing cues
+- pricing cues (₹-aware for Indian ads)
 - urgency cues
 - social proof cues
 - visual style
 - product visibility
 - premium/value framing
+- Hinglish/regional language detection (v2)
 
 Deliverable:
 
 - creative card schema + extraction notebook/job
+- vision-native evaluation path (raw image + CreativeCard to each persona)
 
 ### Step 5. Implement bronze ingestion
 

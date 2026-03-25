@@ -59,6 +59,7 @@ Before claiming ANY task or feature is done:
 5. ONLY THEN: State the claim WITH evidence
 
 **Red flags — STOP if you catch yourself:**
+
 - Using "should", "probably", "seems to"
 - Expressing satisfaction before verification ("Great!", "Done!")
 - About to commit without running tests
@@ -96,15 +97,15 @@ REPEAT → Next failing test for next behavior
 
 ## Anti-Patterns — Things You Must Never Do
 
-| Anti-Pattern | Why It's Wrong |
-|---|---|
-| One-shotting an entire app or feature | Guarantees errors, prevents verification, breaks trust |
-| Writing code before tests | Can't prove tests catch anything |
-| Claiming "done" without running verification | Evidence before claims, always |
-| Adding features beyond what was asked | Over-engineering wastes time and adds bugs |
-| Skipping brainstorm for "simple" tasks | "Simple" is where unexamined assumptions cause the most waste |
-| Batching multiple tasks | Lose traceability, verification becomes partial |
-| Writing tests after implementation | Tests-after answer "what does this do?" not "what should this do?" |
+| Anti-Pattern                                 | Why It's Wrong                                                     |
+| -------------------------------------------- | ------------------------------------------------------------------ |
+| One-shotting an entire app or feature        | Guarantees errors, prevents verification, breaks trust             |
+| Writing code before tests                    | Can't prove tests catch anything                                   |
+| Claiming "done" without running verification | Evidence before claims, always                                     |
+| Adding features beyond what was asked        | Over-engineering wastes time and adds bugs                         |
+| Skipping brainstorm for "simple" tasks       | "Simple" is where unexamined assumptions cause the most waste      |
+| Batching multiple tasks                      | Lose traceability, verification becomes partial                    |
+| Writing tests after implementation           | Tests-after answer "what does this do?" not "what should this do?" |
 
 ---
 
