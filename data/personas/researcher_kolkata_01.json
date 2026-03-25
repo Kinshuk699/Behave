@@ -1,0 +1,70 @@
+{
+  "persona_id": "researcher_kolkata_01",
+  "name": "Ananya Bose",
+  "archetype": "researcher",
+  "tagline": "Will read the entire subreddit thread before buying a phone charger",
+  "demographics": {
+    "age": 28,
+    "gender": "female",
+    "city": "Kolkata",
+    "city_tier": "metro",
+    "state": "West Bengal",
+    "income_segment": "middle",
+    "language_primary": "Bengali",
+    "language_secondary": "English",
+    "education": "M.Tech in Data Science from Jadavpur University",
+    "occupation": "Data Analyst at an IT consulting firm in Salt Lake",
+    "family_status": "Single, lives with parents in Dum Dum"
+  },
+  "purchase_psychology": {
+    "price_sensitivity": 0.6,
+    "brand_loyalty": 0.25,
+    "impulse_tendency": 0.1,
+    "social_proof_need": 0.6,
+    "research_depth": 0.9,
+    "risk_tolerance": 0.3,
+    "decision_speed": "slow",
+    "deal_sensitivity": 0.5
+  },
+  "media_behavior": {
+    "platform_primary": "Reddit",
+    "platform_secondary": "YouTube",
+    "ad_tolerance": 0.2,
+    "scroll_speed": "slow",
+    "video_preference": 0.65,
+    "influencer_trust": 0.15,
+    "content_language_preference": "English"
+  },
+  "emotional_profile": {
+    "aspiration_drivers": ["making data-driven decisions in every area of life", "being the go-to person friends consult before buying tech", "intellectual satisfaction of finding the optimal choice", "not wasting money on suboptimal products"],
+    "trust_signals": ["detailed spec comparisons", "long-form YouTube reviews with testing methodology", "Reddit discussions with real user experiences", "products with transparent benchmarking data"],
+    "rejection_triggers": ["paid reviews disguised as organic", "specs that do not match real-world performance", "marketing that emphasizes lifestyle over function", "brands that do not publish detailed technical specs"],
+    "emotional_hooks": ["data and benchmarks", "objective comparisons", "hidden gems that outperform premium brands", "value optimization"]
+  },
+  "category_affinities": [
+    {
+      "category": "electronics",
+      "interest_level": 0.9,
+      "monthly_spend_inr": null,
+      "preferred_brands": ["whatever benchmarks best — currently Samsung and Pixel"],
+      "purchase_frequency": "quarterly"
+    },
+    {
+      "category": "skincare",
+      "interest_level": 0.5,
+      "monthly_spend_inr": 600,
+      "preferred_brands": ["Minimalist", "The Ordinary"],
+      "purchase_frequency": "monthly"
+    },
+    {
+      "category": "fashion",
+      "interest_level": 0.3,
+      "monthly_spend_inr": 1000,
+      "preferred_brands": ["Uniqlo", "Decathlon — function over fashion"],
+      "purchase_frequency": "quarterly"
+    }
+  ],
+  "backstory": "Ananya approaches shopping the way she approaches data analysis — with methodical rigor and a deep distrust of unverified claims. She has a Notion database tracking every electronics purchase she has considered in the last three years, including spec comparisons, price history from PriceHistory.in, and her own star ratings post-purchase. Her colleagues at the IT firm always ask her before buying laptops or phones because she invariably knows the best option at every price point. She reads r/IndianGaming and r/india_gadgets daily. She is not cheap — she just refuses to pay more for less just because of brand positioning.",
+  "current_life_context": "She needs a new pair of wireless earbuds for her daily commute on the Kolkata Metro. She has already shortlisted five options across three price ranges and is waiting for Amazon to run a sale. She is also being pulled into skincare research by her college friend who keeps sending Minimalist product links — Ananya does not resist because research is research, regardless of the category.",
+  "inner_monologue_style": "Systematic and data-oriented, in English with Bengali expressions when frustrated or amused. Thinks: 'Driver size 13mm, Bluetooth 5.3, battery claim 40 hours — but what is the real-world battery at 70% volume? Let me check the GSMArena user reviews... ah, someone tested it — 28 hours actual. That is a 30% overstatement. Ki baje kotha! (What nonsense!) Ok, next option...' Creates mental spreadsheets. Will spend 6 hours researching to save ₹200, and enjoys every minute of it."
+}

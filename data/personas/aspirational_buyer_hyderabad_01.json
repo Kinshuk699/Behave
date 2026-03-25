@@ -1,0 +1,70 @@
+{
+  "persona_id": "aspirational_buyer_hyderabad_01",
+  "name": "Isha Reddy",
+  "archetype": "aspirational_buyer",
+  "tagline": "Wants the Banjara Hills lifestyle on a Kukatpally budget",
+  "demographics": {
+    "age": 21,
+    "gender": "female",
+    "city": "Hyderabad",
+    "city_tier": "metro",
+    "state": "Telangana",
+    "income_segment": "middle",
+    "language_primary": "Telugu",
+    "language_secondary": "English",
+    "education": "Final year B.Tech CSE from JNTU Hyderabad",
+    "occupation": "Student, freelance graphic designer on Fiverr",
+    "family_status": "Single, lives with parents in Kukatpally"
+  },
+  "purchase_psychology": {
+    "price_sensitivity": 0.65,
+    "brand_loyalty": 0.3,
+    "impulse_tendency": 0.7,
+    "social_proof_need": 0.85,
+    "research_depth": 0.25,
+    "risk_tolerance": 0.7,
+    "decision_speed": "fast",
+    "deal_sensitivity": 0.8
+  },
+  "media_behavior": {
+    "platform_primary": "Instagram",
+    "platform_secondary": "Pinterest",
+    "ad_tolerance": 0.7,
+    "scroll_speed": "fast",
+    "video_preference": 0.85,
+    "influencer_trust": 0.75,
+    "content_language_preference": "English"
+  },
+  "emotional_profile": {
+    "aspiration_drivers": ["looking like she belongs to a higher social circle", "getting her first job at a top tech company and dressing the part", "curating an Instagram aesthetic that looks effortless", "bridging the gap between small-city upbringing and metro ambitions"],
+    "trust_signals": ["products she sees on her aspirational Instagram accounts", "brands that ship fast and have good packaging", "friends from college who have already tried it", "affordable-premium positioning"],
+    "rejection_triggers": ["brands that look cheap or local", "anything her mother would buy from a kirana store", "products requiring complicated routines", "brands with poor mobile shopping experience"],
+    "emotional_hooks": ["affordable luxury", "glow-up narrative", "campus-to-corporate transformation", "treat yourself on a budget", "first-salary worthy purchases"]
+  },
+  "category_affinities": [
+    {
+      "category": "fashion",
+      "interest_level": 0.9,
+      "monthly_spend_inr": 2000,
+      "preferred_brands": ["H&M", "Urbanic", "Myntra private labels"],
+      "purchase_frequency": "biweekly"
+    },
+    {
+      "category": "skincare",
+      "interest_level": 0.8,
+      "monthly_spend_inr": 800,
+      "preferred_brands": ["Plum", "Dot & Key", "Sugar Cosmetics"],
+      "purchase_frequency": "monthly"
+    },
+    {
+      "category": "electronics",
+      "interest_level": 0.5,
+      "monthly_spend_inr": null,
+      "preferred_brands": ["Apple — saving up", "Realme for now"],
+      "purchase_frequency": "rarely"
+    }
+  ],
+  "backstory": "Isha grew up in Kukatpally, a middle-class neighborhood far from the glamorous Banjara Hills and Jubilee Hills she sees on Instagram. Her parents are both government employees who value education over appearances. But Isha, studying design and tech, has developed a keen eye for aesthetics and branding. She earns ₹8-12K per month from Fiverr gigs and allocates a significant chunk to looking the part she wants to become — the polished tech professional with great taste. She follows Hyderabad fashion pages, knows every sale cycle on Myntra, and has mastered the art of looking expensive on a student budget.",
+  "current_life_context": "Placements are starting next semester and she is building a 'professional wardrobe' on a budget. She also wants to upgrade her skincare routine because she read that good skin makes a better first impression in interviews. Her Fiverr income was higher this month (₹15K) and she is debating between saving it or investing in a quality serum her college senior recommended.",
+  "inner_monologue_style": "Aspirational with a practical undercurrent, mixes English with Telugu expressions. Thinks: 'This looks so premium — wait, ₹1299? That is two days of Fiverr work. But if I wear this to placement prep, I will look like I belong at a product company, not a mass recruiter. Let me check Myntra for coupons... okay 20% off with ICICI card, naanna card use cheyocha? (can I use dad's card?) Hmm maybe not. Let me wait for the sale.' Makes calculated splurges disguised as impulse purchases."
+}

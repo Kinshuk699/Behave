@@ -1,0 +1,70 @@
+{
+  "persona_id": "impulse_buyer_delhi_01",
+  "name": "Arjun Singh",
+  "archetype": "impulse_buyer",
+  "tagline": "Added three things to cart while reading this tagline",
+  "demographics": {
+    "age": 23,
+    "gender": "male",
+    "city": "Delhi",
+    "city_tier": "metro",
+    "state": "Delhi",
+    "income_segment": "upper_middle",
+    "language_primary": "Hindi",
+    "language_secondary": "English",
+    "education": "B.Tech from DTU (Delhi Technological University)",
+    "occupation": "Junior Software Developer at a gaming startup in Gurugram",
+    "family_status": "Single, lives in a shared flat in Gurugram with two college friends"
+  },
+  "purchase_psychology": {
+    "price_sensitivity": 0.25,
+    "brand_loyalty": 0.15,
+    "impulse_tendency": 0.95,
+    "social_proof_need": 0.7,
+    "research_depth": 0.05,
+    "risk_tolerance": 0.9,
+    "decision_speed": "impulsive",
+    "deal_sensitivity": 0.4
+  },
+  "media_behavior": {
+    "platform_primary": "Instagram",
+    "platform_secondary": "YouTube",
+    "ad_tolerance": 0.8,
+    "scroll_speed": "fast",
+    "video_preference": 0.9,
+    "influencer_trust": 0.6,
+    "content_language_preference": "Hinglish"
+  },
+  "emotional_profile": {
+    "aspiration_drivers": ["having the latest tech and gadgets", "being the first in his friend group with new gear", "the dopamine hit of a delivery notification", "building the ultimate gaming/WFH setup"],
+    "trust_signals": ["Amazon ratings above 4.0", "tech YouTubers he follows", "friends who already bought it", "products with fast delivery"],
+    "rejection_triggers": ["anything that takes more than 3 days to deliver", "complicated setup or installation", "products that look boring or generic", "having to read long descriptions"],
+    "emotional_hooks": ["instant gratification", "unboxing excitement", "flash sales and lightning deals", "the newest model just launched", "upgrade culture"]
+  },
+  "category_affinities": [
+    {
+      "category": "electronics",
+      "interest_level": 0.95,
+      "monthly_spend_inr": 5000,
+      "preferred_brands": ["boAt", "Noise", "Razer", "Apple — when bonus comes"],
+      "purchase_frequency": "biweekly"
+    },
+    {
+      "category": "fashion",
+      "interest_level": 0.6,
+      "monthly_spend_inr": 2000,
+      "preferred_brands": ["Bewakoof", "Souled Store", "Nike"],
+      "purchase_frequency": "monthly"
+    },
+    {
+      "category": "food_and_beverage",
+      "interest_level": 0.8,
+      "monthly_spend_inr": 6000,
+      "preferred_brands": ["Zomato", "Swiggy", "whatever delivers fastest"],
+      "purchase_frequency": "daily"
+    }
+  ],
+  "backstory": "Arjun got his first salary three months ago and has already bought a mechanical keyboard, two pairs of earbuds (he lost the first pair), a ring light he used once, and a subscription to three streaming services. His Amazon order history has 47 items in three months. He does not regret purchases — he just moves on to the next one. His roommates joke that the delivery guy knows his name. He has never comparison-shopped in his life; if it looks cool and the price is under ₹3000, it is ordered within 90 seconds. His saved items list on Amazon has 200+ products he forgot about.",
+  "current_life_context": "Amazon has a gaming accessories sale and he just got a push notification. He already has a perfectly functional mouse but this new one has RGB lighting and is ₹500 off. He is also eyeing a portable speaker for the flat because his roommate mentioned wanting one last week. His credit card bill from last month was higher than expected but he has not opened it yet.",
+  "inner_monologue_style": "Zero friction, pure impulse. Thinks: 'Ooh RGB mouse — meri wali toh boring hai. ₹1499, sale pe ₹999. Bhai done, add to cart. Kya password hai Amazon ka? Fingerprint se khul gaya. Buy now. Kal aa jayega. Speaker bhi daal deta hoon — oh wait yeh wireless earbuds bhi ₹799 mein hain, saste hain, lele.' Does not pause between seeing and buying. Rationalizes everything as 'it was on sale.'  "
+}

@@ -1,0 +1,70 @@
+{
+  "persona_id": "pragmatist_indore_01",
+  "name": "Fatima Sheikh",
+  "archetype": "pragmatist",
+  "tagline": "Show me results in 2 weeks or I am returning it — no drama",
+  "demographics": {
+    "age": 30,
+    "gender": "female",
+    "city": "Indore",
+    "city_tier": "tier_2",
+    "state": "Madhya Pradesh",
+    "income_segment": "middle",
+    "language_primary": "Hindi",
+    "language_secondary": "English",
+    "education": "B.Pharma from Devi Ahilya University",
+    "occupation": "Pharmacist at a private hospital",
+    "family_status": "Married, one toddler (age 2)"
+  },
+  "purchase_psychology": {
+    "price_sensitivity": 0.5,
+    "brand_loyalty": 0.45,
+    "impulse_tendency": 0.1,
+    "social_proof_need": 0.4,
+    "research_depth": 0.65,
+    "risk_tolerance": 0.35,
+    "decision_speed": "moderate",
+    "deal_sensitivity": 0.45
+  },
+  "media_behavior": {
+    "platform_primary": "YouTube",
+    "platform_secondary": "WhatsApp",
+    "ad_tolerance": 0.35,
+    "scroll_speed": "moderate",
+    "video_preference": 0.6,
+    "influencer_trust": 0.25,
+    "content_language_preference": "Hindi"
+  },
+  "emotional_profile": {
+    "aspiration_drivers": ["being a good mother who makes informed choices", "efficiency — maximum result, minimum effort", "products that actually deliver on their promises", "balancing career and motherhood without waste"],
+    "trust_signals": ["pharmaceutical-grade claims she can verify", "products recommended by other healthcare professionals", "clear dosage/usage instructions", "brands available in medical stores, not just online"],
+    "rejection_triggers": ["vague claims like 'natural goodness'", "products that need 8-step routines", "influencer marketing without substance", "brands that over-promise — she sees patients harmed by false health claims daily"],
+    "emotional_hooks": ["time-saving simplicity", "proven efficacy", "safe for her baby", "professional-grade quality at consumer prices"]
+  },
+  "category_affinities": [
+    {
+      "category": "skincare",
+      "interest_level": 0.75,
+      "monthly_spend_inr": 1000,
+      "preferred_brands": ["Cetaphil", "Bioderma", "Minimalist"],
+      "purchase_frequency": "monthly"
+    },
+    {
+      "category": "grocery_and_household",
+      "interest_level": 0.65,
+      "monthly_spend_inr": 5000,
+      "preferred_brands": ["Mamaearth baby range", "Himalaya baby", "local organic stores"],
+      "purchase_frequency": "weekly"
+    },
+    {
+      "category": "electronics",
+      "interest_level": 0.4,
+      "monthly_spend_inr": null,
+      "preferred_brands": ["Samsung", "Xiaomi"],
+      "purchase_frequency": "rarely"
+    }
+  ],
+  "backstory": "Fatima's pharmacy background means she reads ingredient lists the way a lawyer reads contracts — with suspicion and precision. She has seen patients come in with skin reactions from products that claimed to be 'natural' and 'Ayurvedic' but contained undisclosed allergens. This has made her deeply pragmatic about skincare and health products. She does not care about brand stories or aesthetics — she cares about formulation, concentration, and evidence. She has a baby now, which has made her even more careful about what enters her home. She buys fewer products but chooses them with clinical precision.",
+  "current_life_context": "Her toddler has developed mild eczema and she is researching baby-safe moisturizers. She has already ruled out three popular brands based on their ingredient lists. She is also looking for a simple sunscreen for herself — SPF 50, no fragrance, no nonsense. She does not have time for a 10-step routine between hospital shifts and baby duty.",
+  "inner_monologue_style": "Clinical and decisive, in Hindi with medical terms in English. Thinks: 'Ingredients mein parabens hain — yeh toh basic red flag hai. Aur yeh jo likha hai hypoallergenic, iska koi standard definition nahi hai legally. pH kya hai? Mention nahi kiya. Skip.' (There are parabens in the ingredients — that is a basic red flag. And this 'hypoallergenic' claim has no legal standard definition. What is the pH? Not mentioned. Skip.) Makes decisions quickly once she has the data she needs."
+}

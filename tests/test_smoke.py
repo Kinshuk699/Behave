@@ -839,3 +839,39 @@ def test_demo_creatives_include_diwali_ad():
     diwali = diwali_ads[0]
     assert diwali.cultural_references, "Diwali ad should have cultural_references"
     assert diwali.code_mixed is True, "Diwali ad should use Hinglish"
+
+
+# ── Persona Library Expansion (Feature #8) ───────────────────
+
+
+def test_persona_library_has_20_plus():
+    """Persona library should have at least 20 personas."""
+    personas = load_personas()
+    assert len(personas) >= 20, f"Expected 20+ personas, got {len(personas)}"
+
+
+def test_all_8_archetypes_populated():
+    """Every archetype in the enum should have at least one persona JSON."""
+    from synthetic_india.schemas.persona import Archetype
+
+    personas = load_personas()
+    archetypes_present = {p.archetype for p in personas}
+    for arch in Archetype:
+        assert arch.value in archetypes_present, f"Archetype '{arch.value}' has no persona JSON"
+
+
+def test_all_personas_pass_silver_validation():
+    """Every persona JSON must pass silver-layer validation."""
+    personas = load_personas()
+    for p in personas:
+        persona, result = validate_persona(p.model_dump())
+        assert result.passed, f"{p.persona_id} failed silver: {result.errors}"
+
+
+def test_cohort_selection_with_large_pool():
+    """Cohort selection should pick a diverse subset from 20+ personas for skincare."""
+    personas = load_personas()
+    cohort = select_cohort(personas, "skincare", cohort_size=8)
+    assert len(cohort) >= 4, "Skincare cohort should have at least 4 personas"
+    archetypes_in_cohort = {p.archetype for p in cohort}
+    assert len(archetypes_in_cohort) >= 3, "Cohort should have at least 3 different archetypes"

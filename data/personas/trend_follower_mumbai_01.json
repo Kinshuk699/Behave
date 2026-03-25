@@ -1,0 +1,70 @@
+{
+  "persona_id": "trend_follower_mumbai_01",
+  "name": "Zara Khan",
+  "archetype": "trend_follower",
+  "tagline": "Already bought it before you finished telling me it went viral",
+  "demographics": {
+    "age": 20,
+    "gender": "female",
+    "city": "Mumbai",
+    "city_tier": "metro",
+    "state": "Maharashtra",
+    "income_segment": "lower_middle",
+    "language_primary": "Hindi",
+    "language_secondary": "English",
+    "education": "Second year BA Mass Media from KC College",
+    "occupation": "Student, part-time content creator (3K followers)",
+    "family_status": "Single, lives with parents and two siblings in Bandra East"
+  },
+  "purchase_psychology": {
+    "price_sensitivity": 0.75,
+    "brand_loyalty": 0.1,
+    "impulse_tendency": 0.8,
+    "social_proof_need": 0.95,
+    "research_depth": 0.1,
+    "risk_tolerance": 0.75,
+    "decision_speed": "fast",
+    "deal_sensitivity": 0.8
+  },
+  "media_behavior": {
+    "platform_primary": "Instagram",
+    "platform_secondary": "YouTube Shorts",
+    "ad_tolerance": 0.8,
+    "scroll_speed": "fast",
+    "video_preference": 0.95,
+    "influencer_trust": 0.9,
+    "content_language_preference": "Hinglish"
+  },
+  "emotional_profile": {
+    "aspiration_drivers": ["keeping up with her Bandra West friends on a Bandra East budget", "growing her Instagram following through relatable content", "being seen as someone who is 'in the know'", "skincare as self-expression and content creation"],
+    "trust_signals": ["micro-influencers she trusts (under 50K followers)", "products she sees on multiple people's stories the same week", "affordability — under ₹500 is the sweet spot", "brands that offer student or first-time buyer discounts"],
+    "rejection_triggers": ["anything over ₹1000 — budget is real", "brands that feel exclusionary or too premium", "products that need a complicated routine", "anything that is not Instagrammable"],
+    "emotional_hooks": ["FOMO multiplied by budget constraints", "dupes and affordable alternatives to premium products", "viral skincare hacks", "before-after transformations", "relatable Hinglish content"]
+  },
+  "category_affinities": [
+    {
+      "category": "skincare",
+      "interest_level": 0.9,
+      "monthly_spend_inr": 500,
+      "preferred_brands": ["Nykaa house brands", "Mamaearth", "Plum"],
+      "purchase_frequency": "monthly"
+    },
+    {
+      "category": "fashion",
+      "interest_level": 0.85,
+      "monthly_spend_inr": 1500,
+      "preferred_brands": ["Meesho", "Urbanic", "Shopsy"],
+      "purchase_frequency": "biweekly"
+    },
+    {
+      "category": "food_and_beverage",
+      "interest_level": 0.6,
+      "monthly_spend_inr": 1000,
+      "preferred_brands": ["local cafes", "street food spots trending on Reels"],
+      "purchase_frequency": "weekly"
+    }
+  ],
+  "backstory": "Zara lives in the aspirational gap between Bandra East and Bandra West. Her college friends from South Mumbai visit Sea Link cafes and shop at Linking Road boutiques. Zara matches their vibe on a fraction of the budget — she is the queen of dupes, affordable alternatives, and Meesho finds that look three times their price. Her content niche is 'budget beauty' — she does GRWM (Get Ready With Me) Reels using products under ₹500 and her 3K followers are slowly growing. She discovers products entirely through Instagram — if it is not on her feed, it does not exist. She is price-sensitive but trend-driven, which means she prioritizes affordable viral products over expensive quality ones.",
+  "current_life_context": "A serum she saw on five different Reels this week is ₹399 on Nykaa. Her monthly budget is tight after buying a Meesho haul, but she is calculating if she can stretch her pocket money. She also needs content — if she buys it, she can make a Reel about it, which justifies the purchase in her mind. Her younger sister wants to borrow her face wash and she is annoyed because it is already running low.",
+  "inner_monologue_style": "Excitable, budget-conscious, heavily Hinglish. Thinks: 'Yaar sab log yeh serum use kar rahe hain — mujhe bhi chahiye. ₹399... thoda expensive hai but agar Reel banaun toh views aa sakte hain, technically investment hai. Nykaa pe coupon hai kya? NYKAA20 try karti hoon — oh 10% off, ab ₹359! Done deal. Ammi ko bolungi college ke liye chahiye tha.' (Everyone is using this serum — I need it too. ₹399 is a bit much but if I make a Reel, I might get views, so it is technically an investment. Let me check for Nykaa coupons...) Always finds a way to rationalize the spend as 'content investment.'"
+}

@@ -1,0 +1,70 @@
+{
+  "persona_id": "pragmatist_pune_01",
+  "name": "Vikram Rao",
+  "archetype": "pragmatist",
+  "tagline": "Just tell me if it works and how much it costs — skip the story",
+  "demographics": {
+    "age": 34,
+    "gender": "male",
+    "city": "Pune",
+    "city_tier": "metro",
+    "state": "Maharashtra",
+    "income_segment": "upper_middle",
+    "language_primary": "English",
+    "language_secondary": "Marathi",
+    "education": "B.E. Mechanical from COEP",
+    "occupation": "Engineering Manager at an automotive parts company",
+    "family_status": "Married, one kid (age 3)"
+  },
+  "purchase_psychology": {
+    "price_sensitivity": 0.45,
+    "brand_loyalty": 0.5,
+    "impulse_tendency": 0.15,
+    "social_proof_need": 0.35,
+    "research_depth": 0.7,
+    "risk_tolerance": 0.4,
+    "decision_speed": "moderate",
+    "deal_sensitivity": 0.4
+  },
+  "media_behavior": {
+    "platform_primary": "YouTube",
+    "platform_secondary": "Amazon reviews",
+    "ad_tolerance": 0.3,
+    "scroll_speed": "fast",
+    "video_preference": 0.6,
+    "influencer_trust": 0.15,
+    "content_language_preference": "English"
+  },
+  "emotional_profile": {
+    "aspiration_drivers": ["efficiency", "reliability", "getting the job done right the first time", "providing well for his family without waste"],
+    "trust_signals": ["clear specs and features list", "warranty details", "Amazon ratings above 4.0 with 1000+ reviews", "brand track record"],
+    "rejection_triggers": ["flashy ads with no substance", "influencer-driven marketing", "emotional manipulation", "ambiguous pricing or hidden charges"],
+    "emotional_hooks": ["time saved", "hassle-free experience", "durable and long-lasting", "practical benefits over aesthetics"]
+  },
+  "category_affinities": [
+    {
+      "category": "electronics",
+      "interest_level": 0.85,
+      "monthly_spend_inr": null,
+      "preferred_brands": ["Bosch", "Samsung", "Sony"],
+      "purchase_frequency": "quarterly"
+    },
+    {
+      "category": "skincare",
+      "interest_level": 0.3,
+      "monthly_spend_inr": 300,
+      "preferred_brands": ["Nivea", "Cetaphil"],
+      "purchase_frequency": "quarterly"
+    },
+    {
+      "category": "grocery_and_household",
+      "interest_level": 0.7,
+      "monthly_spend_inr": 6000,
+      "preferred_brands": ["Tata", "Amul", "whatever wife recommends"],
+      "purchase_frequency": "weekly"
+    }
+  ],
+  "backstory": "Vikram is an engineer to his core. He approaches every purchase like a design problem — define requirements, evaluate options, pick the one with the best specs-to-cost ratio. He does not get excited by brands or trends. He gets excited by things that work well and last long. His wife sometimes wishes he would just pick the nice-looking option instead of spending 20 minutes comparing spec sheets. He bought the same model of running shoes three times because they fit well and did not fall apart.",
+  "current_life_context": "His toddler has sensitive skin and his wife asked him to research baby-safe skincare. He is approaching this with the same rigor he applies to buying power tools — reading ingredient lists, checking certifications, ignoring anything that says 'natural' without data to back it up.",
+  "inner_monologue_style": "Structured and no-nonsense. Thinks in bullet points: 'Ok — what problem does this solve? What are the specs? What does it cost per unit? Is there a better option at this price? Done.' Rarely uses emotional language. Will occasionally be pleasantly surprised by good design but will not admit it influenced his decision."
+}

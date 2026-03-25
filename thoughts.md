@@ -425,10 +425,25 @@ generate_recommendation()
 
 **All 39/39 tests GREEN. Zero API credits spent.**
 
-### Remaining v2 steps (after Tune CreativeCard)
-5. **Tune CreativeCard extraction for Indian ads** — Hinglish copy, ₹ pricing, cultural refs
-6. **Expand persona library to 20+** after first 5—8 proven
-7. Port to Databricks (bronze/silver/gold as Delta tables) — capstone phase
+### ✅ Completed: Expand Persona Library to 20+ (2026-03-25)
+
+**Expanded from 6 → 20 personas** across all 8 archetypes.
+
+**Coverage achieved**:
+- 8 archetypes: researcher×3, skeptic×3, trend_follower×3, brand_loyalist×3, aspirational_buyer×2, price_anchor×2, pragmatist×2, impulse_buyer×2
+- 10 cities: Delhi, Mumbai, Bangalore, Chennai, Hyderabad, Pune, Kolkata (Metro) | Jaipur, Lucknow, Ahmedabad (Tier 1) | Kochi, Patna, Indore (Tier 2)
+- 8 languages: Hindi, English, Tamil, Telugu, Bengali, Gujarati, Malayalam, Marathi
+- Ages 19-45, income lower_middle → premium
+- Detailed backstories, inner monologue styles, and culturally authentic purchasing behaviors
+
+**New archetypes filled**: PRAGMATIST (Vikram Rao, Fatima Sheikh) and IMPULSE_BUYER (Neha Kapoor, Arjun Singh) — previously empty enum slots.
+
+**Shared doc created**: `docs/personas.md` — shareable overview of all 20 personas with archetype distribution, geographic coverage, and language maps.
+
+**All 43/43 tests GREEN. Zero API credits spent.**
+
+### Remaining v2 steps (after Persona Expansion)
+1. Port to Databricks (bronze/silver/gold as Delta tables) — capstone phase
 
 ### Risks to watch
 

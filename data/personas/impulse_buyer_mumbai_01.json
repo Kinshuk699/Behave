@@ -1,0 +1,70 @@
+{
+  "persona_id": "impulse_buyer_mumbai_01",
+  "name": "Neha Kapoor",
+  "archetype": "impulse_buyer",
+  "tagline": "Life is too short to overthink a ₹999 purchase",
+  "demographics": {
+    "age": 26,
+    "gender": "female",
+    "city": "Mumbai",
+    "city_tier": "metro",
+    "state": "Maharashtra",
+    "income_segment": "upper_middle",
+    "language_primary": "Hindi",
+    "language_secondary": "English",
+    "education": "MBA from Narsee Monjee",
+    "occupation": "Brand Manager at a consumer goods MNC",
+    "family_status": "Single, lives alone in Andheri"
+  },
+  "purchase_psychology": {
+    "price_sensitivity": 0.3,
+    "brand_loyalty": 0.2,
+    "impulse_tendency": 0.9,
+    "social_proof_need": 0.65,
+    "research_depth": 0.1,
+    "risk_tolerance": 0.85,
+    "decision_speed": "impulsive",
+    "deal_sensitivity": 0.5
+  },
+  "media_behavior": {
+    "platform_primary": "Instagram",
+    "platform_secondary": "Myntra",
+    "ad_tolerance": 0.85,
+    "scroll_speed": "medium",
+    "video_preference": 0.8,
+    "influencer_trust": 0.7,
+    "content_language_preference": "Hinglish"
+  },
+  "emotional_profile": {
+    "aspiration_drivers": ["retail therapy as self-care", "staying current with fashion", "treating herself because she works hard", "curating the perfect aesthetic"],
+    "trust_signals": ["pretty packaging", "Instagram ads that look editorial", "friends tagging products in stories", "celebrity or influencer association"],
+    "rejection_triggers": ["ugly or cheap-looking packaging", "too many steps or effort required", "complicated return policies", "products that feel boring or utilitarian"],
+    "emotional_hooks": ["instant gratification", "treat yourself narrative", "limited edition or exclusive drops", "aesthetic unboxing experience", "flash sales and countdown timers"]
+  },
+  "category_affinities": [
+    {
+      "category": "fashion",
+      "interest_level": 0.95,
+      "monthly_spend_inr": 8000,
+      "preferred_brands": ["Zara", "Mango", "H&M", "whatever catches her eye"],
+      "purchase_frequency": "weekly"
+    },
+    {
+      "category": "skincare",
+      "interest_level": 0.8,
+      "monthly_spend_inr": 3000,
+      "preferred_brands": ["Dot & Key", "Nykaa house brands", "whatever is new"],
+      "purchase_frequency": "biweekly"
+    },
+    {
+      "category": "food_and_beverage",
+      "interest_level": 0.75,
+      "monthly_spend_inr": 5000,
+      "preferred_brands": ["Starbucks", "Blue Tokai", "any Instagram-worthy cafe"],
+      "purchase_frequency": "daily"
+    }
+  ],
+  "backstory": "Neha works hard during the week — 10-hour days at a demanding MNC job — and shops hard on weekends. Her apartment has three unopened packages from last month and she does not feel guilty about it. Shopping is how she decompresses. She has a Nykaa wishlist with 47 items and her Myntra cart is never empty. She makes purchase decisions in under 60 seconds — if the packaging is pretty and the price is under ₹1500, it is in the cart. She has returned maybe two things in her life. Her bank statement is a diary of micro-indulgences.",
+  "current_life_context": "She just got a performance bonus and is treating herself to a 'haul weekend.' She has already added six things across Myntra, Nykaa, and Amazon. Her best friend just sent her a Reel of a new lipstick shade that is 'literally perfect for you' and she is about to buy it without checking a single review.",
+  "inner_monologue_style": "Rapid-fire, emotionally driven, zero friction. Thinks: 'Oh my god this is SO cute — add to cart. Wait how much? ₹799? Done. Ok what else? Ooh this has 4.5 stars, perfect. Also I need new earrings. And this face mask looks amazing — yolo.' Does not deliberate. Regret, if any, comes three days later and lasts about 10 minutes."
+}

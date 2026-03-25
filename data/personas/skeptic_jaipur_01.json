@@ -1,0 +1,70 @@
+{
+  "persona_id": "skeptic_jaipur_01",
+  "name": "Deepak Sharma",
+  "archetype": "skeptic",
+  "tagline": "Tested by dermatologists? Which ones? Show me the paper.",
+  "demographics": {
+    "age": 40,
+    "gender": "male",
+    "city": "Jaipur",
+    "city_tier": "tier_1",
+    "state": "Rajasthan",
+    "income_segment": "middle",
+    "language_primary": "Hindi",
+    "language_secondary": "English",
+    "education": "B.Sc. from Rajasthan University, self-taught in consumer rights",
+    "occupation": "Government school teacher and part-time RTI activist",
+    "family_status": "Married, one son (age 14)"
+  },
+  "purchase_psychology": {
+    "price_sensitivity": 0.65,
+    "brand_loyalty": 0.2,
+    "impulse_tendency": 0.05,
+    "social_proof_need": 0.2,
+    "research_depth": 0.8,
+    "risk_tolerance": 0.15,
+    "decision_speed": "slow",
+    "deal_sensitivity": 0.6
+  },
+  "media_behavior": {
+    "platform_primary": "YouTube",
+    "platform_secondary": "WhatsApp groups",
+    "ad_tolerance": 0.1,
+    "scroll_speed": "slow",
+    "video_preference": 0.65,
+    "influencer_trust": 0.05,
+    "content_language_preference": "Hindi"
+  },
+  "emotional_profile": {
+    "aspiration_drivers": ["protecting consumers from fraud", "being seen as the wise and informed person in his community", "teaching his son to think critically about marketing"],
+    "trust_signals": ["government certifications (FSSAI, BIS, ISI)", "products he has seen in the market for 10+ years", "transparent manufacturing details", "word of mouth from trusted community members"],
+    "rejection_triggers": ["celebrity endorsements (especially cricketers selling paan masala)", "English-heavy marketing targeting Tier 1 audiences", "any claim without verifiable evidence", "D2C brands with no physical store presence"],
+    "emotional_hooks": ["accountability and transparency", "protecting his family", "value for honest money", "brands that respect the consumer's intelligence"]
+  },
+  "category_affinities": [
+    {
+      "category": "grocery_and_household",
+      "interest_level": 0.9,
+      "monthly_spend_inr": 6000,
+      "preferred_brands": ["Tata", "MDH", "established brands with FSSAI"],
+      "purchase_frequency": "weekly"
+    },
+    {
+      "category": "skincare",
+      "interest_level": 0.3,
+      "monthly_spend_inr": 200,
+      "preferred_brands": ["Himalaya", "Vicco"],
+      "purchase_frequency": "rarely"
+    },
+    {
+      "category": "electronics",
+      "interest_level": 0.5,
+      "monthly_spend_inr": null,
+      "preferred_brands": ["LG", "Tata products"],
+      "purchase_frequency": "rarely"
+    }
+  ],
+  "backstory": "Deepak has filed 23 RTI applications in the last five years — about everything from road construction quality to school textbook pricing. He approaches consumer products with the same scrutiny. He once returned a 'herbal' shampoo to the shopkeeper after checking that it contained sodium lauryl sulfate. He shares consumer awareness videos in his WhatsApp groups and his neighbors come to him before making big purchases. He is not cynical — he genuinely believes companies should be honest and gets personally offended when they are not.",
+  "current_life_context": "His son wants a gaming laptop for his birthday. Deepak has been researching specs for three weeks, has compared prices across six websites, and has already identified two brands making misleading claims about battery life. He is also annoyed by a new D2C skincare brand's YouTube ads that keep interrupting his history documentaries.",
+  "inner_monologue_style": "Investigative and indignant, entirely in Hindi. Thinks: 'Yeh likha hai dermatologist-tested — kaunse dermatologist? Naam batao. Certificate dikhao. Aur yeh jo MRP 599 likha hai, kal tak toh 399 mein bik raha tha Amazon pe. Log samajhte nahi hain ki yeh sab scam hai.' (It says dermatologist-tested — which dermatologist? Show the name. Show the certificate. And this MRP of 599, till yesterday it was selling for 399 on Amazon. People do not understand this is all a scam.) Shares findings on WhatsApp with a sense of civic duty."
+}

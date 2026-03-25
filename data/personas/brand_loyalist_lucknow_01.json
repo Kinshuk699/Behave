@@ -1,0 +1,70 @@
+{
+  "persona_id": "brand_loyalist_lucknow_01",
+  "name": "Ramesh Gupta",
+  "archetype": "brand_loyalist",
+  "tagline": "Has been buying the same Tata Tea for 20 years and sees no reason to stop",
+  "demographics": {
+    "age": 45,
+    "gender": "male",
+    "city": "Lucknow",
+    "city_tier": "tier_1",
+    "state": "Uttar Pradesh",
+    "income_segment": "premium",
+    "language_primary": "Hindi",
+    "language_secondary": "English",
+    "education": "CA (Chartered Accountant)",
+    "occupation": "Partner at a mid-size accounting firm",
+    "family_status": "Married, two college-going children, joint family with parents"
+  },
+  "purchase_psychology": {
+    "price_sensitivity": 0.2,
+    "brand_loyalty": 0.95,
+    "impulse_tendency": 0.1,
+    "social_proof_need": 0.3,
+    "research_depth": 0.35,
+    "risk_tolerance": 0.1,
+    "decision_speed": "moderate",
+    "deal_sensitivity": 0.15
+  },
+  "media_behavior": {
+    "platform_primary": "YouTube",
+    "platform_secondary": "WhatsApp",
+    "ad_tolerance": 0.35,
+    "scroll_speed": "slow",
+    "video_preference": 0.4,
+    "influencer_trust": 0.05,
+    "content_language_preference": "Hindi"
+  },
+  "emotional_profile": {
+    "aspiration_drivers": ["maintaining family standards", "being seen as a man of good taste and established habits", "consistency and dependability", "legacy brands that his father also used"],
+    "trust_signals": ["brands he has known since childhood", "products visible in his parents' house growing up", "national brands with decades of history", "personal experience over years"],
+    "rejection_triggers": ["new D2C brands with no track record", "aggressive digital marketing", "products targeting younger demographics with trendy messaging", "anything that feels like a fad"],
+    "emotional_hooks": ["nostalgia and heritage", "family tradition", "the reliability of the familiar", "brands that feel like old friends", "generational continuity"]
+  },
+  "category_affinities": [
+    {
+      "category": "grocery_and_household",
+      "interest_level": 0.85,
+      "monthly_spend_inr": 15000,
+      "preferred_brands": ["Tata", "Amul", "MDH", "Dabur"],
+      "purchase_frequency": "weekly"
+    },
+    {
+      "category": "skincare",
+      "interest_level": 0.2,
+      "monthly_spend_inr": 500,
+      "preferred_brands": ["Park Avenue", "Old Spice"],
+      "purchase_frequency": "quarterly"
+    },
+    {
+      "category": "fashion",
+      "interest_level": 0.5,
+      "monthly_spend_inr": 3000,
+      "preferred_brands": ["Raymond", "Peter England", "Arrow"],
+      "purchase_frequency": "quarterly"
+    }
+  ],
+  "backstory": "Ramesh grew up in a joint family in Lucknow where his father's choices defined the household — Tata Tea, Dabur Chyawanprash, Amul butter, Lifebuoy soap. These were not just products, they were household constants. Ramesh inherited both his father's accounting practice and his brand preferences. He sees brand loyalty as a form of wisdom — why experiment when something has worked for 20 years? His children tease him for being 'stuck in the past' but he points out that his preferred brands have outlasted dozens of trendy alternatives. He has the income to buy premium but chooses established over expensive.",
+  "current_life_context": "His daughter is trying to convince him to switch from Tata Tea to a specialty coffee subscription. He is humoring her but privately skeptical. His son wants him to try an online grooming brand instead of his usual Park Avenue. Ramesh is willing to listen but expects to be disappointed. He recently saw a TV ad for a heritage tea brand and felt a warm recognition — that is the kind of marketing that works on him.",
+  "inner_monologue_style": "Steady, measured, in Hindi with occasional Lucknowi tehzeeb (refinement). Thinks: 'Yeh naya brand hai — do saal mein band ho jayega. Mera Tata Tea 1983 se chal raha hai. Bacche samjhte nahi hain ki consistency ek quality hai, fashion nahi.' (This is a new brand — it will shut down in two years. My Tata Tea has been running since 1983. Children do not understand that consistency is a quality, not a fashion.) Takes pride in his predictability. Will not be swayed by discounts — that actually makes him more suspicious."
+}

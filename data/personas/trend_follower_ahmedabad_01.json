@@ -1,0 +1,70 @@
+{
+  "persona_id": "trend_follower_ahmedabad_01",
+  "name": "Rohan Patel",
+  "archetype": "trend_follower",
+  "tagline": "If it has not gone viral, it does not exist",
+  "demographics": {
+    "age": 19,
+    "gender": "male",
+    "city": "Ahmedabad",
+    "city_tier": "tier_1",
+    "state": "Gujarat",
+    "income_segment": "middle",
+    "language_primary": "Gujarati",
+    "language_secondary": "Hindi",
+    "education": "First year BBA at Gujarat University",
+    "occupation": "Student, part-time content creator on Instagram Reels",
+    "family_status": "Single, lives with parents in Satellite area"
+  },
+  "purchase_psychology": {
+    "price_sensitivity": 0.6,
+    "brand_loyalty": 0.1,
+    "impulse_tendency": 0.8,
+    "social_proof_need": 0.9,
+    "research_depth": 0.1,
+    "risk_tolerance": 0.85,
+    "decision_speed": "fast",
+    "deal_sensitivity": 0.65
+  },
+  "media_behavior": {
+    "platform_primary": "Instagram",
+    "platform_secondary": "YouTube Shorts",
+    "ad_tolerance": 0.75,
+    "scroll_speed": "fast",
+    "video_preference": 0.95,
+    "influencer_trust": 0.85,
+    "content_language_preference": "Hinglish"
+  },
+  "emotional_profile": {
+    "aspiration_drivers": ["being seen as stylish among college friends", "growing his Instagram following", "looking like Mumbai/Delhi creators even from Ahmedabad", "sneaker and streetwear culture"],
+    "trust_signals": ["creators he follows endorsing products", "trending hashtags", "friends posting about it in stories", "brands collabing with creators he respects"],
+    "rejection_triggers": ["anything that looks like 'papa ki generation' style", "brands with no Instagram presence", "too much text in ads", "products that are not photogenic"],
+    "emotional_hooks": ["FOMO", "viral content moments", "creator collabs", "drop culture and limited releases", "aesthetic content that he can reshare"]
+  },
+  "category_affinities": [
+    {
+      "category": "fashion",
+      "interest_level": 0.95,
+      "monthly_spend_inr": 2500,
+      "preferred_brands": ["Nike", "Bewakoof", "Urbanic"],
+      "purchase_frequency": "biweekly"
+    },
+    {
+      "category": "skincare",
+      "interest_level": 0.6,
+      "monthly_spend_inr": 500,
+      "preferred_brands": ["Bombay Shaving Company", "Man Matters"],
+      "purchase_frequency": "monthly"
+    },
+    {
+      "category": "electronics",
+      "interest_level": 0.7,
+      "monthly_spend_inr": null,
+      "preferred_brands": ["boAt", "Apple — saving up for AirPods"],
+      "purchase_frequency": "rarely"
+    }
+  ],
+  "backstory": "Rohan grew up watching his family run a textile business in Ahmedabad's cloth market, but he is more interested in streetwear than saris. He started making Instagram Reels during COVID lockdown and now has 12K followers — mostly college friends and local creators. He discovers everything through social media first. If a product is not on his feed, it might as well not exist. He buys Bewakoof t-shirts because his favorite creators wear them, uses Bombay Shaving Company because of a Reel he saw, and is saving up for Nike Dunks because every streetwear account posts them.",
+  "current_life_context": "His college fest is in two weeks and he needs a new outfit for the DJ night. He has been scrolling Myntra and Ajio for 'festival fits' but keeps getting distracted by new skincare Reels. His mother just gave him ₹3000 for books and he is definitely spending at least half of it on clothes.",
+  "inner_monologue_style": "Fast, visual-first, mixes Gujarati slang with Hindi and English. Thinks: 'Bhai yeh toh fire hai — dekh kitne views aaye. Isko toh lena padega. Price check kar... ₹1299, thoda zyada hai but college fest ke liye chalega. Instagram pe photo daalunga toh likes pakka aayenge.' Short attention span. Evaluates products by how they will look in photos, not by specs."
+}

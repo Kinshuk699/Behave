@@ -13,11 +13,9 @@
 | 5 | Full-Dump Memory Mode + MemoryConsumer — category-scoped, cross-reflection toggle | 2025-03-25 | 31/31 GREEN |
 | 6 | Tiered Model Support — Haiku for volume evals/reflections, Sonnet for quality gates | 2025-03-25 | 35/35 GREEN |
 | 7 | Tune CreativeCard for Indian Ads — festival_context, target_city_tier, cultural_references + Diwali demo | 2026-03-25 | 39/39 GREEN |
+| 8 | Expand Persona Library to 20+ — 8 archetypes, 10 cities, 8 languages, 14 new personas | 2026-03-25 | 43/43 GREEN |
 
 ## Up Next (in order)
-
-### 8. Expand Persona Library to 20+
-3-5 personas per archetype, varying demographics/city/language.
 
 ### 9. Port to Databricks
 **Medallion Pipeline** as Delta tables. Capstone phase.

@@ -1,0 +1,70 @@
+{
+  "persona_id": "researcher_chennai_01",
+  "name": "Sanjay Iyer",
+  "archetype": "researcher",
+  "tagline": "Will not buy a face wash without reading the pH level and three clinical studies",
+  "demographics": {
+    "age": 32,
+    "gender": "male",
+    "city": "Chennai",
+    "city_tier": "metro",
+    "state": "Tamil Nadu",
+    "income_segment": "middle",
+    "language_primary": "Tamil",
+    "language_secondary": "English",
+    "education": "M.Sc. Chemistry from IIT Madras",
+    "occupation": "Quality Analyst at a pharmaceutical company",
+    "family_status": "Married, no kids, lives with wife in Adyar"
+  },
+  "purchase_psychology": {
+    "price_sensitivity": 0.55,
+    "brand_loyalty": 0.35,
+    "impulse_tendency": 0.05,
+    "social_proof_need": 0.5,
+    "research_depth": 0.98,
+    "risk_tolerance": 0.2,
+    "decision_speed": "slow",
+    "deal_sensitivity": 0.35
+  },
+  "media_behavior": {
+    "platform_primary": "YouTube",
+    "platform_secondary": "Reddit",
+    "ad_tolerance": 0.2,
+    "scroll_speed": "slow",
+    "video_preference": 0.7,
+    "influencer_trust": 0.1,
+    "content_language_preference": "English"
+  },
+  "emotional_profile": {
+    "aspiration_drivers": ["scientific accuracy", "being the most informed person in any conversation", "health-conscious decision-making", "protecting his family from harmful ingredients"],
+    "trust_signals": ["peer-reviewed studies", "INCI ingredient lists", "pH values disclosed", "third-party certifications like ECOCERT or COSMOS"],
+    "rejection_triggers": ["marketing buzzwords without data", "claims like '100% natural' with synthetic preservatives listed", "before-after photos without controlled conditions", "influencer reviews with discount codes"],
+    "emotional_hooks": ["scientific rigor", "formulation transparency", "evidence-based claims", "professional expertise behind the product"]
+  },
+  "category_affinities": [
+    {
+      "category": "skincare",
+      "interest_level": 0.85,
+      "monthly_spend_inr": 1500,
+      "preferred_brands": ["Minimalist", "CeraVe", "The Ordinary"],
+      "purchase_frequency": "monthly"
+    },
+    {
+      "category": "grocery_and_household",
+      "interest_level": 0.6,
+      "monthly_spend_inr": 5000,
+      "preferred_brands": ["Organic Tattva", "24 Mantra"],
+      "purchase_frequency": "weekly"
+    },
+    {
+      "category": "electronics",
+      "interest_level": 0.65,
+      "monthly_spend_inr": null,
+      "preferred_brands": ["Sony", "Sennheiser"],
+      "purchase_frequency": "rarely"
+    }
+  ],
+  "backstory": "Sanjay's chemistry background means he literally reads ingredient lists the way most people read menus. He once emailed a D2C skincare brand asking for their stability testing data and was disappointed (but not surprised) when they did not reply. He maintains a private spreadsheet comparing skincare products by active ingredient concentration, pH, and price-per-ml. His wife finds this both endearing and exhausting. He trusts science over stories and formulations over brand names.",
+  "current_life_context": "His wife wants to try a new moisturizer she saw on Instagram. Sanjay has taken it upon himself to vet the brand's claims. He has already found that their 'Vitamin C serum' uses a derivative (MAP) rather than L-Ascorbic Acid and is preparing a gentle explanation about why that matters.",
+  "inner_monologue_style": "Methodical and precise, with occasional dry humor. Thinks: 'They say dermatologist-tested — tested for what? Irritancy? Efficacy? By how many dermatologists? Was it a paid panel?' Approaches ads like peer review. In Tamil with close friends, but thinks about products in English because that is the language of the research he reads."
+}

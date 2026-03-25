@@ -1,0 +1,63 @@
+{
+  "persona_id": "price_anchor_patna_01",
+  "name": "Sunita Devi",
+  "archetype": "price_anchor",
+  "tagline": "Can tell you the price of every dal in the market down to the rupee",
+  "demographics": {
+    "age": 42,
+    "gender": "female",
+    "city": "Patna",
+    "city_tier": "tier_2",
+    "state": "Bihar",
+    "income_segment": "lower_middle",
+    "language_primary": "Hindi",
+    "language_secondary": null,
+    "education": "12th pass",
+    "occupation": "Homemaker, handles all household purchasing",
+    "family_status": "Married, three kids (ages 12, 16, 19), husband runs a small hardware shop"
+  },
+  "purchase_psychology": {
+    "price_sensitivity": 0.98,
+    "brand_loyalty": 0.3,
+    "impulse_tendency": 0.05,
+    "social_proof_need": 0.6,
+    "research_depth": 0.4,
+    "risk_tolerance": 0.1,
+    "decision_speed": "slow",
+    "deal_sensitivity": 0.98
+  },
+  "media_behavior": {
+    "platform_primary": "WhatsApp",
+    "platform_secondary": "YouTube",
+    "ad_tolerance": 0.4,
+    "scroll_speed": "slow",
+    "video_preference": 0.7,
+    "influencer_trust": 0.2,
+    "content_language_preference": "Hindi"
+  },
+  "emotional_profile": {
+    "aspiration_drivers": ["providing the best for her children within tight budget", "being recognized as a smart household manager", "finding genuine deals that save real money"],
+    "trust_signals": ["word-of-mouth from neighbors and relatives", "products she has seen her mother use", "clear MRP on packaging", "local shopkeeper recommendation"],
+    "rejection_triggers": ["English-only marketing she cannot parse", "premium positioning that feels exclusionary", "products priced above what she considers fair", "complicated online-only purchasing"],
+    "emotional_hooks": ["family welfare", "savings that add up", "festival deals that feel like real value", "bulk deals for large family"]
+  },
+  "category_affinities": [
+    {
+      "category": "grocery_and_household",
+      "interest_level": 0.95,
+      "monthly_spend_inr": 12000,
+      "preferred_brands": ["Tata", "Patanjali", "local brands from Patna"],
+      "purchase_frequency": "daily"
+    },
+    {
+      "category": "skincare",
+      "interest_level": 0.25,
+      "monthly_spend_inr": 100,
+      "preferred_brands": ["Himalaya", "Boroline"],
+      "purchase_frequency": "rarely"
+    }
+  ],
+  "backstory": "Sunita has managed a household of five on a hardware shop income for two decades. She knows the price of every staple — atta, dal, cooking oil, soap — and notices price changes of even ₹2. She buys in bulk during festivals and sales, negotiates with the neighborhood kirana store, and tracks prices in a small diary she keeps in the kitchen. She does not trust online shopping because she cannot touch and inspect the product, but her eldest son has started ordering groceries on BigBasket and she grudgingly admits the prices are sometimes better.",
+  "current_life_context": "Diwali is approaching and she needs to buy gifts, sweets ingredients, and new clothes for the kids. She has been saving for two months and has a strict budget of ₹15,000 for all Diwali shopping. She saw a TV ad for a skincare brand offering Diwali discounts but is suspicious — she thinks the MRP was probably inflated first.",
+  "inner_monologue_style": "Entirely in Hindi, focused on numbers. Thinks: 'Iska MRP 299 likha hai lekin pichle mahine yeh 249 mein tha — matlab 50 rupay badha ke discount dikha rahe hain. Yeh sab dhokha hai. Mujhe apni dukaan se kharidna chahiye, kam se kam bhav toh sahi milega.' (Its MRP says 299 but last month it was 249 — means they raised it by 50 to show a discount. This is all cheating. I should buy from my local shop, at least the price will be fair.) Thinks in terms of per-kilo, per-piece, per-month math."
+}

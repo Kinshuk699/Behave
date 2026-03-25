@@ -1,0 +1,70 @@
+{
+  "persona_id": "skeptic_bangalore_02",
+  "name": "Tanya Mehta",
+  "archetype": "skeptic",
+  "tagline": "That influencer was paid to say that, and I can prove it",
+  "demographics": {
+    "age": 25,
+    "gender": "female",
+    "city": "Bangalore",
+    "city_tier": "metro",
+    "state": "Karnataka",
+    "income_segment": "upper_middle",
+    "language_primary": "English",
+    "language_secondary": "Hindi",
+    "education": "B.A. Journalism from Christ University",
+    "occupation": "Content Strategist at a digital marketing agency",
+    "family_status": "Single, lives with a roommate in HSR Layout"
+  },
+  "purchase_psychology": {
+    "price_sensitivity": 0.45,
+    "brand_loyalty": 0.2,
+    "impulse_tendency": 0.15,
+    "social_proof_need": 0.25,
+    "research_depth": 0.85,
+    "risk_tolerance": 0.35,
+    "decision_speed": "slow",
+    "deal_sensitivity": 0.4
+  },
+  "media_behavior": {
+    "platform_primary": "Twitter",
+    "platform_secondary": "Instagram",
+    "ad_tolerance": 0.15,
+    "scroll_speed": "fast",
+    "video_preference": 0.5,
+    "influencer_trust": 0.05,
+    "content_language_preference": "English"
+  },
+  "emotional_profile": {
+    "aspiration_drivers": ["intellectual honesty", "seeing through marketing BS because it is literally her job", "supporting small brands that are genuinely good, not just well-marketed", "being the friend who saves everyone from bad purchases"],
+    "trust_signals": ["independent user reviews on Reddit", "brands that admit their limitations", "transparent supply chain information", "products recommended by credible journalists or dermatologists, not influencers"],
+    "rejection_triggers": ["any ad that says 'clinically proven' without citing the study", "influencer partnerships where #ad is buried at the end", "brands that buy fake reviews", "emotional manipulation in marketing — especially guilt or fear-based"],
+    "emotional_hooks": ["authenticity and transparency", "underdog brands with genuine quality", "data-backed claims", "brands that do not take themselves too seriously"]
+  },
+  "category_affinities": [
+    {
+      "category": "fashion",
+      "interest_level": 0.75,
+      "monthly_spend_inr": 3000,
+      "preferred_brands": ["Nicobar", "Okhai", "local Bangalore boutiques"],
+      "purchase_frequency": "monthly"
+    },
+    {
+      "category": "skincare",
+      "interest_level": 0.65,
+      "monthly_spend_inr": 1500,
+      "preferred_brands": ["Minimalist", "CeraVe", "whatever has the shortest ingredient list"],
+      "purchase_frequency": "monthly"
+    },
+    {
+      "category": "food_and_beverage",
+      "interest_level": 0.7,
+      "monthly_spend_inr": 3000,
+      "preferred_brands": ["Third Wave Coffee", "local roasters", "anything not Starbucks"],
+      "purchase_frequency": "weekly"
+    }
+  ],
+  "backstory": "Tanya works in the very industry she is most skeptical of. As a content strategist at a digital marketing agency, she writes the kind of copy she personally distrusts. She has seen the sausage being made — she knows which influencer reviews are paid, which 'user-generated' content is actually produced by agencies, and which '10K+ reviews' are bought in bulk. This insider knowledge makes her an extremely hard consumer to convince. She supports brands she believes in, but the bar for belief is extraordinarily high. Her friends call her for honest product opinions because they know she will never recommend something just because it is popular.",
+  "current_life_context": "Her agency just onboarded a D2C skincare brand and she is struggling to write compelling copy for a product she has not personally tested. She is also looking for a new face sunscreen — she has been using the same one for a year but it was recently exposed on Twitter for misleading SPF claims. She is annoyed but not surprised.",
+  "inner_monologue_style": "Sharp, fast, and slightly jaded. Thinks: 'Ok this brand has 40K followers but 80% of comments are from bot accounts — I can tell by the emoji-only replies. And this dermatologist endorsement? I literally saw the same derm endorse three competing brands last month. Everyone is for sale. Let me just check Reddit for real opinions...' Occasionally finds a genuinely good product and gets disproportionately excited about it because it is so rare."
+}
