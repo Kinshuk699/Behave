@@ -40,6 +40,7 @@ GOLD = "kinshuk_gold"
 import json
 from datetime import datetime, timezone
 from pyspark.sql import functions as F
+from pyspark.sql.types import StructType, StructField, StringType, IntegerType, DoubleType
 
 # Build a demo scorecard from silver personas + creatives
 # (Real scorecards come from gold_persona_evaluations after a simulation run)
@@ -58,12 +59,31 @@ print(f"Silver data: {n_personas} personas, {n_creatives} creatives")
 scorecard_rows = []
 creative_rows = df_creatives.collect()
 
+scorecard_schema = StructType([
+    StructField("run_id", StringType(), True),
+    StructField("creative_id", StringType(), True),
+    StructField("brand", StringType(), True),
+    StructField("category", StringType(), True),
+    StructField("n_personas_available", IntegerType(), True),
+    StructField("n_personas_evaluated", IntegerType(), True),
+    StructField("avg_overall_score", DoubleType(), True),
+    StructField("avg_attention", DoubleType(), True),
+    StructField("avg_relevance", DoubleType(), True),
+    StructField("avg_trust", DoubleType(), True),
+    StructField("avg_desire", DoubleType(), True),
+    StructField("avg_clarity", DoubleType(), True),
+    StructField("action_distribution", StringType(), True),
+    StructField("sentiment_distribution", StringType(), True),
+    StructField("status", StringType(), True),
+    StructField("_materialized_at", StringType(), True),
+])
+
 for row in creative_rows:
     scorecard = {
         "run_id": "pre_simulation",
         "creative_id": row["creative_id"],
         "brand": row["brand"],
-        "category": row.get("category", "skincare"),
+        "category": row["category"],
         "n_personas_available": n_personas,
         "n_personas_evaluated": 0,  # Pre-simulation
         "avg_overall_score": None,
@@ -79,7 +99,7 @@ for row in creative_rows:
     }
     scorecard_rows.append(scorecard)
 
-df_scorecards = spark.createDataFrame(scorecard_rows)
+df_scorecards = spark.createDataFrame(scorecard_rows, schema=scorecard_schema)
 df_scorecards.write.mode("overwrite").saveAsTable(f"{CATALOG}.{GOLD}.creative_scorecards")
 print(f"✅ Wrote {len(scorecard_rows)} scorecard rows to {CATALOG}.{GOLD}.creative_scorecards")
 
