@@ -225,6 +225,7 @@ async def run_simulation(
     use_memory: bool = True,
     use_embeddings: bool = False,
     run_id: Optional[str] = None,
+    memory_scope: Optional["MemoryScope"] = None,
 ) -> tuple[list[CreativeScorecard], Optional[AgentRecommendation], RunMetadata]:
     """
     Execute a complete simulation run.
@@ -307,6 +308,7 @@ async def run_simulation(
                         memory_stream=stream,
                         config=config,
                         use_embeddings=use_embeddings,
+                        memory_scope=memory_scope,
                     )
 
                     all_persona_ids.add(persona.persona_id)

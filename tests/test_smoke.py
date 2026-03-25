@@ -721,6 +721,206 @@ def test_build_memory_block_accepts_memory_nodes():
     assert "Past Experiences" in result
 
 
+# ── Memory Scope tests (per-persona scope toggle) ────────────
+
+
+def test_memory_scope_enum_has_four_values():
+    """MemoryScope should have NONE, CATEGORY, BRAND, FULL."""
+    from synthetic_india.memory.consumer import MemoryScope
+
+    assert MemoryScope.NONE == "none"
+    assert MemoryScope.CATEGORY == "category"
+    assert MemoryScope.BRAND == "brand"
+    assert MemoryScope.FULL == "full"
+
+
+def test_consume_scope_none_returns_empty():
+    """Scope NONE should return no memories regardless of stream contents."""
+    from synthetic_india.memory.consumer import MemoryConsumer, MemoryScope
+
+    stream = MemoryStream("test_persona")
+    stream.add_node(MemoryNode(
+        node_id="mem_01", persona_id="test_persona",
+        memory_type="observation", description="Saw a skincare ad",
+        subject="test_persona", predicate="evaluated", object="Brand A",
+        importance=5.0, category="skincare", brand="Brand A",
+    ))
+
+    consumer = MemoryConsumer()
+    result = consumer.consume(
+        stream=stream, query="skincare", category="skincare",
+        scope=MemoryScope.NONE,
+    )
+    assert result == []
+
+
+def test_consume_scope_category_filters_by_category():
+    """Scope CATEGORY should return only same-category nodes (existing behavior)."""
+    from synthetic_india.memory.consumer import MemoryConsumer, MemoryScope
+
+    stream = MemoryStream("test_persona")
+    stream.add_node(MemoryNode(
+        node_id="mem_skin", persona_id="test_persona",
+        memory_type="observation", description="Skincare eval",
+        subject="test_persona", predicate="evaluated", object="Brand A",
+        importance=5.0, category="skincare", brand="Brand A",
+    ))
+    stream.add_node(MemoryNode(
+        node_id="mem_groc", persona_id="test_persona",
+        memory_type="observation", description="Grocery eval",
+        subject="test_persona", predicate="evaluated", object="Zepto",
+        importance=5.0, category="grocery_delivery", brand="Zepto",
+    ))
+
+    consumer = MemoryConsumer()
+    result = consumer.consume(
+        stream=stream, query="skincare serum", category="skincare",
+        scope=MemoryScope.CATEGORY,
+    )
+    assert len(result) == 1
+    assert result[0].category == "skincare"
+
+
+def test_consume_scope_brand_filters_by_brand():
+    """Scope BRAND should return only memories from the same brand."""
+    from synthetic_india.memory.consumer import MemoryConsumer, MemoryScope
+
+    stream = MemoryStream("test_persona")
+    stream.add_node(MemoryNode(
+        node_id="mem_zepto1", persona_id="test_persona",
+        memory_type="observation", description="Zepto grocery ad",
+        subject="test_persona", predicate="evaluated", object="Zepto",
+        importance=5.0, category="grocery_delivery", brand="Zepto",
+    ))
+    stream.add_node(MemoryNode(
+        node_id="mem_zepto2", persona_id="test_persona",
+        memory_type="observation", description="Zepto snacks ad",
+        subject="test_persona", predicate="evaluated", object="Zepto",
+        importance=6.0, category="grocery_delivery", brand="Zepto",
+    ))
+    stream.add_node(MemoryNode(
+        node_id="mem_swiggy", persona_id="test_persona",
+        memory_type="observation", description="Swiggy food ad",
+        subject="test_persona", predicate="evaluated", object="Swiggy",
+        importance=5.0, category="food_delivery", brand="Swiggy",
+    ))
+
+    consumer = MemoryConsumer()
+    result = consumer.consume(
+        stream=stream, query="Zepto grocery", category="grocery_delivery",
+        scope=MemoryScope.BRAND, brand="Zepto",
+    )
+    assert len(result) == 2
+    assert all(n.brand == "Zepto" for n in result)
+
+
+def test_consume_scope_full_returns_everything():
+    """Scope FULL should return all memories across all categories and brands."""
+    from synthetic_india.memory.consumer import MemoryConsumer, MemoryScope
+
+    stream = MemoryStream("test_persona")
+    stream.add_node(MemoryNode(
+        node_id="mem_skin", persona_id="test_persona",
+        memory_type="observation", description="Skincare eval",
+        subject="test_persona", predicate="evaluated", object="Brand A",
+        importance=5.0, category="skincare", brand="Brand A",
+    ))
+    stream.add_node(MemoryNode(
+        node_id="mem_groc", persona_id="test_persona",
+        memory_type="observation", description="Grocery eval",
+        subject="test_persona", predicate="evaluated", object="Zepto",
+        importance=5.0, category="grocery_delivery", brand="Zepto",
+    ))
+    stream.add_node(MemoryNode(
+        node_id="mem_food", persona_id="test_persona",
+        memory_type="observation", description="Food delivery eval",
+        subject="test_persona", predicate="evaluated", object="Swiggy",
+        importance=5.0, category="food_delivery", brand="Swiggy",
+    ))
+
+    consumer = MemoryConsumer()
+    result = consumer.consume(
+        stream=stream, query="anything", category="skincare",
+        scope=MemoryScope.FULL,
+    )
+    assert len(result) == 3
+
+
+def test_get_exposure_summary():
+    """get_exposure_summary() should report what a persona has been shown."""
+    from synthetic_india.memory.consumer import MemoryConsumer
+
+    stream = MemoryStream("test_persona")
+    stream.add_node(MemoryNode(
+        node_id="mem_01", persona_id="test_persona",
+        memory_type="observation", description="Saw Zepto grocery ad",
+        subject="test_persona", predicate="evaluated_pause",
+        object="Zepto grocery_delivery creative",
+        importance=5.0, category="grocery_delivery", brand="Zepto",
+    ))
+    stream.add_node(MemoryNode(
+        node_id="mem_02", persona_id="test_persona",
+        memory_type="observation", description="Saw Minimalist skincare ad",
+        subject="test_persona", predicate="evaluated_engage",
+        object="Minimalist skincare creative",
+        importance=7.0, category="skincare", brand="Minimalist",
+    ))
+
+    consumer = MemoryConsumer()
+    summary = consumer.get_exposure_summary(stream)
+
+    assert summary["persona_id"] == "test_persona"
+    assert summary["total_memories"] == 2
+    assert "grocery_delivery" in summary["categories"]
+    assert "skincare" in summary["categories"]
+    assert "Zepto" in summary["brands"]
+    assert "Minimalist" in summary["brands"]
+    assert len(summary["exposures"]) == 2
+
+
+def test_consume_default_scope_is_category():
+    """Default scope (when not specified) should behave as CATEGORY — backwards compatible."""
+    from synthetic_india.memory.consumer import MemoryConsumer
+
+    stream = MemoryStream("test_persona")
+    stream.add_node(MemoryNode(
+        node_id="mem_skin", persona_id="test_persona",
+        memory_type="observation", description="Skincare eval",
+        subject="test_persona", predicate="evaluated", object="Brand A",
+        importance=5.0, category="skincare", brand="Brand A",
+    ))
+    stream.add_node(MemoryNode(
+        node_id="mem_groc", persona_id="test_persona",
+        memory_type="observation", description="Grocery eval",
+        subject="test_persona", predicate="evaluated", object="Zepto",
+        importance=5.0, category="grocery_delivery", brand="Zepto",
+    ))
+
+    consumer = MemoryConsumer()
+    # No scope param → should default to CATEGORY (backwards compatible)
+    result = consumer.consume(stream=stream, query="skincare", category="skincare")
+    assert len(result) == 1
+    assert result[0].category == "skincare"
+
+
+def test_evaluate_creative_accepts_memory_scope():
+    """evaluate_creative() should accept memory_scope parameter."""
+    import inspect
+    from synthetic_india.agents.persona_evaluator import evaluate_creative
+
+    sig = inspect.signature(evaluate_creative)
+    assert "memory_scope" in sig.parameters, "evaluate_creative should accept memory_scope param"
+
+
+def test_run_simulation_accepts_memory_scope():
+    """run_simulation() should accept memory_scope parameter."""
+    import inspect
+    from synthetic_india.engine.simulation import run_simulation
+
+    sig = inspect.signature(run_simulation)
+    assert "memory_scope" in sig.parameters, "run_simulation should accept memory_scope param"
+
+
 # ── Tiered model support tests ───────────────────────────────
 
 
@@ -1083,3 +1283,72 @@ def test_gold_notebook_file_exists():
     from pathlib import Path
     notebook = Path(__file__).resolve().parents[1] / "notebooks" / "03_gold_materialize.py"
     assert notebook.exists(), f"Gold notebook not found at {notebook}"
+
+
+# ── Simulation Ingest Pipeline (Feature #11) ──────────────────
+
+
+def test_ingest_notebook_file_exists():
+    """The simulation ingest notebook should exist at notebooks/04_simulation_ingest.py."""
+    from pathlib import Path
+    notebook = Path(__file__).resolve().parents[1] / "notebooks" / "04_simulation_ingest.py"
+    assert notebook.exists(), f"Simulation ingest notebook not found at {notebook}"
+
+
+def test_bronze_prepare_evaluations_from_run_json():
+    """Bronze prepare should handle real evaluation JSON from a simulation run."""
+    import json
+    from pathlib import Path
+
+    run_dir = Path(__file__).resolve().parents[1] / "data" / "runs" / "run_e3d656cc826e"
+    if not run_dir.exists():
+        import pytest
+        pytest.skip("No real run data yet")
+
+    raw_evals = json.loads((run_dir / "evaluations.json").read_text())
+    assert len(raw_evals) >= 1
+
+    # Each evaluation should have the key fields the silver layer validates
+    for e in raw_evals:
+        assert e.get("evaluation_id"), "evaluation_id must be present"
+        assert len(e.get("reasoning", "")) >= 10, "reasoning must be substantial"
+        assert len(e.get("verbatim_reaction", "")) >= 5, "verbatim must be present"
+
+
+def test_silver_validates_real_evaluation_rows():
+    """Silver validation should pass real (high-quality) evaluation data."""
+    import json
+    from pathlib import Path
+    from synthetic_india.pipeline.databricks_silver import validate_evaluation_rows
+
+    run_dir = Path(__file__).resolve().parents[1] / "data" / "runs" / "run_e3d656cc826e"
+    if not run_dir.exists():
+        import pytest
+        pytest.skip("No real run data yet")
+
+    raw_evals = json.loads((run_dir / "evaluations.json").read_text())
+    passed, quarantined = validate_evaluation_rows(raw_evals)
+
+    assert len(passed) >= 1, "At least one evaluation should pass validation"
+    assert len(quarantined) == 0, f"Real evals should not be quarantined: {quarantined}"
+
+
+def test_gold_scorecard_from_real_evals():
+    """Gold scorecard should produce valid aggregates from real evaluation data."""
+    import json
+    from pathlib import Path
+    from synthetic_india.pipeline.databricks_gold import build_scorecard_row
+
+    run_dir = Path(__file__).resolve().parents[1] / "data" / "runs" / "run_e3d656cc826e"
+    if not run_dir.exists():
+        import pytest
+        pytest.skip("No real run data yet")
+
+    raw_evals = json.loads((run_dir / "evaluations.json").read_text())
+    scorecard = build_scorecard_row("run_e3d656cc826e", "zepto_ad_01", raw_evals)
+
+    assert scorecard["n_personas_evaluated"] == len(raw_evals)
+    assert 0 <= scorecard["avg_overall_score"] <= 100
+    assert scorecard["avg_attention"] > 0
+    assert scorecard["run_id"] == "run_e3d656cc826e"
+    assert "_materialized_at" in scorecard

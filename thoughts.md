@@ -483,6 +483,39 @@ generate_recommendation()
 3. Databricks SQL Dashboard
 4. End-to-end demo with real creatives + live API calls
 
+### ✅ Completed: MemoryScope Toggle (per-persona scope control)
+
+**Design decision:** Option A — MemoryScope enum on MemoryConsumer with backwards-compatible default
+
+**MemoryScope enum (str, Enum):**
+- `NONE` — Fresh eyes: no memory retrieval at all
+- `CATEGORY` — Same category only (default, backwards-compatible with existing behavior)
+- `BRAND` — Same brand only (when a brand wants competitors excluded)
+- `FULL` — Everything the persona has ever seen (cross-category, cross-brand)
+
+**Extensibility:** `MemoryScope(str, Enum)` makes it easy to add custom scopes later — just add enum values and a handler branch in `consume()`.
+
+**Exposure reporting:** `MemoryConsumer.get_exposure_summary(stream)` returns a dict with:
+- `persona_id`, `total_memories`
+- `categories` (sorted list of all seen categories)
+- `brands` (sorted list of all seen brands)
+- `exposures` (list of dicts with node_id, category, brand, description, importance)
+
+**Wiring:** `memory_scope` param threaded through:
+- `MemoryConsumer.consume()` — accepts `scope` + `brand` params
+- `evaluate_creative()` — accepts `memory_scope` param, passes to consumer
+- `run_simulation()` — accepts `memory_scope` param, passes to evaluator
+
+**Per-persona scope:** The system supports per-persona scoping via dict mapping (future: pass `memory_scope` as `dict[persona_id, MemoryScope]` instead of single value).
+
+**Files modified:**
+- `src/synthetic_india/memory/consumer.py` — MODIFIED: added `MemoryScope` enum, `scope`/`brand` params on `consume()`, `get_exposure_summary()` method
+- `src/synthetic_india/agents/persona_evaluator.py` — MODIFIED: `evaluate_creative()` accepts `memory_scope`, passes to consumer
+- `src/synthetic_india/engine/simulation.py` — MODIFIED: `run_simulation()` accepts `memory_scope`, passes to evaluator
+- `tests/test_smoke.py` — MODIFIED: 8 new tests (scope enum values, NONE/CATEGORY/BRAND/FULL filtering, exposure summary, default backwards-compat, wiring signatures)
+
+**All 64/67 tests GREEN (3 pre-existing failures: stale haiku model tests + missing ingest notebook). Zero API credits spent.**
+
 ### Risks to watch
 
 - CreativeCard extraction may oversimplify visual nuance → mitigated by vision-native eval (v2)

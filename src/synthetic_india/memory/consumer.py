@@ -11,12 +11,22 @@ Phase 3+:  Scored retrieval when category memories exceed threshold
 
 from __future__ import annotations
 
+from enum import Enum
 from typing import Optional
 
 from synthetic_india.config import MemoryConfig, get_memory_config
 from synthetic_india.memory.retrieval import MemoryRetriever
 from synthetic_india.memory.stream import MemoryStream
 from synthetic_india.schemas.memory import MemoryNode, MemoryType
+
+
+class MemoryScope(str, Enum):
+    """Scope for memory consumption — controls what past experiences are surfaced."""
+
+    NONE = "none"           # Fresh eyes: no memories at all
+    CATEGORY = "category"   # Same industry/category only (default)
+    BRAND = "brand"         # Same brand only
+    FULL = "full"           # Everything the persona has ever seen
 
 
 class MemoryConsumer:
@@ -84,13 +94,30 @@ class MemoryConsumer:
         category: str,
         top_k: int = 10,
         query_embedding: Optional[list[float]] = None,
+        scope: MemoryScope = MemoryScope.CATEGORY,
+        brand: Optional[str] = None,
     ) -> list[MemoryNode]:
         """
-        Auto-select strategy based on per-category node count.
+        Auto-select strategy based on scope and per-category node count.
 
-        Below threshold → full dump (offset 0, consume everything)
-        At or above threshold → scored retrieval (selective consumption)
+        Scope controls which memories are visible:
+        - NONE: empty list (fresh-eyes evaluation)
+        - CATEGORY: only same-category nodes (default, backwards-compatible)
+        - BRAND: only same-brand nodes (requires brand param)
+        - FULL: all nodes in the stream
         """
+        if scope == MemoryScope.NONE:
+            return []
+
+        if scope == MemoryScope.BRAND:
+            if not brand:
+                return []
+            return list(stream.get_nodes_by_brand(brand))
+
+        if scope == MemoryScope.FULL:
+            return list(stream.nodes)
+
+        # Default: CATEGORY — existing auto-strategy behavior
         category_count = len(stream.get_nodes_by_category(category))
 
         if category_count < self.config.full_dump_threshold:
@@ -99,3 +126,36 @@ class MemoryConsumer:
             return self.consume_scored(
                 stream, query, category, top_k, query_embedding
             )
+
+    def get_exposure_summary(self, stream: MemoryStream) -> dict:
+        """
+        Build an exposure summary for a persona's memory stream.
+
+        Returns a dict with persona_id, total memories, categories seen,
+        brands seen, and a list of individual exposures.
+        """
+        nodes = stream.nodes
+        categories = set()
+        brands = set()
+        exposures = []
+
+        for node in nodes:
+            if node.category:
+                categories.add(node.category)
+            if node.brand:
+                brands.add(node.brand)
+            exposures.append({
+                "node_id": node.node_id,
+                "category": node.category,
+                "brand": node.brand,
+                "description": node.description,
+                "importance": node.importance,
+            })
+
+        return {
+            "persona_id": stream.persona_id,
+            "total_memories": len(nodes),
+            "categories": sorted(categories),
+            "brands": sorted(brands),
+            "exposures": exposures,
+        }

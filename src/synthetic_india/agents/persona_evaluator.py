@@ -252,6 +252,7 @@ async def evaluate_creative(
     memory_stream: Optional[MemoryStream] = None,
     config: Optional[LLMConfig] = None,
     use_embeddings: bool = False,
+    memory_scope: Optional["MemoryScope"] = None,
 ) -> tuple[PersonaEvaluation, LLMResponse]:
     """
     Run one persona's evaluation of one creative.
@@ -285,13 +286,20 @@ async def evaluate_creative(
 
         query_text = f"{creative.brand} {creative.category} {creative.headline or ''}"
 
-        # Consumer auto-selects: full dump if <threshold, scored retrieval otherwise
-        retrieved_memories = consumer.consume(
-            stream=memory_stream,
-            query=query_text,
-            category=creative.category,
-            top_k=5,
-        )
+        # Build consume kwargs — scope and brand are optional
+        consume_kwargs: dict = {
+            "stream": memory_stream,
+            "query": query_text,
+            "category": creative.category,
+            "top_k": 5,
+        }
+        if memory_scope is not None:
+            from synthetic_india.memory.consumer import MemoryScope
+            consume_kwargs["scope"] = memory_scope
+            if memory_scope == MemoryScope.BRAND:
+                consume_kwargs["brand"] = creative.brand
+
+        retrieved_memories = consumer.consume(**consume_kwargs)
 
         memory_context = _build_memory_block(retrieved_memories)
 
