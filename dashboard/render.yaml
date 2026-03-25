@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: behave-dashboard
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app:app --host 0.0.0.0 --port $PORT
+    rootDir: dashboard
+    envVars:
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: BEHAVE_PASSWORD
+        value: behave2026
+      - key: EVAL_MODEL
+        value: claude-sonnet-4-20250514
+      - key: CREATIVE_ANALYSIS_MODEL
+        value: claude-sonnet-4-20250514
+      - key: RECOMMENDATION_MODEL
+        value: claude-sonnet-4-20250514
+      - key: CRITIC_MODEL
+        value: claude-sonnet-4-20250514
+      - key: REFLECTION_MODEL
+        value: claude-sonnet-4-20250514

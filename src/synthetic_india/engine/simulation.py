@@ -481,6 +481,14 @@ def _save_run(
             critic_summary.model_dump_json(indent=2)
         )
 
+    # Auto-ingest to Databricks (best-effort, never blocks)
+    try:
+        from synthetic_india.pipeline.databricks_ingest import auto_ingest
+        if auto_ingest(run_meta.run_id, run_dir):
+            console.print("[dim]  Databricks ingest triggered[/dim]")
+    except Exception:
+        pass  # Graceful — local run is already saved
+
     return run_dir
 
 

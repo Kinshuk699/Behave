@@ -45,4 +45,4 @@ ID: 898817165102177
 
 ## Next →
 
-Dashboard — SQL analytics on gold tables (coming next)
+[Dashboard](14-dashboard.md) — Live demo site on Render with pre-loaded Zepto data + live simulation

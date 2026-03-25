@@ -1408,3 +1408,115 @@ def test_build_mlflow_payload_from_run_data():
     assert payload["metrics"]["total_tokens"] == 16000
     assert payload["metrics"]["n_personas_evaluated"] == 5
     assert payload["metrics"]["quarantine_rate"] == 0.0
+
+
+# ── Dashboard tests ──────────────────────────────────────────
+
+
+def test_dashboard_app_exists():
+    """dashboard/app.py should exist."""
+    from pathlib import Path
+
+    app_file = Path(__file__).resolve().parents[1] / "dashboard" / "app.py"
+    assert app_file.exists(), "dashboard/app.py not found"
+
+
+def test_dashboard_static_files_exist():
+    """Dashboard static assets must exist."""
+    from pathlib import Path
+
+    static = Path(__file__).resolve().parents[1] / "dashboard" / "static"
+    for name in ("index.html", "styles.css", "app.js"):
+        assert (static / name).exists(), f"dashboard/static/{name} not found"
+
+
+def test_dashboard_has_preloaded_data():
+    """index.html should embed the Zepto run data for instant display."""
+    from pathlib import Path
+
+    html = (Path(__file__).resolve().parents[1] / "dashboard" / "static" / "index.html").read_text()
+    assert "run_e3d656cc826e" in html, "Pre-loaded run ID should be in HTML"
+    assert "Zepto" in html, "Pre-loaded brand should be in HTML"
+    assert "42.4" in html or "42.4" in html, "Pre-loaded overall score should be in HTML"
+
+
+def test_dashboard_health_endpoint():
+    """GET /api/health should return 200."""
+    import sys
+    from pathlib import Path
+
+    # Import the FastAPI app
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "dashboard"))
+    from starlette.testclient import TestClient
+
+    from app import app
+
+    client = TestClient(app)
+    resp = client.get("/api/health")
+    assert resp.status_code == 200
+    assert resp.json()["status"] == "ok"
+
+
+def test_dashboard_simulate_rejects_bad_password():
+    """POST /api/simulate without correct password returns 403."""
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "dashboard"))
+    from starlette.testclient import TestClient
+
+    from app import app
+
+    client = TestClient(app)
+    resp = client.post("/api/simulate", json={"password": "wrong", "brand": "Test", "category": "test"})
+    assert resp.status_code == 403
+
+
+def test_dashboard_render_config_exists():
+    """render.yaml deployment config should exist."""
+    from pathlib import Path
+
+    render_yaml = Path(__file__).resolve().parents[1] / "dashboard" / "render.yaml"
+    assert render_yaml.exists(), "dashboard/render.yaml not found"
+
+
+# ── Auto-ingest to Databricks tests ──────────────────────────
+
+
+def test_databricks_ingest_module_exists():
+    """The databricks_ingest module should be importable."""
+    from synthetic_india.pipeline import databricks_ingest
+    assert hasattr(databricks_ingest, "auto_ingest")
+    assert hasattr(databricks_ingest, "upload_run_files")
+    assert hasattr(databricks_ingest, "trigger_ingest_notebook")
+
+
+def test_databricks_ingest_workspace_path():
+    """upload_run_files should construct the correct workspace path."""
+    from synthetic_india.pipeline.databricks_ingest import _workspace_run_path, _dbfs_run_path
+    ws_path = _workspace_run_path("run_abc123")
+    assert "data/runs/run_abc123" in ws_path
+    assert ws_path.startswith("/Workspace/")
+    dbfs_path = _dbfs_run_path("run_abc123")
+    assert "run_abc123" in dbfs_path
+    assert dbfs_path.startswith("/synthetic_india/")
+
+
+def test_databricks_ingest_notebook_path():
+    """trigger_ingest_notebook should target the correct notebook."""
+    from synthetic_india.pipeline.databricks_ingest import NOTEBOOK_PATH
+    assert "04_simulation_ingest" in NOTEBOOK_PATH
+    assert NOTEBOOK_PATH.startswith("/Workspace/")
+
+
+def test_databricks_ingest_graceful_without_sdk():
+    """auto_ingest should not crash if databricks-sdk is not installed."""
+    from pathlib import Path
+    from unittest.mock import patch
+    from synthetic_india.pipeline.databricks_ingest import auto_ingest
+
+    # Simulate SDK import failure
+    with patch("synthetic_india.pipeline.databricks_ingest._get_client", side_effect=ImportError("no sdk")):
+        # Should not raise — just logs a warning
+        result = auto_ingest("run_fake", Path("/tmp/fake"))
+        assert result is False

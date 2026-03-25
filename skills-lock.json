@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "skills": {
+    "find-skills": {
+      "source": "vercel-labs/skills",
+      "sourceType": "github",
+      "computedHash": "d31e234f0c90694a670222cdd1dafa853e051d7066beda389f1097c22dadd461"
+    },
+    "frontend-prime": {
+      "source": "esramulkpinar/prime-frontend-skills",
+      "sourceType": "github",
+      "computedHash": "808b4f6e81ae468d8e6b5b0177729269a1d6cf0a0066154b8afdc9f630f47ac4"
+    }
+  }
+}

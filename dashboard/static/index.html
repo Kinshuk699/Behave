@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Behave — Agentic Creative Testing</title>
+  <meta name="description" content="AI-powered ad creative testing with synthetic Indian consumer personas. See how real people would react before you spend.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+  <!-- ═══ NAV ═══ -->
+  <nav class="nav">
+    <div class="nav__brand">
+      <span class="nav__logo">B</span>
+      <span class="nav__name">Behave</span>
+    </div>
+    <div class="nav__links">
+      <a href="#brief">Brief</a>
+      <a href="#pipeline">Pipeline</a>
+      <a href="#verdict">Verdict</a>
+      <a href="#test" class="nav__cta">Test Your Own</a>
+    </div>
+  </nav>
+
+  <!-- ═══ HERO ═══ -->
+  <header class="hero">
+    <div class="hero__content">
+      <p class="hero__tag">Agentic Creative Testing Platform</p>
+      <h1 class="hero__title">Know how India<br><em>actually</em> reacts.</h1>
+      <p class="hero__sub">20 synthetic consumers. 8 archetypes. Real cultural context.<br>Test your ad before you spend.</p>
+      <a href="#brief" class="hero__scroll">See the Zepto case study ↓</a>
+    </div>
+    <div class="hero__stats">
+      <div class="stat">
+        <span class="stat__num">42.4</span>
+        <span class="stat__label">Overall Score</span>
+      </div>
+      <div class="stat stat--accent">
+        <span class="stat__num">KILL</span>
+        <span class="stat__label">Verdict</span>
+      </div>
+      <div class="stat">
+        <span class="stat__num">$0.12</span>
+        <span class="stat__label">Cost</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══ ACT 1: THE BRIEF ═══ -->
+  <section id="brief" class="section">
+    <div class="section__header">
+      <span class="section__number">01</span>
+      <h2 class="section__title">The Brief</h2>
+      <p class="section__desc">What was tested and who tested it.</p>
+    </div>
+
+    <div class="brief__grid">
+      <div class="brief__creative">
+        <div class="brief__label">Creative Under Test</div>
+        <div class="brief__card">
+          <div class="brief__img-placeholder">
+            <span>Zepto Valentine's Day Ad</span>
+            <small>zepto_ad_01 · Static Image</small>
+          </div>
+          <div class="brief__meta">
+            <span class="tag">Zepto</span>
+            <span class="tag">grocery_delivery</span>
+            <span class="tag">Valentine's</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="brief__cohort">
+        <div class="brief__label">Cohort — 5 Personas</div>
+        <div class="persona-list" id="personaList">
+          <!-- Populated by JS from pre-loaded data -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ ACT 2: THE PIPELINE ═══ -->
+  <section id="pipeline" class="section section--dark">
+    <div class="section__header">
+      <span class="section__number">02</span>
+      <h2 class="section__title">The Pipeline</h2>
+      <p class="section__desc">How data flows through the system.</p>
+    </div>
+
+    <div class="pipeline__flow">
+      <div class="pipeline__node pipeline__node--active" data-step="1">
+        <div class="pipeline__icon">🎨</div>
+        <div class="pipeline__name">Creative Analysis</div>
+        <div class="pipeline__detail">Vision LLM extracts headline, tone, persuasion cues</div>
+      </div>
+      <div class="pipeline__arrow">→</div>
+      <div class="pipeline__node pipeline__node--active" data-step="2">
+        <div class="pipeline__icon">👥</div>
+        <div class="pipeline__name">5 Persona Evals</div>
+        <div class="pipeline__detail">Each persona sees the raw ad + their memory</div>
+      </div>
+      <div class="pipeline__arrow">→</div>
+      <div class="pipeline__node pipeline__node--active" data-step="3">
+        <div class="pipeline__icon">🛡</div>
+        <div class="pipeline__name">Critic Agent</div>
+        <div class="pipeline__detail">Quality gate: consistency, sycophancy, authenticity</div>
+      </div>
+      <div class="pipeline__arrow">→</div>
+      <div class="pipeline__node pipeline__node--active" data-step="4">
+        <div class="pipeline__icon">🥉</div>
+        <div class="pipeline__name">Bronze</div>
+        <div class="pipeline__detail">Raw evaluations appended to Delta</div>
+      </div>
+      <div class="pipeline__arrow">→</div>
+      <div class="pipeline__node pipeline__node--active" data-step="5">
+        <div class="pipeline__icon">🥈</div>
+        <div class="pipeline__name">Silver</div>
+        <div class="pipeline__detail">Validated, quarantined bad records</div>
+      </div>
+      <div class="pipeline__arrow">→</div>
+      <div class="pipeline__node pipeline__node--active" data-step="6">
+        <div class="pipeline__icon">🥇</div>
+        <div class="pipeline__name">Gold</div>
+        <div class="pipeline__detail">Aggregated scorecards + audit log</div>
+      </div>
+      <div class="pipeline__arrow">→</div>
+      <div class="pipeline__node pipeline__node--active" data-step="7">
+        <div class="pipeline__icon">📊</div>
+        <div class="pipeline__name">MLflow</div>
+        <div class="pipeline__detail">Experiment tracked for comparison</div>
+      </div>
+    </div>
+
+    <div class="pipeline__stats">
+      <div class="pipeline__stat">
+        <span class="pipeline__stat-num">5</span>
+        <span class="pipeline__stat-label">Evaluations</span>
+      </div>
+      <div class="pipeline__stat">
+        <span class="pipeline__stat-num">0</span>
+        <span class="pipeline__stat-label">Quarantined</span>
+      </div>
+      <div class="pipeline__stat">
+        <span class="pipeline__stat-num">16,586</span>
+        <span class="pipeline__stat-label">Tokens</span>
+      </div>
+      <div class="pipeline__stat">
+        <span class="pipeline__stat-num">110s</span>
+        <span class="pipeline__stat-label">Runtime</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ ACT 3: THE VERDICT ═══ -->
+  <section id="verdict" class="section">
+    <div class="section__header">
+      <span class="section__number">03</span>
+      <h2 class="section__title">The Verdict</h2>
+      <p class="section__desc">What the personas thought — and what to do about it.</p>
+    </div>
+
+    <!-- Verdict banner -->
+    <div class="verdict__banner verdict__banner--kill">
+      <div class="verdict__action">KILL</div>
+      <div class="verdict__confidence">85% confidence</div>
+      <div class="verdict__reason">Overall score 42.4/100 (Grade D). Hindi tagline rejected as "cringey" — damaging brand perception at scale.</div>
+    </div>
+
+    <!-- Score overview -->
+    <div class="verdict__scores">
+      <div class="verdict__radar">
+        <canvas id="radarChart" width="380" height="380"></canvas>
+      </div>
+      <div class="verdict__dimensions">
+        <div class="dim">
+          <div class="dim__bar-track"><div class="dim__bar" style="--pct: 47%" data-score="4.7"></div></div>
+          <span class="dim__name">Attention</span>
+          <span class="dim__val">4.7</span>
+        </div>
+        <div class="dim">
+          <div class="dim__bar-track"><div class="dim__bar" style="--pct: 36%" data-score="3.6"></div></div>
+          <span class="dim__name">Relevance</span>
+          <span class="dim__val">3.6</span>
+        </div>
+        <div class="dim">
+          <div class="dim__bar-track"><div class="dim__bar" style="--pct: 45%" data-score="4.5"></div></div>
+          <span class="dim__name">Trust</span>
+          <span class="dim__val">4.5</span>
+        </div>
+        <div class="dim">
+          <div class="dim__bar-track"><div class="dim__bar" style="--pct: 25%" data-score="2.5"></div></div>
+          <span class="dim__name">Desire</span>
+          <span class="dim__val">2.5</span>
+        </div>
+        <div class="dim">
+          <div class="dim__bar-track"><div class="dim__bar" style="--pct: 72%" data-score="7.2"></div></div>
+          <span class="dim__name">Clarity</span>
+          <span class="dim__val">7.2</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Segment comparison -->
+    <div class="verdict__segments">
+      <h3 class="verdict__sub-title">Segment Breakdown</h3>
+      <div class="segments__grid" id="segmentGrid">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+
+    <!-- Verbatims -->
+    <div class="verdict__verbatims">
+      <h3 class="verdict__sub-title">What They Said</h3>
+      <div class="verbatims__list" id="verbatimList">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+
+    <!-- Edit playbook -->
+    <div class="verdict__playbook">
+      <h3 class="verdict__sub-title">Edit Playbook</h3>
+      <div class="playbook__list" id="playbookList">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+
+    <!-- Key evidence -->
+    <div class="verdict__evidence">
+      <h3 class="verdict__sub-title">Key Evidence</h3>
+      <ul class="evidence__list" id="evidenceList">
+        <!-- Populated by JS -->
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═══ TEST YOUR OWN ═══ -->
+  <section id="test" class="section section--dark">
+    <div class="section__header">
+      <span class="section__number">04</span>
+      <h2 class="section__title">Test Your Own</h2>
+      <p class="section__desc">Upload a creative and run the full pipeline live.</p>
+    </div>
+
+    <div class="test__gate" id="testGate">
+      <label class="test__label">Password</label>
+      <input type="password" id="gatePassword" class="test__input" placeholder="Enter access code">
+      <button id="gateBtn" class="btn btn--primary">Unlock</button>
+    </div>
+
+    <div class="test__form" id="testForm" style="display:none;">
+      <div class="test__row">
+        <div class="test__field">
+          <label class="test__label">Brand</label>
+          <input type="text" id="inputBrand" class="test__input" placeholder="e.g. Zepto">
+        </div>
+        <div class="test__field">
+          <label class="test__label">Category</label>
+          <input type="text" id="inputCategory" class="test__input" placeholder="e.g. grocery_delivery">
+        </div>
+      </div>
+      <div class="test__row">
+        <div class="test__field">
+          <label class="test__label">Headline</label>
+          <input type="text" id="inputHeadline" class="test__input" placeholder="Ad headline">
+        </div>
+        <div class="test__field">
+          <label class="test__label">CTA</label>
+          <input type="text" id="inputCta" class="test__input" placeholder="e.g. Shop Now">
+        </div>
+      </div>
+      <div class="test__row">
+        <div class="test__field test__field--wide">
+          <label class="test__label">Body Copy</label>
+          <textarea id="inputBody" class="test__input test__textarea" placeholder="Ad body text"></textarea>
+        </div>
+      </div>
+      <div class="test__row">
+        <div class="test__field">
+          <label class="test__label">Memory Scope</label>
+          <select id="inputScope" class="test__input">
+            <option value="none">None — Fresh eyes</option>
+            <option value="category" selected>Category — Same industry</option>
+            <option value="brand">Brand — Same brand only</option>
+            <option value="full">Full — All past exposure</option>
+          </select>
+        </div>
+        <div class="test__field">
+          <label class="test__label">Cohort Size</label>
+          <select id="inputCohort" class="test__input">
+            <option value="3">3 personas (~$0.07)</option>
+            <option value="5" selected>5 personas (~$0.12)</option>
+            <option value="10">10 personas (~$0.25)</option>
+          </select>
+        </div>
+      </div>
+      <div class="test__row">
+        <div class="test__field test__field--wide">
+          <label class="test__label">Creative Image (optional)</label>
+          <div class="test__upload" id="uploadZone">
+            <input type="file" id="inputImage" accept="image/*" hidden>
+            <span>Click or drag to upload</span>
+          </div>
+          <div class="test__preview" id="imagePreview" style="display:none;"></div>
+        </div>
+      </div>
+      <button id="runBtn" class="btn btn--primary btn--large">Run Simulation →</button>
+      <div class="test__status" id="testStatus" style="display:none;"></div>
+    </div>
+
+    <!-- Live results container -->
+    <div class="test__results" id="testResults" style="display:none;">
+      <h3 class="verdict__sub-title">Live Results</h3>
+      <div id="liveVerdict"></div>
+      <div class="verdict__scores">
+        <div class="verdict__radar">
+          <canvas id="liveRadarChart" width="380" height="380"></canvas>
+        </div>
+        <div class="verdict__dimensions" id="liveDimensions"></div>
+      </div>
+      <div id="liveVerbatims"></div>
+      <div id="livePlaybook"></div>
+    </div>
+  </section>
+
+  <!-- ═══ FOOTER ═══ -->
+  <footer class="footer">
+    <div class="footer__inner">
+      <span class="footer__brand">Behave</span>
+      <span class="footer__meta">Synthetic India v2 · Capstone Project · run_e3d656cc826e</span>
+      <span class="footer__tech">Python · Pydantic · Anthropic Claude · Databricks · Delta Lake · MLflow</span>
+    </div>
+  </footer>
+
+  <!-- Pre-loaded data for instant render -->
+  <script id="preloadedData" type="application/json">
+  {
+    "metadata": {
+      "run_id": "run_e3d656cc826e",
+      "brand": "Zepto",
+      "category": "grocery_delivery",
+      "cohort_size": 5,
+      "total_evaluations": 5,
+      "successful_evaluations": 5,
+      "quarantined_records": 0,
+      "total_cost_usd": 0.115866,
+      "total_tokens": 16586,
+      "status": "completed"
+    },
+    "scorecard": {
+      "overall_score": 42.4,
+      "grade": "D",
+      "avg_attention": 4.7,
+      "avg_relevance": 3.6,
+      "avg_trust": 4.5,
+      "avg_desire": 2.5,
+      "avg_clarity": 7.2,
+      "action_distribution": {"scroll_past": 3, "pause": 2},
+      "sentiment_distribution": {"neutral": 4, "positive": 1},
+      "top_strengths": ["clarity", "strong convenience", "strong trust"],
+      "top_weaknesses": ["desire", "relevance", "trust", "attention", "The Hindi tagline feels forced and cringey"],
+      "top_verbatims": [
+        "Aww this is actually sweet! Ice cream melting analogy tho - very filmy but works. But yaar, I don't really do grocery shopping, mom does all that.",
+        "Yeh kya bakwas hai - 10 minute mein grocery? Mera local baniya 20 saal se sahi samaan deta hai, time pe.",
+        "Yaar ye kya cheesy line hai... 'tumhe dekhte hi pighal jata hu' - seriously? Zepto is okay but this ad is so basic.",
+        "Yaar, another grocery delivery app? I'm quite happy with Nature's Basket, thank you.",
+        "Enth ee love-shove okke... I get my rice from Raghavan uncle's shop for 15 years."
+      ],
+      "segments": [
+        {
+          "segment_name": "aspirational_buyer",
+          "n_personas": 2,
+          "avg_score": 53.5,
+          "avg_attention": 5.75,
+          "avg_relevance": 5.0,
+          "avg_trust": 6.75,
+          "avg_desire": 4.25,
+          "avg_clarity": 8.0,
+          "representative_verbatim": "Yaar ye kya cheesy line hai... 'tumhe dekhte hi pighal jata hu' - seriously?"
+        },
+        {
+          "segment_name": "brand_loyalist",
+          "n_personas": 3,
+          "avg_score": 35.0,
+          "avg_attention": 4.0,
+          "avg_relevance": 2.67,
+          "avg_trust": 3.0,
+          "avg_desire": 1.33,
+          "avg_clarity": 6.67,
+          "representative_verbatim": "Yaar, another grocery delivery app? I'm quite happy with Nature's Basket."
+        }
+      ]
+    },
+    "recommendation": {
+      "recommended_action": "kill",
+      "confidence_score": 0.85,
+      "reasoning_summary": "This creative scored a failing 42.4/100 with critically low desire (2.5) and attention (4.7) scores.",
+      "key_evidence": [
+        "Overall score of 42.4/100 (Grade D) indicates poor performance",
+        "Desire score of only 2.5 shows creative fails to drive purchase intent",
+        "Attention score of 4.7 means ad gets ignored in feed",
+        "Multiple verbatims calling Hindi tagline 'bakwas', 'cheesy', and 'forced'",
+        "60% scroll past rate with only neutral/negative sentiment"
+      ],
+      "top_risks": [
+        "Scaling this creative will damage brand perception due to cringey messaging",
+        "Low desire scores indicate poor conversion rates and wasted ad spend",
+        "Negative consumer reactions could create viral backlash on social media"
+      ],
+      "risk_level": "high",
+      "edit_recommendations": [
+        {
+          "element": "headline",
+          "current_state": "Hindi tagline with ice cream melting analogy",
+          "suggested_change": "Replace with straightforward benefit-focused English copy",
+          "expected_impact": "Reduce cringe factor, improve relevance scores",
+          "priority": 1
+        },
+        {
+          "element": "visual",
+          "current_state": "Filmy ice cream melting concept",
+          "suggested_change": "Show actual grocery delivery in progress or satisfied customers",
+          "expected_impact": "Increase trust and relevance, reduce cheesy perception",
+          "priority": 2
+        },
+        {
+          "element": "body_copy",
+          "current_state": "Romantic analogy messaging",
+          "suggested_change": "Focus on practical benefits: speed, convenience, product quality",
+          "expected_impact": "Improve desire and relevance scores significantly",
+          "priority": 1
+        }
+      ],
+      "strongest_segment": "aspirational_buyer",
+      "weakest_segment": "brand_loyalist"
+    },
+    "personas": [
+      {"id": "aspirational_buyer_jaipur_01", "name": "Priya Sharma", "archetype": "aspirational_buyer", "city": "Jaipur"},
+      {"id": "brand_loyalist_mumbai_01", "name": "Rohan Desai", "archetype": "brand_loyalist", "city": "Mumbai"},
+      {"id": "brand_loyalist_kochi_01", "name": "Anjali Menon", "archetype": "brand_loyalist", "city": "Kochi"},
+      {"id": "aspirational_buyer_hyderabad_01", "name": "Meera Reddy", "archetype": "aspirational_buyer", "city": "Hyderabad"},
+      {"id": "brand_loyalist_lucknow_01", "name": "Vikram Singh", "archetype": "brand_loyalist", "city": "Lucknow"}
+    ]
+  }
+  </script>
+
+  <script src="/app.js"></script>
+</body>
+</html>

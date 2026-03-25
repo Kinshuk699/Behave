@@ -578,7 +578,7 @@ Navigate the architecture visually using the Markdown NodeGraph View extension. 
 
 ### The Pipeline (linear chain)
 
-Start here → [Creative Analysis](docs/01-creative-analysis.md) → [Cohort Selection](docs/02-cohort-selection.md) → [Persona Evaluation](docs/03-persona-evaluation.md) → [Critic Agent](docs/04-critic-agent.md) → [Memory System](docs/05-memory-system.md) → [Medallion Pipeline](docs/06-medallion-pipeline.md) → [Recommendation Agent](docs/07-recommendation-agent.md) → [Simulation Ingest](docs/12-simulation-ingest.md) → [MLflow Tracking](docs/13-mlflow-tracking.md) → Dashboard (next)
+Start here → [Creative Analysis](docs/01-creative-analysis.md) → [Cohort Selection](docs/02-cohort-selection.md) → [Persona Evaluation](docs/03-persona-evaluation.md) → [Critic Agent](docs/04-critic-agent.md) → [Memory System](docs/05-memory-system.md) → [Medallion Pipeline](docs/06-medallion-pipeline.md) → [Recommendation Agent](docs/07-recommendation-agent.md) → [Simulation Ingest](docs/12-simulation-ingest.md) → [MLflow Tracking](docs/13-mlflow-tracking.md) → [Dashboard](docs/14-dashboard.md)
 
 Each pipeline doc links only to its "Next →" step. Click into any node to see the full design, key decisions, and data flow.
 
@@ -608,3 +608,5 @@ Each pipeline doc links only to its "Next →" step. Click into any node to see 
 11. Approach A (inline critic) beats batch critic because: quarantine before aggregation, no context overflow at 20+ personas, natural fit in existing loop
 12. API keys were leaking in pytest error output via dataclass repr — fixed with `repr=False`. Always check what shows up in test failures.
 13. Critic gracefully degrades: if the LLM call fails, the evaluation is included anyway (fail-open). Quality gate shouldn't block the whole run.
+14. Dashboard design: pre-loaded data loads instantly for wow factor, live simulation is a separate "Test Your Own" section. Visitors see value before needing a password.
+15. FastAPI serves both the static dashboard and the `/api/simulate` endpoint — single deployment, no CORS headaches.

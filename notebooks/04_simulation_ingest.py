@@ -23,10 +23,17 @@ BRONZE = "kinshuk_bronze"
 SILVER = "kinshuk_silver"
 GOLD = "kinshuk_gold"
 
-# Set to the run you want to ingest
-RUN_ID = "run_e3d656cc826e"
+# Accept run_id as a widget parameter (set by auto-ingest trigger)
+# Falls back to default for manual runs
+dbutils.widgets.text("run_id", "run_e3d656cc826e")
+RUN_ID = dbutils.widgets.get("run_id")
 
-# Bundle deployment path
+# Storage root: workspace bundle path for manual runs, /dbfs/... for auto-ingest
+DEFAULT_STORAGE = "/Workspace/Users/kinshuk.sahni6@gmail.com/.bundle/Behave/dev/files/data/runs"
+dbutils.widgets.text("storage_root", DEFAULT_STORAGE)
+STORAGE_ROOT = dbutils.widgets.get("storage_root")
+
+# Bundle deployment path (for reference, kept for non-run resources)
 BUNDLE_ROOT = "/Workspace/Users/kinshuk.sahni6@gmail.com/.bundle/Behave/dev/files"
 
 # COMMAND ----------
@@ -40,7 +47,7 @@ import json, os
 from datetime import datetime, timezone
 from pyspark.sql import functions as F
 
-run_dir = os.path.join(BUNDLE_ROOT, "data", "runs", RUN_ID)
+run_dir = os.path.join(STORAGE_ROOT, RUN_ID)
 
 # Load evaluations
 eval_path = os.path.join(run_dir, "evaluations.json")
