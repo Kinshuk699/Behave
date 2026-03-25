@@ -1,6 +1,6 @@
 # Roadmap — What's Next
 
-**Last updated:** 2025-03-25
+**Last updated:** 2026-03-25
 
 ## Completed ✅
 
@@ -12,11 +12,9 @@
 | 4 | Trend Follower Persona — Priya Malhotra, Delhi, FOMO archetype | 2025-03-25 | 23/23 GREEN |
 | 5 | Full-Dump Memory Mode + MemoryConsumer — category-scoped, cross-reflection toggle | 2025-03-25 | 31/31 GREEN |
 | 6 | Tiered Model Support — Haiku for volume evals/reflections, Sonnet for quality gates | 2025-03-25 | 35/35 GREEN |
+| 7 | Tune CreativeCard for Indian Ads — festival_context, target_city_tier, cultural_references + Diwali demo | 2026-03-25 | 39/39 GREEN |
 
 ## Up Next (in order)
-
-### 7. Tune CreativeCard for Indian Ads
-Test **Creative Analysis** with real Hinglish copy, ₹ pricing, cultural refs.
 
 ### 8. Expand Persona Library to 20+
 3-5 personas per archetype, varying demographics/city/language.

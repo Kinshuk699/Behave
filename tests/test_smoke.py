@@ -226,7 +226,7 @@ def test_load_personas():
 
 def test_build_demo_creatives():
     creatives = build_demo_creatives()
-    assert len(creatives) == 2
+    assert len(creatives) >= 2
     for c in creatives:
         assert isinstance(c, CreativeCard)
         assert c.brand
@@ -764,3 +764,78 @@ def test_simulation_uses_reflection_model():
     assert "config.reflection_model" in source, (
         "simulation.py should use config.reflection_model for reflection calls"
     )
+
+
+# ── India-specific CreativeCard fields (Feature #7) ──────────
+
+
+def test_creative_card_has_festival_context():
+    """CreativeCard should have an optional festival_context field."""
+    card = CreativeCard(
+        creative_id="test_fest",
+        brand="TestBrand",
+        category="skincare",
+        format="static_image",
+        festival_context="Diwali",
+    )
+    assert card.festival_context == "Diwali"
+
+    # Default should be None
+    card_default = CreativeCard(
+        creative_id="test_default",
+        brand="TestBrand",
+        category="skincare",
+        format="static_image",
+    )
+    assert card_default.festival_context is None
+
+
+def test_creative_card_has_target_city_tier():
+    """CreativeCard should have an optional target_city_tier field."""
+    card = CreativeCard(
+        creative_id="test_tier",
+        brand="TestBrand",
+        category="skincare",
+        format="static_image",
+        target_city_tier="Tier 2-3",
+    )
+    assert card.target_city_tier == "Tier 2-3"
+
+    card_default = CreativeCard(
+        creative_id="test_default",
+        brand="TestBrand",
+        category="skincare",
+        format="static_image",
+    )
+    assert card_default.target_city_tier is None
+
+
+def test_creative_card_has_cultural_references():
+    """CreativeCard should have a cultural_references list field."""
+    refs = ["rangoli motifs", "family gathering", "diyas"]
+    card = CreativeCard(
+        creative_id="test_culture",
+        brand="TestBrand",
+        category="skincare",
+        format="static_image",
+        cultural_references=refs,
+    )
+    assert card.cultural_references == refs
+
+    card_default = CreativeCard(
+        creative_id="test_default",
+        brand="TestBrand",
+        category="skincare",
+        format="static_image",
+    )
+    assert card_default.cultural_references == []
+
+
+def test_demo_creatives_include_diwali_ad():
+    """build_demo_creatives should include a festival-themed Diwali ad."""
+    demos = build_demo_creatives()
+    diwali_ads = [c for c in demos if c.festival_context and "diwali" in c.festival_context.lower()]
+    assert len(diwali_ads) >= 1, "Should have at least one Diwali demo creative"
+    diwali = diwali_ads[0]
+    assert diwali.cultural_references, "Diwali ad should have cultural_references"
+    assert diwali.code_mixed is True, "Diwali ad should use Hinglish"

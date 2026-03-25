@@ -53,7 +53,10 @@ Extract the following fields as a JSON object:
   "celebrity_present": true/false,
   "language_primary": "English | Hindi | etc.",
   "language_secondary": null or language,
-  "code_mixed": true/false (Hinglish or multi-language mixing)
+  "code_mixed": true/false (Hinglish or multi-language mixing),
+  "festival_context": "Diwali | Holi | Eid | Navratri | Christmas | null (only if festival imagery, messaging, or sale tie-in is present)",
+  "target_city_tier": "Tier 1 | Tier 2-3 | Metro | Pan-India | null (infer from pricing, language, and positioning)",
+  "cultural_references": ["list of Indian cultural motifs: 'rangoli', 'haldi', 'Bollywood', 'cricket', 'joint family', 'diyas', etc."]
 }}
 
 Return ONLY the JSON object, no explanation."""

@@ -408,7 +408,24 @@ generate_recommendation()
 
 **All 35/35 tests GREEN. Zero API credits spent.**
 
-### Remaining v2 steps (after Tiered Model Support)
+### ✅ Completed: Tune CreativeCard for Indian Ads (2026-03-25)
+
+**What changed**: CreativeCard now structurally understands Indian advertising context.
+
+**3 new fields added to `CreativeCard`**:
+- `festival_context: Optional[str]` — Diwali, Holi, Eid, Navratri, etc. (only when actually present)
+- `target_city_tier: Optional[str]` — Tier 1, Tier 2-3, Metro, Pan-India
+- `cultural_references: list[str]` — rangoli, haldi, Bollywood, cricket, joint family, diyas, etc.
+
+**Extraction prompt updated** — `creative_analyzer.py` prompt now explicitly asks for festival tie-ins, city tier inference (from pricing/language/positioning), and cultural motif detection.
+
+**Diwali demo creative added** — `demo_creative_03` (Mamaearth Ubtan Face Wash): Hindi primary, Hinglish code-mixed, Diwali festival context, gold-orange traditional visual, haldi/diyas/rangoli cultural references, Pan-India targeting.
+
+**Why it matters**: Without this, a Diwali sale ad and a random Tuesday ad look identical to the system. Now personas get structured cultural context, so their reactions are culturally grounded ("the Diwali pricing feels aspirational") rather than generic.
+
+**All 39/39 tests GREEN. Zero API credits spent.**
+
+### Remaining v2 steps (after Tune CreativeCard)
 5. **Tune CreativeCard extraction for Indian ads** — Hinglish copy, ₹ pricing, cultural refs
 6. **Expand persona library to 20+** after first 5—8 proven
 7. Port to Databricks (bronze/silver/gold as Delta tables) — capstone phase

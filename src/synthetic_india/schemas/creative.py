@@ -95,6 +95,18 @@ class CreativeCard(BaseModel):
     language_secondary: Optional[str] = None
     code_mixed: bool = Field(False, description="Uses Hinglish or multi-language mixing")
 
+    # India-specific context
+    festival_context: Optional[str] = Field(
+        None, description="Festival tie-in if present: Diwali, Holi, Eid, Navratri, etc."
+    )
+    target_city_tier: Optional[str] = Field(
+        None, description="Target city tier: 'Tier 1', 'Tier 2-3', 'Metro', 'Pan-India'"
+    )
+    cultural_references: list[str] = Field(
+        default_factory=list,
+        description="Cultural motifs: 'rangoli', 'Bollywood celeb', 'cricket', 'joint family', etc.",
+    )
+
     # Vision-native (v2) — raw ad image for direct LLM evaluation
     image_path: Optional[str] = Field(
         None, description="Local path to raw ad image; base64-encoded at eval time"
