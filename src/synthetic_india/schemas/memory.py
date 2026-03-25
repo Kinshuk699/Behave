@@ -78,6 +78,11 @@ class MemoryNode(BaseModel):
     last_accessed_at: datetime = Field(default_factory=datetime.utcnow)
     access_count: int = 0
 
+    # Stream offset (assigned by MemoryStream.add_node)
+    sequence_number: Optional[int] = Field(
+        None, description="Monotonic offset in the stream, assigned on insertion"
+    )
+
     model_config = ConfigDict(use_enum_values=True)
 
 

@@ -19,11 +19,11 @@ from typing import Optional
 from synthetic_india.agents.llm_client import LLMResponse, call_anthropic, get_embedding
 from synthetic_india.agents.image_utils import encode_image
 from synthetic_india.config import LLMConfig, get_llm_config
-from synthetic_india.memory.retrieval import MemoryRetriever
+from synthetic_india.memory.consumer import MemoryConsumer
 from synthetic_india.memory.stream import MemoryStream
 from synthetic_india.schemas.creative import CreativeCard
 from synthetic_india.schemas.evaluation import PersonaEvaluation
-from synthetic_india.schemas.memory import RetrievalScore
+from synthetic_india.schemas.memory import MemoryNode
 from synthetic_india.schemas.persona import PersonaProfile
 
 
@@ -157,7 +157,7 @@ def _prepare_vision_kwargs(creative: CreativeCard) -> dict:
     return {}
 
 
-def _build_memory_block(memories: list[RetrievalScore]) -> str:
+def _build_memory_block(memories: list[MemoryNode]) -> str:
     """Render retrieved memories into a prompt block."""
     if not memories:
         return ""
@@ -168,8 +168,7 @@ def _build_memory_block(memories: list[RetrievalScore]) -> str:
         "Here are your relevant memories:\n"
     )
 
-    for i, scored in enumerate(memories, 1):
-        node = scored.node
+    for i, node in enumerate(memories, 1):
         time_ago = ""
         if node.created_at:
             from datetime import datetime
@@ -278,40 +277,21 @@ async def evaluate_creative(
     config = config or get_llm_config()
 
     # ── Step 1: Retrieve relevant memories ────────────────────
-    retrieved_memories: list[RetrievalScore] = []
+    retrieved_memories: list[MemoryNode] = []
     memory_context = ""
 
     if memory_stream and memory_stream.size > 0:
-        retriever = MemoryRetriever()
+        consumer = MemoryConsumer()
 
         query_text = f"{creative.brand} {creative.category} {creative.headline or ''}"
 
-        query_embedding = None
-        if use_embeddings:
-            query_embedding = await get_embedding(query_text, config=config)
-
-        retrieved_memories = retriever.retrieve(
-            nodes=memory_stream.nodes,
-            query_embedding=query_embedding,
-            query_text=query_text,
+        # Consumer auto-selects: full dump if <threshold, scored retrieval otherwise
+        retrieved_memories = consumer.consume(
+            stream=memory_stream,
+            query=query_text,
+            category=creative.category,
             top_k=5,
-            category_filter=creative.category,
         )
-
-        # Also get brand-specific memories if any
-        brand_memories = retriever.retrieve(
-            nodes=memory_stream.nodes,
-            query_text=creative.brand,
-            top_k=3,
-            brand_filter=creative.brand,
-        )
-
-        # Merge and deduplicate
-        seen_ids = {s.node.node_id for s in retrieved_memories}
-        for bm in brand_memories:
-            if bm.node.node_id not in seen_ids:
-                retrieved_memories.append(bm)
-                seen_ids.add(bm.node.node_id)
 
         memory_context = _build_memory_block(retrieved_memories)
 

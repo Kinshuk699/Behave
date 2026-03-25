@@ -362,9 +362,30 @@ generate_recommendation()
 
 **All 23/23 tests GREEN. Zero API credits spent.**
 
-### Remaining v2 steps (after Trend Follower)
+### ✅ Completed: Full-Dump Memory Mode + MemoryConsumer (2025-03-25)
 
-1. **Full-dump memory mode** — skip retrieval for <50 memories
+**Design decision:** Option B — Stream Consumer abstraction with category-scoped consumption
+- `MemoryConsumer` class: `consume_all()`, `consume_scored()`, `consume()` (auto-select)
+- Category-scoped: threshold is per-category count, not total — beauty memories don't pollute sports evals
+- Cross-category reflections toggle: `include_cross_reflections: bool = True` (agency can flip to `False` for clean-room)
+- `sequence_number` on `MemoryNode` — monotonic offset assigned by `add_node()`, streaming vocabulary
+- `full_dump_threshold: int = 50` in `MemoryConfig` — per-category
+- Wired into `persona_evaluator.py` replacing raw `MemoryRetriever` calls
+- `_build_memory_block()` now accepts `list[MemoryNode]` directly
+
+**Capstone narrative:** Each MemoryNode is an event with a monotonic offset. The MemoryConsumer reads from offset 0 (full dump) or uses scored retrieval — mirroring how streaming systems handle backfill vs live consumption.
+
+**Files created/modified:**
+- `src/synthetic_india/memory/consumer.py` — NEW: `MemoryConsumer` class
+- `src/synthetic_india/schemas/memory.py` — MODIFIED: added `sequence_number` field
+- `src/synthetic_india/config.py` — MODIFIED: added `full_dump_threshold` + `include_cross_reflections`
+- `src/synthetic_india/memory/stream.py` — MODIFIED: `add_node()` assigns monotonic sequence_number, `from_state()` restores counter
+- `src/synthetic_india/agents/persona_evaluator.py` — MODIFIED: imports MemoryConsumer, `_build_memory_block()` takes `list[MemoryNode]`, retrieval block uses `consumer.consume()`
+- `tests/test_smoke.py` — MODIFIED: 8 new tests (31 total)
+
+**All 31/31 tests GREEN. Zero API credits spent.**
+
+### Remaining v2 steps (after MemoryConsumer)
 4. **Tiered model support** — Haiku/4o-mini for volume, Sonnet for Critic
 5. **Tune CreativeCard extraction for Indian ads** — Hinglish copy, ₹ pricing, cultural refs
 6. **Expand persona library to 20+** after first 5—8 proven

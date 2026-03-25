@@ -44,6 +44,7 @@ class MemoryStream:
         self._importance_since_reflection: float = 0.0
         self._reflection_count: int = 0
         self._last_reflection_at: Optional[datetime] = None
+        self._next_sequence_number: int = 0
 
     @property
     def size(self) -> int:
@@ -59,7 +60,9 @@ class MemoryStream:
         return sum(n.importance for n in self.nodes)
 
     def add_node(self, node: MemoryNode) -> None:
-        """Add a memory node to the stream."""
+        """Add a memory node to the stream, assigning a monotonic sequence number."""
+        node.sequence_number = self._next_sequence_number
+        self._next_sequence_number += 1
         self.nodes.append(node)
         self._importance_since_reflection += node.importance
 
@@ -167,6 +170,13 @@ class MemoryStream:
         stream._importance_since_reflection = state.total_importance_since_reflection
         stream._reflection_count = state.reflection_count
         stream._last_reflection_at = state.last_reflection_at
+        # Restore sequence counter from persisted nodes
+        if stream.nodes:
+            max_seq = max(
+                (n.sequence_number for n in stream.nodes if n.sequence_number is not None),
+                default=-1,
+            )
+            stream._next_sequence_number = max_seq + 1
         return stream
 
     def save(self, directory: Optional[Path] = None) -> Path:

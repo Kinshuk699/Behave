@@ -1,7 +1,7 @@
 # Memory System — Generative Agents
 
-**Status:** Built ✅ (retrieval mode) | Full-dump mode planned
-**Files:** `src/synthetic_india/memory/stream.py`, `src/synthetic_india/memory/retrieval.py`
+**Status:** Built ✅ (retrieval mode + full-dump mode)
+**Files:** `src/synthetic_india/memory/stream.py`, `src/synthetic_india/memory/retrieval.py`, `src/synthetic_india/memory/consumer.py`
 **Schema:** `src/synthetic_india/schemas/memory.py`
 
 ## Why Memory Matters
@@ -38,8 +38,14 @@ When cumulative importance exceeds 150 points, the persona *reflects*:
 
 | Phase | When | Mode | Why |
 |---|---|---|---|
-| **Phase 1-2** | <50 memories per persona | **Full dump** — entire stream in context | 200K token windows make retrieval unnecessary; eliminates retrieval errors |
-| **Phase 3+** | 50+ memories | **Retrieval mode** — scored selection | Context window limits require selective memory |
+| **Phase 1-2** | <50 memories per persona (per category) | **Full dump** — entire category stream in context | 200K token windows make retrieval unnecessary; eliminates retrieval errors |
+| **Phase 3+** | 50+ memories (per category) | **Retrieval mode** — scored selection | Context window limits require selective memory |
+
+### Category Scoping + Cross-Reflections
+
+- Consumption is **category-scoped**: beauty memories don't pollute sports evals
+- **Cross-category reflections** (generalized beliefs) optionally included via `include_cross_reflections` toggle
+- Agency controls: `True` (default, realistic) or `False` (clean-room isolation)
 
 ## Data Flow
 

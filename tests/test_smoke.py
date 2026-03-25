@@ -516,3 +516,206 @@ def test_trend_follower_validates_silver():
     tf = trend_followers[0]
     persona, result = validate_persona(tf.model_dump())
     assert result.passed, f"trend_follower failed validation: {result.errors}"
+
+
+# ── Memory Consumer tests ────────────────────────────────────
+
+
+def test_memory_node_has_sequence_number():
+    """MemoryNode should have a sequence_number field (Optional[int], default None)."""
+    node = MemoryNode(
+        node_id="mem_test_001",
+        persona_id="researcher_delhi_01",
+        memory_type="observation",
+        description="Saw a Minimalist ad with niacinamide claims",
+        subject="researcher_delhi_01",
+        predicate="evaluated",
+        object="Minimalist niacinamide serum",
+        importance=6.0,
+        category="skincare",
+        brand="Minimalist",
+    )
+    assert hasattr(node, "sequence_number")
+    assert node.sequence_number is None  # default
+
+    node_with_seq = node.model_copy(update={"sequence_number": 42})
+    assert node_with_seq.sequence_number == 42
+
+
+def test_memory_config_has_consumer_fields():
+    """MemoryConfig should have full_dump_threshold and include_cross_reflections."""
+    from synthetic_india.config import MemoryConfig
+
+    config = MemoryConfig()
+    assert hasattr(config, "full_dump_threshold")
+    assert config.full_dump_threshold == 50
+    assert hasattr(config, "include_cross_reflections")
+    assert config.include_cross_reflections is True  # default: cross-reflections ON
+
+
+def test_memory_stream_assigns_sequence_numbers():
+    """MemoryStream.add_node() should assign monotonic sequence_numbers."""
+    stream = MemoryStream("test_persona")
+
+    node1 = MemoryNode(
+        node_id="mem_seq_01", persona_id="test_persona",
+        memory_type="observation", description="First ad eval",
+        subject="test_persona", predicate="evaluated", object="Brand A",
+        importance=5.0, category="skincare", brand="Brand A",
+    )
+    node2 = MemoryNode(
+        node_id="mem_seq_02", persona_id="test_persona",
+        memory_type="observation", description="Second ad eval",
+        subject="test_persona", predicate="evaluated", object="Brand B",
+        importance=7.0, category="sports", brand="Brand B",
+    )
+
+    stream.add_node(node1)
+    stream.add_node(node2)
+
+    assert stream.nodes[0].sequence_number == 0
+    assert stream.nodes[1].sequence_number == 1
+
+
+def test_memory_consumer_consume_all_category_scoped():
+    """consume_all should return only category-matched nodes + cross-category reflections."""
+    from synthetic_india.memory.consumer import MemoryConsumer
+
+    stream = MemoryStream("test_persona")
+
+    # Add 3 skincare observations
+    for i in range(3):
+        stream.add_node(MemoryNode(
+            node_id=f"mem_skin_{i}", persona_id="test_persona",
+            memory_type="observation", description=f"Skincare eval {i}",
+            subject="test_persona", predicate="evaluated", object=f"Brand {i}",
+            importance=5.0, category="skincare", brand=f"Brand {i}",
+        ))
+
+    # Add 2 sports observations (should NOT appear in skincare consume_all)
+    for i in range(2):
+        stream.add_node(MemoryNode(
+            node_id=f"mem_sport_{i}", persona_id="test_persona",
+            memory_type="observation", description=f"Sports eval {i}",
+            subject="test_persona", predicate="evaluated", object=f"SportBrand {i}",
+            importance=5.0, category="sports", brand=f"SportBrand {i}",
+        ))
+
+    # Add 1 cross-category reflection (from sports, should appear in skincare consumption)
+    stream.add_node(MemoryNode(
+        node_id="ref_sports_01", persona_id="test_persona",
+        memory_type="reflection", description="I distrust brands using urgency tactics",
+        subject="test_persona", predicate="believes", object="urgency tactics",
+        importance=8.0, category="sports",
+    ))
+
+    consumer = MemoryConsumer()
+    result = consumer.consume_all(stream, category="skincare")
+
+    # Should get 3 skincare obs + 1 cross-category reflection = 4
+    assert len(result) == 4
+    categories = [n.category for n in result]
+    types = [n.memory_type for n in result]
+    # All skincare nodes present
+    assert categories.count("skincare") == 3
+    # Cross-category reflection present
+    assert "reflection" in [t.value if hasattr(t, 'value') else t for t in types]
+
+
+def test_memory_consumer_consume_all_no_cross_reflections():
+    """consume_all with include_cross_reflections=False should exclude cross-category reflections."""
+    from synthetic_india.memory.consumer import MemoryConsumer
+    from synthetic_india.config import MemoryConfig
+
+    stream = MemoryStream("test_persona")
+
+    stream.add_node(MemoryNode(
+        node_id="mem_skin_0", persona_id="test_persona",
+        memory_type="observation", description="Skincare eval",
+        subject="test_persona", predicate="evaluated", object="Brand A",
+        importance=5.0, category="skincare", brand="Brand A",
+    ))
+    stream.add_node(MemoryNode(
+        node_id="ref_sports_01", persona_id="test_persona",
+        memory_type="reflection", description="I distrust urgency tactics",
+        subject="test_persona", predicate="believes", object="urgency tactics",
+        importance=8.0, category="sports",
+    ))
+
+    config = MemoryConfig(include_cross_reflections=False)
+    consumer = MemoryConsumer(config=config)
+    result = consumer.consume_all(stream, category="skincare")
+
+    # Only the skincare observation, no cross-category reflection
+    assert len(result) == 1
+    assert result[0].category == "skincare"
+
+
+def test_memory_consumer_auto_selects_strategy():
+    """consume() should auto-select full_dump for small streams, scored for large."""
+    from synthetic_india.memory.consumer import MemoryConsumer
+    from synthetic_india.config import MemoryConfig
+
+    # Small stream (below threshold of 3)
+    config = MemoryConfig(full_dump_threshold=3)
+    consumer = MemoryConsumer(config=config)
+
+    stream = MemoryStream("test_persona")
+    for i in range(2):  # 2 skincare nodes < threshold of 3
+        stream.add_node(MemoryNode(
+            node_id=f"mem_{i}", persona_id="test_persona",
+            memory_type="observation", description=f"Skincare eval {i}",
+            subject="test_persona", predicate="evaluated", object=f"Brand {i}",
+            importance=5.0, category="skincare", brand=f"Brand {i}",
+        ))
+
+    # Below threshold → should get ALL category nodes (full dump)
+    result = consumer.consume(stream, query="skincare serum", category="skincare")
+    assert len(result) == 2  # full dump of all 2 skincare nodes
+
+    # Now add more to exceed threshold
+    for i in range(2, 10):
+        stream.add_node(MemoryNode(
+            node_id=f"mem_{i}", persona_id="test_persona",
+            memory_type="observation", description=f"Skincare eval {i}",
+            subject="test_persona", predicate="evaluated", object=f"Brand {i}",
+            importance=float(i), category="skincare", brand=f"Brand {i}",
+        ))
+
+    # 10 skincare nodes >= threshold of 3 → scored retrieval (top_k limits result)
+    result = consumer.consume(stream, query="skincare serum", category="skincare", top_k=5)
+    assert len(result) <= 5  # scored retrieval caps at top_k
+
+
+def test_evaluator_imports_memory_consumer():
+    """persona_evaluator should import and use MemoryConsumer instead of raw MemoryRetriever."""
+    from synthetic_india.agents import persona_evaluator
+
+    assert hasattr(persona_evaluator, 'MemoryConsumer')
+
+
+def test_build_memory_block_accepts_memory_nodes():
+    """_build_memory_block should accept list[MemoryNode] directly."""
+    from synthetic_india.agents.persona_evaluator import _build_memory_block
+
+    nodes = [
+        MemoryNode(
+            node_id="mem_block_01", persona_id="test_persona",
+            memory_type="observation",
+            description="Saw a Minimalist niacinamide ad, was impressed by transparency",
+            subject="test_persona", predicate="evaluated", object="Minimalist",
+            importance=6.0, category="skincare", brand="Minimalist",
+        ),
+        MemoryNode(
+            node_id="ref_block_01", persona_id="test_persona",
+            memory_type="reflection",
+            description="I tend to distrust brands using urgency tactics",
+            subject="test_persona", predicate="believes", object="urgency tactics",
+            importance=8.0, category="sports",
+        ),
+    ]
+
+    result = _build_memory_block(nodes)
+    assert "Minimalist" in result
+    assert "urgency" in result
+    assert "Past Experiences" in result

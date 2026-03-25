@@ -10,14 +10,9 @@
 | 2 | Critic Agent — quality gate with 4 dimensions | 2025-03-25 | 16/16 GREEN |
 | 3 | Vision-Native Evaluation — image_path + base64 + vision API | 2025-03-25 | 21/21 GREEN |
 | 4 | Trend Follower Persona — Priya Malhotra, Delhi, FOMO archetype | 2025-03-25 | 23/23 GREEN |
+| 5 | Full-Dump Memory Mode + MemoryConsumer — category-scoped, cross-reflection toggle | 2025-03-25 | 31/31 GREEN |
 
 ## Up Next (in order)
-
-### 5. Full-Dump Memory Mode
-Skip retrieval in the **Memory System** for personas with <50 memories.
-- Simple boolean toggle: if `stream.size < 50`, dump everything into context
-- Eliminates retrieval errors (a top failure mode in the original paper)
-- **Why:** 200K token windows make this feasible now
 
 ### 6. Tiered Model Support
 Haiku/4o-mini for volume evals, Sonnet for **Critic Agent**.
