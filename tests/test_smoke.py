@@ -1,4 +1,8 @@
-"""Quick validation that all modules import and work correctly."""
+"""Smoke tests — all local, zero API calls."""
+
+from io import StringIO
+
+from rich.console import Console
 
 from synthetic_india.schemas.persona import PersonaProfile
 from synthetic_india.schemas.creative import CreativeCard
@@ -9,40 +13,93 @@ from synthetic_india.memory.stream import MemoryStream
 from synthetic_india.memory.retrieval import MemoryRetriever, ReflectionEngine
 from synthetic_india.engine.cohort import select_cohort
 from synthetic_india.engine.simulation import load_personas
-from synthetic_india.cli import build_demo_creatives
+from synthetic_india.cli import build_demo_creatives, print_run_header, print_run_summary
 from synthetic_india.pipeline.silver import validate_persona, validate_creative_card
+from synthetic_india.schemas.recommendation import RunMetadata
 
-# Load personas
-personas = load_personas()
-print(f"Loaded {len(personas)} personas:")
-for p in personas:
-    print(f"  {p.name} ({p.archetype}) -- {p.tagline}")
 
-# Load demo creatives
-creatives = build_demo_creatives()
-print(f"\nDemo creatives: {len(creatives)}")
-for c in creatives:
-    print(f"  {c.creative_id}: {c.brand} -- {c.headline[:60]}")
+def test_load_personas():
+    personas = load_personas()
+    assert len(personas) >= 5
+    for p in personas:
+        assert isinstance(p, PersonaProfile)
+        assert p.name
+        assert p.archetype
 
-# Test cohort selection
-cohort = select_cohort(personas, "skincare")
-print(f"\nSkincare cohort ({len(cohort)} personas):")
-for p in cohort:
-    print(f"  {p.name}")
 
-# Test memory stream
-stream = MemoryStream("researcher_delhi_01")
-print(f"\nMemory stream for researcher: {stream.size} nodes")
+def test_build_demo_creatives():
+    creatives = build_demo_creatives()
+    assert len(creatives) == 2
+    for c in creatives:
+        assert isinstance(c, CreativeCard)
+        assert c.brand
+        assert c.headline
 
-# Test retriever
-retriever = MemoryRetriever()
-print(f"Retriever weights: recency={retriever.config.recency_weight}, relevance={retriever.config.relevance_weight}, importance={retriever.config.importance_weight}")
 
-# Test silver validation
-print("\nSilver validation:")
-for p_data in [p.model_dump() for p in personas]:
-    persona, result = validate_persona(p_data)
-    status = "PASS" if result.passed else f"FAIL: {result.errors}"
-    print(f"  Validate {p_data['persona_id']}: {status}")
+def test_cohort_selection():
+    personas = load_personas()
+    cohort = select_cohort(personas, "skincare")
+    assert isinstance(cohort, list)
+    assert len(cohort) > 0
+    for p in cohort:
+        assert isinstance(p, PersonaProfile)
 
-print("\nAll imports and validations passed!")
+
+def test_memory_stream_init():
+    stream = MemoryStream("researcher_delhi_01")
+    assert stream.size == 0
+
+
+def test_memory_retriever_init():
+    retriever = MemoryRetriever()
+    assert retriever.config.recency_weight > 0
+    assert retriever.config.relevance_weight > 0
+    assert retriever.config.importance_weight > 0
+
+
+def test_silver_persona_validation():
+    personas = load_personas()
+    for p in personas:
+        persona, result = validate_persona(p.model_dump())
+        assert result.passed, f"{p.persona_id} failed: {result.errors}"
+
+
+def test_print_run_header_shows_brand_and_headline():
+    """print_run_header should display brand, category, and headline."""
+    creatives = build_demo_creatives()
+    creative = creatives[0]  # Minimalist
+
+    buf = StringIO()
+    test_console = Console(file=buf, force_terminal=True)
+    print_run_header(creatives=[creative], console=test_console)
+    output = buf.getvalue()
+
+    assert "Minimalist" in output
+    assert "skincare" in output
+    assert "Niacinamide" in output
+
+
+def test_print_run_summary_shows_key_metrics():
+    """print_run_summary should display run_id, cost, evaluation count."""
+    meta = RunMetadata(
+        run_id="test_run_001",
+        brand="Minimalist",
+        category="skincare",
+        creative_ids=["c1"],
+        persona_ids=["p1", "p2", "p3"],
+        cohort_size=3,
+        total_evaluations=3,
+        total_cost_usd=0.0042,
+        total_tokens=1500,
+        status="completed",
+        successful_evaluations=3,
+    )
+
+    buf = StringIO()
+    test_console = Console(file=buf, force_terminal=True)
+    print_run_summary(meta=meta, console=test_console)
+    output = buf.getvalue()
+
+    assert "test_run_001" in output
+    assert "3" in output  # evaluations
+    assert "0.0042" in output  # cost

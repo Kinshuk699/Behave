@@ -16,8 +16,34 @@ from rich.console import Console
 
 from synthetic_india.engine.simulation import load_personas, run_simulation
 from synthetic_india.schemas.creative import CreativeCard, CreativeFormat
+from synthetic_india.schemas.recommendation import RunMetadata
 
 console = Console()
+
+
+def print_run_header(
+    creatives: list[CreativeCard],
+    console: Console = console,
+) -> None:
+    """Print what's about to be evaluated before a simulation starts."""
+    console.print("\n[bold cyan]Synthetic India — Creative Evaluation[/bold cyan]")
+    console.print(f"Creatives to evaluate: {len(creatives)}")
+    for c in creatives:
+        console.print(f"  • [bold]{c.brand}[/bold] ({c.category}): {c.headline}")
+    console.print()
+
+
+def print_run_summary(
+    meta: RunMetadata,
+    console: Console = console,
+) -> None:
+    """Print post-run summary with key metrics."""
+    console.print(f"\n[bold green]Run complete![/bold green]")
+    console.print(f"  Run ID:      {meta.run_id}")
+    console.print(f"  Evaluations: {meta.total_evaluations}")
+    console.print(f"  Cost:        ${meta.total_cost_usd:.4f}")
+    console.print(f"  Tokens:      {meta.total_tokens:,}")
+    console.print(f"  Status:      {meta.status}")
 
 
 def build_demo_creatives() -> list[CreativeCard]:
@@ -89,10 +115,13 @@ async def cmd_run(args: argparse.Namespace) -> None:
         language_primary="English",
     )
 
+    print_run_header(creatives=[creative])
+
     scorecards, recommendation, meta = await run_simulation(
         creatives=[creative],
         use_memory=not args.no_memory,
     )
+    print_run_summary(meta=meta)
 
 
 async def cmd_demo(args: argparse.Namespace) -> None:
@@ -110,12 +139,14 @@ async def cmd_demo(args: argparse.Namespace) -> None:
         console.print(f"  - {p.name} ({p.archetype}): {p.tagline}")
 
     console.print()
+    print_run_header(creatives=creatives)
 
     scorecards, recommendation, meta = await run_simulation(
         creatives=creatives,
         personas=personas,
         use_memory=not args.no_memory,
     )
+    print_run_summary(meta=meta)
 
 
 def main() -> None:
