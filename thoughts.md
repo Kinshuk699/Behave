@@ -264,18 +264,80 @@ Target: 20+ (3-5 per archetype, varying demographics/city/language)
 - 5 starter personas
 - Smoke test passes
 
-### Next steps (from v2 spec, engineer priorities)
+### Completed steps
 
-1. **Review all code** for errors (step by step, one module at a time)
-2. **Add stateless mode toggle** — boolean flag to disable memory for debugging
-3. **Add vision-native evaluation** — send raw ad image alongside CreativeCard to each persona
-4. **Implement Critic Agent** — persona consistency + sycophancy + cultural authenticity + action-reasoning checks
-5. **Tune CreativeCard extraction for Indian ads** — test with real Hinglish copy, ₹ pricing, cultural refs
-6. **Add Trend Follower persona** — critical missing archetype for Indian D2C
-7. **Set up `.env` with real API keys** and run 3 real Indian D2C ads through the system
-8. **Skip Databricks for now** — focus on simulation quality first; Databricks is for capstone later
-9. Port to Databricks (bronze/silver/gold as Delta tables) — capstone phase
-10. Expand persona library to 20+ after first 5-8 proven
+1. ✅ **Fix CLI output** (2025-03-25)
+   - Converted smoke test script → 8 proper pytest functions
+   - Added `print_run_header()` — shows brand/category/headline before simulation
+   - Added `print_run_summary()` — shows run_id, evaluations, cost, tokens, status after simulation
+   - Wired both into `cmd_run` and `cmd_demo`
+   - All 8/8 tests GREEN, zero API credits spent
+   - Note: `run_simulation()` also prints internally — minor duplication, dedup later
+
+### ✅ Completed: Critic Agent (2025-03-25)
+
+**Design decision:** Approach A — Post-eval inline with summary rollup
+- Critic evaluates each `PersonaEvaluation` individually, right after `evaluate_creative()`
+- If FAIL → quarantine eval, exclude from scorecard aggregation
+- After all evals for a creative → `CriticRunSummary` rolls up individual verdicts
+- Shows both individual scores AND how each contributes to overall quality
+- Model: Sonnet for Critic (quality gate), cheaper models for volume evals
+
+**4 quality dimensions scored (0-10):**
+1. Persona consistency — does eval match persona profile?
+2. Sycophancy detection — 0=genuine, 10=sycophantic
+3. Cultural authenticity — 0=generic/Western, 10=authentically Indian
+4. Action-reasoning alignment — does primary_action follow from reasoning + scores?
+
+**Pydantic models:**
+- `CriticVerdict` — per-evaluation: 4 sub-scores, overall_quality, passed bool, explanation, flags
+- `CriticRunSummary` — per-run: all verdicts, pass/fail counts, per-dimension averages, contribution breakdown
+
+**Where it fits in simulation flow:**
+```
+evaluate_creative() → PersonaEvaluation
+    ↓
+critic.evaluate() → CriticVerdict
+    ↓
+if FAIL → quarantine, exclude from scorecard
+if PASS → include in aggregation
+    ↓
+(after all evals for a creative)
+critic.summarize() → CriticRunSummary
+    ↓
+aggregate_evaluations() (only passed evals)
+    ↓
+generate_recommendation()
+```
+
+**TDD Build Plan (step by step):**
+1. Schema: `CriticVerdict` + `CriticRunSummary` Pydantic models
+2. Config: `critic_model` field in `LLMConfig`
+3. Agent: `critic_agent.py` — `evaluate_single()` function (LLM call)
+4. Agent: `critic_agent.py` — `summarize_run()` function (pure Python rollup)
+5. Wire into `simulation.py` — call critic after each eval, quarantine FAILs
+6. CLI: show critic summary in `print_run_summary()`
+7. End-to-end verify
+
+**All 7 tasks completed. 16/16 tests GREEN. Zero API credits spent.**
+
+**Files created/modified:**
+- `src/synthetic_india/schemas/critic.py` — NEW: `CriticVerdict`, `CriticRunSummary` Pydantic models
+- `src/synthetic_india/agents/critic_agent.py` — NEW: `build_critic_prompt()`, `evaluate_single()`, `summarize_run()`
+- `src/synthetic_india/config.py` — MODIFIED: added `critic_model` field + `repr=False` on API key fields (security fix)
+- `src/synthetic_india/engine/simulation.py` — MODIFIED: critic import, post-eval quality gate, quarantine logic, `_print_critic_summary()`, `_save_run()` persists critic data
+- `src/synthetic_india/cli.py` — MODIFIED: `print_run_summary()` now accepts `critic_summary` param
+- `tests/test_smoke.py` — MODIFIED: 8 new critic tests (16 total)
+
+### Remaining v2 steps (after Critic Agent)
+
+1. **Vision-native evaluation** — send raw ad image alongside CreativeCard to each persona
+2. **Add Trend Follower persona** — critical missing archetype for Indian D2C
+3. **Full-dump memory mode** — skip retrieval for <50 memories
+4. **Tiered model support** — Haiku/4o-mini for volume, Sonnet for Critic
+5. **Tune CreativeCard extraction for Indian ads** — Hinglish copy, ₹ pricing, cultural refs
+6. **Expand persona library to 20+** after first 5—8 proven
+7. Port to Databricks (bronze/silver/gold as Delta tables) — capstone phase
 
 ### Risks to watch
 
@@ -285,6 +347,7 @@ Target: 20+ (3-5 per archetype, varying demographics/city/language)
 - Aggregation scores can create false precision (expose segment disagreement)
 - Cultural authenticity: "sounds like an American LLM's idea of an Indian person" → Critic checks (v2)
 - Calibration data from clients may be sparse or biased
+- **NEW**: Critic adds 1 LLM call per evaluation — increases cost per run by ~50%. Justified because quality gate is the v2 differentiator.
 
 ---
 
@@ -300,3 +363,6 @@ Target: 20+ (3-5 per archetype, varying demographics/city/language)
 8. v2 insight: 200K context windows mean we can skip retrieval complexity for early phases — full dump mode is simpler and eliminates retrieval errors (a top failure mode in the original paper)
 9. v2 insight: Vision-native eval means CreativeCard is no longer the SOLE input — the persona sees the raw ad too, catching cultural cues the extraction might miss
 10. v2 insight: The Critic Agent is what prevents the system from being a "fancy wrapper" — it enforces persona consistency, catches sycophancy, and validates cultural authenticity
+11. Approach A (inline critic) beats batch critic because: quarantine before aggregation, no context overflow at 20+ personas, natural fit in existing loop
+12. API keys were leaking in pytest error output via dataclass repr — fixed with `repr=False`. Always check what shows up in test failures.
+13. Critic gracefully degrades: if the LLM call fails, the evaluation is included anyway (fail-open). Quality gate shouldn't block the whole run.

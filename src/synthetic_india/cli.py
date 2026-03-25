@@ -17,6 +17,7 @@ from rich.console import Console
 from synthetic_india.engine.simulation import load_personas, run_simulation
 from synthetic_india.schemas.creative import CreativeCard, CreativeFormat
 from synthetic_india.schemas.recommendation import RunMetadata
+from synthetic_india.schemas.critic import CriticRunSummary
 
 console = Console()
 
@@ -35,6 +36,7 @@ def print_run_header(
 
 def print_run_summary(
     meta: RunMetadata,
+    critic_summary: CriticRunSummary | None = None,
     console: Console = console,
 ) -> None:
     """Print post-run summary with key metrics."""
@@ -44,6 +46,14 @@ def print_run_summary(
     console.print(f"  Cost:        ${meta.total_cost_usd:.4f}")
     console.print(f"  Tokens:      {meta.total_tokens:,}")
     console.print(f"  Status:      {meta.status}")
+    if meta.quarantined_records:
+        console.print(f"  Quarantined: {meta.quarantined_records}")
+    if critic_summary:
+        console.print(f"\n  [bold]Critic Quality Gate[/bold]")
+        console.print(f"    Pass rate:    {critic_summary.pass_rate:.0%}")
+        console.print(f"    Passed:       {critic_summary.total_passed}")
+        console.print(f"    Failed:       {critic_summary.total_failed}")
+        console.print(f"    Quality:      {critic_summary.overall_quality_score:.1f}/10")
 
 
 def build_demo_creatives() -> list[CreativeCard]:

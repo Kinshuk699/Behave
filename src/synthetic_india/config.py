@@ -28,8 +28,11 @@ class LLMConfig:
     recommendation_model: str = field(
         default_factory=lambda: os.getenv("RECOMMENDATION_MODEL", "claude-sonnet-4-20250514")
     )
-    openai_api_key: str = field(default_factory=lambda: os.getenv("OPENAI_API_KEY", ""))
-    anthropic_api_key: str = field(default_factory=lambda: os.getenv("ANTHROPIC_API_KEY", ""))
+    critic_model: str = field(
+        default_factory=lambda: os.getenv("CRITIC_MODEL", "claude-sonnet-4-20250514")
+    )
+    openai_api_key: str = field(default_factory=lambda: os.getenv("OPENAI_API_KEY", ""), repr=False)
+    anthropic_api_key: str = field(default_factory=lambda: os.getenv("ANTHROPIC_API_KEY", ""), repr=False)
 
 
 @dataclass(frozen=True)

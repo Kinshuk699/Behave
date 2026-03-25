@@ -29,6 +29,7 @@ from rich.console import Console
 from rich.progress import Progress, SpinnerColumn, TextColumn
 from rich.table import Table
 
+from synthetic_india.agents import critic_agent
 from synthetic_india.agents.llm_client import call_anthropic
 from synthetic_india.agents.persona_evaluator import evaluate_creative
 from synthetic_india.agents.recommendation_agent import generate_recommendation
@@ -44,6 +45,7 @@ from synthetic_india.engine.cohort import select_cohort
 from synthetic_india.memory.retrieval import ReflectionEngine
 from synthetic_india.memory.stream import MemoryStream
 from synthetic_india.schemas.creative import CreativeCard
+from synthetic_india.schemas.critic import CriticRunSummary, CriticVerdict
 from synthetic_india.schemas.evaluation import (
     CreativeScorecard,
     PersonaEvaluation,
@@ -257,6 +259,8 @@ async def run_simulation(
     all_persona_ids = set()
     all_evaluations: list[PersonaEvaluation] = []
     all_scorecards: list[CreativeScorecard] = []
+    all_verdicts: list[CriticVerdict] = []
+    quarantined_evaluations: list[PersonaEvaluation] = []
     total_cost = 0.0
     total_tokens = 0
 
@@ -305,10 +309,34 @@ async def run_simulation(
                         use_embeddings=use_embeddings,
                     )
 
-                    evaluations.append(evaluation)
                     all_persona_ids.add(persona.persona_id)
                     total_cost += evaluation.cost_usd
                     total_tokens += evaluation.prompt_tokens + evaluation.completion_tokens
+
+                    # Critic quality gate
+                    try:
+                        verdict = await critic_agent.evaluate_single(
+                            persona=persona,
+                            evaluation=evaluation,
+                            config=config,
+                        )
+                        all_verdicts.append(verdict)
+                        total_cost += verdict.cost_usd
+
+                        if verdict.passed:
+                            evaluations.append(evaluation)
+                        else:
+                            quarantined_evaluations.append(evaluation)
+                            console.print(
+                                f"  [yellow]Quarantined {persona.name}: "
+                                f"{verdict.explanation}[/yellow]"
+                            )
+                    except Exception as critic_err:
+                        console.print(
+                            f"  [yellow]Critic failed for {persona.name}: {critic_err} "
+                            f"— evaluation included anyway[/yellow]"
+                        )
+                        evaluations.append(evaluation)
 
                     progress.update(task, advance=1)
 
@@ -356,7 +384,16 @@ async def run_simulation(
             for stream in memory_streams.values():
                 stream.save()
 
-        # Aggregate
+        # Critic summary for this creative
+        creative_verdicts = [
+            v for v in all_verdicts
+            if v.evaluation_id in {e.evaluation_id for e in evaluations + quarantined_evaluations}
+        ]
+        if creative_verdicts:
+            critic_summary = critic_agent.summarize_run(run_id, creative_verdicts)
+            _print_critic_summary(critic_summary)
+
+        # Aggregate (only passed evaluations)
         scorecard = aggregate_evaluations(evaluations, personas, creative, run_id)
         all_scorecards.append(scorecard)
         all_evaluations.extend(evaluations)
@@ -395,10 +432,12 @@ async def run_simulation(
         started_at=started_at,
         completed_at=completed_at,
         successful_evaluations=len(all_evaluations),
+        quarantined_records=len(quarantined_evaluations),
+        failed_evaluations=0,
     )
 
     # Persist run results
-    _save_run(run_meta, all_evaluations, all_scorecards, recommendation)
+    _save_run(run_meta, all_evaluations, all_scorecards, recommendation, all_verdicts)
 
     console.print(f"\n[bold green]Run complete![/bold green]")
     console.print(f"  Run ID: {run_id}")
@@ -414,6 +453,7 @@ def _save_run(
     evaluations: list[PersonaEvaluation],
     scorecards: list[CreativeScorecard],
     recommendation: Optional[AgentRecommendation],
+    verdicts: Optional[list[CriticVerdict]] = None,
 ) -> Path:
     """Persist all run outputs to JSON files."""
     run_dir = RUNS_DIR / run_meta.run_id
@@ -430,8 +470,54 @@ def _save_run(
         (run_dir / "recommendation.json").write_text(
             recommendation.model_dump_json(indent=2)
         )
+    if verdicts:
+        critic_summary = critic_agent.summarize_run(run_meta.run_id, verdicts)
+        (run_dir / "critic_verdicts.json").write_text(
+            json.dumps([v.model_dump(mode="json") for v in verdicts], indent=2, default=str)
+        )
+        (run_dir / "critic_summary.json").write_text(
+            critic_summary.model_dump_json(indent=2)
+        )
 
     return run_dir
+
+
+def _print_critic_summary(summary: CriticRunSummary) -> None:
+    """Pretty-print critic quality gate results."""
+    table = Table(title="Critic Quality Gate")
+    table.add_column("Metric", style="cyan")
+    table.add_column("Value", style="white")
+
+    table.add_row("Evaluated", str(summary.total_evaluated))
+    table.add_row("Passed", f"[green]{summary.total_passed}[/green]")
+    table.add_row("Failed (Quarantined)", f"[red]{summary.total_failed}[/red]")
+    table.add_row("Pass Rate", f"{summary.pass_rate:.0%}")
+    table.add_row("Avg Persona Consistency", f"{summary.avg_persona_consistency:.1f}/10")
+    table.add_row("Avg Sycophancy", f"{summary.avg_sycophancy_score:.1f}/10")
+    table.add_row("Avg Cultural Authenticity", f"{summary.avg_cultural_authenticity:.1f}/10")
+    table.add_row("Avg Action-Reasoning Align", f"{summary.avg_action_reasoning_alignment:.1f}/10")
+    table.add_row("Overall Quality", f"{summary.overall_quality_score:.1f}/10")
+
+    console.print(table)
+
+    # Show individual contributions
+    if summary.quality_contributions:
+        contrib_table = Table(title="Per-Persona Contribution")
+        contrib_table.add_column("Persona", style="cyan")
+        contrib_table.add_column("Quality", style="white")
+        contrib_table.add_column("Weight", style="white")
+        contrib_table.add_column("Status", style="white")
+
+        for c in summary.quality_contributions:
+            status = "[green]PASS[/green]" if c["passed"] else "[red]FAIL[/red]"
+            contrib_table.add_row(
+                c["persona_id"],
+                f"{c['overall_quality']:.1f}",
+                f"{c['weight']:.1%}",
+                status,
+            )
+
+        console.print(contrib_table)
 
 
 def _print_scorecard(scorecard: CreativeScorecard) -> None:
