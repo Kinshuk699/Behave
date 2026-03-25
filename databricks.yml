@@ -9,6 +9,7 @@ sync:
   include:
     - notebooks/*.py
     - data/personas/*.json
+    - data/runs/**/*.json
 
 targets:
   dev:

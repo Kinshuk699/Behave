@@ -924,24 +924,24 @@ def test_run_simulation_accepts_memory_scope():
 # ── Tiered model support tests ───────────────────────────────
 
 
-def test_eval_model_defaults_to_haiku():
-    """Volume eval model should default to Haiku for cost efficiency."""
+def test_eval_model_is_configured():
+    """Volume eval model should be set (Sonnet — user's API key only has Sonnet access)."""
     from synthetic_india.config import LLMConfig
 
     config = LLMConfig()
-    assert "haiku" in config.eval_model.lower(), (
-        f"eval_model should default to Haiku for volume evals, got {config.eval_model}"
+    assert "claude" in config.eval_model.lower(), (
+        f"eval_model should be a Claude model, got {config.eval_model}"
     )
 
 
-def test_reflection_model_exists_and_defaults_to_haiku():
-    """LLMConfig should have a reflection_model field defaulting to Haiku."""
+def test_reflection_model_exists():
+    """LLMConfig should have a reflection_model field."""
     from synthetic_india.config import LLMConfig
 
     config = LLMConfig()
     assert hasattr(config, "reflection_model")
-    assert "haiku" in config.reflection_model.lower(), (
-        f"reflection_model should default to Haiku, got {config.reflection_model}"
+    assert "claude" in config.reflection_model.lower(), (
+        f"reflection_model should be a Claude model, got {config.reflection_model}"
     )
 
 
@@ -1352,3 +1352,59 @@ def test_gold_scorecard_from_real_evals():
     assert scorecard["avg_attention"] > 0
     assert scorecard["run_id"] == "run_e3d656cc826e"
     assert "_materialized_at" in scorecard
+
+
+# ── MLflow integration tests ─────────────────────────────────
+
+
+def test_ingest_notebook_uses_mlflow():
+    """04_simulation_ingest.py should contain MLflow logging."""
+    from pathlib import Path
+
+    notebook = Path(__file__).resolve().parents[1] / "notebooks" / "04_simulation_ingest.py"
+    content = notebook.read_text()
+    assert "mlflow" in content, "Ingest notebook should use MLflow for experiment tracking"
+    assert "mlflow.log_param" in content or "mlflow.log_params" in content, \
+        "Notebook should log params to MLflow"
+    assert "mlflow.log_metric" in content or "mlflow.log_metrics" in content, \
+        "Notebook should log metrics to MLflow"
+
+
+def test_build_mlflow_payload_from_run_data():
+    """Pipeline helper should build MLflow-ready params + metrics from run metadata and scorecards."""
+    from synthetic_india.pipeline.mlflow_utils import build_mlflow_payload
+
+    metadata = {
+        "run_id": "run_abc123",
+        "brand": "Zepto",
+        "category": "grocery_delivery",
+        "cohort_size": 5,
+        "total_evaluations": 5,
+        "successful_evaluations": 5,
+        "quarantined_records": 0,
+        "total_cost_usd": 0.12,
+        "total_tokens": 16000,
+    }
+    scorecard = {
+        "avg_overall_score": 42.4,
+        "avg_attention": 4.2,
+        "avg_relevance": 5.0,
+        "avg_trust": 6.1,
+        "avg_desire": 3.5,
+        "avg_clarity": 6.8,
+        "n_personas_evaluated": 5,
+    }
+
+    payload = build_mlflow_payload(metadata, scorecard)
+
+    # Params
+    assert payload["params"]["run_id"] == "run_abc123"
+    assert payload["params"]["brand"] == "Zepto"
+    assert payload["params"]["category"] == "grocery_delivery"
+
+    # Metrics
+    assert payload["metrics"]["avg_overall_score"] == 42.4
+    assert payload["metrics"]["total_cost_usd"] == 0.12
+    assert payload["metrics"]["total_tokens"] == 16000
+    assert payload["metrics"]["n_personas_evaluated"] == 5
+    assert payload["metrics"]["quarantine_rate"] == 0.0

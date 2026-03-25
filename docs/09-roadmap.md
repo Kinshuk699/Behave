@@ -16,13 +16,13 @@
 | 8 | Expand Persona Library to 20+ — 8 archetypes, 10 cities, 8 languages, 14 new personas | 2026-03-25 | 43/43 GREEN |
 | 9 | Port to Databricks — 3 schemas, 3 notebooks, medallion pipeline on Delta tables | 2026-03-25 | 54/54 GREEN |
 
+| 10 | Simulation Ingest Notebook — real data through full medallion pipeline on cluster | 2026-03-25 | 67/67 GREEN |
+| 11 | MLflow Integration — experiment tracking, params/metrics/artifacts | 2026-03-26 | 69/69 GREEN |
+
 ## Up Next (in order)
-
-### 10. Run Notebooks on Cluster
-Execute bronze → silver → gold notebooks on DataExpert cluster to populate Delta tables.
-
-### 11. MLflow Integration
-Log simulation runs, trace LLM calls, track costs.
 
 ### 12. Databricks SQL Dashboard
 Creative scorecards, segment breakdowns, quality metrics.
+
+### 13. End-to-End Demo
+Run with real creatives + live API calls, full pipeline from local → Delta → MLflow → Dashboard.

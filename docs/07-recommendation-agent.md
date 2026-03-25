@@ -45,4 +45,6 @@ generate_recommendation() → AgentRecommendation
 Output to user (CLI + saved as recommendation.json)
 ```
 
+## Next →
 
+[Simulation Ingest](12-simulation-ingest.md) — push local run data into Databricks Delta tables

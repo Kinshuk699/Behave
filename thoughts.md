@@ -478,11 +478,55 @@ generate_recommendation()
 **All 54/54 tests GREEN. Zero API credits spent.**
 
 ### Remaining steps
-1. Run notebooks on Databricks cluster to populate Delta tables
-2. MLflow integration (log eval runs, trace LLM calls)
+1. ~~Run notebooks on Databricks cluster to populate Delta tables~~ ✅
+2. ~~MLflow integration (log eval runs, trace LLM calls)~~ ✅
 3. Databricks SQL Dashboard
 4. End-to-end demo with real creatives + live API calls
 
+### ✅ Completed: MLflow Integration (2026-03-25)
+
+**Approach:** Option A — MLflow in ingest notebook only (Databricks has MLflow built-in)
+
+**New module:** `src/synthetic_india/pipeline/mlflow_utils.py`
+- `build_mlflow_payload(metadata, scorecard)` → dict with `params` and `metrics` for MLflow
+
+**Notebook changes:** Added Section 5 to `04_simulation_ingest.py`:
+- `mlflow.set_experiment("/Users/kinshuk.sahni6@gmail.com/synthetic_india")`
+- Logs params: run_id, brand, category, cohort_size
+- Logs metrics: avg_overall_score, total_cost_usd, total_tokens, n_personas_evaluated, quarantine_rate
+- Logs artifacts: evaluations.json, recommendation.json
+
+**Experiment verified:** ID `898817165102177`, name `/Users/kinshuk.sahni6@gmail.com/synthetic_india`
+**Bug fixed:** `NameError: evals_data` → replaced with `raw_evals` (correct variable name in notebook scope)
+**Tests:** 69/69 GREEN (2 new MLflow tests)
+### ✅ Completed: Simulation Ingest Notebook (2026-03-25)
+
+**04_simulation_ingest.py** — Full medallion pipeline for real simulation run data.
+
+**Flow:** Local `data/runs/{RUN_ID}/` → Bronze (raw) → Silver (validated) → Gold (aggregated)
+
+**Bronze tables created:**
+- `kinshuk_bronze.evaluations` — raw persona evaluations (append)
+- `kinshuk_bronze.critic_verdicts` — raw critic quality verdicts (append)
+- `kinshuk_bronze.run_metadata` — run info (append)
+
+**Silver tables created:**
+- `kinshuk_silver.evaluations` — validated evaluations (reasoning >= 10 chars, verbatim >= 5 chars)
+- Quarantine records routed to existing `kinshuk_silver.quarantine`
+
+**Gold tables appended:**
+- `kinshuk_gold.creative_scorecards` — per-creative aggregated scores from real data
+- `kinshuk_gold.run_audit_log` — audit trail entry for ingest
+
+**Bugs fixed during deployment:**
+1. `CANNOT_DETERMINE_TYPE` — Spark can't infer schema from `None` values. Fix: `_serialize()` converts `None` to `""`.
+2. `_LEGACY_ERROR_TEMP_DELTA_0007` — Schema mismatch on `run_audit_log` (extra `total_cost_usd`, `total_tokens` columns vs existing table). Fix: dropped extra columns to match existing schema. ACLs prevent automatic schema migration.
+
+**Bundle sync:** Added `data/runs/**/*.json` to `databricks.yml` sync.include.
+
+**Verified:** All tables populated, notebook ran successfully on DataExpert cluster.
+
+**Also fixed:** 2 stale model tests (`test_eval_model_defaults_to_haiku` → `test_eval_model_is_configured`, same for reflection). All 67/67 tests GREEN.
 ### ✅ Completed: MemoryScope Toggle (per-persona scope control)
 
 **Design decision:** Option A — MemoryScope enum on MemoryConsumer with backwards-compatible default
@@ -534,7 +578,7 @@ Navigate the architecture visually using the Markdown NodeGraph View extension. 
 
 ### The Pipeline (linear chain)
 
-Start here → [Creative Analysis](docs/01-creative-analysis.md) → Cohort Selection → Persona Evaluation → Critic Agent → Medallion Pipeline → Recommendation Agent
+Start here → [Creative Analysis](docs/01-creative-analysis.md) → [Cohort Selection](docs/02-cohort-selection.md) → [Persona Evaluation](docs/03-persona-evaluation.md) → [Critic Agent](docs/04-critic-agent.md) → [Memory System](docs/05-memory-system.md) → [Medallion Pipeline](docs/06-medallion-pipeline.md) → [Recommendation Agent](docs/07-recommendation-agent.md) → [Simulation Ingest](docs/12-simulation-ingest.md) → [MLflow Tracking](docs/13-mlflow-tracking.md) → Dashboard (next)
 
 Each pipeline doc links only to its "Next →" step. Click into any node to see the full design, key decisions, and data flow.
 
@@ -542,6 +586,7 @@ Each pipeline doc links only to its "Next →" step. Click into any node to see 
 
 | Node | What it covers |
 |------|----------------|
+| [Personas](docs/08-personas.md) | 20 personas, 8 archetypes, city/language coverage |
 | [Roadmap](docs/09-roadmap.md) | What's done, what's next, sequencing rationale |
 | [Ah-Ha Moments](docs/10-aha-moments.md) | 13 accumulated insights from paper, spec, and implementation |
 | [India Use Cases](docs/11-india-use-cases.md) | 10 India-specific scenarios, capstone candidates |
