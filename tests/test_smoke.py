@@ -875,3 +875,211 @@ def test_cohort_selection_with_large_pool():
     assert len(cohort) >= 4, "Skincare cohort should have at least 4 personas"
     archetypes_in_cohort = {p.archetype for p in cohort}
     assert len(archetypes_in_cohort) >= 3, "Cohort should have at least 3 different archetypes"
+
+
+# ── Databricks Medallion Pipeline (Feature #9) ───────────────
+
+
+def test_bronze_prepare_personas_returns_flat_dicts():
+    """prepare_personas_for_bronze should flatten PersonaProfiles into Delta-ready dicts."""
+    from synthetic_india.pipeline.databricks_bronze import prepare_personas_for_bronze
+
+    personas = load_personas()
+    rows = prepare_personas_for_bronze(personas)
+
+    assert len(rows) >= 20
+    row = rows[0]
+    # Must have top-level identity fields
+    assert "persona_id" in row
+    assert "name" in row
+    assert "archetype" in row
+    # Demographics should be flattened
+    assert "city" in row
+    assert "city_tier" in row
+    assert "age" in row
+    # Should have ingestion timestamp
+    assert "_ingested_at" in row
+    # No nested Pydantic objects — all values should be JSON-serializable primitives
+    for key, val in row.items():
+        assert not hasattr(val, "model_dump"), f"Field '{key}' is still a Pydantic model"
+
+
+def test_bronze_prepare_creatives_returns_flat_dicts():
+    """prepare_creatives_for_bronze should flatten CreativeCards into Delta-ready dicts."""
+    from synthetic_india.pipeline.databricks_bronze import prepare_creatives_for_bronze
+
+    creatives = build_demo_creatives()
+    rows = prepare_creatives_for_bronze(creatives)
+
+    assert len(rows) >= 2
+    row = rows[0]
+    assert "creative_id" in row
+    assert "brand" in row
+    assert "category" in row
+    assert "headline" in row
+    assert "_ingested_at" in row
+    # Enum fields should be string values
+    assert isinstance(row.get("format"), str)
+
+
+def test_bronze_prepare_evaluations_returns_flat_dicts():
+    """prepare_evaluations_for_bronze should flatten PersonaEvaluations into Delta-ready dicts."""
+    from synthetic_india.pipeline.databricks_bronze import prepare_evaluations_for_bronze
+
+    eval_data = PersonaEvaluation(
+        evaluation_id="eval_db_001",
+        run_id="run_db_test",
+        creative_id="creative_test",
+        persona_id="researcher_delhi_01",
+        primary_action="read",
+        sentiment="positive",
+        overall_score=72.0,
+        attention_score=7.0,
+        relevance_score=8.0,
+        trust_score=6.5,
+        desire_score=5.0,
+        clarity_score=8.0,
+        first_impression="Clean product page",
+        reasoning="Ingredients list is transparent.",
+        objections=["Price seems high"],
+        verbatim_reaction="Need to check reviews first.",
+        importance_score=6.0,
+        category="skincare",
+        brand="Minimalist",
+        key_themes=["transparency", "ingredients"],
+    )
+
+    rows = prepare_evaluations_for_bronze([eval_data])
+    assert len(rows) == 1
+    row = rows[0]
+    assert row["evaluation_id"] == "eval_db_001"
+    assert row["primary_action"] == "read"
+    assert row["sentiment"] == "positive"
+    assert "_ingested_at" in row
+    # List fields should be JSON strings for Delta storage
+    assert isinstance(row["objections"], str)
+    assert isinstance(row["key_themes"], str)
+
+
+def test_bronze_notebook_file_exists():
+    """The bronze Databricks notebook should exist at notebooks/01_bronze_ingest.py."""
+    from pathlib import Path
+    notebook = Path(__file__).resolve().parents[1] / "notebooks" / "01_bronze_ingest.py"
+    assert notebook.exists(), f"Bronze notebook not found at {notebook}"
+
+
+def test_silver_validate_bronze_personas_all_pass():
+    """Silver validation on properly-prepared bronze persona rows should pass all."""
+    from synthetic_india.pipeline.databricks_silver import validate_persona_rows
+
+    from synthetic_india.pipeline.databricks_bronze import prepare_personas_for_bronze
+    personas = load_personas()
+    bronze_rows = prepare_personas_for_bronze(personas)
+
+    passed, quarantined = validate_persona_rows(bronze_rows)
+    assert len(passed) >= 20
+    assert len(quarantined) == 0
+
+
+def test_silver_validate_bad_persona_quarantined():
+    """A persona row with missing backstory should be quarantined."""
+    from synthetic_india.pipeline.databricks_silver import validate_persona_rows
+
+    bad_row = {
+        "persona_id": "bad_persona_01",
+        "name": "Bad Persona",
+        "archetype": "researcher",
+        "tagline": "Test",
+        "backstory": "",  # Too short
+        "city": "Delhi",
+        "city_tier": "metro",
+        "age": 25,
+        "category_affinities": "[]",
+        "_ingested_at": "2026-03-25T00:00:00",
+    }
+    passed, quarantined = validate_persona_rows([bad_row])
+    assert len(passed) == 0
+    assert len(quarantined) == 1
+    assert "backstory" in quarantined[0]["errors"].lower()
+
+
+def test_silver_validate_creative_rows():
+    """Silver validation on demo creative rows should pass."""
+    from synthetic_india.pipeline.databricks_silver import validate_creative_rows
+    from synthetic_india.pipeline.databricks_bronze import prepare_creatives_for_bronze
+
+    creatives = build_demo_creatives()
+    bronze_rows = prepare_creatives_for_bronze(creatives)
+
+    passed, quarantined = validate_creative_rows(bronze_rows)
+    assert len(passed) >= 2
+    assert len(quarantined) == 0
+
+
+def test_silver_notebook_file_exists():
+    """The silver Databricks notebook should exist at notebooks/02_silver_transform.py."""
+    from pathlib import Path
+    notebook = Path(__file__).resolve().parents[1] / "notebooks" / "02_silver_transform.py"
+    assert notebook.exists(), f"Silver notebook not found at {notebook}"
+
+
+def test_gold_build_scorecard_row():
+    """build_scorecard_row should produce a flat dict from evaluation rows."""
+    from synthetic_india.pipeline.databricks_gold import build_scorecard_row
+
+    eval_rows = [
+        {
+            "evaluation_id": "e1", "creative_id": "c1", "persona_id": "p1",
+            "run_id": "run_01", "brand": "Minimalist", "category": "skincare",
+            "primary_action": "read", "sentiment": "positive",
+            "overall_score": 72.0, "attention_score": 7.0, "relevance_score": 8.0,
+            "trust_score": 6.5, "desire_score": 5.0, "clarity_score": 8.0,
+        },
+        {
+            "evaluation_id": "e2", "creative_id": "c1", "persona_id": "p2",
+            "run_id": "run_01", "brand": "Minimalist", "category": "skincare",
+            "primary_action": "engage", "sentiment": "very_positive",
+            "overall_score": 85.0, "attention_score": 9.0, "relevance_score": 8.5,
+            "trust_score": 7.5, "desire_score": 8.0, "clarity_score": 9.0,
+        },
+    ]
+
+    scorecard = build_scorecard_row("run_01", "c1", eval_rows)
+
+    assert scorecard["run_id"] == "run_01"
+    assert scorecard["creative_id"] == "c1"
+    assert scorecard["brand"] == "Minimalist"
+    assert scorecard["n_personas_evaluated"] == 2
+    assert scorecard["avg_overall_score"] == 78.5  # (72 + 85) / 2
+    assert scorecard["avg_attention"] == 8.0  # (7 + 9) / 2
+    assert "read" in scorecard["action_distribution"]
+    assert "positive" in scorecard["sentiment_distribution"]
+    assert "_materialized_at" in scorecard
+
+
+def test_gold_build_audit_row():
+    """build_audit_row should produce a run audit dict."""
+    from synthetic_india.pipeline.databricks_gold import build_audit_row
+
+    audit = build_audit_row(
+        run_id="run_01",
+        brand="Minimalist",
+        category="skincare",
+        n_creatives=3,
+        n_evaluations=15,
+        n_passed=13,
+        n_quarantined=2,
+    )
+
+    assert audit["run_id"] == "run_01"
+    assert audit["n_creatives"] == 3
+    assert audit["total_evaluations"] == 15
+    assert audit["quarantined_records"] == 2
+    assert "_materialized_at" in audit
+
+
+def test_gold_notebook_file_exists():
+    """The gold Databricks notebook should exist at notebooks/03_gold_materialize.py."""
+    from pathlib import Path
+    notebook = Path(__file__).resolve().parents[1] / "notebooks" / "03_gold_materialize.py"
+    assert notebook.exists(), f"Gold notebook not found at {notebook}"

@@ -443,7 +443,45 @@ generate_recommendation()
 **All 43/43 tests GREEN. Zero API credits spent.**
 
 ### Remaining v2 steps (after Persona Expansion)
-1. Port to Databricks (bronze/silver/gold as Delta tables) — capstone phase
+1. ~~Port to Databricks (bronze/silver/gold as Delta tables) — capstone phase~~ ✅ DONE
+
+### ✅ Completed: Port to Databricks (2026-03-25)
+
+**Design decision:** Option A — Pure Databricks Notebooks (no DLT dependency)
+- 3 Unity Catalog schemas created: `kinshuk_bronze`, `kinshuk_silver`, `kinshuk_gold`
+- 3 Python notebooks deployed via Databricks Asset Bundle
+- Transformation logic TDD'd locally with `databricks_bronze.py`, `databricks_silver.py`, `databricks_gold.py`
+- DataExpert All purpose cluster (Zach's course infra, included in course fee)
+
+**Schemas created in `bootcamp_students` catalog:**
+- `kinshuk_bronze` — raw append-only data
+- `kinshuk_silver` — validated and cleaned data
+- `kinshuk_gold` — aggregated analytics-ready data
+
+**Notebooks:**
+- `01_bronze_ingest.py` — reads 20 persona JSONs + 3 demo creatives → writes to bronze Delta tables
+- `02_silver_transform.py` — validates bronze → writes silver + quarantine tables (Spark filter expressions)
+- `03_gold_materialize.py` — aggregates silver → creative scorecards + run audit log
+
+**Bronze tables:** `persona_seed`, `creative_uploads`
+**Silver tables:** `personas`, `creative_cards`, `quarantine`
+**Gold tables:** `creative_scorecards`, `run_audit_log`
+
+**Pipeline modules created:**
+- `src/synthetic_india/pipeline/databricks_bronze.py` — `prepare_personas_for_bronze()`, `prepare_creatives_for_bronze()`, `prepare_evaluations_for_bronze()`
+- `src/synthetic_india/pipeline/databricks_silver.py` — `validate_persona_rows()`, `validate_creative_rows()`, `validate_evaluation_rows()`
+- `src/synthetic_india/pipeline/databricks_gold.py` — `build_scorecard_row()`, `build_audit_row()`
+
+**Bundle config:** `databricks.yml` updated with `sync.include` for notebooks + persona data.
+**Deployment:** `databricks bundle deploy` syncs to `/Workspace/Users/kinshuk.sahni6@gmail.com/.bundle/Behave/dev/files/`
+
+**All 54/54 tests GREEN. Zero API credits spent.**
+
+### Remaining steps
+1. Run notebooks on Databricks cluster to populate Delta tables
+2. MLflow integration (log eval runs, trace LLM calls)
+3. Databricks SQL Dashboard
+4. End-to-end demo with real creatives + live API calls
 
 ### Risks to watch
 

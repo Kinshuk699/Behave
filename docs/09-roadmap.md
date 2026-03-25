@@ -14,13 +14,15 @@
 | 6 | Tiered Model Support — Haiku for volume evals/reflections, Sonnet for quality gates | 2025-03-25 | 35/35 GREEN |
 | 7 | Tune CreativeCard for Indian Ads — festival_context, target_city_tier, cultural_references + Diwali demo | 2026-03-25 | 39/39 GREEN |
 | 8 | Expand Persona Library to 20+ — 8 archetypes, 10 cities, 8 languages, 14 new personas | 2026-03-25 | 43/43 GREEN |
+| 9 | Port to Databricks — 3 schemas, 3 notebooks, medallion pipeline on Delta tables | 2026-03-25 | 54/54 GREEN |
 
 ## Up Next (in order)
 
-### 9. Port to Databricks
-**Medallion Pipeline** as Delta tables. Capstone phase.
-- Bronze → append-only Delta tables
-- Silver → DLT expectations (schema + **Critic** quality)
-- Gold → Unity Catalog analytics views
+### 10. Run Notebooks on Cluster
+Execute bronze → silver → gold notebooks on DataExpert cluster to populate Delta tables.
 
+### 11. MLflow Integration
+Log simulation runs, trace LLM calls, track costs.
 
+### 12. Databricks SQL Dashboard
+Creative scorecards, segment breakdowns, quality metrics.
