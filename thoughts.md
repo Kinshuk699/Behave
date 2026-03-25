@@ -351,6 +351,26 @@ generate_recommendation()
 
 ---
 
+## Constellation Graph
+
+Navigate the architecture visually using the Markdown NodeGraph View extension. `thoughts.md` is the hub — open Graph View to see the connected map.
+
+### The Pipeline (linear chain)
+
+Start here → [Creative Analysis](docs/01-creative-analysis.md) → Cohort Selection → Persona Evaluation → Critic Agent → Medallion Pipeline → Recommendation Agent
+
+Each pipeline doc links only to its "Next →" step. Click into any node to see the full design, key decisions, and data flow.
+
+### Knowledge Nodes (branch from hub)
+
+| Node | What it covers |
+|------|----------------|
+| [Roadmap](docs/09-roadmap.md) | What's done, what's next, sequencing rationale |
+| [Ah-Ha Moments](docs/10-aha-moments.md) | 13 accumulated insights from paper, spec, and implementation |
+| [India Use Cases](docs/11-india-use-cases.md) | 10 India-specific scenarios, capstone candidates |
+
+---
+
 ## Ah-ha moments (accumulated)
 
 1. Reflection is what turns repeated low-level events into stable beliefs — without it, agents remember but don't learn
