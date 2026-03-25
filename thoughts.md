@@ -385,8 +385,30 @@ generate_recommendation()
 
 **All 31/31 tests GREEN. Zero API credits spent.**
 
-### Remaining v2 steps (after MemoryConsumer)
-4. **Tiered model support** — Haiku/4o-mini for volume, Sonnet for Critic
+### ✅ Completed: Tiered Model Support (2025-03-25)
+
+**Design decision:** Option B — Anthropic-only tiering, no provider routing needed
+- Volume models (eval + reflection) → `claude-haiku-3-20250307` ($0.25/$1.25 per 1M tokens)
+- Quality models (critic + recommendation + creative analysis) → `claude-sonnet-4-20250514` ($3/$15 per 1M tokens)
+- ~12x cost reduction on volume evals
+- Added `reflection_model` field to `LLMConfig`
+- Updated `.env` to use Haiku for `EVAL_MODEL` and `REFLECTION_MODEL`
+- Simulation reflection calls now use `config.reflection_model` instead of `config.eval_model`
+
+**Cost estimate:** 20-persona run with ~1K prompt + ~500 completion tokens per eval:
+- Eval cost: ~$0.018 (was ~$0.21 on Sonnet)
+- Critic + Recommendation: ~$0.02 (stays on Sonnet)
+- Total: ~$0.04 per run (≈ ₹3.5) — well within ₹100 target
+
+**Files modified:**
+- `src/synthetic_india/config.py` — MODIFIED: `eval_model` default → Haiku, added `reflection_model` field
+- `src/synthetic_india/engine/simulation.py` — MODIFIED: reflection calls use `config.reflection_model`
+- `.env` — MODIFIED: `EVAL_MODEL` and `REFLECTION_MODEL` set to Haiku
+- `tests/test_smoke.py` — MODIFIED: 4 new tests (35 total)
+
+**All 35/35 tests GREEN. Zero API credits spent.**
+
+### Remaining v2 steps (after Tiered Model Support)
 5. **Tune CreativeCard extraction for Indian ads** — Hinglish copy, ₹ pricing, cultural refs
 6. **Expand persona library to 20+** after first 5—8 proven
 7. Port to Databricks (bronze/silver/gold as Delta tables) — capstone phase

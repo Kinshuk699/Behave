@@ -18,7 +18,7 @@ RUNS_DIR = DATA_DIR / "runs"
 
 @dataclass(frozen=True)
 class LLMConfig:
-    eval_model: str = field(default_factory=lambda: os.getenv("EVAL_MODEL", "claude-sonnet-4-20250514"))
+    eval_model: str = field(default_factory=lambda: os.getenv("EVAL_MODEL", "claude-haiku-3-20250307"))
     creative_analysis_model: str = field(
         default_factory=lambda: os.getenv("CREATIVE_ANALYSIS_MODEL", "claude-sonnet-4-20250514")
     )
@@ -30,6 +30,9 @@ class LLMConfig:
     )
     critic_model: str = field(
         default_factory=lambda: os.getenv("CRITIC_MODEL", "claude-sonnet-4-20250514")
+    )
+    reflection_model: str = field(
+        default_factory=lambda: os.getenv("REFLECTION_MODEL", "claude-haiku-3-20250307")
     )
     openai_api_key: str = field(default_factory=lambda: os.getenv("OPENAI_API_KEY", ""), repr=False)
     anthropic_api_key: str = field(default_factory=lambda: os.getenv("ANTHROPIC_API_KEY", ""), repr=False)

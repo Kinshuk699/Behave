@@ -719,3 +719,48 @@ def test_build_memory_block_accepts_memory_nodes():
     assert "Minimalist" in result
     assert "urgency" in result
     assert "Past Experiences" in result
+
+
+# ── Tiered model support tests ───────────────────────────────
+
+
+def test_eval_model_defaults_to_haiku():
+    """Volume eval model should default to Haiku for cost efficiency."""
+    from synthetic_india.config import LLMConfig
+
+    config = LLMConfig()
+    assert "haiku" in config.eval_model.lower(), (
+        f"eval_model should default to Haiku for volume evals, got {config.eval_model}"
+    )
+
+
+def test_reflection_model_exists_and_defaults_to_haiku():
+    """LLMConfig should have a reflection_model field defaulting to Haiku."""
+    from synthetic_india.config import LLMConfig
+
+    config = LLMConfig()
+    assert hasattr(config, "reflection_model")
+    assert "haiku" in config.reflection_model.lower(), (
+        f"reflection_model should default to Haiku, got {config.reflection_model}"
+    )
+
+
+def test_quality_models_stay_on_sonnet():
+    """Critic, recommendation, and creative analysis should stay on Sonnet."""
+    from synthetic_india.config import LLMConfig
+
+    config = LLMConfig()
+    assert "sonnet" in config.critic_model.lower()
+    assert "sonnet" in config.recommendation_model.lower()
+    assert "sonnet" in config.creative_analysis_model.lower()
+
+
+def test_simulation_uses_reflection_model():
+    """simulation module should use config.reflection_model for reflections, not eval_model."""
+    import inspect
+    from synthetic_india.engine import simulation
+
+    source = inspect.getsource(simulation)
+    assert "config.reflection_model" in source, (
+        "simulation.py should use config.reflection_model for reflection calls"
+    )

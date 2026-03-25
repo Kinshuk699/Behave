@@ -361,7 +361,7 @@ async def run_simulation(
 
                     try:
                         resp = await call_anthropic(
-                            prompt=prompt, model=config.eval_model, config=config
+                            prompt=prompt, model=config.reflection_model, config=config
                         )
                         insights = [
                             line.strip()
