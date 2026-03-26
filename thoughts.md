@@ -568,6 +568,39 @@ generate_recommendation()
 - Aggregation scores can create false precision (expose segment disagreement)
 - Cultural authenticity: "sounds like an American LLM's idea of an Indian person" → Critic checks (v2)
 - Calibration data from clients may be sparse or biased
+
+### ✅ Completed: Auto-Ingest to Databricks (2026-03-26)
+
+**Design decision:** SDK upload to DBFS + trigger ingest notebook (not Kafka, not SQL connector)
+- After `_save_run()`, uploads 6 JSON files to `dbfs:/synthetic_india/runs/{run_id}/`
+- Triggers `04_simulation_ingest.py` as a one-time Databricks job with `run_id` + `storage_root` parameters
+- Notebook now parameterized via `dbutils.widgets` — works for both manual and auto-triggered runs
+- Graceful degradation: if SDK missing or auth fails, local run still completes (never blocks)
+
+**Flow:**
+```
+_save_run() writes JSON locally
+    ↓
+auto_ingest(run_id, run_dir)
+    ↓
+upload_run_files() → DBFS via databricks-sdk
+    ↓
+trigger_ingest_notebook() → jobs.submit() with run_id parameter
+    ↓
+Notebook runs: Bronze → Silver → Gold → MLflow
+```
+
+**Verified live:**
+- Snabbit 10-persona run → uploaded, job 1051216645341202 triggered
+- Zepto 5-persona run → uploaded, job 442071465076539 triggered
+- 79/79 tests GREEN
+
+**Files:**
+- `src/synthetic_india/pipeline/databricks_ingest.py` — NEW: `auto_ingest()`, `upload_run_files()`, `trigger_ingest_notebook()`
+- `src/synthetic_india/engine/simulation.py` — MODIFIED: `_save_run()` calls `auto_ingest()` after local writes
+- `notebooks/04_simulation_ingest.py` — MODIFIED: accepts `run_id` and `storage_root` widget params
+- `dashboard/render.yaml` — MODIFIED: added `DATABRICKS_HOST` + `DATABRICKS_TOKEN` env vars
+- `dashboard/requirements.txt` — MODIFIED: added `databricks-sdk>=0.20`
 - **NEW**: Critic adds 1 LLM call per evaluation — increases cost per run by ~50%. Justified because quality gate is the v2 differentiator.
 
 ---
@@ -578,7 +611,7 @@ Navigate the architecture visually using the Markdown NodeGraph View extension. 
 
 ### The Pipeline (linear chain)
 
-Start here → [Creative Analysis](docs/01-creative-analysis.md) → [Cohort Selection](docs/02-cohort-selection.md) → [Persona Evaluation](docs/03-persona-evaluation.md) → [Critic Agent](docs/04-critic-agent.md) → [Memory System](docs/05-memory-system.md) → [Medallion Pipeline](docs/06-medallion-pipeline.md) → [Recommendation Agent](docs/07-recommendation-agent.md) → [Simulation Ingest](docs/12-simulation-ingest.md) → [MLflow Tracking](docs/13-mlflow-tracking.md) → [Dashboard](docs/14-dashboard.md)
+Start here → [Creative Analysis](docs/01-creative-analysis.md) → [Cohort Selection](docs/02-cohort-selection.md) → [Persona Evaluation](docs/03-persona-evaluation.md) → [Critic Agent](docs/04-critic-agent.md) → [Memory System](docs/05-memory-system.md) → [Medallion Pipeline](docs/06-medallion-pipeline.md) → [Recommendation Agent](docs/07-recommendation-agent.md) → [Simulation Ingest](docs/12-simulation-ingest.md) → [MLflow Tracking](docs/13-mlflow-tracking.md) → [Dashboard](docs/14-dashboard.md) → Auto-Ingest (DBFS + notebook trigger)
 
 Each pipeline doc links only to its "Next →" step. Click into any node to see the full design, key decisions, and data flow.
 
@@ -610,3 +643,6 @@ Each pipeline doc links only to its "Next →" step. Click into any node to see 
 13. Critic gracefully degrades: if the LLM call fails, the evaluation is included anyway (fail-open). Quality gate shouldn't block the whole run.
 14. Dashboard design: pre-loaded data loads instantly for wow factor, live simulation is a separate "Test Your Own" section. Visitors see value before needing a password.
 15. FastAPI serves both the static dashboard and the `/api/simulate` endpoint — single deployment, no CORS headaches.
+16. Auto-ingest: Kafka is overkill for a few runs/day — Databricks SDK (upload to DBFS + trigger notebook) is the right tool. Graceful degradation means local runs never break if Databricks is down.
+17. DBFS for file uploads, not Workspace files API — `workspace.upload()` treats files as notebooks, `files.upload()` rejects `/Workspace/` paths. DBFS just works for arbitrary JSON.
+18. Notebook parameterization via `dbutils.widgets` — same notebook works for manual runs (hardcoded default) AND auto-triggered runs (run_id passed as base_parameter).

@@ -20,3 +20,7 @@ services:
         value: claude-sonnet-4-20250514
       - key: REFLECTION_MODEL
         value: claude-sonnet-4-20250514
+      - key: DATABRICKS_HOST
+        sync: false
+      - key: DATABRICKS_TOKEN
+        sync: false
