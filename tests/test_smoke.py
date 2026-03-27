@@ -1822,3 +1822,307 @@ def test_influence_strength_bounds():
         assert False, "Should have raised validation error"
     except pydantic.ValidationError:
         pass
+
+
+# ── Phase 3a: Evaluator prompt rendering tests ─────────────────
+
+
+def _load_enriched_persona():
+    """Helper: load a known enriched persona for prompt rendering tests."""
+    personas = load_personas()
+    # Find impulse_buyer_delhi_01 — we know it's fully enriched
+    for p in personas:
+        if p.persona_id == "impulse_buyer_delhi_01":
+            return p
+    raise RuntimeError("impulse_buyer_delhi_01 not found")
+
+
+def test_persona_block_renders_generational_touchstones():
+    """_build_persona_block should render generational_touchstones when present."""
+    from synthetic_india.agents.persona_evaluator import _build_persona_block
+
+    persona = _load_enriched_persona()
+    block = _build_persona_block(persona)
+
+    assert "Cultural Memory" in block or "Generational" in block
+    assert persona.generational_touchstones.formative_era in block
+    # At least one iconic ad should appear
+    assert persona.generational_touchstones.iconic_ads[0] in block
+    assert "nostalgia" in block.lower() or "nostalgia_intensity" in block
+
+
+def test_persona_block_renders_internal_conflicts():
+    """_build_persona_block should render internal_conflicts when present."""
+    from synthetic_india.agents.persona_evaluator import _build_persona_block
+
+    persona = _load_enriched_persona()
+    block = _build_persona_block(persona)
+
+    assert "Tension" in block or "Conflict" in block or "Inner" in block
+    # First conflict's tension text should appear
+    assert persona.internal_conflicts[0].tension in block
+
+
+def test_persona_block_renders_influence_network():
+    """_build_persona_block should render influence_network when present."""
+    from synthetic_india.agents.persona_evaluator import _build_persona_block
+
+    persona = _load_enriched_persona()
+    block = _build_persona_block(persona)
+
+    assert "Influence" in block
+    # First influencer's role should appear
+    assert persona.influence_network[0].role in block
+
+
+def test_persona_block_renders_values_hierarchy():
+    """_build_persona_block should render values_hierarchy when present."""
+    from synthetic_india.agents.persona_evaluator import _build_persona_block
+
+    persona = _load_enriched_persona()
+    block = _build_persona_block(persona)
+
+    assert "Values" in block
+    assert persona.values_hierarchy[0] in block
+
+
+def test_persona_block_renders_cognitive_biases():
+    """_build_persona_block should render cognitive_biases when present."""
+    from synthetic_india.agents.persona_evaluator import _build_persona_block
+
+    persona = _load_enriched_persona()
+    block = _build_persona_block(persona)
+
+    assert "Cognitive" in block or "Biases" in block
+    assert persona.cognitive_biases[0] in block
+
+
+def test_persona_block_renders_brand_relationships():
+    """_build_persona_block should render brand_relationships within category affinities."""
+    from synthetic_india.agents.persona_evaluator import _build_persona_block
+
+    persona = _load_enriched_persona()
+    block = _build_persona_block(persona)
+
+    # The enriched persona has brand_relationships on category affinities
+    first_cat = persona.category_affinities[0]
+    if first_cat.brand_relationships:
+        br = first_cat.brand_relationships[0]
+        assert br.brand in block
+        assert br.relationship_type in block
+
+
+def test_persona_block_omits_missing_deep_fields():
+    """_build_persona_block should gracefully omit deep fields when they are None/empty."""
+    from synthetic_india.agents.persona_evaluator import _build_persona_block
+
+    persona = _load_enriched_persona()
+    # Create a copy without deep fields
+    data = persona.model_dump()
+    data["generational_touchstones"] = None
+    data["internal_conflicts"] = []
+    data["influence_network"] = []
+    data["values_hierarchy"] = []
+    data["cognitive_biases"] = []
+    for aff in data["category_affinities"]:
+        aff["brand_relationships"] = []
+    stripped = PersonaProfile(**data)
+
+    block = _build_persona_block(stripped)
+
+    # Should still have core sections
+    assert "Who You Are" in block
+    assert "Purchase Psychology" in block
+    # Should NOT have deep sections
+    assert "Cultural Memory" not in block
+    assert "Inner Tensions" not in block
+
+
+def test_evaluator_system_mentions_real_voice():
+    """EVALUATOR_SYSTEM should instruct authentic consumer voice, not focus-group speak."""
+    from synthetic_india.agents.persona_evaluator import EVALUATOR_SYSTEM
+
+    lower = EVALUATOR_SYSTEM.lower()
+    assert "whatsapp" in lower or "voice note" in lower or "real person" in lower
+    assert "focus group" in lower or "marketing consultant" in lower
+
+
+# ── Phase 3b: Critic prompt rendering tests ─────────────────────
+
+
+def _make_test_evaluation(persona_id: str) -> PersonaEvaluation:
+    """Helper: build a minimal PersonaEvaluation for critic prompt tests."""
+    return PersonaEvaluation(
+        evaluation_id="eval_critic_test",
+        run_id="run_test",
+        creative_id="creative_test",
+        persona_id=persona_id,
+        primary_action="read",
+        sentiment="positive",
+        overall_score=72.0,
+        attention_score=7.0,
+        relevance_score=8.0,
+        trust_score=6.5,
+        desire_score=5.0,
+        clarity_score=8.0,
+        first_impression="Looks clean",
+        reasoning="Transparent ingredients",
+        objections=["Price seems high"],
+        what_would_change_mind="Clinical data",
+        verbatim_reaction="Let me check reviews first.",
+        importance_score=6.0,
+        category="skincare",
+        brand="Minimalist",
+        key_themes=["transparency"],
+    )
+
+
+def test_critic_prompt_includes_all_purchase_psychology():
+    """Critic prompt should include all 8 purchase_psychology floats, not just 3."""
+    from synthetic_india.agents.critic_agent import build_critic_prompt
+
+    persona = _load_enriched_persona()
+    evaluation = _make_test_evaluation(persona.persona_id)
+    _, prompt = build_critic_prompt(persona=persona, evaluation=evaluation)
+
+    # Should include all 8 fields
+    assert "social_proof_need" in prompt or "social proof" in prompt.lower()
+    assert "risk_tolerance" in prompt or "risk tolerance" in prompt.lower()
+    assert "deal_sensitivity" in prompt or "deal sensitivity" in prompt.lower()
+    assert "decision_speed" in prompt or "decision speed" in prompt.lower()
+
+
+def test_critic_prompt_includes_backstory():
+    """Critic prompt should include backstory and current_life_context."""
+    from synthetic_india.agents.critic_agent import build_critic_prompt
+
+    persona = _load_enriched_persona()
+    evaluation = _make_test_evaluation(persona.persona_id)
+    _, prompt = build_critic_prompt(persona=persona, evaluation=evaluation)
+
+    assert persona.backstory[:50] in prompt
+    assert persona.current_life_context[:50] in prompt
+
+
+def test_critic_prompt_includes_deep_fields():
+    """Critic prompt should include generational_touchstones, internal_conflicts, values, biases."""
+    from synthetic_india.agents.critic_agent import build_critic_prompt
+
+    persona = _load_enriched_persona()
+    evaluation = _make_test_evaluation(persona.persona_id)
+    _, prompt = build_critic_prompt(persona=persona, evaluation=evaluation)
+
+    # Generational touchstones
+    assert persona.generational_touchstones.formative_era[:30] in prompt
+    # Internal conflicts — first tension
+    assert persona.internal_conflicts[0].tension[:30] in prompt
+    # Values hierarchy
+    assert persona.values_hierarchy[0] in prompt
+    # Cognitive biases
+    assert persona.cognitive_biases[0] in prompt
+
+
+def test_critic_prompt_generational_consistency_check():
+    """Critic prompt should instruct checking for generational anachronisms."""
+    from synthetic_india.agents.critic_agent import build_critic_prompt
+
+    persona = _load_enriched_persona()
+    evaluation = _make_test_evaluation(persona.persona_id)
+    _, prompt = build_critic_prompt(persona=persona, evaluation=evaluation)
+
+    lower = prompt.lower()
+    assert "generational" in lower or "anachronis" in lower or "age-appropriate" in lower
+
+
+# ── Phase 4: Memory system tests ──────────────────────────────
+
+
+def test_reflection_threshold_lowered():
+    """MemoryConfig.reflection_threshold should be 50, not 150."""
+    from synthetic_india.config import MemoryConfig
+
+    config = MemoryConfig()
+    assert config.reflection_threshold == 50.0
+
+
+def test_memory_stream_default_reflection_threshold():
+    """MemoryStream default threshold should match the lowered config value."""
+    stream = MemoryStream(persona_id="test_persona")
+    assert stream.reflection_threshold == 50.0
+
+
+def test_add_preference_memory():
+    """MemoryStream.add_preference_memory should create PREFERENCE nodes."""
+    from synthetic_india.schemas.memory import MemoryType
+
+    stream = MemoryStream(persona_id="test_persona")
+    node = stream.add_preference_memory(
+        brand="Minimalist",
+        category="skincare",
+        description="I really like Minimalist's transparent ingredient lists.",
+        importance=7.5,
+        source_evaluation_id="eval_001",
+    )
+
+    assert node.memory_type == MemoryType.PREFERENCE
+    assert node.brand == "Minimalist"
+    assert node.category == "skincare"
+    assert node.importance == 7.5
+    assert stream.size == 1
+
+
+def test_add_category_belief_memory():
+    """MemoryStream.add_category_belief_memory should create CATEGORY_BELIEF nodes."""
+    from synthetic_india.schemas.memory import MemoryType
+
+    stream = MemoryStream(persona_id="test_persona")
+    node = stream.add_category_belief_memory(
+        category="skincare",
+        description="Skincare brands relying on celebrity endorsements are usually overpriced.",
+        importance=8.0,
+        source_evaluation_id="eval_002",
+    )
+
+    assert node.memory_type == MemoryType.CATEGORY_BELIEF
+    assert node.category == "skincare"
+    assert node.importance == 8.0
+    assert stream.size == 1
+
+
+def test_should_reflect_at_threshold_50():
+    """should_reflect should trigger after cumulative importance >= 50."""
+    from synthetic_india.schemas.memory import MemoryType
+
+    stream = MemoryStream(persona_id="test_persona")
+
+    # Add nodes with importance summing to 49 — should not trigger
+    for i in range(7):
+        node = MemoryNode(
+            node_id=f"mem_{i}",
+            persona_id="test_persona",
+            memory_type=MemoryType.OBSERVATION,
+            description=f"Observation {i}",
+            subject="test",
+            predicate="evaluated",
+            object="test creative",
+            importance=7.0,
+        )
+        stream.add_node(node)
+
+    assert stream._importance_since_reflection == 49.0
+    assert not stream.should_reflect
+
+    # One more node pushes over 50
+    node = MemoryNode(
+        node_id="mem_final",
+        persona_id="test_persona",
+        memory_type=MemoryType.OBSERVATION,
+        description="Final observation",
+        subject="test",
+        predicate="evaluated",
+        object="test creative",
+        importance=2.0,
+    )
+    stream.add_node(node)
+    assert stream._importance_since_reflection == 51.0
+    assert stream.should_reflect

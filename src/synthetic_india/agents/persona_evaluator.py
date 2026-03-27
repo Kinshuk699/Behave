@@ -40,8 +40,14 @@ def _build_persona_block(persona: PersonaProfile) -> str:
             f"\n  - {aff.category}: interest {aff.interest_level:.1f}/1.0, "
             f"preferred brands: {brands}"
         )
+        if aff.brand_relationships:
+            for br in aff.brand_relationships:
+                affinities += (
+                    f"\n    → {br.brand} ({br.relationship_type}, "
+                    f"intensity {br.intensity:.1f}): {br.emotional_history}"
+                )
 
-    return f"""## Who You Are
+    block = f"""## Who You Are
 
 Name: {persona.name}
 Archetype: {persona.archetype}
@@ -93,6 +99,59 @@ Emotional hooks: {', '.join(emo.emotional_hooks)}
 ## How You Think
 
 {persona.inner_monologue_style}"""
+
+    # ── Deep persona fields (only render when populated) ──────
+    if persona.generational_touchstones:
+        gt = persona.generational_touchstones
+        iconic = "\n".join(f"  - {ad}" for ad in gt.iconic_ads) if gt.iconic_ads else "  (none)"
+        refs = ", ".join(gt.cultural_references) if gt.cultural_references else "(none)"
+        brands = ", ".join(gt.formative_brands) if gt.formative_brands else "(none)"
+        block += f"""
+
+## Your Cultural Memory
+
+Formative era: {gt.formative_era}
+Iconic ads that shaped you:
+{iconic}
+Cultural references: {refs}
+Nostalgia intensity: {gt.nostalgia_intensity:.1f}/1.0
+Formative brands: {brands}"""
+
+    if persona.internal_conflicts:
+        conflicts = ""
+        for i, ic in enumerate(persona.internal_conflicts, 1):
+            conflicts += f"\n{i}. Tension: {ic.tension}\n   Resolution tendency: {ic.resolution_tendency}"
+        block += f"""
+
+## Your Inner Tensions
+{conflicts}"""
+
+    if persona.influence_network:
+        influences = ""
+        for inf in persona.influence_network:
+            influences += f"\n  - {inf.role} (strength {inf.influence_strength:.1f}): {inf.influence_domain}"
+        block += f"""
+
+## Who Influences You
+{influences}"""
+
+    if persona.values_hierarchy:
+        values = ", ".join(f"{i+1}. {v}" for i, v in enumerate(persona.values_hierarchy))
+        block += f"""
+
+## Your Values (in order)
+
+{values}"""
+
+    if persona.cognitive_biases:
+        biases = ", ".join(persona.cognitive_biases)
+        block += f"""
+
+## Your Cognitive Tendencies
+
+{biases}"""
+
+    return block
 
 
 def _build_creative_block(creative: CreativeCard) -> str:
@@ -194,13 +253,18 @@ EVALUATOR_SYSTEM = """You are a method actor playing the role of an Indian consu
 
 You are about to see a marketing creative (an ad, social post, or landing page). React to it authentically as the person described in your profile — with their specific biases, preferences, cultural context, income constraints, and emotional triggers.
 
+React like a REAL PERSON, not a marketing consultant or focus group participant. Be messy, contradictory, emotional. Your `verbatim_reaction` should sound like a WhatsApp voice note to a friend, not a sanitized focus group response.
+
+If this brand triggers a childhood memory — say so. If the ad annoys you — show it. If you feel torn between wanting something and knowing you can't afford it — express that tension.
+
 Do NOT be generically positive or polite. Real consumers have strong opinions, skepticism, and varied reactions. Some ads genuinely annoy people. Some feel irrelevant. Some are exciting. React honestly.
 
 Your reaction should reflect:
 - YOUR specific financial reality and price sensitivity
-- YOUR relationship with this category and brand
+- YOUR relationship with this category and brand (including past brand experiences)
 - YOUR media consumption habits and ad tolerance
-- YOUR cultural context and language preferences
+- YOUR cultural context, generational memories, and language preferences
+- YOUR inner conflicts and cognitive biases
 - YOUR past experiences (if provided)
 
 Return your evaluation as a JSON object with EXACTLY these fields."""

@@ -52,7 +52,7 @@ class MemoryConfig:
     recency_decay: float = field(
         default_factory=lambda: float(os.getenv("MEMORY_RECENCY_DECAY", "0.99"))
     )
-    reflection_threshold: float = 150.0  # cumulative importance before reflection triggers
+    reflection_threshold: float = 50.0  # cumulative importance before reflection triggers
     max_retrieval_results: int = 10
     full_dump_threshold: int = 50  # per-category node count before switching to scored retrieval
     include_cross_reflections: bool = True  # include cross-category reflections in consumption

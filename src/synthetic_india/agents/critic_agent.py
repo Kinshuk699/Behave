@@ -40,6 +40,32 @@ Respond ONLY with a JSON object (no markdown fences, no preamble)."""
 
 def _build_critic_prompt(persona: PersonaProfile, evaluation: PersonaEvaluation) -> str:
     """Build the user-facing prompt for the critic, embedding persona + evaluation data."""
+
+    # ── Deep persona context (conditional) ───────────────────
+    deep_context = ""
+
+    if persona.backstory:
+        deep_context += f"\n- backstory: {persona.backstory}"
+    if persona.current_life_context:
+        deep_context += f"\n- current_life_context: {persona.current_life_context}"
+
+    if persona.generational_touchstones:
+        gt = persona.generational_touchstones
+        deep_context += f"\n- formative_era: {gt.formative_era}"
+        if gt.iconic_ads:
+            deep_context += f"\n- iconic_ads: {', '.join(gt.iconic_ads[:3])}"
+        deep_context += f"\n- nostalgia_intensity: {gt.nostalgia_intensity}"
+
+    if persona.internal_conflicts:
+        conflicts = "; ".join(ic.tension for ic in persona.internal_conflicts[:3])
+        deep_context += f"\n- internal_conflicts: {conflicts}"
+
+    if persona.values_hierarchy:
+        deep_context += f"\n- values_hierarchy: {', '.join(persona.values_hierarchy)}"
+
+    if persona.cognitive_biases:
+        deep_context += f"\n- cognitive_biases: {', '.join(persona.cognitive_biases)}"
+
     return f"""## Persona Profile
 
 - persona_id: {persona.persona_id}
@@ -52,10 +78,14 @@ def _build_critic_prompt(persona: PersonaProfile, evaluation: PersonaEvaluation)
 - price_sensitivity: {persona.purchase_psychology.price_sensitivity}
 - brand_loyalty: {persona.purchase_psychology.brand_loyalty}
 - impulse_tendency: {persona.purchase_psychology.impulse_tendency}
+- social_proof_need: {persona.purchase_psychology.social_proof_need}
 - research_depth: {persona.purchase_psychology.research_depth}
+- risk_tolerance: {persona.purchase_psychology.risk_tolerance}
+- decision_speed: {persona.purchase_psychology.decision_speed}
+- deal_sensitivity: {persona.purchase_psychology.deal_sensitivity}
 - trust_signals: {', '.join(persona.emotional_profile.trust_signals)}
 - rejection_triggers: {', '.join(persona.emotional_profile.rejection_triggers)}
-- inner_monologue_style: {persona.inner_monologue_style}
+- inner_monologue_style: {persona.inner_monologue_style}{deep_context}
 
 ## Evaluation Being Critiqued
 
@@ -90,6 +120,8 @@ Score this evaluation on 4 dimensions (each 0-10):
    - A skeptic giving all 8+ scores with no objections → low score
    - A researcher with shallow reasoning → low score
    - Match price_sensitivity, brand_loyalty, impulse_tendency to the action and scores
+   - Check generational consistency: a 23-year-old should not reference 90s Doordarshan ads unless their persona explicitly lists them in iconic_ads. Flag age-inappropriate cultural references.
+   - Verify internal conflicts are reflected — a persona torn about spending should not give enthusiastic purchase_intent without acknowledging that tension
 
 2. **sycophancy_score** (0-10, where 0=genuine and 10=sycophantic):
    - Unrealistically positive sentiment + high scores + no real objections → high

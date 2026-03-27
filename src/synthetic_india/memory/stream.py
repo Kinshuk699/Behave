@@ -37,7 +37,7 @@ class MemoryStream:
     - persists to JSON for durability (Delta table in Databricks)
     """
 
-    def __init__(self, persona_id: str, reflection_threshold: float = 150.0):
+    def __init__(self, persona_id: str, reflection_threshold: float = 50.0):
         self.persona_id = persona_id
         self.nodes: list[MemoryNode] = []
         self.reflection_threshold = reflection_threshold
@@ -98,6 +98,68 @@ class MemoryStream:
             key_themes=evaluation.key_themes,
         )
 
+        self.add_node(node)
+        return node
+
+    def add_preference_memory(
+        self,
+        brand: str,
+        category: str,
+        description: str,
+        importance: float,
+        source_evaluation_id: str,
+    ) -> MemoryNode:
+        """
+        Create a PREFERENCE memory from a strong positive evaluation.
+
+        Called when overall_score > 70 — the persona liked this enough
+        to form an enduring preference that influences future evaluations.
+        """
+        node = MemoryNode(
+            node_id=f"pref_{uuid.uuid4().hex[:12]}",
+            persona_id=self.persona_id,
+            memory_type=MemoryType.PREFERENCE,
+            description=description,
+            subject=self.persona_id,
+            predicate="prefers",
+            object=f"{brand} in {category}",
+            importance=importance,
+            embedding_key=description,
+            source_evaluation_id=source_evaluation_id,
+            brand=brand,
+            category=category,
+        )
+        self.add_node(node)
+        return node
+
+    def add_category_belief_memory(
+        self,
+        category: str,
+        description: str,
+        importance: float,
+        source_evaluation_id: str,
+        brand: Optional[str] = None,
+    ) -> MemoryNode:
+        """
+        Create a CATEGORY_BELIEF memory from a strong negative evaluation.
+
+        Called when overall_score < 30 — the persona disliked this enough
+        to form a lasting skepticism or belief about the category/brand.
+        """
+        node = MemoryNode(
+            node_id=f"belief_{uuid.uuid4().hex[:12]}",
+            persona_id=self.persona_id,
+            memory_type=MemoryType.CATEGORY_BELIEF,
+            description=description,
+            subject=self.persona_id,
+            predicate="believes",
+            object=f"{category} category",
+            importance=importance,
+            embedding_key=description,
+            source_evaluation_id=source_evaluation_id,
+            brand=brand,
+            category=category,
+        )
         self.add_node(node)
         return node
 

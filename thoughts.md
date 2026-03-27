@@ -784,3 +784,48 @@ Grouped by generation for cultural accuracy:
 - New evaluation output fields (emotional_journey, cultural_resonance)
 - Dashboard changes
 - Databricks pipeline changes (existing ingest handles new fields via JSON serialization)
+
+---
+
+## ✅ OVERHAUL COMPLETED (2026-03-28)
+
+### What Was Done
+
+**Phase 1 — Schema Enhancement:**
+- 4 new Pydantic models: `GenerationalTouchstones`, `InternalConflict`, `BrandRelationship`, `Influencer`
+- 5 new Optional fields on `PersonaProfile`: `generational_touchstones`, `internal_conflicts`, `influence_network`, `values_hierarchy`, `cognitive_biases`
+- `CategoryAffinity` now has `brand_relationships: list[BrandRelationship]`
+- 9 schema tests added, all GREEN
+
+**Phase 2 — All 20 Persona JSONs Enriched:**
+- 3 Doordarshan-gen (40-45): Ramesh, Deepak, Sunita — nostalgic ads, scarcity values, family hierarchy
+- 6 Liberalization-gen (30-38): Fatima, Sanjay, Ananya, Vikram, Ravi, Kavitha — malls, liberalization brands, straddling old/new
+- 11 Digital natives (20-29): All enriched with startup culture, UPI-first, Instagram-native touchstones
+
+**Phase 3a — Evaluator Prompt Overhaul:**
+- `_build_persona_block()` now renders 6 new sections: Cultural Memory, Inner Tensions, Who Influences You, Values, Cognitive Tendencies, brand_relationships within affinities
+- All sections conditional — gracefully omits when fields are None/empty (backward compatible)
+- `EVALUATOR_SYSTEM` now instructs WhatsApp voice note voice, not focus group response; mentions childhood memories, inner conflicts, cognitive biases
+- 8 tests added, all GREEN
+
+**Phase 3b — Critic Prompt Overhaul:**
+- `_build_critic_prompt()` now includes all 8 purchase_psychology floats (was 3), backstory, current_life_context, generational_touchstones, internal_conflicts, values_hierarchy, cognitive_biases
+- Added generational consistency check: "a 23-year-old should not reference 90s Doordarshan ads unless their persona explicitly lists them"
+- Added internal conflict verification instruction
+- 4 tests added, all GREEN
+
+**Phase 4 — Memory System Fixes:**
+- Reflection threshold lowered from 150 → 50 (both `config.py` and `stream.py` default)
+- `add_preference_memory()` creates PREFERENCE nodes (for strong positive evals, score > 70)
+- `add_category_belief_memory()` creates CATEGORY_BELIEF nodes (for strong negative evals, score < 30)
+- 5 tests added, all GREEN
+
+### Final Test Count: 112/112 GREEN (0.46s)
+
+### What's NOT Done Yet (Future Work)
+- Wiring preference/belief creation INTO `evaluate_creative()` (methods exist, orchestration pending)
+- Wiring `ReflectionEngine` invocation after `should_reflect` threshold crossed
+- Embedding generation for memory retrieval
+- Cross-persona memory / social contagion
+- New evaluation output fields (emotional_journey, cultural_resonance)
+- Dashboard changes
