@@ -61,6 +61,44 @@ from synthetic_india.pipeline.databricks_reader import (
 console = Console()
 
 
+def maybe_create_preference_or_belief(
+    stream: MemoryStream,
+    evaluation: PersonaEvaluation,
+) -> None:
+    """
+    Create PREFERENCE or CATEGORY_BELIEF memory from strong evaluations.
+
+    Called after the critic gate passes — only genuine, non-sycophantic
+    evaluations should form lasting memories.
+
+    - overall_score > 70 → PREFERENCE (the persona liked this)
+    - overall_score < 30 → CATEGORY_BELIEF (the persona was repelled)
+    - 30-70 → no extra memory, just the OBSERVATION from evaluate_creative
+    """
+    if evaluation.overall_score > 70:
+        stream.add_preference_memory(
+            brand=evaluation.brand,
+            category=evaluation.category,
+            description=(
+                f"I genuinely liked the {evaluation.brand} {evaluation.category} creative. "
+                f"{evaluation.reasoning}"
+            ),
+            importance=min(evaluation.importance_score + 1.0, 10.0),
+            source_evaluation_id=evaluation.evaluation_id,
+        )
+    elif evaluation.overall_score < 30:
+        stream.add_category_belief_memory(
+            category=evaluation.category,
+            description=(
+                f"I was put off by the {evaluation.brand} {evaluation.category} creative. "
+                f"{evaluation.reasoning}"
+            ),
+            importance=min(evaluation.importance_score + 1.0, 10.0),
+            source_evaluation_id=evaluation.evaluation_id,
+            brand=evaluation.brand,
+        )
+
+
 def load_personas(directory: Optional[Path] = None) -> list[PersonaProfile]:
     """Load persona profiles — tries Databricks first, falls back to local."""
     return _read_personas_with_fallback(directory)
@@ -334,6 +372,9 @@ async def run_simulation(
 
                         if verdict.passed:
                             evaluations.append(evaluation)
+                            # Create lasting preference/belief memories from strong evals
+                            if stream is not None:
+                                maybe_create_preference_or_belief(stream, evaluation)
                         else:
                             quarantined_evaluations.append(evaluation)
                             console.print(
@@ -346,6 +387,8 @@ async def run_simulation(
                             f"— evaluation included anyway[/yellow]"
                         )
                         evaluations.append(evaluation)
+                        if stream is not None:
+                            maybe_create_preference_or_belief(stream, evaluation)
 
                     progress.update(task, advance=1)
 

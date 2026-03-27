@@ -2126,3 +2126,115 @@ def test_should_reflect_at_threshold_50():
     stream.add_node(node)
     assert stream._importance_since_reflection == 51.0
     assert stream.should_reflect
+
+
+# ── Preference/belief wiring tests ─────────────────────────────
+
+
+def test_high_score_creates_preference_memory():
+    """Evaluations with overall_score > 70 should create a PREFERENCE memory node."""
+    from synthetic_india.engine.simulation import maybe_create_preference_or_belief
+    from synthetic_india.schemas.memory import MemoryType
+
+    stream = MemoryStream(persona_id="test_persona")
+    evaluation = PersonaEvaluation(
+        evaluation_id="eval_high",
+        run_id="run_test",
+        creative_id="creative_test",
+        persona_id="test_persona",
+        primary_action="click",
+        sentiment="very_positive",
+        overall_score=85.0,
+        attention_score=8.0,
+        relevance_score=9.0,
+        trust_score=8.0,
+        desire_score=8.5,
+        clarity_score=9.0,
+        first_impression="Love it",
+        reasoning="Great product, fits my needs perfectly.",
+        objections=[],
+        verbatim_reaction="Yeh toh mast hai bhai!",
+        importance_score=7.0,
+        category="electronics",
+        brand="boAt",
+        key_themes=["value", "quality"],
+    )
+
+    maybe_create_preference_or_belief(stream, evaluation)
+
+    assert stream.size == 1
+    node = stream.nodes[0]
+    assert node.memory_type == MemoryType.PREFERENCE
+    assert node.brand == "boAt"
+    assert node.category == "electronics"
+
+
+def test_low_score_creates_category_belief():
+    """Evaluations with overall_score < 30 should create a CATEGORY_BELIEF memory node."""
+    from synthetic_india.engine.simulation import maybe_create_preference_or_belief
+    from synthetic_india.schemas.memory import MemoryType
+
+    stream = MemoryStream(persona_id="test_persona")
+    evaluation = PersonaEvaluation(
+        evaluation_id="eval_low",
+        run_id="run_test",
+        creative_id="creative_test",
+        persona_id="test_persona",
+        primary_action="scroll_past",
+        sentiment="very_negative",
+        overall_score=15.0,
+        attention_score=2.0,
+        relevance_score=1.0,
+        trust_score=2.0,
+        desire_score=1.0,
+        clarity_score=3.0,
+        first_impression="Terrible",
+        reasoning="Looks cheap and untrustworthy.",
+        objections=["Fake claims", "No reviews"],
+        verbatim_reaction="Yeh kya bakwas hai",
+        importance_score=6.0,
+        category="skincare",
+        brand="ShadyBrand",
+        key_themes=["distrust"],
+    )
+
+    maybe_create_preference_or_belief(stream, evaluation)
+
+    assert stream.size == 1
+    node = stream.nodes[0]
+    assert node.memory_type == MemoryType.CATEGORY_BELIEF
+    assert node.brand == "ShadyBrand"
+    assert node.category == "skincare"
+
+
+def test_mid_score_creates_no_extra_memory():
+    """Evaluations with 30 <= overall_score <= 70 should NOT create preference or belief nodes."""
+    from synthetic_india.engine.simulation import maybe_create_preference_or_belief
+
+    stream = MemoryStream(persona_id="test_persona")
+    evaluation = PersonaEvaluation(
+        evaluation_id="eval_mid",
+        run_id="run_test",
+        creative_id="creative_test",
+        persona_id="test_persona",
+        primary_action="read",
+        sentiment="neutral",
+        overall_score=50.0,
+        attention_score=5.0,
+        relevance_score=5.0,
+        trust_score=5.0,
+        desire_score=5.0,
+        clarity_score=5.0,
+        first_impression="Meh",
+        reasoning="Not bad, not great.",
+        objections=[],
+        verbatim_reaction="Theek hai",
+        importance_score=4.0,
+        category="fashion",
+        brand="SomeStore",
+        key_themes=["average"],
+    )
+
+    maybe_create_preference_or_belief(stream, evaluation)
+
+    assert stream.size == 0

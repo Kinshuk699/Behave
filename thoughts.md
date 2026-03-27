@@ -829,3 +829,23 @@ Grouped by generation for cultural accuracy:
 - Cross-persona memory / social contagion
 - New evaluation output fields (emotional_journey, cultural_resonance)
 - Dashboard changes
+
+---
+
+## ✅ PREFERENCE/BELIEF WIRING COMPLETED (2026-03-28)
+
+- Added `maybe_create_preference_or_belief()` in `simulation.py`
+  - score > 70 → PREFERENCE node (importance + 1.0, capped at 10)
+  - score < 30 → CATEGORY_BELIEF node (importance + 1.0, capped at 10)
+  - 30-70 → no extra node, just OBSERVATION
+- Wired after critic gate passes (Option B: only genuine evals form lasting memories)
+- Also wired in critic-failure fallback path
+- ReflectionEngine was ALREADY wired in `simulation.py` (lines 362-395) — checked `should_reflect`, calls engine, stores reflections
+- 3 new tests, all GREEN
+- **Final count: 115/115 GREEN (0.42s)**
+
+### Remaining Future Work
+- Embedding generation for memory retrieval
+- Cross-persona memory / social contagion
+- New evaluation output fields (emotional_journey, cultural_resonance)
+- Dashboard changes
