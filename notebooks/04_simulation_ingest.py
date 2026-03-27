@@ -120,6 +120,30 @@ print(f"✅ Wrote run metadata to {CATALOG}.{BRONZE}.run_metadata")
 
 # COMMAND ----------
 
+# Ingest memory nodes (new observations + reflections created during this run)
+memory_path = os.path.join(run_dir, "memory_nodes.json")
+memory_node_rows = []
+if os.path.exists(memory_path):
+    with open(memory_path) as f:
+        raw_memory_nodes = json.load(f)
+
+    for node in raw_memory_nodes:
+        row = {k: _serialize(v) for k, v in node.items()}
+        row["_ingested_at"] = datetime.now(timezone.utc).isoformat()
+        row["_run_id"] = RUN_ID
+        memory_node_rows.append(row)
+
+    if memory_node_rows:
+        df_bronze_memory = spark.createDataFrame(memory_node_rows)
+        df_bronze_memory.write.mode("append").saveAsTable(f"{CATALOG}.{BRONZE}.memory_nodes")
+        print(f"✅ Wrote {len(memory_node_rows)} memory nodes to {CATALOG}.{BRONZE}.memory_nodes")
+    else:
+        print("⚠️ memory_nodes.json was empty — skipping")
+else:
+    print("⚠️ No memory_nodes.json found — skipping")
+
+# COMMAND ----------
+
 display(spark.table(f"{CATALOG}.{BRONZE}.evaluations").filter(F.col("_run_id") == RUN_ID).select(
     "evaluation_id", "persona_id", "primary_action", "sentiment", "overall_score", "cost_usd"
 ))
@@ -191,6 +215,50 @@ if quarantined_rows:
 display(spark.table(f"{CATALOG}.{SILVER}.evaluations").filter(F.col("_run_id") == RUN_ID).select(
     "evaluation_id", "persona_id", "primary_action", "overall_score", "reasoning", "_validated_at"
 ))
+
+# COMMAND ----------
+
+# Silver — Validate memory nodes
+silver_memory_rows = []
+quarantined_memory_rows = []
+now_mem = datetime.now(timezone.utc).isoformat()
+
+if memory_node_rows:
+    for row in memory_node_rows:
+        errors = []
+        if not row.get("node_id"):
+            errors.append("missing node_id")
+        desc = row.get("description", "")
+        if not desc or len(str(desc)) < 5:
+            errors.append("description too short")
+        if not row.get("persona_id"):
+            errors.append("missing persona_id")
+
+        if errors:
+            quarantined_memory_rows.append({
+                "record_id": row.get("node_id", "unknown"),
+                "source_table": "memory_nodes",
+                "errors": "; ".join(errors),
+                "_quarantined_at": now_mem,
+            })
+        else:
+            row_copy = dict(row)
+            row_copy["_validated_at"] = now_mem
+            silver_memory_rows.append(row_copy)
+
+    if silver_memory_rows:
+        df_silver_memory = spark.createDataFrame(silver_memory_rows)
+        df_silver_memory.write.mode("append").saveAsTable(f"{CATALOG}.{SILVER}.memory_nodes")
+        print(f"✅ Wrote {len(silver_memory_rows)} validated memory nodes to {CATALOG}.{SILVER}.memory_nodes")
+
+    if quarantined_memory_rows:
+        df_quarantine_mem = spark.createDataFrame(quarantined_memory_rows)
+        df_quarantine_mem.write.mode("append").saveAsTable(f"{CATALOG}.{SILVER}.quarantine")
+        print(f"⚠️ Quarantined {len(quarantined_memory_rows)} memory node records")
+
+    print(f"✅ Memory nodes — Passed: {len(silver_memory_rows)} | Quarantined: {len(quarantined_memory_rows)}")
+else:
+    print("⚠️ No memory nodes to validate")
 
 # COMMAND ----------
 
@@ -288,6 +356,8 @@ audit_row = {
     "total_evaluations": metadata.get("total_evaluations", 0),
     "successful_evaluations": metadata.get("successful_evaluations", 0),
     "quarantined_records": len(quarantined_rows),
+    "memory_nodes_created": len(silver_memory_rows),
+    "memory_scope": metadata.get("memory_scope", ""),
     "pipeline_stage": "simulation_ingest",
     "status": "completed",
     "_materialized_at": datetime.now(timezone.utc).isoformat(),
@@ -334,6 +404,7 @@ with mlflow.start_run(run_name=RUN_ID):
         "total_tokens": int(metadata.get("total_tokens", 0)),
         "n_personas_evaluated": len(gold_scorecards),
         "quarantine_rate": len(quarantined_rows) / max(len(raw_evals), 1),
+        "memory_nodes_created": len(silver_memory_rows),
     })
 
     # Log raw run data as artifacts
@@ -352,10 +423,12 @@ print(f"✅ Logged MLflow run for {RUN_ID} under experiment {experiment_path}")
 # MAGIC | Bronze | `evaluations` | Append raw evals | ✅ |
 # MAGIC | Bronze | `critic_verdicts` | Append critic data | ✅ |
 # MAGIC | Bronze | `run_metadata` | Append run info | ✅ |
+# MAGIC | Bronze | `memory_nodes` | Append new memory nodes | ✅ |
 # MAGIC | Silver | `evaluations` | Validated evals | ✅ |
+# MAGIC | Silver | `memory_nodes` | Validated memory nodes | ✅ |
 # MAGIC | Silver | `quarantine` | Bad records | ✅ |
 # MAGIC | Gold | `creative_scorecards` | Aggregated scores | ✅ |
-# MAGIC | Gold | `run_audit_log` | Audit trail | ✅ |
+# MAGIC | Gold | `run_audit_log` | Audit trail + memory stats | ✅ |
 # MAGIC | MLflow | experiment | Params + metrics | ✅ |
 # MAGIC
 # MAGIC **Note**: This notebook uses `mode("append")` — safe to re-run for different `RUN_ID` values.

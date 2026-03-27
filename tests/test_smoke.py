@@ -1520,3 +1520,128 @@ def test_databricks_ingest_graceful_without_sdk():
         # Should not raise — just logs a warning
         result = auto_ingest("run_fake", Path("/tmp/fake"))
         assert result is False
+
+
+# ── Memory → Databricks wiring tests ─────────────────────────
+
+
+def test_run_metadata_has_memory_scope():
+    """RunMetadata should have an optional memory_scope field."""
+    meta_with = RunMetadata(
+        run_id="test_ms", brand="Zepto", category="grocery_delivery",
+        creative_ids=["c1"], persona_ids=["p1"], cohort_size=1,
+        total_evaluations=1, memory_scope="category",
+    )
+    assert meta_with.memory_scope == "category"
+
+    meta_without = RunMetadata(
+        run_id="test_ms2", brand="Zepto", category="grocery_delivery",
+        creative_ids=["c1"], persona_ids=["p1"], cohort_size=1,
+        total_evaluations=1,
+    )
+    assert meta_without.memory_scope is None
+
+
+def test_save_run_creates_memory_nodes_json(tmp_path):
+    """_save_run should create memory_nodes.json when new_memory_nodes is provided."""
+    import json
+    from unittest.mock import patch
+    from synthetic_india.engine.simulation import _save_run
+
+    meta = RunMetadata(
+        run_id="test_mem_nodes", brand="Zepto", category="grocery_delivery",
+        creative_ids=["c1"], persona_ids=["p1"], cohort_size=1,
+        total_evaluations=1, memory_scope="category",
+    )
+    nodes = [
+        MemoryNode(
+            node_id="mem_test_01", persona_id="test_persona",
+            memory_type="observation", description="Saw a Zepto ad",
+            subject="test_persona", predicate="evaluated_pause",
+            object="Zepto grocery creative", importance=5.0,
+            category="grocery_delivery", brand="Zepto",
+        ),
+    ]
+
+    # Patch RUNS_DIR to tmp_path to avoid polluting real data
+    with patch("synthetic_india.engine.simulation.RUNS_DIR", tmp_path):
+        # Also patch auto_ingest to avoid Databricks call
+        with patch("synthetic_india.pipeline.databricks_ingest.auto_ingest", return_value=False):
+            _save_run(meta, [], [], None, None, new_memory_nodes=nodes)
+
+    run_dir = tmp_path / "test_mem_nodes"
+    assert (run_dir / "memory_nodes.json").exists()
+
+    saved_nodes = json.loads((run_dir / "memory_nodes.json").read_text())
+    assert len(saved_nodes) == 1
+    assert saved_nodes[0]["node_id"] == "mem_test_01"
+    assert saved_nodes[0]["brand"] == "Zepto"
+
+
+def test_memory_nodes_in_run_files():
+    """memory_nodes.json must be in the RUN_FILES list for Databricks upload."""
+    from synthetic_india.pipeline.databricks_ingest import RUN_FILES
+    assert "memory_nodes.json" in RUN_FILES
+
+
+def test_backfill_memory_files_collects_nodes(tmp_path):
+    """backfill_memory_files should read local memory JSONs and return all nodes."""
+    import json
+    from synthetic_india.pipeline.databricks_ingest import backfill_memory_files
+
+    # Create a fake memory directory with one file containing 2 nodes
+    mem_dir = tmp_path / "memory"
+    mem_dir.mkdir()
+    (mem_dir / "test_persona_memory.json").write_text(json.dumps({
+        "persona_id": "test_persona",
+        "nodes": [
+            {"node_id": "n1", "persona_id": "test_persona", "description": "First memory", "importance": 3.0},
+            {"node_id": "n2", "persona_id": "test_persona", "description": "Second memory", "importance": 5.0},
+        ]
+    }))
+
+    nodes = backfill_memory_files(memory_dir=mem_dir, upload=False)
+    assert len(nodes) == 2
+    assert nodes[0]["node_id"] == "n1"
+    assert nodes[1]["node_id"] == "n2"
+
+
+def test_databricks_reader_read_personas_fallback():
+    """read_personas should fall back to local files when Databricks is unavailable."""
+    from synthetic_india.pipeline.databricks_reader import read_personas
+
+    # Without Databricks SDK installed or configured, should fall back to local
+    personas = read_personas()
+    # We have 20 persona files locally
+    assert len(personas) >= 10  # At least our known personas
+    assert all(hasattr(p, "persona_id") for p in personas)
+
+
+def test_databricks_reader_read_memory_nodes_fallback():
+    """read_memory_nodes should fall back to local files when Databricks is unavailable."""
+    from synthetic_india.pipeline.databricks_reader import read_memory_nodes
+
+    nodes = read_memory_nodes(persona_id="aspirational_buyer_hyderabad_01")
+    # This persona has 2 nodes in local data/memory/
+    assert len(nodes) >= 1
+    assert all(hasattr(n, "node_id") for n in nodes)
+
+
+def test_load_personas_uses_reader():
+    """load_personas should delegate to databricks_reader.read_personas."""
+    from unittest.mock import patch, MagicMock
+    from synthetic_india.engine.simulation import load_personas
+    from synthetic_india.schemas.persona import PersonaProfile
+
+    # Mock the reader to return a known list
+    fake_persona = MagicMock(spec=PersonaProfile)
+    fake_persona.persona_id = "test_persona"
+
+    with patch(
+        "synthetic_india.engine.simulation._read_personas_with_fallback",
+        return_value=[fake_persona],
+    ) as mock_read:
+        result = load_personas()
+        mock_read.assert_called_once()
+        assert len(result) == 1
+        assert result[0].persona_id == "test_persona"

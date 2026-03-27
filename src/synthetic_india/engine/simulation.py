@@ -53,18 +53,17 @@ from synthetic_india.schemas.evaluation import (
 )
 from synthetic_india.schemas.persona import PersonaProfile
 from synthetic_india.schemas.recommendation import AgentRecommendation, RunMetadata
+from synthetic_india.pipeline.databricks_reader import (
+    read_personas as _read_personas_with_fallback,
+    read_memory_nodes as _read_memory_nodes_with_fallback,
+)
 
 console = Console()
 
 
 def load_personas(directory: Optional[Path] = None) -> list[PersonaProfile]:
-    """Load all persona profiles from JSON files."""
-    persona_dir = directory or PERSONAS_DIR
-    personas = []
-    for path in sorted(persona_dir.glob("*.json")):
-        data = json.loads(path.read_text())
-        personas.append(PersonaProfile.model_validate(data))
-    return personas
+    """Load persona profiles — tries Databricks first, falls back to local."""
+    return _read_personas_with_fallback(directory)
 
 
 def _grade_score(score: float) -> str:
@@ -262,6 +261,7 @@ async def run_simulation(
     all_scorecards: list[CreativeScorecard] = []
     all_verdicts: list[CriticVerdict] = []
     quarantined_evaluations: list[PersonaEvaluation] = []
+    all_new_memory_nodes: list = []
     total_cost = 0.0
     total_tokens = 0
 
@@ -299,6 +299,7 @@ async def run_simulation(
 
             for persona in cohort:
                 stream = memory_streams.get(persona.persona_id) if use_memory else None
+                stream_size_before = stream.size if stream else 0
 
                 try:
                     evaluation, response = await evaluate_creative(
@@ -314,6 +315,12 @@ async def run_simulation(
                     all_persona_ids.add(persona.persona_id)
                     total_cost += evaluation.cost_usd
                     total_tokens += evaluation.prompt_tokens + evaluation.completion_tokens
+
+                    # Collect new memory nodes created during this eval
+                    if stream and stream.size > stream_size_before:
+                        all_new_memory_nodes.extend(
+                            stream.nodes[stream_size_before:]
+                        )
 
                     # Critic quality gate
                     try:
@@ -351,6 +358,7 @@ async def run_simulation(
             reflection_engine = ReflectionEngine()
             for persona in cohort:
                 stream = memory_streams.get(persona.persona_id)
+                reflect_size_before = stream.size if stream else 0
                 if stream and stream.should_reflect:
                     console.print(
                         f"  [yellow]Triggering reflection for {persona.name} "
@@ -381,6 +389,12 @@ async def run_simulation(
                         total_tokens += resp.prompt_tokens + resp.completion_tokens
                     except Exception as e:
                         console.print(f"  [red]Reflection failed: {e}[/red]")
+
+                # Collect reflection nodes
+                if stream and stream.size > reflect_size_before:
+                    all_new_memory_nodes.extend(
+                        stream.nodes[reflect_size_before:]
+                    )
 
             # Persist memory streams
             for stream in memory_streams.values():
@@ -436,10 +450,11 @@ async def run_simulation(
         successful_evaluations=len(all_evaluations),
         quarantined_records=len(quarantined_evaluations),
         failed_evaluations=0,
+        memory_scope=memory_scope.value if memory_scope else None,
     )
 
     # Persist run results
-    _save_run(run_meta, all_evaluations, all_scorecards, recommendation, all_verdicts)
+    _save_run(run_meta, all_evaluations, all_scorecards, recommendation, all_verdicts, all_new_memory_nodes)
 
     console.print(f"\n[bold green]Run complete![/bold green]")
     console.print(f"  Run ID: {run_id}")
@@ -456,6 +471,7 @@ def _save_run(
     scorecards: list[CreativeScorecard],
     recommendation: Optional[AgentRecommendation],
     verdicts: Optional[list[CriticVerdict]] = None,
+    new_memory_nodes: Optional[list] = None,
 ) -> Path:
     """Persist all run outputs to JSON files."""
     run_dir = RUNS_DIR / run_meta.run_id
@@ -479,6 +495,15 @@ def _save_run(
         )
         (run_dir / "critic_summary.json").write_text(
             critic_summary.model_dump_json(indent=2)
+        )
+
+    # Save new memory nodes created during this run
+    if new_memory_nodes:
+        (run_dir / "memory_nodes.json").write_text(
+            json.dumps(
+                [n.model_dump(mode="json") for n in new_memory_nodes],
+                indent=2, default=str,
+            )
         )
 
     # Auto-ingest to Databricks (best-effort, never blocks)

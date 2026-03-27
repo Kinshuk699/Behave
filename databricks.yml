@@ -10,6 +10,7 @@ sync:
     - notebooks/*.py
     - data/personas/*.json
     - data/runs/**/*.json
+    - data/memory/*.json
 
 targets:
   dev:

@@ -30,6 +30,7 @@ RUN_FILES = [
     "recommendation.json",
     "critic_verdicts.json",
     "critic_summary.json",
+    "memory_nodes.json",
 ]
 
 
@@ -140,3 +141,37 @@ def auto_ingest(run_id: str, run_dir: Path) -> bool:
     except Exception as exc:
         logger.warning("Databricks auto-ingest failed: %s", exc)
         return False
+
+
+def backfill_memory_files(
+    memory_dir: Path | None = None,
+    upload: bool = True,
+) -> list[dict]:
+    """Read existing local memory JSON files and optionally upload nodes to DBFS.
+
+    Each memory file has structure: {"persona_id": "...", "nodes": [...]}
+    Returns the flat list of all node dicts (for testing / manual inspection).
+    """
+    import json, io
+
+    if memory_dir is None:
+        memory_dir = Path(__file__).resolve().parent.parent.parent.parent / "data" / "memory"
+
+    all_nodes: list[dict] = []
+    for mem_file in sorted(memory_dir.glob("*.json")):
+        with open(mem_file) as f:
+            data = json.load(f)
+        nodes = data.get("nodes", [])
+        all_nodes.extend(nodes)
+
+    if upload and all_nodes:
+        try:
+            client = _get_client()
+            dbfs_path = f"{DBFS_RUNS_ROOT}/_backfill/memory_nodes_backfill.json"
+            payload = json.dumps(all_nodes, indent=2, default=str).encode()
+            client.dbfs.upload(dbfs_path, io.BytesIO(payload), overwrite=True)
+            logger.info("Backfilled %d memory nodes to dbfs:%s", len(all_nodes), dbfs_path)
+        except Exception as exc:
+            logger.warning("Failed to upload backfill: %s", exc)
+
+    return all_nodes

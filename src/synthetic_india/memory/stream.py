@@ -190,7 +190,28 @@ class MemoryStream:
 
     @classmethod
     def load(cls, persona_id: str, directory: Optional[Path] = None) -> MemoryStream:
-        """Load a persisted memory stream."""
+        """Load a persisted memory stream — tries Databricks, falls back to local."""
+        # Try Databricks first (gracefully degrades)
+        try:
+            from synthetic_india.pipeline.databricks_reader import read_memory_nodes
+            db_nodes = read_memory_nodes(persona_id)
+            if db_nodes:
+                stream = cls(persona_id=persona_id)
+                stream.nodes = db_nodes
+                if stream.nodes:
+                    stream._importance_since_reflection = sum(
+                        n.importance for n in stream.nodes
+                    )
+                    max_seq = max(
+                        (n.sequence_number for n in stream.nodes if n.sequence_number is not None),
+                        default=-1,
+                    )
+                    stream._next_sequence_number = max_seq + 1
+                return stream
+        except Exception:
+            pass
+
+        # Fall back to local JSON
         load_dir = directory or MEMORY_DIR
         path = load_dir / f"{persona_id}_memory.json"
         if not path.exists():

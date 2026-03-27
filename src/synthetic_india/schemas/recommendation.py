@@ -90,3 +90,6 @@ class RunMetadata(BaseModel):
     quarantined_records: int = 0
     successful_evaluations: int = 0
     failed_evaluations: int = 0
+
+    # Memory configuration
+    memory_scope: Optional[str] = None
