@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Behave — Platform Architecture</title>
+
+    <!-- Fonts: Archivo Black for display, Space Grotesk for body -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        /* ===========================================
+           CSS CUSTOM PROPERTIES — Bold Signal Theme
+           =========================================== */
+        :root {
+            --bg-primary: #0e0e10;
+            --bg-gradient: linear-gradient(160deg, #0e0e10 0%, #1a1a2e 40%, #0e0e10 100%);
+            --bg-card: #FF5722;
+            --bg-card-alt: #2979FF;
+            --bg-card-green: #00C853;
+            --bg-card-purple: #7C4DFF;
+            --bg-card-gold: #FFB300;
+            --bg-surface: rgba(255,255,255,0.04);
+            --bg-surface-hover: rgba(255,255,255,0.08);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255,255,255,0.55);
+            --text-on-card: #0e0e10;
+            --text-accent: #FF5722;
+            --border-subtle: rgba(255,255,255,0.08);
+
+            --font-display: 'Archivo Black', sans-serif;
+            --font-body: 'Space Grotesk', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+
+            --title-size: clamp(2rem, 5.5vw, 4.5rem);
+            --h2-size: clamp(1.5rem, 3.5vw, 2.8rem);
+            --h3-size: clamp(1.1rem, 2.2vw, 1.6rem);
+            --body-size: clamp(0.75rem, 1.4vw, 1.05rem);
+            --small-size: clamp(0.6rem, 1vw, 0.8rem);
+            --label-size: clamp(0.55rem, 0.85vw, 0.72rem);
+
+            --slide-padding: clamp(1.5rem, 4vw, 4rem);
+            --content-gap: clamp(0.75rem, 2vw, 2rem);
+            --element-gap: clamp(0.3rem, 1vw, 0.75rem);
+
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+            --duration: 0.7s;
+        }
+
+        /* ===========================================
+           BASE RESET
+           =========================================== */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        /* ===========================================
+           VIEWPORT FITTING — MANDATORY BASE STYLES
+           =========================================== */
+        html, body { height: 100%; overflow-x: hidden; }
+        html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+
+        .slide {
+            width: 100vw; height: 100vh; height: 100dvh;
+            overflow: hidden;
+            scroll-snap-align: start;
+            display: flex; flex-direction: column;
+            position: relative;
+            background: var(--bg-gradient);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+        }
+
+        .slide-content {
+            flex: 1; display: flex; flex-direction: column;
+            justify-content: center;
+            max-height: 100%; overflow: hidden;
+            padding: var(--slide-padding);
+        }
+
+        .card, .container, .content-box {
+            max-width: min(90vw, 1100px);
+            max-height: min(85vh, 750px);
+        }
+
+        .feature-list, .bullet-list { gap: clamp(0.4rem, 1vh, 1rem); }
+        .feature-list li, .bullet-list li { font-size: var(--body-size); line-height: 1.4; }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+            gap: clamp(0.5rem, 1.5vw, 1rem);
+        }
+
+        img, .image-container {
+            max-width: 100%;
+            max-height: min(50vh, 400px);
+            object-fit: contain;
+        }
+
+        @media (max-height: 700px) {
+            :root {
+                --slide-padding: clamp(0.75rem, 3vw, 2rem);
+                --content-gap: clamp(0.4rem, 1.5vw, 1rem);
+                --title-size: clamp(1.25rem, 4.5vw, 2.5rem);
+                --h2-size: clamp(1rem, 3vw, 1.75rem);
+            }
+        }
+        @media (max-height: 600px) {
+            :root {
+                --slide-padding: clamp(0.5rem, 2.5vw, 1.5rem);
+                --content-gap: clamp(0.3rem, 1vw, 0.75rem);
+                --title-size: clamp(1.1rem, 4vw, 2rem);
+                --body-size: clamp(0.7rem, 1.2vw, 0.95rem);
+            }
+            .nav-dots, .keyboard-hint, .decorative { display: none; }
+        }
+        @media (max-height: 500px) {
+            :root {
+                --slide-padding: clamp(0.4rem, 2vw, 1rem);
+                --title-size: clamp(1rem, 3.5vw, 1.5rem);
+                --h2-size: clamp(0.9rem, 2.5vw, 1.25rem);
+                --body-size: clamp(0.65rem, 1vw, 0.85rem);
+            }
+        }
+        @media (max-width: 600px) {
+            :root { --title-size: clamp(1.25rem, 7vw, 2.5rem); }
+            .grid { grid-template-columns: 1fr; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.2s !important;
+            }
+            html { scroll-behavior: auto; }
+        }
+
+        /* ===========================================
+           ANIMATIONS
+           =========================================== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(25px);
+            transition: opacity var(--duration) var(--ease-out-expo),
+                        transform var(--duration) var(--ease-out-expo);
+        }
+        .slide.visible .reveal { opacity: 1; transform: translateY(0); }
+        .reveal:nth-child(1) { transition-delay: 0.05s; }
+        .reveal:nth-child(2) { transition-delay: 0.15s; }
+        .reveal:nth-child(3) { transition-delay: 0.25s; }
+        .reveal:nth-child(4) { transition-delay: 0.35s; }
+        .reveal:nth-child(5) { transition-delay: 0.45s; }
+        .reveal:nth-child(6) { transition-delay: 0.55s; }
+
+        .reveal-scale {
+            opacity: 0; transform: scale(0.92);
+            transition: opacity 0.6s var(--ease-out-expo), transform 0.6s var(--ease-out-expo);
+        }
+        .slide.visible .reveal-scale { opacity: 1; transform: scale(1); }
+
+        /* ===========================================
+           TYPOGRAPHY
+           =========================================== */
+        h1, h2, .section-number { font-family: var(--font-display); letter-spacing: -0.02em; }
+        h1 { font-size: var(--title-size); line-height: 1.05; }
+        h2 { font-size: var(--h2-size); line-height: 1.1; }
+        h3 { font-size: var(--h3-size); font-weight: 600; line-height: 1.2; font-family: var(--font-body); }
+        p, li { font-size: var(--body-size); line-height: 1.55; color: var(--text-secondary); font-weight: 400; }
+        .mono { font-family: var(--font-mono); font-size: var(--small-size); }
+
+        /* ===========================================
+           SECTION NUMBER (Bold Signal signature)
+           =========================================== */
+        .section-number {
+            position: absolute;
+            top: var(--slide-padding);
+            left: var(--slide-padding);
+            font-size: clamp(0.65rem, 1.2vw, 0.85rem);
+            color: var(--text-secondary);
+            letter-spacing: 0.15em;
+            z-index: 5;
+        }
+
+        /* ===========================================
+           ACCENT CARD — Bold Signal focal element
+           =========================================== */
+        .accent-card {
+            background: var(--bg-card);
+            border-radius: clamp(8px, 1.2vw, 16px);
+            padding: clamp(1rem, 2.5vw, 2.5rem);
+            color: var(--text-on-card);
+            position: relative;
+            overflow: hidden;
+        }
+        .accent-card::after {
+            content: '';
+            position: absolute;
+            top: 0; right: 0;
+            width: 40%; height: 100%;
+            background: rgba(0,0,0,0.06);
+            clip-path: polygon(25% 0, 100% 0, 100% 100%, 0% 100%);
+        }
+        .accent-card h2, .accent-card h3 { color: var(--text-on-card); }
+        .accent-card p { color: rgba(14,14,16,0.7); }
+
+        .accent-card.blue { background: var(--bg-card-alt); }
+        .accent-card.green { background: var(--bg-card-green); }
+        .accent-card.purple { background: var(--bg-card-purple); color: #fff; }
+        .accent-card.purple h2, .accent-card.purple h3 { color: #fff; }
+        .accent-card.purple p { color: rgba(255,255,255,0.75); }
+        .accent-card.gold { background: var(--bg-card-gold); }
+
+        /* ===========================================
+           LAYOUT HELPERS
+           =========================================== */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: clamp(1rem, 3vw, 3rem);
+            align-items: start;
+        }
+        @media (max-width: 700px) {
+            .two-col { grid-template-columns: 1fr; }
+        }
+
+        .three-col {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: clamp(0.5rem, 1.5vw, 1.2rem);
+            align-items: stretch;
+        }
+        @media (max-width: 800px) {
+            .three-col { grid-template-columns: 1fr; }
+        }
+
+        .four-col {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: clamp(0.4rem, 1vw, 0.8rem);
+        }
+        @media (max-width: 800px) {
+            .four-col { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        .tag {
+            display: inline-block;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: 100px;
+            padding: clamp(0.15rem, 0.4vw, 0.3rem) clamp(0.5rem, 1vw, 0.8rem);
+            font-size: var(--label-size);
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-family: var(--font-mono);
+        }
+
+        .stat-box {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: clamp(6px, 1vw, 12px);
+            padding: clamp(0.6rem, 1.5vw, 1.2rem);
+            text-align: center;
+        }
+        .stat-box .number {
+            font-family: var(--font-display);
+            font-size: clamp(1.2rem, 3vw, 2.2rem);
+            color: var(--text-primary);
+            display: block;
+        }
+        .stat-box .label {
+            font-size: var(--label-size);
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-top: clamp(0.15rem, 0.4vw, 0.3rem);
+            display: block;
+        }
+
+        .info-row {
+            display: flex;
+            gap: clamp(0.3rem, 1vw, 0.8rem);
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .mini-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: var(--small-size);
+        }
+        .mini-table th {
+            text-align: left;
+            color: var(--text-secondary);
+            font-weight: 500;
+            padding: clamp(0.2rem, 0.5vw, 0.4rem) clamp(0.3rem, 0.8vw, 0.6rem);
+            border-bottom: 1px solid var(--border-subtle);
+            font-size: var(--label-size);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+        .mini-table td {
+            padding: clamp(0.2rem, 0.5vw, 0.35rem) clamp(0.3rem, 0.8vw, 0.6rem);
+            color: var(--text-secondary);
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            font-size: var(--small-size);
+        }
+        .mini-table td:first-child { color: var(--text-primary); font-weight: 500; }
+
+        .divider {
+            height: 1px;
+            background: var(--border-subtle);
+            margin: clamp(0.5rem, 1.2vw, 1rem) 0;
+        }
+
+        .formula-box {
+            background: rgba(255,87,34,0.08);
+            border: 1px solid rgba(255,87,34,0.2);
+            border-radius: clamp(6px, 1vw, 10px);
+            padding: clamp(0.6rem, 1.5vw, 1.2rem);
+            font-family: var(--font-mono);
+            font-size: var(--small-size);
+            color: var(--text-accent);
+            text-align: center;
+        }
+
+        .flow-arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: clamp(0.3rem, 0.8vw, 0.6rem);
+            font-size: var(--body-size);
+            color: var(--text-secondary);
+        }
+        .flow-arrow .step {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: clamp(4px, 0.6vw, 8px);
+            padding: clamp(0.3rem, 0.6vw, 0.5rem) clamp(0.5rem, 1vw, 0.8rem);
+            font-size: var(--small-size);
+            font-weight: 500;
+            color: var(--text-primary);
+            white-space: nowrap;
+        }
+        .flow-arrow .arrow { color: var(--text-accent); font-weight: 700; }
+
+        /* ===========================================
+           PROGRESS BAR
+           =========================================== */
+        .progress-bar {
+            position: fixed; top: 0; left: 0;
+            height: 3px; background: var(--bg-card);
+            z-index: 9999; width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* ===========================================
+           NAV DOTS
+           =========================================== */
+        .nav-dots {
+            position: fixed; right: clamp(0.5rem, 1.5vw, 1.5rem);
+            top: 50%; transform: translateY(-50%);
+            display: flex; flex-direction: column;
+            gap: clamp(4px, 0.6vh, 8px);
+            z-index: 100;
+        }
+        .nav-dot {
+            width: clamp(6px, 0.6vw, 8px);
+            height: clamp(6px, 0.6vw, 8px);
+            border-radius: 50%;
+            background: rgba(255,255,255,0.15);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+        .nav-dot.active {
+            background: var(--bg-card);
+            transform: scale(1.4);
+        }
+
+        /* ===========================================
+           BACKGROUND DECORATIONS
+           =========================================== */
+        .grid-bg {
+            position: absolute; inset: 0;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+            background-size: clamp(30px, 5vw, 60px) clamp(30px, 5vw, 60px);
+            pointer-events: none;
+        }
+
+        .glow {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            pointer-events: none;
+            opacity: 0.4;
+        }
+        .glow.orange { background: var(--bg-card); width: 300px; height: 300px; }
+        .glow.blue { background: var(--bg-card-alt); width: 250px; height: 250px; }
+
+        /* ===========================================
+           PERSONA BADGE
+           =========================================== */
+        .persona-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: clamp(0.2rem, 0.5vw, 0.35rem);
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: 100px;
+            padding: clamp(0.12rem, 0.3vw, 0.2rem) clamp(0.4rem, 0.8vw, 0.6rem);
+            font-size: var(--label-size);
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+        .persona-chip .dot {
+            width: clamp(4px, 0.5vw, 6px);
+            height: clamp(4px, 0.5vw, 6px);
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Progress Bar -->
+    <div class="progress-bar" id="progressBar"></div>
+    <!-- Nav Dots -->
+    <nav class="nav-dots" id="navDots"></nav>
+
+    <!-- ===========================================
+         SLIDE 1 — TITLE
+         =========================================== -->
+    <section class="slide title-slide" style="justify-content: center;">
+        <div class="grid-bg"></div>
+        <div class="glow orange" style="top: -100px; right: -50px;"></div>
+        <div class="glow blue" style="bottom: -80px; left: 10%;"></div>
+
+        <div class="slide-content" style="align-items: center; text-align: center; gap: var(--content-gap);">
+            <div class="reveal" style="display:flex; gap: clamp(0.4rem,1vw,0.8rem); flex-wrap:wrap; justify-content:center;">
+                <span class="tag">SYNTHETIC INDIA</span>
+                <span class="tag">PLATFORM ARCHITECTURE</span>
+            </div>
+            <h1 class="reveal" style="max-width: 14ch;">BEHAVE</h1>
+            <p class="reveal" style="font-size: clamp(0.85rem, 1.8vw, 1.25rem); max-width: 50ch; color: var(--text-secondary);">
+                20 AI personas × persistent memory × quality gates<br>
+                → one decisive recommendation per creative
+            </p>
+            <div class="reveal" style="margin-top: clamp(0.5rem,1.5vw,1.5rem); display:flex; gap: clamp(0.5rem,1.5vw,1.2rem); flex-wrap:wrap; justify-content:center;">
+                <div class="stat-box" style="min-width: clamp(60px,8vw,100px);">
+                    <span class="number">20</span><span class="label">Personas</span>
+                </div>
+                <div class="stat-box" style="min-width: clamp(60px,8vw,100px);">
+                    <span class="number">8</span><span class="label">Archetypes</span>
+                </div>
+                <div class="stat-box" style="min-width: clamp(60px,8vw,100px);">
+                    <span class="number">115</span><span class="label">Tests GREEN</span>
+                </div>
+                <div class="stat-box" style="min-width: clamp(60px,8vw,100px);">
+                    <span class="number">~$0.35</span><span class="label">Per Run</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===========================================
+         SLIDE 2 — HOW IT WORKS (Pipeline Overview)
+         =========================================== -->
+    <section class="slide">
+        <div class="grid-bg"></div>
+        <span class="section-number">01 — PIPELINE</span>
+
+        <div class="slide-content" style="gap: var(--content-gap);">
+            <h2 class="reveal">How a simulation run works</h2>
+            <p class="reveal" style="max-width: 65ch;">One creative in → one decisive recommendation out. Every step is auditable.</p>
+
+            <!-- Flow -->
+            <div class="reveal flow-arrow" style="margin: clamp(0.3rem,0.8vw,0.6rem) 0; flex-wrap: wrap;">
+                <span class="step">📄 Creative Card</span>
+                <span class="arrow">→</span>
+                <span class="step">👥 Cohort (20)</span>
+                <span class="arrow">→</span>
+                <span class="step">🧠 Persona Eval ×20</span>
+                <span class="arrow">→</span>
+                <span class="step">🛡️ Critic Gate ×20</span>
+                <span class="arrow">→</span>
+                <span class="step">📊 Scorecard</span>
+                <span class="arrow">→</span>
+                <span class="step" style="background: rgba(255,87,34,0.15); border-color: rgba(255,87,34,0.3);">🎯 Recommendation</span>
+            </div>
+
+            <div class="reveal two-col" style="margin-top: clamp(0.3rem,0.8vw,0.5rem);">
+                <!-- Left: Steps explained -->
+                <div style="display:flex; flex-direction:column; gap: var(--element-gap);">
+                    <div class="accent-card" style="padding: clamp(0.6rem,1.5vw,1rem);">
+                        <h3 style="font-size: var(--body-size); margin-bottom: 0.2em;">Per Persona (Haiku — $0.005/eval)</h3>
+                        <p style="font-size: var(--small-size);">Retrieve top-5 memories → Build rich prompt (persona + creative + memory context) → LLM generates structured evaluation in-character (scores, reasoning, verbatim reaction)</p>
+                    </div>
+                    <div class="accent-card blue" style="padding: clamp(0.6rem,1.5vw,1rem);">
+                        <h3 style="font-size: var(--body-size); margin-bottom: 0.2em;">Critic Gate (Sonnet — $0.012/check)</h3>
+                        <p style="font-size: var(--small-size);">Scores on 4 dimensions: persona consistency, sycophancy detection, cultural authenticity, action-reasoning alignment. FAIL → quarantine. Only genuine evaluations aggregate.</p>
+                    </div>
+                    <div class="accent-card green" style="padding: clamp(0.6rem,1.5vw,1rem);">
+                        <h3 style="font-size: var(--body-size); margin-bottom: 0.2em;">Memory Formation</h3>
+                        <p style="font-size: var(--small-size);">Score &gt; 70 → PREFERENCE node. Score &lt; 30 → CATEGORY_BELIEF node. Cumulative importance ≥ 50 → Reflection triggers (higher-order insight synthesis).</p>
+                    </div>
+                </div>
+                <!-- Right: Models + Cost -->
+                <div style="display:flex; flex-direction:column; gap: var(--element-gap);">
+                    <table class="mini-table">
+                        <tr><th>Step</th><th>Model</th><th>Cost</th></tr>
+                        <tr><td>Evaluation ×20</td><td style="font-family:var(--font-mono);">claude-haiku-3</td><td>~$0.10</td></tr>
+                        <tr><td>Critic ×20</td><td style="font-family:var(--font-mono);">claude-sonnet-4</td><td>~$0.24</td></tr>
+                        <tr><td>Reflection ×~2</td><td style="font-family:var(--font-mono);">claude-haiku-3</td><td>~$0.01</td></tr>
+                        <tr><td>Recommendation ×1</td><td style="font-family:var(--font-mono);">claude-sonnet-4</td><td>~$0.04</td></tr>
+                    </table>
+                    <div class="divider"></div>
+                    <div style="display:flex; justify-content:space-between; align-items:baseline;">
+                        <span style="font-size:var(--small-size); color:var(--text-secondary);">Total per run (1 creative, 20 personas)</span>
+                        <span style="font-family:var(--font-display); font-size:var(--h3-size); color:var(--text-accent);">~$0.39</span>
+                    </div>
+                    <div class="divider"></div>
+                    <p style="font-size: var(--label-size);">LLM calls: 20 evals + 20 critics + ~2 reflections + 1 recommendation = <strong style="color:var(--text-primary);">~43 calls</strong></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===========================================
+         SLIDE 3 — THE 20 PERSONAS
+         =========================================== -->
+    <section class="slide">
+        <div class="grid-bg"></div>
+        <span class="section-number">02 — PERSONAS</span>
+
+        <div class="slide-content" style="gap: var(--content-gap);">
+            <div class="reveal" style="display:flex; align-items:baseline; gap: clamp(0.5rem,1.5vw,1rem); flex-wrap:wrap;">
+                <h2>20 Indian Consumer Personas</h2>
+                <span class="tag">8 archetypes × 3 generations</span>
+            </div>
+            <p class="reveal" style="max-width: 70ch;">Each persona has ~50 parameters covering demographics, psychology, media habits, emotional triggers, generational memory, internal conflicts, brand relationships, and cognitive biases.</p>
+
+            <!-- Archetype Grid -->
+            <div class="reveal four-col" style="margin-top: clamp(0.2rem,0.5vw,0.4rem);">
+                <div class="stat-box"><span class="number" style="font-size:var(--h3-size);">🔍</span><span class="label">Researcher</span>
+                    <div style="margin-top:0.3em; display:flex; flex-wrap:wrap; gap:3px; justify-content:center;">
+                        <span class="persona-chip"><span class="dot" style="background:#4FC3F7;"></span>Priya 29</span>
+                        <span class="persona-chip"><span class="dot" style="background:#4FC3F7;"></span>Sanjay 32</span>
+                        <span class="persona-chip"><span class="dot" style="background:#4FC3F7;"></span>Ananya 28</span>
+                    </div>
+                </div>
+                <div class="stat-box"><span class="number" style="font-size:var(--h3-size);">⚡</span><span class="label">Impulse Buyer</span>
+                    <div style="margin-top:0.3em; display:flex; flex-wrap:wrap; gap:3px; justify-content:center;">
+                        <span class="persona-chip"><span class="dot" style="background:#FF7043;"></span>Arjun 23</span>
+                        <span class="persona-chip"><span class="dot" style="background:#FF7043;"></span>Neha 26</span>
+                    </div>
+                </div>
+                <div class="stat-box"><span class="number" style="font-size:var(--h3-size);">🤨</span><span class="label">Skeptic</span>
+                    <div style="margin-top:0.3em; display:flex; flex-wrap:wrap; gap:3px; justify-content:center;">
+                        <span class="persona-chip"><span class="dot" style="background:#AB47BC;"></span>Arjun K 27</span>
+                        <span class="persona-chip"><span class="dot" style="background:#AB47BC;"></span>Deepak 40</span>
+                        <span class="persona-chip"><span class="dot" style="background:#AB47BC;"></span>Tanya 25</span>
+                    </div>
+                </div>
+                <div class="stat-box"><span class="number" style="font-size:var(--h3-size);">💎</span><span class="label">Brand Loyalist</span>
+                    <div style="margin-top:0.3em; display:flex; flex-wrap:wrap; gap:3px; justify-content:center;">
+                        <span class="persona-chip"><span class="dot" style="background:#66BB6A;"></span>Ananya 33</span>
+                        <span class="persona-chip"><span class="dot" style="background:#66BB6A;"></span>Kavitha 38</span>
+                        <span class="persona-chip"><span class="dot" style="background:#66BB6A;"></span>Ramesh 45</span>
+                    </div>
+                </div>
+            </div>
+            <div class="reveal four-col">
+                <div class="stat-box"><span class="number" style="font-size:var(--h3-size);">🎯</span><span class="label">Pragmatist</span>
+                    <div style="margin-top:0.3em; display:flex; flex-wrap:wrap; gap:3px; justify-content:center;">
+                        <span class="persona-chip"><span class="dot" style="background:#FFA726;"></span>Fatima 30</span>
+                        <span class="persona-chip"><span class="dot" style="background:#FFA726;"></span>Vikram 34</span>
+                    </div>
+                </div>
+                <div class="stat-box"><span class="number" style="font-size:var(--h3-size);">💰</span><span class="label">Price Anchor</span>
+                    <div style="margin-top:0.3em; display:flex; flex-wrap:wrap; gap:3px; justify-content:center;">
+                        <span class="persona-chip"><span class="dot" style="background:#EF5350;"></span>Ravi 35</span>
+                        <span class="persona-chip"><span class="dot" style="background:#EF5350;"></span>Sunita 42</span>
+                    </div>
+                </div>
+                <div class="stat-box"><span class="number" style="font-size:var(--h3-size);">✨</span><span class="label">Aspirational</span>
+                    <div style="margin-top:0.3em; display:flex; flex-wrap:wrap; gap:3px; justify-content:center;">
+                        <span class="persona-chip"><span class="dot" style="background:#EC407A;"></span>Meera 24</span>
+                        <span class="persona-chip"><span class="dot" style="background:#EC407A;"></span>Isha 21</span>
+                    </div>
+                </div>
+                <div class="stat-box"><span class="number" style="font-size:var(--h3-size);">📱</span><span class="label">Trend Follower</span>
+                    <div style="margin-top:0.3em; display:flex; flex-wrap:wrap; gap:3px; justify-content:center;">
+                        <span class="persona-chip"><span class="dot" style="background:#29B6F6;"></span>Priya M 22</span>
+                        <span class="persona-chip"><span class="dot" style="background:#29B6F6;"></span>Rohan 19</span>
+                        <span class="persona-chip"><span class="dot" style="background:#29B6F6;"></span>Zara 20</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="reveal info-row" style="margin-top: clamp(0.2rem,0.5vw,0.3rem);">
+                <span class="tag">🟢 Ages 19–24: Digital Natives</span>
+                <span class="tag">🟡 Ages 25–38: Liberalization Gen</span>
+                <span class="tag">🔴 Ages 40–45: Doordarshan Gen</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===========================================
+         SLIDE 4 — PERSONA DEPTH (What's Inside)
+         =========================================== -->
+    <section class="slide">
+        <div class="grid-bg"></div>
+        <span class="section-number">03 — PERSONA SCHEMA</span>
+
+        <div class="slide-content" style="gap: var(--content-gap);">
+            <h2 class="reveal">What's inside each persona</h2>
+            <p class="reveal" style="max-width: 60ch;">~50 parameters across 10 nested models. Every persona is a Pydantic v2 object, validated at load.</p>
+
+            <div class="reveal two-col" style="margin-top: clamp(0.2rem,0.6vw,0.4rem);">
+                <!-- Left: Schema map -->
+                <div style="display:flex; flex-direction:column; gap:var(--element-gap);">
+                    <table class="mini-table">
+                        <tr><th>Model</th><th>Key Fields</th></tr>
+                        <tr><td>Demographics</td><td>age, gender, city, city_tier, state, income, education, occupation, family_status, languages</td></tr>
+                        <tr><td>PurchasePsychology</td><td>price_sensitivity, brand_loyalty, impulse_tendency, social_proof_need, research_depth, risk_tolerance, decision_speed, deal_sensitivity <span class="tag" style="margin-left:4px;">all 0–1</span></td></tr>
+                        <tr><td>MediaBehavior</td><td>platform_primary, ad_tolerance, scroll_speed, influencer_trust, video_preference</td></tr>
+                        <tr><td>EmotionalProfile</td><td>aspiration_drivers[], trust_signals[], rejection_triggers[], emotional_hooks[]</td></tr>
+                        <tr><td>CategoryAffinity[]</td><td>category, interest_level, monthly_spend_inr, preferred_brands, purchase_frequency, <strong style="color:var(--text-accent);">brand_relationships[]</strong></td></tr>
+                    </table>
+                </div>
+                <!-- Right: Deep Fields (NEW) -->
+                <div style="display:flex; flex-direction:column; gap:var(--element-gap);">
+                    <div class="accent-card purple" style="padding: clamp(0.5rem,1.2vw,0.9rem);">
+                        <h3 style="font-size: var(--small-size); margin-bottom: 0.3em;">🆕 DEEP SOUL LAYER</h3>
+                        <p style="font-size: var(--label-size); line-height: 1.5;">
+                            <strong>GenerationalTouchstones</strong> — formative_era, iconic_ads[], cultural_references[], nostalgia_intensity (0–1), formative_brands[]<br>
+                            <strong>InternalConflict[]</strong> — tension + resolution_tendency<br>
+                            <strong>BrandRelationship[]</strong> — brand, relationship_type, emotional_history, intensity (0–1)<br>
+                            <strong>Influencer[]</strong> — role, influence_strength (0–1), influence_domain<br>
+                            <strong>values_hierarchy</strong> — ordered list<br>
+                            <strong>cognitive_biases</strong> — e.g. present_bias, anchoring, ostrich_effect
+                        </p>
+                    </div>
+                    <div style="display:flex; flex-direction:column; gap:var(--element-gap);">
+                        <table class="mini-table">
+                            <tr><th>Narrative Fields</th><th></th></tr>
+                            <tr><td>backstory</td><td style="font-size:var(--label-size);">2–3 sentence life history</td></tr>
+                            <tr><td>current_life_context</td><td style="font-size:var(--label-size);">What's happening right now</td></tr>
+                            <tr><td>inner_monologue_style</td><td style="font-size:var(--label-size);">How they think about products — in their voice</td></tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===========================================
+         SLIDE 5 — MEMORY SYSTEM
+         =========================================== -->
+    <section class="slide">
+        <div class="grid-bg"></div>
+        <span class="section-number">04 — MEMORY</span>
+
+        <div class="slide-content" style="gap: var(--content-gap);">
+            <h2 class="reveal">Long-Horizon Memory Retrieval</h2>
+            <p class="reveal" style="max-width: 65ch;">Based on Park et al.'s <em>Generative Agents</em> — personas carry persistent memories across simulation runs. A persona who distrusted a brand last month will carry that skepticism forward.</p>
+
+            <div class="reveal" style="margin: clamp(0.3rem,1vw,0.8rem) 0;">
+                <div class="formula-box" style="font-size: clamp(0.8rem, 1.5vw, 1.1rem);">
+                    score &nbsp;=&nbsp; α · recency &nbsp;+&nbsp; β · relevance &nbsp;+&nbsp; γ · importance
+                </div>
+            </div>
+
+            <div class="reveal three-col">
+                <div class="stat-box" style="text-align:left; padding: clamp(0.5rem,1.2vw,1rem);">
+                    <span class="label" style="color:var(--text-accent); margin-bottom:0.4em; display:block;">RECENCY</span>
+                    <p style="font-size:var(--label-size); margin-bottom:0.3em; font-family:var(--font-mono); color:var(--text-primary);">0.99 ^ hours_elapsed</p>
+                    <p style="font-size:var(--label-size);">Exponential decay. Memory from 3 days ago scores 0.49. From 30 days = 0.0007. Recent experiences dominate.</p>
+                </div>
+                <div class="stat-box" style="text-align:left; padding: clamp(0.5rem,1.2vw,1rem);">
+                    <span class="label" style="color:var(--bg-card-alt); margin-bottom:0.4em; display:block;">RELEVANCE</span>
+                    <p style="font-size:var(--label-size); margin-bottom:0.3em; font-family:var(--font-mono); color:var(--text-primary);">cosine_sim(query, memory)</p>
+                    <p style="font-size:var(--label-size);">Semantic match. Falls back to keyword overlap: text_overlap × 0.7 + theme_overlap × 0.3 when embeddings unavailable.</p>
+                </div>
+                <div class="stat-box" style="text-align:left; padding: clamp(0.5rem,1.2vw,1rem);">
+                    <span class="label" style="color:var(--bg-card-green); margin-bottom:0.4em; display:block;">IMPORTANCE</span>
+                    <p style="font-size:var(--label-size); margin-bottom:0.3em; font-family:var(--font-mono); color:var(--text-primary);">poignancy / 10.0</p>
+                    <p style="font-size:var(--label-size);">LLM-scored memorability. A traumatic brand experience (8/10) persists longer than a forgettable ad (2/10).</p>
+                </div>
+            </div>
+
+            <div class="reveal two-col" style="margin-top: clamp(0.2rem,0.5vw,0.3rem);">
+                <div style="display: flex; flex-direction:column; gap: var(--element-gap);">
+                    <h3 style="font-size:var(--small-size); color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.08em;">4 Memory Types</h3>
+                    <div class="info-row">
+                        <span class="tag">OBSERVATION — raw eval reaction</span>
+                        <span class="tag">PREFERENCE — score &gt; 70</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="tag">CATEGORY_BELIEF — score &lt; 30</span>
+                        <span class="tag">REFLECTION — synthesized insight</span>
+                    </div>
+                </div>
+                <div style="display: flex; flex-direction:column; gap: var(--element-gap);">
+                    <h3 style="font-size:var(--small-size); color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.08em;">Config</h3>
+                    <div class="info-row" style="flex-wrap:wrap;">
+                        <span class="tag">α = β = γ = 1.0</span>
+                        <span class="tag">decay = 0.99</span>
+                        <span class="tag">top_k = 5</span>
+                        <span class="tag">reflection threshold = 50</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===========================================
+         SLIDE 6 — EVALUATION OUTPUT + CRITIC
+         =========================================== -->
+    <section class="slide">
+        <div class="grid-bg"></div>
+        <span class="section-number">05 — QUALITY</span>
+
+        <div class="slide-content" style="gap: var(--content-gap);">
+            <h2 class="reveal">Evaluation → Critic → Scorecard</h2>
+
+            <div class="reveal two-col">
+                <!-- Left: Evaluation output -->
+                <div style="display:flex; flex-direction:column; gap: var(--element-gap);">
+                    <h3 style="font-size:var(--small-size); color:var(--text-accent); text-transform:uppercase; letter-spacing:0.08em;">PersonaEvaluation (per persona)</h3>
+                    <table class="mini-table">
+                        <tr><th>Field</th><th>Type</th></tr>
+                        <tr><td>primary_action</td><td>scroll_past | pause | read | engage | click | save | share | purchase_intent | negative_react</td></tr>
+                        <tr><td>sentiment</td><td>very_negative → very_positive</td></tr>
+                        <tr><td>overall_score</td><td>0–100</td></tr>
+                        <tr><td>5 dimensional scores</td><td>attention, relevance, trust, desire, clarity (0–10 each)</td></tr>
+                        <tr><td>first_impression</td><td>What they notice in 2 seconds</td></tr>
+                        <tr><td>reasoning</td><td>In-character "why" narrative</td></tr>
+                        <tr><td>verbatim_reaction</td><td>WhatsApp-style quote in their voice</td></tr>
+                        <tr><td>objections[]</td><td>Specific pushback</td></tr>
+                        <tr><td>importance_score</td><td>Memorability for memory system (0–10)</td></tr>
+                    </table>
+                </div>
+                <!-- Right: Critic -->
+                <div style="display:flex; flex-direction:column; gap: var(--element-gap);">
+                    <h3 style="font-size:var(--small-size); color:var(--bg-card-alt); text-transform:uppercase; letter-spacing:0.08em;">CriticVerdict (quality gate)</h3>
+                    <div class="accent-card blue" style="padding: clamp(0.5rem,1.2vw,0.9rem);">
+                        <p style="font-size: var(--label-size); line-height:1.6;">
+                            <strong>persona_consistency</strong> (0–10, weight 0.30)<br>
+                            <strong>sycophancy_score</strong> (0–10, weight 0.25) — <em>inverted: 10 − score</em><br>
+                            <strong>cultural_authenticity</strong> (0–10, weight 0.25)<br>
+                            <strong>action_reasoning_alignment</strong> (0–10, weight 0.20)
+                        </p>
+                    </div>
+                    <div class="formula-box" style="font-size: var(--label-size);">
+                        overall = 0.30×consistency + 0.25×(10−sycophancy) + 0.25×cultural + 0.20×alignment
+                    </div>
+                    <div style="display:flex; align-items:center; gap: clamp(0.3rem,0.8vw,0.6rem);">
+                        <span class="tag" style="border-color: rgba(0,200,83,0.4); color:#00C853;">PASS ≥ 6.0</span>
+                        <span class="tag" style="border-color: rgba(239,83,80,0.4); color:#EF5350;">FAIL &lt; 6.0 → quarantined</span>
+                    </div>
+                    <div class="divider"></div>
+                    <h3 style="font-size:var(--small-size); color:var(--bg-card-green); text-transform:uppercase; letter-spacing:0.08em;">Scorecard (aggregate)</h3>
+                    <p style="font-size: var(--label-size);">
+                        Average all 5 dimensional scores, action distribution, sentiment distribution, segment breakdowns by archetype/age/city_tier/income. Grade: A/B/C/D/F.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===========================================
+         SLIDE 7 — RECOMMENDATION + MEDALLION
+         =========================================== -->
+    <section class="slide">
+        <div class="grid-bg"></div>
+        <div class="glow orange" style="bottom: -100px; left: -80px;"></div>
+        <span class="section-number">06 — OUTPUT</span>
+
+        <div class="slide-content" style="gap: var(--content-gap);">
+            <h2 class="reveal">Final Output: Decision + Data Pipeline</h2>
+
+            <div class="reveal two-col">
+                <!-- Left: Recommendation -->
+                <div style="display:flex; flex-direction:column; gap: var(--element-gap);">
+                    <h3 style="font-size:var(--small-size); color:var(--text-accent); text-transform:uppercase; letter-spacing:0.08em;">AgentRecommendation</h3>
+                    <p style="font-size:var(--label-size);">System prompt: <em>"You are a senior media strategist at a top Indian ad agency. You make a clear call."</em></p>
+
+                    <div style="display:flex; gap:clamp(0.3rem,0.6vw,0.5rem); flex-wrap:wrap;">
+                        <span class="tag" style="border-color:rgba(0,200,83,0.4); color:#00C853; font-size:var(--label-size);">🚀 SCALE</span>
+                        <span class="tag" style="border-color:rgba(255,179,0,0.4); color:#FFB300; font-size:var(--label-size);">🔄 ITERATE</span>
+                        <span class="tag" style="border-color:rgba(239,83,80,0.4); color:#EF5350; font-size:var(--label-size);">🛑 KILL</span>
+                        <span class="tag" style="border-color:rgba(41,121,255,0.4); color:#2979FF; font-size:var(--label-size);">🧪 SPLIT_TEST</span>
+                        <span class="tag" style="border-color:rgba(255,255,255,0.2); color:var(--text-secondary); font-size:var(--label-size);">⏸ HOLD</span>
+                    </div>
+
+                    <table class="mini-table">
+                        <tr><th>Output Fields</th><th></th></tr>
+                        <tr><td>winning_creative_id</td><td>Which to scale (or null)</td></tr>
+                        <tr><td>recommended_action</td><td>SCALE / ITERATE / KILL / SPLIT_TEST / HOLD</td></tr>
+                        <tr><td>reasoning_summary + key_evidence[]</td><td>2–3 sentences + top evidence</td></tr>
+                        <tr><td>edit_recommendations[]</td><td>element, current_state, suggested_change, priority</td></tr>
+                        <tr><td>strongest/weakest_segment</td><td>Audience targeting insight</td></tr>
+                        <tr><td>confidence_score</td><td>0–1 agent certainty</td></tr>
+                    </table>
+                </div>
+                <!-- Right: Medallion Pipeline -->
+                <div style="display:flex; flex-direction:column; gap: var(--element-gap);">
+                    <h3 style="font-size:var(--small-size); color:var(--bg-card-gold); text-transform:uppercase; letter-spacing:0.08em;">Databricks Medallion Pipeline</h3>
+
+                    <div class="accent-card gold" style="padding: clamp(0.4rem,1vw,0.7rem);">
+                        <h3 style="font-size:var(--small-size);">🥉 BRONZE — Raw Ingest</h3>
+                        <p style="font-size:var(--label-size);">Immutable, append-only. 20 persona JSONs + creative uploads flattened into columnar tables. No transforms.</p>
+                    </div>
+                    <div class="accent-card" style="padding: clamp(0.4rem,1vw,0.7rem); background: #B0BEC5;">
+                        <h3 style="font-size:var(--small-size);">🥈 SILVER — Validate</h3>
+                        <p style="font-size:var(--label-size);">Business rules: backstory ≥ 20 chars, reasoning ≥ 10 chars, extraction_confidence ≥ 0.3. Bad records → quarantine table with error description.</p>
+                    </div>
+                    <div class="accent-card gold" style="padding: clamp(0.4rem,1vw,0.7rem); background: #FFD54F;">
+                        <h3 style="font-size:var(--small-size);">🥇 GOLD — Aggregate</h3>
+                        <p style="font-size:var(--label-size);">Analytics-ready tables: creative_scorecards (avg scores, distributions, grades), run_audit_log (pipeline metadata, quality stats). Feeds dashboard.</p>
+                    </div>
+
+                    <div class="flow-arrow" style="margin-top: clamp(0.2rem, 0.4vw, 0.3rem);">
+                        <span class="step" style="font-size:var(--label-size);">Bronze</span>
+                        <span class="arrow">→</span>
+                        <span class="step" style="font-size:var(--label-size);">Silver</span>
+                        <span class="arrow">→</span>
+                        <span class="step" style="font-size:var(--label-size);">Gold</span>
+                        <span class="arrow">→</span>
+                        <span class="step" style="font-size:var(--label-size); background:rgba(255,87,34,0.15); border-color:rgba(255,87,34,0.3);">Dashboard</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===========================================
+         SLIDE 8 — CREATIVE INPUT SCHEMA
+         =========================================== -->
+    <section class="slide">
+        <div class="grid-bg"></div>
+        <span class="section-number">07 — CREATIVE INPUT</span>
+
+        <div class="slide-content" style="gap: var(--content-gap);">
+            <h2 class="reveal">CreativeCard — What Goes In</h2>
+            <p class="reveal" style="max-width: 65ch;">Each ad/creative is structured into ~30 fields covering text, pricing signals, persuasion cues, visual analysis, and India-specific context. Supports vision-native evaluation (raw image → base64).</p>
+
+            <div class="reveal three-col" style="align-items:stretch;">
+                <div style="display:flex; flex-direction:column; gap:var(--element-gap);">
+                    <h3 style="font-size:var(--label-size); color:var(--text-accent); text-transform:uppercase; letter-spacing:0.08em;">Text & Identity</h3>
+                    <table class="mini-table">
+                        <tr><td>brand</td><td>str</td></tr>
+                        <tr><td>category</td><td>str</td></tr>
+                        <tr><td>format</td><td>static_image | carousel | video_thumbnail | story_ad | reel_ad | landing_page</td></tr>
+                        <tr><td>headline</td><td>Primary hook</td></tr>
+                        <tr><td>body_copy</td><td>Supporting text</td></tr>
+                        <tr><td>cta_text / cta_type</td><td>"Shop Now" → buy</td></tr>
+                    </table>
+                    <h3 style="font-size:var(--label-size); color:var(--text-accent); text-transform:uppercase; letter-spacing:0.08em; margin-top:auto;">Pricing Signals</h3>
+                    <table class="mini-table">
+                        <tr><td>price_shown</td><td>₹ value</td></tr>
+                        <tr><td>original_price</td><td>₹ strikethrough</td></tr>
+                        <tr><td>discount_%</td><td>float</td></tr>
+                        <tr><td>price_framing</td><td>premium | value | discount | comparison | no_price</td></tr>
+                    </table>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:var(--element-gap);">
+                    <h3 style="font-size:var(--label-size); color:var(--bg-card-alt); text-transform:uppercase; letter-spacing:0.08em;">Persuasion Cues</h3>
+                    <table class="mini-table">
+                        <tr><td>urgency_cues[]</td><td>"Limited time", "Only 3 left"</td></tr>
+                        <tr><td>social_proof_cues[]</td><td>"10K+ reviews", "Shark Tank"</td></tr>
+                        <tr><td>trust_signals[]</td><td>"Dermatologist tested"</td></tr>
+                        <tr><td>emotional_hooks[]</td><td>"For your family"</td></tr>
+                    </table>
+                    <h3 style="font-size:var(--label-size); color:var(--bg-card-alt); text-transform:uppercase; letter-spacing:0.08em;">Visual Analysis</h3>
+                    <table class="mini-table">
+                        <tr><td>visual_style</td><td>minimal | bold | lifestyle | product_focused | ugc | celeb</td></tr>
+                        <tr><td>product_visibility</td><td>0–1</td></tr>
+                        <tr><td>human_presence</td><td>bool</td></tr>
+                        <tr><td>celebrity_present</td><td>bool</td></tr>
+                        <tr><td>image_path</td><td>vision-native (base64 at eval)</td></tr>
+                    </table>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:var(--element-gap);">
+                    <h3 style="font-size:var(--label-size); color:var(--bg-card-green); text-transform:uppercase; letter-spacing:0.08em;">India-Specific</h3>
+                    <table class="mini-table">
+                        <tr><td>festival_context</td><td>Diwali | Holi | Eid | Navratri...</td></tr>
+                        <tr><td>target_city_tier</td><td>"Metro" | "Tier 2-3" | "Pan-India"</td></tr>
+                        <tr><td>cultural_references[]</td><td>Bollywood, cricket, joint family, rangoli...</td></tr>
+                        <tr><td>language_primary</td><td>English / Hindi / Tamil...</td></tr>
+                        <tr><td>code_mixed</td><td>Hinglish flag</td></tr>
+                    </table>
+                    <div class="divider"></div>
+                    <h3 style="font-size:var(--label-size); color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.08em;">Metadata</h3>
+                    <table class="mini-table">
+                        <tr><td>extraction_model</td><td>Model used for extraction</td></tr>
+                        <tr><td>extraction_confidence</td><td>0–1</td></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===========================================
+         SLIDE 9 — CLOSING
+         =========================================== -->
+    <section class="slide" style="justify-content:center;">
+        <div class="grid-bg"></div>
+        <div class="glow orange" style="top: 20%; right: 5%;"></div>
+        <div class="glow blue" style="bottom: 20%; left: 10%;"></div>
+
+        <div class="slide-content" style="align-items:center; text-align:center; gap: var(--content-gap);">
+            <h1 class="reveal" style="max-width: 16ch;">That's the engine.</h1>
+            <p class="reveal" style="font-size: clamp(0.85rem, 1.6vw, 1.15rem); max-width: 55ch; color: var(--text-secondary);">
+                Feed it a creative → 20 personas react with persistent memory → a critic filters out noise → you get a decisive recommendation in under 60 seconds for ~₹30.
+            </p>
+            <div class="reveal" style="margin-top: clamp(0.5rem,1.5vw,1.5rem); display:flex; gap: clamp(0.5rem,1.5vw,1rem); flex-wrap:wrap; justify-content:center;">
+                <span class="tag">Python 3.12</span>
+                <span class="tag">Pydantic v2</span>
+                <span class="tag">Anthropic SDK</span>
+                <span class="tag">Databricks</span>
+                <span class="tag">Delta Lake</span>
+                <span class="tag">115 tests GREEN</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===========================================
+       JAVASCRIPT — Slide Controller
+       =========================================== -->
+    <script>
+        class SlidePresentation {
+            constructor() {
+                this.slides = document.querySelectorAll('.slide');
+                this.currentSlide = 0;
+                this.isScrolling = false;
+                this.setupIntersectionObserver();
+                this.setupKeyboardNav();
+                this.setupTouchNav();
+                this.setupProgressBar();
+                this.setupNavDots();
+            }
+
+            setupIntersectionObserver() {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                            const index = Array.from(this.slides).indexOf(entry.target);
+                            this.currentSlide = index;
+                            this.updateNavDots();
+                            this.updateProgress();
+                        }
+                    });
+                }, { threshold: 0.4 });
+                this.slides.forEach(slide => observer.observe(slide));
+            }
+
+            setupKeyboardNav() {
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ') {
+                        e.preventDefault();
+                        this.goToSlide(this.currentSlide + 1);
+                    } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+                        e.preventDefault();
+                        this.goToSlide(this.currentSlide - 1);
+                    }
+                });
+            }
+
+            setupTouchNav() {
+                let touchStartY = 0;
+                document.addEventListener('touchstart', (e) => {
+                    touchStartY = e.touches[0].clientY;
+                }, { passive: true });
+                document.addEventListener('touchend', (e) => {
+                    const diff = touchStartY - e.changedTouches[0].clientY;
+                    if (Math.abs(diff) > 50) {
+                        if (diff > 0) this.goToSlide(this.currentSlide + 1);
+                        else this.goToSlide(this.currentSlide - 1);
+                    }
+                }, { passive: true });
+            }
+
+            setupProgressBar() {
+                this.progressBar = document.getElementById('progressBar');
+                this.updateProgress();
+            }
+
+            updateProgress() {
+                if (this.progressBar) {
+                    const pct = ((this.currentSlide) / (this.slides.length - 1)) * 100;
+                    this.progressBar.style.width = pct + '%';
+                }
+            }
+
+            setupNavDots() {
+                const nav = document.getElementById('navDots');
+                if (!nav) return;
+                this.slides.forEach((_, i) => {
+                    const dot = document.createElement('button');
+                    dot.className = 'nav-dot' + (i === 0 ? ' active' : '');
+                    dot.setAttribute('aria-label', `Go to slide ${i + 1}`);
+                    dot.addEventListener('click', () => this.goToSlide(i));
+                    nav.appendChild(dot);
+                });
+            }
+
+            updateNavDots() {
+                document.querySelectorAll('.nav-dot').forEach((dot, i) => {
+                    dot.classList.toggle('active', i === this.currentSlide);
+                });
+            }
+
+            goToSlide(index) {
+                if (index < 0 || index >= this.slides.length) return;
+                this.slides[index].scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        new SlidePresentation();
+    </script>
+</body>
+</html>
