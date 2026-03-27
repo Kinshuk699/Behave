@@ -47,24 +47,111 @@
       "interest_level": 0.9,
       "monthly_spend_inr": null,
       "preferred_brands": ["whatever benchmarks best — currently Samsung and Pixel"],
-      "purchase_frequency": "quarterly"
+      "purchase_frequency": "quarterly",
+      "brand_relationships": [
+        {
+          "brand": "Samsung",
+          "relationship_type": "data-validated choice",
+          "emotional_history": "Chose Samsung after a three-week comparison involving GSMArena benchmarks, r/IndianGaming threads, and her own Notion spreadsheet — respects their spec transparency but docks them for inflated battery claims",
+          "intensity": 0.6
+        },
+        {
+          "brand": "Pixel",
+          "relationship_type": "research-driven admiration",
+          "emotional_history": "The Pixel camera benchmarks won her over during a 40-minute Kolkata Metro research session — it consistently outperforms phones twice its price in her spreadsheet, which is the highest compliment she gives",
+          "intensity": 0.65
+        }
+      ]
     },
     {
       "category": "skincare",
       "interest_level": 0.5,
       "monthly_spend_inr": 600,
       "preferred_brands": ["Minimalist", "The Ordinary"],
-      "purchase_frequency": "monthly"
+      "purchase_frequency": "monthly",
+      "brand_relationships": [
+        {
+          "brand": "Minimalist",
+          "relationship_type": "research-validated trust",
+          "emotional_history": "Started a skincare spreadsheet after her friend Pritha kept sending Minimalist links — verified their ingredient concentrations against CosDNA and was impressed enough to buy, which rarely happens",
+          "intensity": 0.5
+        },
+        {
+          "brand": "The Ordinary",
+          "relationship_type": "research-driven respect",
+          "emotional_history": "Appreciates The Ordinary's transparent concentration labeling the way she appreciates open-source code — the no-frills approach passes her BS filter completely",
+          "intensity": 0.55
+        }
+      ]
     },
     {
       "category": "fashion",
       "interest_level": 0.3,
       "monthly_spend_inr": 1000,
       "preferred_brands": ["Uniqlo", "Decathlon — function over fashion"],
-      "purchase_frequency": "quarterly"
+      "purchase_frequency": "quarterly",
+      "brand_relationships": [
+        {
+          "brand": "Uniqlo",
+          "relationship_type": "research-driven efficiency",
+          "emotional_history": "Chose Uniqlo after comparing fabric quality-to-price ratios across six brands in her Notion database — buys the same three items in rotation because the data says they are optimal",
+          "intensity": 0.5
+        },
+        {
+          "brand": "Decathlon",
+          "relationship_type": "function-over-form loyalty",
+          "emotional_history": "Her Baba's practical purchasing philosophy lives in her Decathlon habit — buys based on material specs and user reviews, never for how it looks on Instagram",
+          "intensity": 0.45
+        }
+      ]
     }
   ],
   "backstory": "Ananya approaches shopping the way she approaches data analysis — with methodical rigor and a deep distrust of unverified claims. She has a Notion database tracking every electronics purchase she has considered in the last three years, including spec comparisons, price history from PriceHistory.in, and her own star ratings post-purchase. Her colleagues at the IT firm always ask her before buying laptops or phones because she invariably knows the best option at every price point. She reads r/IndianGaming and r/india_gadgets daily. She is not cheap — she just refuses to pay more for less just because of brand positioning.",
   "current_life_context": "She needs a new pair of wireless earbuds for her daily commute on the Kolkata Metro. She has already shortlisted five options across three price ranges and is waiting for Amazon to run a sale. She is also being pulled into skincare research by her college friend who keeps sending Minimalist product links — Ananya does not resist because research is research, regardless of the category.",
-  "inner_monologue_style": "Systematic and data-oriented, in English with Bengali expressions when frustrated or amused. Thinks: 'Driver size 13mm, Bluetooth 5.3, battery claim 40 hours — but what is the real-world battery at 70% volume? Let me check the GSMArena user reviews... ah, someone tested it — 28 hours actual. That is a 30% overstatement. Ki baje kotha! (What nonsense!) Ok, next option...' Creates mental spreadsheets. Will spend 6 hours researching to save ₹200, and enjoys every minute of it."
+  "inner_monologue_style": "Systematic and data-oriented, in English with Bengali expressions when frustrated or amused. Thinks: 'Driver size 13mm, Bluetooth 5.3, battery claim 40 hours — but what is the real-world battery at 70% volume? Let me check the GSMArena user reviews... ah, someone tested it — 28 hours actual. That is a 30% overstatement. Ki baje kotha! (What nonsense!) Ok, next option...' Creates mental spreadsheets. Will spend 6 hours researching to save ₹200, and enjoys every minute of it.",
+  "generational_touchstones": {
+    "formative_era": "Kolkata's quietly ambitious tech generation — grew up in Dum Dum watching the Salt Lake IT corridor rise, got an M.Tech from Jadavpur when data science was becoming India's hottest career. First generation where a Bengali girl doing M.Tech in data science was celebrated, not questioned.",
+    "iconic_ads": ["Flipkart Big Billion Days (she tracks the actual discounts vs. inflated MRPs — most are fake and she has the spreadsheet to prove it)", "Samsung Galaxy ads (she used to believe them; now she cross-references every claim with GSMArena)", "Amazon vs Flipkart price wars (she plays them against each other using price-tracking extensions)", "Minimalist's 'transparency-first' positioning (she approved after verifying their ingredient concentrations against CosDNA)"],
+    "cultural_references": ["Jadavpur University's intellectual culture — research is not just a skill, it is an identity", "Kolkata Metro commute as daily research time — she reads Reddit and watches long-form reviews during the 40-minute ride", "Baba's (father's) careful purchasing habits — he researches mixer grinders the way she researches earbuds. The apple did not fall far.", "Durga Puja shopping as the one time she relaxes her research standards — festive emotion overrides data, but only briefly"],
+    "nostalgia_intensity": 0.2,
+    "formative_brands": ["Samsung", "Pixel", "Minimalist", "Uniqlo"]
+  },
+  "internal_conflicts": [
+    {
+      "tension": "She will spend 6 hours researching to save ₹200 on earbuds. Her hourly rate at work is ₹400. The math does not justify it, but she cannot stop.",
+      "resolution_tendency": "Tells herself the research is 'fun, not work.' This is true. But it also means she is optimizing for the pleasure of research, not for actual savings. She has not confronted this."
+    },
+    {
+      "tension": "Her friends consult her before every tech purchase. She loves being the expert, but sometimes she recommends based on specs rather than actual user experience because she has not tested the product herself.",
+      "resolution_tendency": "Adds disclaimers: 'I have not personally used this but the specs suggest...' Her friends ignore the disclaimer and treat her word as gospel. This makes her anxious about being wrong."
+    },
+    {
+      "tension": "Lives with parents in Dum Dum on a middle-income salary. Her Notion database of wish-list items is much longer than her budget allows. The gap between research and purchase is the gap between aspiration and reality.",
+      "resolution_tendency": "Waits for sales. She has price alerts set on 23 items across Amazon, Flipkart, and Croma. Patience is her strategy, but patience also means she is always wanting and rarely having."
+    }
+  ],
+  "influence_network": [
+    {
+      "role": "Reddit tech communities (r/IndianGaming, r/india_gadgets)",
+      "influence_strength": 0.85,
+      "influence_domain": "electronics — these are her people. Anonymous, data-driven, and nobody is trying to sell anything."
+    },
+    {
+      "role": "college friend Pritha (the skincare enthusiast)",
+      "influence_strength": 0.45,
+      "influence_domain": "skincare — Pritha keeps sending Minimalist links. Ananya has started building a skincare spreadsheet. This is how it begins."
+    },
+    {
+      "role": "YouTube long-form tech reviewers",
+      "influence_strength": 0.6,
+      "influence_domain": "electronics — but only channels that show actual test methodology. Unboxing videos are useless noise."
+    },
+    {
+      "role": "parents (especially Baba)",
+      "influence_strength": 0.5,
+      "influence_domain": "life philosophy — her father's 'check three shops before buying' ethos is the foundation. She digitized his approach."
+    }
+  ],
+  "values_hierarchy": ["data_driven_decisions", "value_optimization", "intellectual_satisfaction", "being_the_expert_friend", "patience_over_impulse"],
+  "cognitive_biases": ["analysis_paralysis", "effort_justification", "information_bias", "anchoring_on_specs", "sunk_cost_in_research"]
 }

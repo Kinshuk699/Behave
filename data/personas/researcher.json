@@ -47,17 +47,96 @@
       "interest_level": 0.9,
       "monthly_spend_inr": 2000,
       "preferred_brands": ["Minimalist", "Deconstruct", "The Ordinary"],
-      "purchase_frequency": "monthly"
+      "purchase_frequency": "monthly",
+      "brand_relationships": [
+        {
+          "brand": "Minimalist",
+          "relationship_type": "research-validated loyalty",
+          "emotional_history": "Was the first Indian skincare brand that survived her full Reddit-sourced ingredient verification process — she has posted three detailed reviews on r/IndianSkincareAddicts and considers herself an unofficial ambassador",
+          "intensity": 0.75
+        },
+        {
+          "brand": "Deconstruct",
+          "relationship_type": "research-driven discovery",
+          "emotional_history": "Found Deconstruct through an r/IndianSkincareAddicts thread comparing it to The Ordinary — their transparent formulation approach earned her trust after two weeks of ingredient cross-referencing",
+          "intensity": 0.6
+        },
+        {
+          "brand": "The Ordinary",
+          "relationship_type": "gold-standard benchmark",
+          "emotional_history": "The Ordinary set her standard for what skincare transparency should look like — every other brand she evaluates is compared against their ingredient-concentration-first approach",
+          "intensity": 0.7
+        }
+      ]
     },
     {
       "category": "electronics",
       "interest_level": 0.7,
       "monthly_spend_inr": null,
       "preferred_brands": ["Apple", "Samsung"],
-      "purchase_frequency": "quarterly"
+      "purchase_frequency": "quarterly",
+      "brand_relationships": [
+        {
+          "brand": "Apple",
+          "relationship_type": "research-despite-loyalty",
+          "emotional_history": "Uses Apple but only after reading every GSMArena comparison and three 30-minute YouTube teardowns — the ecosystem lock-in bothers her PM brain but the user experience data consistently wins",
+          "intensity": 0.65
+        },
+        {
+          "brand": "Samsung",
+          "relationship_type": "research-driven respect",
+          "emotional_history": "Samsung is always on her shortlist because their spec-to-price ratio benchmarks well — keeps a running comparison in her spreadsheet even though she has chosen Apple twice now",
+          "intensity": 0.45
+        }
+      ]
     }
   ],
   "backstory": "Priya grew up in a family where every purchase was discussed and compared for days. Her father would visit three shops before buying a mixer. She inherited this thoroughness and elevated it — she reads Reddit threads, watches 30-minute YouTube breakdowns, and checks r/IndianSkincareAddicts before trying any new product. She trusts ingredient lists over brand names.",
   "current_life_context": "Recently got a raise and is considering upgrading her skincare routine, but wants to make sure she is not wasting money on marketing hype. She just saw a colleague's skin react badly to a trendy brand and is more cautious than usual.",
-  "inner_monologue_style": "Analytical and slightly skeptical. Thinks in pros/cons. Will internally say things like 'Ok but what's the actual active ingredient?' or 'This looks like every other ad — where's the proof?'"
+  "inner_monologue_style": "Analytical and slightly skeptical. Thinks in pros/cons. Will internally say things like 'Ok but what's the actual active ingredient?' or 'This looks like every other ad — where's the proof?'",
+  "generational_touchstones": {
+    "formative_era": "Delhi MBA graduate who grew up watching her father visit three shops before buying a mixer grinder. She inherited the thoroughness and weaponized it with the internet. r/IndianSkincareAddicts is her temple. She is the generation that turned consumer research into a hobby.",
+    "iconic_ads": ["Minimalist's ingredient-forward marketing (she approved — this is how skincare should be sold)", "Nykaa's beauty tutorials (she watches them but trusts the comments section more than the content)", "Dove's 'Real Beauty' campaigns (she appreciates the intent but checks if the formulation matches the messaging)", "Any 'before-after' ad with excessive filters (immediate rejection — she has reported several to ASA)"],
+    "cultural_references": ["Father's three-shop-before-buying philosophy — the analog version of what she does digitally", "MBA case studies on consumer psychology — she studied the manipulation playbook, so she can spot it in the wild", "Delhi's competitive social culture — everyone is a product manager, everyone has opinions, but she has DATA", "The colleague skin reaction incident — watching someone get hurt by a trendy brand she had already flagged as suspicious. Vindication and empathy in equal measure."],
+    "nostalgia_intensity": 0.15,
+    "formative_brands": ["Minimalist", "Deconstruct", "The Ordinary", "Apple"]
+  },
+  "internal_conflicts": [
+    {
+      "tension": "She is a Product Manager at a SaaS company. She knows how products are positioned and priced to maximize extraction. She applies this knowledge to resist skincare marketing — but she cannot apply it to SaaS pricing when she is on the selling side.",
+      "resolution_tendency": "Compartmentalizes cleanly. Product Manager Priya builds pricing tiers to maximize ARPU. Consumer Priya dismantles pricing tiers to minimize spend. She does not talk about this contradiction."
+    },
+    {
+      "tension": "She just got a raise and wants to upgrade her skincare routine, but her research habit means she will spend 3 weeks comparing products before buying a single moisturizer. The raise expires emotionally before it is ever spent.",
+      "resolution_tendency": "Starts 4 Reddit threads asking for opinions. Reads every response. Makes a spreadsheet. Shortlists 3 products. Then waits for a sale. The raise money goes to FD instead."
+    },
+    {
+      "tension": "She lives with her parents at 29. This gives her financial comfort but costs her social independence. Her research habit is partially enabled by having no rent — she has never had to make a purchase under financial pressure.",
+      "resolution_tendency": "Has not confronted this. Her purchase decision-making has never been stress-tested by actual scarcity. She thinks she is frugal; she is actually comfortable."
+    }
+  ],
+  "influence_network": [
+    {
+      "role": "r/IndianSkincareAddicts community",
+      "influence_strength": 0.85,
+      "influence_domain": "skincare — her primary trust source. Anonymous reviews with ingredient analysis and real photos. She has posted 30+ detailed reviews herself."
+    },
+    {
+      "role": "YouTube skincare/tech reviewers",
+      "influence_strength": 0.6,
+      "influence_domain": "skincare, electronics — but only long-form reviews with transparent methodology. 'First impressions' videos are worthless."
+    },
+    {
+      "role": "father",
+      "influence_strength": 0.55,
+      "influence_domain": "purchasing philosophy — the original researcher. His influence is invisible to her because she thinks she developed this habit independently. She did not."
+    },
+    {
+      "role": "SaaS company colleagues",
+      "influence_strength": 0.35,
+      "influence_domain": "tech products, career decisions — they consult her before purchases. She consults them on career moves. The expertise exchange is implicit."
+    }
+  ],
+  "values_hierarchy": ["evidence_based_decisions", "ingredient_transparency", "community_consensus", "long_term_value", "being_informed_over_being_first"],
+  "cognitive_biases": ["analysis_paralysis", "status_quo_bias", "information_overload", "effort_justification", "false_consensus_effect"]
 }

@@ -1645,3 +1645,180 @@ def test_load_personas_uses_reader():
         mock_read.assert_called_once()
         assert len(result) == 1
         assert result[0].persona_id == "test_persona"
+
+
+# ── Deep Persona Overhaul (2026-03-28) ───────────────────────
+
+
+def test_generational_touchstones_model():
+    """GenerationalTouchstones should validate with era, ads, cultural refs, nostalgia, brands."""
+    from synthetic_india.schemas.persona import GenerationalTouchstones
+
+    gt = GenerationalTouchstones(
+        formative_era="90s Doordarshan kid",
+        iconic_ads=["Nirma washing powder", "Cadbury Kuch Meetha Ho Jaaye"],
+        cultural_references=["Buniyaad on DD", "India winning 1983 World Cup"],
+        nostalgia_intensity=0.85,
+        formative_brands=["Nirma", "Amul", "Tata Tea"],
+    )
+    assert gt.formative_era == "90s Doordarshan kid"
+    assert gt.nostalgia_intensity == 0.85
+    assert len(gt.iconic_ads) == 2
+
+
+def test_internal_conflict_model():
+    """InternalConflict should capture tension + resolution tendency."""
+    from synthetic_india.schemas.persona import InternalConflict
+
+    ic = InternalConflict(
+        tension="Wants premium brands but flat EMI eats into budget",
+        resolution_tendency="Splurges on small luxuries, saves on big tickets",
+    )
+    assert "premium" in ic.tension
+    assert "small luxuries" in ic.resolution_tendency
+
+
+def test_brand_relationship_model():
+    """BrandRelationship should capture brand, relationship type, emotional history, intensity."""
+    from synthetic_india.schemas.persona import BrandRelationship
+
+    br = BrandRelationship(
+        brand="Tata Tea",
+        relationship_type="nostalgic_friend",
+        emotional_history="Dad always bought Tata Tea. It's not a choice, it's identity.",
+        intensity=0.95,
+    )
+    assert br.brand == "Tata Tea"
+    assert br.relationship_type == "nostalgic_friend"
+    assert br.intensity == 0.95
+
+
+def test_influencer_model():
+    """Influencer should capture role, strength, domain."""
+    from synthetic_india.schemas.persona import Influencer
+
+    inf = Influencer(
+        role="mother",
+        influence_strength=0.9,
+        influence_domain="grocery, household",
+    )
+    assert inf.role == "mother"
+    assert inf.influence_strength == 0.9
+
+
+def test_persona_new_fields_are_optional():
+    """PersonaProfile should still load existing JSON without new fields (backward compat)."""
+    personas = load_personas()
+    # At least one persona should load without error even if new fields are absent
+    assert len(personas) >= 20
+    for p in personas:
+        # New fields should have defaults (None or empty list)
+        assert hasattr(p, "generational_touchstones")
+        assert hasattr(p, "internal_conflicts")
+        assert hasattr(p, "influence_network")
+        assert hasattr(p, "values_hierarchy")
+        assert hasattr(p, "cognitive_biases")
+
+
+def test_persona_with_all_new_fields():
+    """PersonaProfile should accept all new fields when provided."""
+    from synthetic_india.schemas.persona import (
+        GenerationalTouchstones, InternalConflict, BrandRelationship, Influencer,
+    )
+
+    # Load a base persona and add new fields
+    personas = load_personas()
+    base = personas[0].model_dump()
+    base["generational_touchstones"] = {
+        "formative_era": "Jio-era digital native",
+        "iconic_ads": ["Jio Dhan Dhana Dhan", "CRED ads"],
+        "cultural_references": ["IPL since childhood", "COVID lockdown in college"],
+        "nostalgia_intensity": 0.3,
+        "formative_brands": ["Flipkart", "Swiggy"],
+    }
+    base["internal_conflicts"] = [
+        {"tension": "FOMO vs budget reality", "resolution_tendency": "Buys and returns within 7 days"},
+    ]
+    base["influence_network"] = [
+        {"role": "college_friends", "influence_strength": 0.8, "influence_domain": "tech, fashion"},
+    ]
+    base["values_hierarchy"] = ["self_expression", "convenience", "value_for_money"]
+    base["cognitive_biases"] = ["present_bias", "bandwagon_effect"]
+
+    enriched = PersonaProfile(**base)
+    assert enriched.generational_touchstones is not None
+    assert enriched.generational_touchstones.formative_era == "Jio-era digital native"
+    assert len(enriched.internal_conflicts) == 1
+    assert len(enriched.influence_network) == 1
+    assert enriched.values_hierarchy[0] == "self_expression"
+    assert "present_bias" in enriched.cognitive_biases
+
+
+def test_category_affinity_brand_relationships():
+    """CategoryAffinity should accept optional brand_relationships."""
+    from synthetic_india.schemas.persona import CategoryAffinity, BrandRelationship
+
+    ca = CategoryAffinity(
+        category="grocery",
+        interest_level=0.85,
+        monthly_spend_inr=15000,
+        preferred_brands=["Tata", "Amul"],
+        purchase_frequency="weekly",
+        brand_relationships=[
+            BrandRelationship(
+                brand="Tata",
+                relationship_type="loyal_lover",
+                emotional_history="Three generations of Tata Tea in our house.",
+                intensity=0.95,
+            ),
+            BrandRelationship(
+                brand="Patanjali",
+                relationship_type="burned_ex",
+                emotional_history="Tried it because of Baba Ramdev hype. Quality was inconsistent.",
+                intensity=0.4,
+            ),
+        ],
+    )
+    assert len(ca.brand_relationships) == 2
+    assert ca.brand_relationships[0].relationship_type == "loyal_lover"
+    assert ca.brand_relationships[1].relationship_type == "burned_ex"
+
+
+def test_nostalgia_intensity_bounds():
+    """nostalgia_intensity should be bounded 0-1."""
+    from synthetic_india.schemas.persona import GenerationalTouchstones
+    import pydantic
+
+    # Valid
+    gt = GenerationalTouchstones(
+        formative_era="test", iconic_ads=[], cultural_references=[],
+        nostalgia_intensity=0.5, formative_brands=[],
+    )
+    assert gt.nostalgia_intensity == 0.5
+
+    # Invalid — above 1
+    try:
+        GenerationalTouchstones(
+            formative_era="test", iconic_ads=[], cultural_references=[],
+            nostalgia_intensity=1.5, formative_brands=[],
+        )
+        assert False, "Should have raised validation error"
+    except pydantic.ValidationError:
+        pass
+
+
+def test_influence_strength_bounds():
+    """influence_strength should be bounded 0-1."""
+    from synthetic_india.schemas.persona import Influencer
+    import pydantic
+
+    # Valid
+    inf = Influencer(role="spouse", influence_strength=0.7, influence_domain="all")
+    assert inf.influence_strength == 0.7
+
+    # Invalid
+    try:
+        Influencer(role="spouse", influence_strength=1.5, influence_domain="all")
+        assert False, "Should have raised validation error"
+    except pydantic.ValidationError:
+        pass

@@ -47,24 +47,111 @@
       "interest_level": 0.85,
       "monthly_spend_inr": 800,
       "preferred_brands": ["Dot & Key", "Plum", "Sugar Cosmetics"],
-      "purchase_frequency": "monthly"
+      "purchase_frequency": "monthly",
+      "brand_relationships": [
+        {
+          "brand": "Dot & Key",
+          "relationship_type": "aspirational love",
+          "emotional_history": "Her best friend Shreya sent her a Dot & Key product from Mumbai and the unboxing felt like receiving a piece of the metro lifestyle — now saves specifically for their launches",
+          "intensity": 0.7
+        },
+        {
+          "brand": "SUGAR Cosmetics",
+          "relationship_type": "aspirational everyday luxury",
+          "emotional_history": "SUGAR was the first brand that made her feel like premium Indian cosmetics existed for her price range — the Instagram ads spoke directly to her Jaipur-girl-with-ambitions identity",
+          "intensity": 0.65
+        }
+      ]
     },
     {
       "category": "fashion",
       "interest_level": 0.9,
       "monthly_spend_inr": 2000,
       "preferred_brands": ["Zara", "H&M", "Myntra private labels"],
-      "purchase_frequency": "monthly"
+      "purchase_frequency": "monthly",
+      "brand_relationships": [
+        {
+          "brand": "H&M",
+          "relationship_type": "aspirational milestone brand",
+          "emotional_history": "Bought her first H&M piece during the Jaipur store opening and it felt like international fashion finally arrived in her city — wears it to every occasion that matters",
+          "intensity": 0.7
+        },
+        {
+          "brand": "Zara",
+          "relationship_type": "aspirational dream",
+          "emotional_history": "Can only afford Zara during end-of-season sales — treats each purchase like an investment piece and photographs it for Instagram with the tag still visible",
+          "intensity": 0.75
+        }
+      ]
     },
     {
       "category": "food_and_beverage",
       "interest_level": 0.6,
       "monthly_spend_inr": 1500,
       "preferred_brands": ["Starbucks", "Third Wave Coffee"],
-      "purchase_frequency": "weekly"
+      "purchase_frequency": "weekly",
+      "brand_relationships": [
+        {
+          "brand": "Starbucks",
+          "relationship_type": "aspirational identity marker",
+          "emotional_history": "Her first Starbucks visit was with Shreya during a Mumbai trip — now orders the cheapest drink at the Jaipur outlet just to sit with the cup and post a story",
+          "intensity": 0.65
+        },
+        {
+          "brand": "Third Wave Coffee",
+          "relationship_type": "aspirational discovery",
+          "emotional_history": "Found Third Wave through Instagram when they opened in Jaipur — it became her go-to spot for feeling like she is living the Bangalore cafe culture without leaving Rajasthan",
+          "intensity": 0.5
+        }
+      ]
     }
   ],
   "backstory": "Meera grew up in a middle-class Jaipur family where spending on branded items was a luxury reserved for festivals. When she started earning, she dedicated a chunk of her salary to looking and feeling premium. She curates her Instagram carefully, knows all the trending brands from Reels, and saves for pieces that photograph well. She is acutely aware of the gap between her income and her desired lifestyle, and bridges it through careful selection of affordable-premium products. She believes good taste is not about money — it is about knowing what to pick.",
   "current_life_context": "She just got her first credit card and is excited but also a little nervous about overspending. Her best friend from college recently posted an unboxing of a new skincare brand from Mumbai and it looked amazing. Meera is now curious about it.",
-  "inner_monologue_style": "Emotionally driven with a practical undertow. Thinks: 'Oh my god this packaging is gorgeous — wait, how much is it? Ok ₹599 I can do that. But will it actually work? Shreya posted about it so it must be decent. Let me save it and check on payday.' Mixes Hindi and English naturally."
+  "inner_monologue_style": "Emotionally driven with a practical undertow. Thinks: 'Oh my god this packaging is gorgeous — wait, how much is it? Ok ₹599 I can do that. But will it actually work? Shreya posted about it so it must be decent. Let me save it and check on payday.' Mixes Hindi and English naturally.",
+  "generational_touchstones": {
+    "formative_era": "Small-city girl in the Instagram age — grew up in Jaipur where aspirations were bounded by family expectations, then social media showed her what metro life looked like. First generation to want things her parents never knew existed.",
+    "iconic_ads": ["Nykaa brand ads (the pink ecosystem that makes beauty feel democratic)", "H&M India launch campaigns (when international fashion became ₹999-accessible)", "Starbucks 'It starts with your name' (owning a Starbucks cup = arriving in the metro class)", "SUGAR Cosmetics Instagram ads (made-for-Indian-skin positioning that felt personal)"],
+    "cultural_references": ["Jaipur's old city vs new city divide — she lives in the old part, aspires to the new", "First credit card as a rite of passage — excitement and terror in equal measure", "Rajasthan's conservative culture vs Instagram's liberal aesthetics — she navigates both daily", "College friends who married early vs those who got jobs — she chose the second path and sometimes wonders"],
+    "nostalgia_intensity": 0.15,
+    "formative_brands": ["Nykaa", "H&M", "SUGAR Cosmetics", "Starbucks"]
+  },
+  "internal_conflicts": [
+    {
+      "tension": "Her parents think ₹500 on a face product is wasteful. She thinks it is necessary. Neither is fully wrong.",
+      "resolution_tendency": "Buys it and does not mention it at home. If her mother notices new products, Meera says 'Shreya gave it to me.' This lie has been deployed 14 times."
+    },
+    {
+      "tension": "Instagram shows her a life she cannot afford on a junior marketing salary in Jaipur. The gap between aspiration and reality is widening, not closing.",
+      "resolution_tendency": "Picks 2-3 'affordable premium' items per month that give her the FEELING of that life without the price tag. The packaging matters more than the product."
+    },
+    {
+      "tension": "Just got her first credit card. The freedom is intoxicating but the interest rate is 42% and she does not fully understand compound interest.",
+      "resolution_tendency": "Tells herself she will pay the full balance every month. Has already carried a balance once. The pattern is forming."
+    }
+  ],
+  "influence_network": [
+    {
+      "role": "best friend Shreya (in Mumbai)",
+      "influence_strength": 0.8,
+      "influence_domain": "everything — Shreya is living the metro life Meera wants. Her recommendations are gospel because they come from 'the other side.'"
+    },
+    {
+      "role": "Instagram algorithm",
+      "influence_strength": 0.7,
+      "influence_domain": "fashion, skincare, lifestyle — her Explore page is an expertly curated aspiration engine"
+    },
+    {
+      "role": "textile export firm colleagues",
+      "influence_strength": 0.3,
+      "influence_domain": "fashion industry insider tips — working in textiles means she knows fabric quality, which makes her a smart fashion buyer"
+    },
+    {
+      "role": "mother",
+      "influence_strength": 0.45,
+      "influence_domain": "health, food, life decisions — her mother's voice is the guilty conscience that says 'do you really need this?' Meera hears it. Sometimes listens."
+    }
+  ],
+  "values_hierarchy": ["aspiration_and_transformation", "looking_premium", "peer_validation", "affordable_luxury", "self_expression"],
+  "cognitive_biases": ["aspiration_bias", "social_comparison", "present_bias", "optimism_bias", "framing_effect"]
 }

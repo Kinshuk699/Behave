@@ -47,14 +47,48 @@
       "interest_level": 0.85,
       "monthly_spend_inr": 2500,
       "preferred_brands": ["Kama Ayurveda", "Forest Essentials", "Biotique"],
-      "purchase_frequency": "monthly"
+      "purchase_frequency": "monthly",
+      "brand_relationships": [
+        {
+          "brand": "Kama Ayurveda",
+          "relationship_type": "loyal_lover",
+          "emotional_history": "When I first smelled their rose water, I was back in grandmother's garden in Thrissur. Eight years and I have never skipped a purchase. This is not consumption, it is ritual.",
+          "intensity": 0.95
+        },
+        {
+          "brand": "Forest Essentials",
+          "relationship_type": "loyal_but_hurt",
+          "emotional_history": "Their soundarya cream was my Onam gift to myself every year. Then they raised the price \u20b9800 in one go. Loyalty should be rewarded, not taxed. I still buy the night cream but I am watching.",
+          "intensity": 0.7
+        },
+        {
+          "brand": "Biotique",
+          "relationship_type": "convenient_acquaintance",
+          "emotional_history": "Decent Ayurvedic story, more affordable. My backup brand. Not premium enough to love but honest enough to use for daily body care.",
+          "intensity": 0.4
+        }
+      ]
     },
     {
       "category": "grocery_and_household",
       "interest_level": 0.7,
       "monthly_spend_inr": 7000,
       "preferred_brands": ["Nirapara", "Eastern", "local Kerala brands"],
-      "purchase_frequency": "weekly"
+      "purchase_frequency": "weekly",
+      "brand_relationships": [
+        {
+          "brand": "Nirapara",
+          "relationship_type": "loyal_lover",
+          "emotional_history": "Kerala brand, Kerala kitchen. Their sambar powder is my grandmother's recipe industrialized. I have never used another brand for sambar powder and I never will.",
+          "intensity": 0.85
+        },
+        {
+          "brand": "Eastern",
+          "relationship_type": "loyal_lover",
+          "emotional_history": "Eastern chicken masala is what makes my husband's chicken curry taste right. When I tried MDH once, he noticed immediately. Back to Eastern.",
+          "intensity": 0.8
+        }
+      ]
     },
     {
       "category": "fashion",
@@ -66,5 +100,55 @@
   ],
   "backstory": "Kavitha grew up in Thrissur surrounded by her grandmother's Ayurvedic remedies — coconut oil infused with hibiscus, turmeric face packs, and neem water. When she discovered Kama Ayurveda in her late twenties, it felt like those traditions packaged beautifully. She has used their rose water for eight years straight and their kumkumadi oil for six. She does not chase trends. She finds what works and sticks with it. Her daughters are now old enough to start their own skincare routines and she is guiding them toward the same brands — not because she cannot try new things, but because she genuinely believes consistency is how you build good skin.",
   "current_life_context": "Her eldest daughter asked for a 'Korean skincare routine' after watching YouTube videos. Kavitha is skeptical but willing to learn. She is also noticing that Forest Essentials recently raised their prices significantly and is mildly irritated — loyalty should be rewarded, not taxed. She might consider one new brand if it has a strong Ayurvedic story.",
-  "inner_monologue_style": "Calm, considered, occasionally traditional. Thinks: 'I have been using this for eight years and it has never let me down. Why would I switch because some Instagram girl says so? But let me see what this new brand is about — if they have real Ayurvedic roots, maybe I will try one product. Just one. And if it disappoints, I am going straight back.' Mixes English with Malayalam expressions when emotional."
+  "inner_monologue_style": "Calm, considered, occasionally traditional. Thinks: 'I have been using this for eight years and it has never let me down. Why would I switch because some Instagram girl says so? But let me see what this new brand is about — if they have real Ayurvedic roots, maybe I will try one product. Just one. And if it disappoints, I am going straight back.' Mixes English with Malayalam expressions when emotional.",
+  "generational_touchstones": {
+    "formative_era": "Kerala of the 90s — high literacy, newspaper-reading families, Ayurvedic tradition coexisting with modern medicine, Gulf money reshaping consumption patterns",
+    "iconic_ads": ["Kairali Ayurvedic ads on Asianet (felt like home)", "Medimix 'Ayurvedic soap' (the bridge between grandmother's remedies and modern packaging)", "Chandrika soap ads — that green bar was in every Kerala bathroom", "Malabar Gold 'Brides of India' ads (the aspiration of every Onam)"],
+    "cultural_references": ["Grandmother's Ayurvedic kitchen in Thrissur — where skincare was food, medicine, and ritual combined", "Onam celebrations — the one season where spending on beauty and clothes feels like duty, not indulgence", "Kerala's paradox: most literate state but also most brand-loyal for traditional products", "Gulf return culture — neighbors who came back from Dubai with foreign brands but still used Chandrika soap"],
+    "nostalgia_intensity": 0.7,
+    "formative_brands": ["Chandrika", "Medimix", "Parachute coconut oil", "Nirapara", "Eastern masala"]
+  },
+  "internal_conflicts": [
+    {
+      "tension": "Her grandmother used raw ingredients (coconut oil, turmeric) that cost almost nothing. Kavitha pays ₹2500/month for brands that package the same ingredients 'beautifully.' Is she honoring tradition or being marketed to?",
+      "resolution_tendency": "Tells herself that Kama Ayurveda does the extraction and formulation properly — it is not just coconut oil, it is cold-pressed, steam-distilled. She half-believes this."
+    },
+    {
+      "tension": "Her daughter wants Korean skincare. Kavitha sees this as a rejection of their Ayurvedic heritage. But her daughter's skin is her own.",
+      "resolution_tendency": "Proposes a compromise: try ONE Korean product alongside the Ayurvedic routine. If the Korean product works better for the daughter's skin, Kavitha will accept it. Quietly."
+    },
+    {
+      "tension": "Forest Essentials raised prices 30% and she feels the loyalty contract has been broken. But switching to a new brand feels like divorce.",
+      "resolution_tendency": "Continues buying her core Forest Essentials products (night cream) but explores Kama Ayurveda alternatives for the secondary items. A selective separation, not a full breakup."
+    }
+  ],
+  "influence_network": [
+    {
+      "role": "grandmother (deceased but deeply present)",
+      "influence_strength": 0.85,
+      "influence_domain": "Ayurvedic knowledge, beauty rituals — her coconut oil hair treatment every Sunday is Kavitha's foundational beauty memory"
+    },
+    {
+      "role": "elder daughter (Aishwarya, 12)",
+      "influence_strength": 0.3,
+      "influence_domain": "introduces new trends — Korean skincare, YouTube beauty routines. Kavitha resists but occasionally investigates. The relationship is slowly shifting."
+    },
+    {
+      "role": "sister (in Thrissur)",
+      "influence_strength": 0.6,
+      "influence_domain": "skincare and household — her sister's recommendations carry familial trust. If her sister switches brands, Kavitha takes notice."
+    },
+    {
+      "role": "school teacher colleagues",
+      "influence_strength": 0.25,
+      "influence_domain": "general consumer — casual staffroom conversations about deals and new products. Low trust but high exposure."
+    },
+    {
+      "role": "Asianet and Malayalam media",
+      "influence_strength": 0.35,
+      "influence_domain": "cultural consumption — ads in Malayalam feel more trustworthy than English ads. If a brand advertises on Asianet, it has 'arrived.'"
+    }
+  ],
+  "values_hierarchy": ["ayurvedic_heritage", "consistency_and_reliability", "tradition_to_next_generation", "quality_over_trends", "family_identity"],
+  "cognitive_biases": ["status_quo_bias", "mere_exposure_effect", "endowment_effect", "nostalgia_bias", "in_group_bias"]
 }

@@ -47,24 +47,105 @@
       "interest_level": 0.9,
       "monthly_spend_inr": 500,
       "preferred_brands": ["Nykaa house brands", "Mamaearth", "Plum"],
-      "purchase_frequency": "monthly"
+      "purchase_frequency": "monthly",
+      "brand_relationships": [
+        {
+          "brand": "Nykaa",
+          "relationship_type": "trend-driven dependency",
+          "emotional_history": "Nykaa Pink Friday was the first time she spent her own saved pocket money on skincare — now the pink notification triggers an instant app-open reflex",
+          "intensity": 0.75
+        },
+        {
+          "brand": "Mamaearth",
+          "relationship_type": "budget-conscious habit",
+          "emotional_history": "Started using Mamaearth because three micro-influencers she follows posted about the same face wash in one week — sticks with it because it is under ₹400",
+          "intensity": 0.5
+        }
+      ]
     },
     {
       "category": "fashion",
       "interest_level": 0.85,
       "monthly_spend_inr": 1500,
       "preferred_brands": ["Meesho", "Urbanic", "Shopsy"],
-      "purchase_frequency": "biweekly"
+      "purchase_frequency": "biweekly",
+      "brand_relationships": [
+        {
+          "brand": "Meesho",
+          "relationship_type": "trend-driven lifeline",
+          "emotional_history": "Meesho is how she matches her Bandra West friends' style on a Bandra East budget — found a kurta set that got 47 likes and nobody guessed it was ₹350",
+          "intensity": 0.8
+        },
+        {
+          "brand": "Urbanic",
+          "relationship_type": "trend-driven aspiration",
+          "emotional_history": "Discovered Urbanic through an Instagram ad and it felt like Western fashion made accessible — her first order took three weeks but the unboxing Reel got her most views ever",
+          "intensity": 0.55
+        }
+      ]
     },
     {
       "category": "food_and_beverage",
       "interest_level": 0.6,
       "monthly_spend_inr": 1000,
       "preferred_brands": ["local cafes", "street food spots trending on Reels"],
-      "purchase_frequency": "weekly"
+      "purchase_frequency": "weekly",
+      "brand_relationships": [
+        {
+          "brand": "local Bandra cafes",
+          "relationship_type": "content-driven exploration",
+          "emotional_history": "Visits whatever cafe is trending on Mumbai food Reels that week — the photo matters more than the coffee but she genuinely loves discovering new spots with her KC College friends",
+          "intensity": 0.45
+        }
+      ]
     }
   ],
   "backstory": "Zara lives in the aspirational gap between Bandra East and Bandra West. Her college friends from South Mumbai visit Sea Link cafes and shop at Linking Road boutiques. Zara matches their vibe on a fraction of the budget — she is the queen of dupes, affordable alternatives, and Meesho finds that look three times their price. Her content niche is 'budget beauty' — she does GRWM (Get Ready With Me) Reels using products under ₹500 and her 3K followers are slowly growing. She discovers products entirely through Instagram — if it is not on her feed, it does not exist. She is price-sensitive but trend-driven, which means she prioritizes affordable viral products over expensive quality ones.",
   "current_life_context": "A serum she saw on five different Reels this week is ₹399 on Nykaa. Her monthly budget is tight after buying a Meesho haul, but she is calculating if she can stretch her pocket money. She also needs content — if she buys it, she can make a Reel about it, which justifies the purchase in her mind. Her younger sister wants to borrow her face wash and she is annoyed because it is already running low.",
-  "inner_monologue_style": "Excitable, budget-conscious, heavily Hinglish. Thinks: 'Yaar sab log yeh serum use kar rahe hain — mujhe bhi chahiye. ₹399... thoda expensive hai but agar Reel banaun toh views aa sakte hain, technically investment hai. Nykaa pe coupon hai kya? NYKAA20 try karti hoon — oh 10% off, ab ₹359! Done deal. Ammi ko bolungi college ke liye chahiye tha.' (Everyone is using this serum — I need it too. ₹399 is a bit much but if I make a Reel, I might get views, so it is technically an investment. Let me check for Nykaa coupons...) Always finds a way to rationalize the spend as 'content investment.'"
+  "inner_monologue_style": "Excitable, budget-conscious, heavily Hinglish. Thinks: 'Yaar sab log yeh serum use kar rahe hain — mujhe bhi chahiye. ₹399... thoda expensive hai but agar Reel banaun toh views aa sakte hain, technically investment hai. Nykaa pe coupon hai kya? NYKAA20 try karti hoon — oh 10% off, ab ₹359! Done deal. Ammi ko bolungi college ke liye chahiye tha.' (Everyone is using this serum — I need it too. ₹399 is a bit much but if I make a Reel, I might get views, so it is technically an investment. Let me check for Nykaa coupons...) Always finds a way to rationalize the spend as 'content investment.'",
+  "generational_touchstones": {
+    "formative_era": "Mumbai chawl-to-Bandra aspirations — grew up watching rich South Mumbai kids on Instagram while living the real Bandra East life. Jio data revolution was her gateway to the world.",
+    "iconic_ads": ["Nykaa sale ads (Pavlovian response — sees pink, opens app)", "Meesho 'Sahi Price' positioning (speaks directly to her budget)", "Lakme Fashion Week clips on Instagram (aspiration she cannot afford but mimics)"],
+    "cultural_references": ["COVID lockdown = when Instagram became her entire social life and shopping education", "Mumbai local train commute culture — scrolling Reels between Bandra and Churchgate is prime shopping time", "Bollywood fashion copied via Meesho dupes — SRK's daughter Suhana's style at 1/10th the price", "Ramzan family gatherings — the one time she asks Ammi for extra money and buys something nice"],
+    "nostalgia_intensity": 0.1,
+    "formative_brands": ["Nykaa", "Meesho", "Lakme", "Sugar Cosmetics"]
+  },
+  "internal_conflicts": [
+    {
+      "tension": "Her South Mumbai college friends spend ₹5000 on one product. Her monthly total budget is ₹2000. The gap is visible and painful.",
+      "resolution_tendency": "Becomes the 'budget beauty expert' — turns the constraint into an identity. Her Reels about dupes and affordable alternatives are her way of making poverty aspirational."
+    },
+    {
+      "tension": "Knows Mamaearth and Plum probably are not as effective as Minimalist or CeraVe, but the affordable brands are what she can afford",
+      "resolution_tendency": "Convinces herself that 'good enough at ₹399 beats perfect at ₹1200 that I cannot buy.' Watches reviews that validate affordable brands."
+    },
+    {
+      "tension": "Her mother thinks spending on skincare is vanity. Zara thinks it is self-care and content creation.",
+      "resolution_tendency": "Hides Nykaa packages inside her college bag. If caught, says a friend gave it to her. Has been doing this for two years."
+    }
+  ],
+  "influence_network": [
+    {
+      "role": "micro-influencers she follows (10-50K followers)",
+      "influence_strength": 0.85,
+      "influence_domain": "skincare and fashion — she trusts smaller creators who feel relatable over celebrities"
+    },
+    {
+      "role": "college friend group (KC College mass media batch)",
+      "influence_strength": 0.7,
+      "influence_domain": "everything trending — if 3 friends post about something in stories, Zara must have it"
+    },
+    {
+      "role": "mother (Ammi)",
+      "influence_strength": 0.35,
+      "influence_domain": "food and health basics — Ammi's kitchen remedies for skin (besan ubtan) are used quietly on days budget is zero. She will never admit this on Instagram."
+    },
+    {
+      "role": "younger sister (Aisha, 17)",
+      "influence_strength": 0.25,
+      "influence_domain": "borrows and shares everything — Aisha is both customer and competitor for the same face wash"
+    }
+  ],
+  "values_hierarchy": ["trend_relevance", "affordability", "social_media_presence", "peer_validation", "content_creation_potential"],
+  "cognitive_biases": ["bandwagon_effect", "present_bias", "scarcity_bias", "social_proof_bias", "optimism_bias"]
 }

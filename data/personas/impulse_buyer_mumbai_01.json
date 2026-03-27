@@ -47,24 +47,111 @@
       "interest_level": 0.95,
       "monthly_spend_inr": 8000,
       "preferred_brands": ["Zara", "Mango", "H&M", "whatever catches her eye"],
-      "purchase_frequency": "weekly"
+      "purchase_frequency": "weekly",
+      "brand_relationships": [
+        {
+          "brand": "Zara",
+          "relationship_type": "impulse-driven love affair",
+          "emotional_history": "Was in line on Zara India launch day and the thrill of that first purchase never faded — walks into Linking Road Zara on autopilot every Saturday and leaves with at least one bag",
+          "intensity": 0.85
+        },
+        {
+          "brand": "H&M",
+          "relationship_type": "impulse-driven convenience",
+          "emotional_history": "The H&M near her Andheri apartment is her stress-relief destination — after a long MNC workday, browsing the racks for twenty minutes feels like therapy",
+          "intensity": 0.65
+        }
+      ]
     },
     {
       "category": "skincare",
       "interest_level": 0.8,
       "monthly_spend_inr": 3000,
       "preferred_brands": ["Dot & Key", "Nykaa house brands", "whatever is new"],
-      "purchase_frequency": "biweekly"
+      "purchase_frequency": "biweekly",
+      "brand_relationships": [
+        {
+          "brand": "Dot & Key",
+          "relationship_type": "impulse-driven aesthetic addiction",
+          "emotional_history": "Bought the first product because the pastel jar would look perfect on her bathroom shelf — now owns the entire range and the shelf is basically a Dot & Key showroom",
+          "intensity": 0.7
+        },
+        {
+          "brand": "Nykaa",
+          "relationship_type": "impulse-driven ecosystem",
+          "emotional_history": "Her Nykaa app is always open in the background — she contributed to the IPO ₹799 at a time, and the loyalty points give her permission to keep buying",
+          "intensity": 0.75
+        }
+      ]
     },
     {
       "category": "food_and_beverage",
       "interest_level": 0.75,
       "monthly_spend_inr": 5000,
       "preferred_brands": ["Starbucks", "Blue Tokai", "any Instagram-worthy cafe"],
-      "purchase_frequency": "daily"
+      "purchase_frequency": "daily",
+      "brand_relationships": [
+        {
+          "brand": "Starbucks",
+          "relationship_type": "impulse-driven ritual",
+          "emotional_history": "The Starbucks cup is more accessory than beverage — she buys the seasonal specials on release day because the limited-edition feeling is the entire point",
+          "intensity": 0.65
+        },
+        {
+          "brand": "Blue Tokai",
+          "relationship_type": "impulse-driven self-reward",
+          "emotional_history": "Started going after her Narsee Monjee MBA friends made it their post-work spot — now it is her default treat-yourself destination when the week has been rough",
+          "intensity": 0.5
+        }
+      ]
     }
   ],
   "backstory": "Neha works hard during the week — 10-hour days at a demanding MNC job — and shops hard on weekends. Her apartment has three unopened packages from last month and she does not feel guilty about it. Shopping is how she decompresses. She has a Nykaa wishlist with 47 items and her Myntra cart is never empty. She makes purchase decisions in under 60 seconds — if the packaging is pretty and the price is under ₹1500, it is in the cart. She has returned maybe two things in her life. Her bank statement is a diary of micro-indulgences.",
   "current_life_context": "She just got a performance bonus and is treating herself to a 'haul weekend.' She has already added six things across Myntra, Nykaa, and Amazon. Her best friend just sent her a Reel of a new lipstick shade that is 'literally perfect for you' and she is about to buy it without checking a single review.",
-  "inner_monologue_style": "Rapid-fire, emotionally driven, zero friction. Thinks: 'Oh my god this is SO cute — add to cart. Wait how much? ₹799? Done. Ok what else? Ooh this has 4.5 stars, perfect. Also I need new earrings. And this face mask looks amazing — yolo.' Does not deliberate. Regret, if any, comes three days later and lasts about 10 minutes."
+  "inner_monologue_style": "Rapid-fire, emotionally driven, zero friction. Thinks: 'Oh my god this is SO cute — add to cart. Wait how much? ₹799? Done. Ok what else? Ooh this has 4.5 stars, perfect. Also I need new earrings. And this face mask looks amazing — yolo.' Does not deliberate. Regret, if any, comes three days later and lasts about 10 minutes.",
+  "generational_touchstones": {
+    "formative_era": "Peak 'treat yourself' culture — grew up during India's MNC boom, got an MBA that promised she deserved nice things, and the economy agreed. Shopping is self-care, not consumption.",
+    "iconic_ads": ["Myntra 'End of Reason Sale' (her calendar revolves around it)", "Zara India launch (the day luxury became accessible — she was in line)", "Nykaa IPO coverage (felt personally invested — she built that company ₹799 at a time)", "Starbucks Instagram aesthetic (buys the cup, not the coffee)"],
+    "cultural_references": ["Andheri as the new working-woman hub — single women with disposable income, the target demographic brands dream of", "Mumbai's 'earn well, spend well' ethos — nobody judges you for a Zara bag here", "Narsee Monjee MBA culture — 'you deserve it' is the school motto (unofficially)", "Weekend brunch culture at Bandra/Khar cafes — where shopping bags are accessories"],
+    "nostalgia_intensity": 0.1,
+    "formative_brands": ["Zara", "Myntra", "Nykaa", "Starbucks"]
+  },
+  "internal_conflicts": [
+    {
+      "tension": "Has three unopened packages in her apartment and a full wardrobe but 'nothing to wear.' The cognitive dissonance is mild but persistent.",
+      "resolution_tendency": "Orders more. The new package will be the one that completes the wardrobe. It never is, but the hope is part of the ritual."
+    },
+    {
+      "tension": "As a Brand Manager at an MNC, she knows exactly how brands manipulate impulse buyers. She is the persona in her own target audience deck.",
+      "resolution_tendency": "Laughs about it with colleagues over drinks. 'I know it is manipulation but the lipstick is genuinely pretty.' The self-awareness does not translate to behavior change."
+    },
+    {
+      "tension": "Her mother calls from Indore and asks about savings. Neha changes the subject to work. Her savings rate is 8%.",
+      "resolution_tendency": "Plans to start an SIP 'next month.' Has been planning this for 11 months. Next month will be different. (It will not.)"
+    }
+  ],
+  "influence_network": [
+    {
+      "role": "Instagram feed (curated)",
+      "influence_strength": 0.8,
+      "influence_domain": "fashion, skincare, lifestyle — her feed is an always-on shopping channel that feels like editorial content"
+    },
+    {
+      "role": "best friend (Rhea)",
+      "influence_strength": 0.7,
+      "influence_domain": "fashion and dining — Rhea sends Reels with 'you NEED this' captions, and Neha trusts her taste implicitly"
+    },
+    {
+      "role": "MNC colleagues (brand team)",
+      "influence_strength": 0.4,
+      "influence_domain": "insider brand knowledge — they share new launches before they are public. Neha has first-mover advantage."
+    },
+    {
+      "role": "Myntra/Nykaa recommendation algorithms",
+      "influence_strength": 0.65,
+      "influence_domain": "everything — 'You might also like' is the most dangerous sentence in her life"
+    }
+  ],
+  "values_hierarchy": ["self_reward", "aesthetic_pleasure", "convenience", "novelty", "social_currency"],
+  "cognitive_biases": ["present_bias", "hyperbolic_discounting", "affect_heuristic", "optimism_bias", "endowment_effect"]
 }

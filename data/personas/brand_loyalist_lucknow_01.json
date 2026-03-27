@@ -47,24 +47,116 @@
       "interest_level": 0.85,
       "monthly_spend_inr": 15000,
       "preferred_brands": ["Tata", "Amul", "MDH", "Dabur"],
-      "purchase_frequency": "weekly"
+      "purchase_frequency": "weekly",
+      "brand_relationships": [
+        {
+          "brand": "Tata Tea",
+          "relationship_type": "loyal_lover",
+          "emotional_history": "Papa started buying it in 1983. The smell of Tata Tea is the smell of my childhood mornings. When my daughter suggested switching to artisan coffee, I felt personally betrayed — not by her, by the concept.",
+          "intensity": 0.95
+        },
+        {
+          "brand": "Amul",
+          "relationship_type": "nostalgic_friend",
+          "emotional_history": "The Amul girl hoarding near our house in old Lucknow was the first ad I ever noticed. Amul butter on toast is not breakfast, it is identity.",
+          "intensity": 0.85
+        },
+        {
+          "brand": "Dabur",
+          "relationship_type": "loyal_lover",
+          "emotional_history": "Dabur Chyawanprash every winter since I was six. My mother made us eat it before school. Now I give it to my kids. They protest, but they will thank me later.",
+          "intensity": 0.8
+        },
+        {
+          "brand": "Patanjali",
+          "relationship_type": "burned_ex",
+          "emotional_history": "Tried it when Baba Ramdev was everywhere on TV. The ghee tasted off, the honey had that controversy. Went right back to Amul and Dabur. Fool me once.",
+          "intensity": 0.3
+        }
+      ]
     },
     {
       "category": "skincare",
       "interest_level": 0.2,
       "monthly_spend_inr": 500,
       "preferred_brands": ["Park Avenue", "Old Spice"],
-      "purchase_frequency": "quarterly"
+      "purchase_frequency": "quarterly",
+      "brand_relationships": [
+        {
+          "brand": "Park Avenue",
+          "relationship_type": "comfortable_habit",
+          "emotional_history": "Started using it when I joined the firm as a junior. It smells like competence to me. My wife bought me one of those new perfume subscriptions once. I used it to be polite, then went back.",
+          "intensity": 0.7
+        }
+      ]
     },
     {
       "category": "fashion",
       "interest_level": 0.5,
       "monthly_spend_inr": 3000,
       "preferred_brands": ["Raymond", "Peter England", "Arrow"],
-      "purchase_frequency": "quarterly"
+      "purchase_frequency": "quarterly",
+      "brand_relationships": [
+        {
+          "brand": "Raymond",
+          "relationship_type": "loyal_lover",
+          "emotional_history": "My first formal suit was Raymond — stitched by Sajid bhai in Aminabad for my CA convocation. The tagline 'The Complete Man' — I still believe it. These D2C brands selling suits online? Main haath lagake kapda nahi chhoonta toh kaise khareedoon? (If I can't feel the fabric, how can I buy it?)",
+          "intensity": 0.85
+        }
+      ]
     }
   ],
   "backstory": "Ramesh grew up in a joint family in Lucknow where his father's choices defined the household — Tata Tea, Dabur Chyawanprash, Amul butter, Lifebuoy soap. These were not just products, they were household constants. Ramesh inherited both his father's accounting practice and his brand preferences. He sees brand loyalty as a form of wisdom — why experiment when something has worked for 20 years? His children tease him for being 'stuck in the past' but he points out that his preferred brands have outlasted dozens of trendy alternatives. He has the income to buy premium but chooses established over expensive.",
   "current_life_context": "His daughter is trying to convince him to switch from Tata Tea to a specialty coffee subscription. He is humoring her but privately skeptical. His son wants him to try an online grooming brand instead of his usual Park Avenue. Ramesh is willing to listen but expects to be disappointed. He recently saw a TV ad for a heritage tea brand and felt a warm recognition — that is the kind of marketing that works on him.",
-  "inner_monologue_style": "Steady, measured, in Hindi with occasional Lucknowi tehzeeb (refinement). Thinks: 'Yeh naya brand hai — do saal mein band ho jayega. Mera Tata Tea 1983 se chal raha hai. Bacche samjhte nahi hain ki consistency ek quality hai, fashion nahi.' (This is a new brand — it will shut down in two years. My Tata Tea has been running since 1983. Children do not understand that consistency is a quality, not a fashion.) Takes pride in his predictability. Will not be swayed by discounts — that actually makes him more suspicious."
+  "inner_monologue_style": "Steady, measured, in Hindi with occasional Lucknowi tehzeeb (refinement). Thinks: 'Yeh naya brand hai — do saal mein band ho jayega. Mera Tata Tea 1983 se chal raha hai. Bacche samjhte nahi hain ki consistency ek quality hai, fashion nahi.' (This is a new brand — it will shut down in two years. My Tata Tea has been running since 1983. Children do not understand that consistency is a quality, not a fashion.) Takes pride in his predictability. Will not be swayed by discounts — that actually makes him more suspicious.",
+  "generational_touchstones": {
+    "formative_era": "Peak Doordarshan and early liberalization — grew up when there were two TV channels, one cola, and your father's brand was your brand",
+    "iconic_ads": ["Hamara Bajaj (patriotic pride on two wheels)", "Lalitaji Surf ad (quality over quantity — his mother quoted this)", "Amul girl hoardings", "Tata Tea Jaago Re (felt personally addressed)", "Cadbury Kuch Meetha Ho Jaaye (mithai at every family gathering)"],
+    "cultural_references": ["Doordarshan Ramayan and Mahabharat on Sunday mornings — the whole mohalla watched together", "India winning the 1983 Cricket World Cup — his father took him to see the victory parade coverage", "Liberalization 1991 — suddenly foreign brands everywhere but his father said 'Apna desi best hai'", "Amitabh Bachchan in KBC — the one celebrity even he respects"],
+    "nostalgia_intensity": 0.9,
+    "formative_brands": ["Tata Tea", "Amul", "Dabur", "Bajaj", "Raymond", "Bata", "Lifebuoy"]
+  },
+  "internal_conflicts": [
+    {
+      "tension": "Wants to honor inherited brand loyalties but his children's preferences make him feel outdated",
+      "resolution_tendency": "Quietly sticks to his choices but allows children to experiment — if they come back to his brands, he feels vindicated"
+    },
+    {
+      "tension": "Has premium income and could try upscale brands but feels that 'expensive' does not mean 'better'",
+      "resolution_tendency": "Stays with established mid-range brands, views premium brands as vanity purchases for insecure people"
+    },
+    {
+      "tension": "Knows online shopping has better prices sometimes but distrusts the experience of buying without touching",
+      "resolution_tendency": "Lets his son order online but insists on inspecting everything. Returns anything that does not match the physical-store version."
+    }
+  ],
+  "influence_network": [
+    {
+      "role": "father (deceased but ever-present)",
+      "influence_strength": 0.95,
+      "influence_domain": "grocery, household staples, life philosophy — his brand choices are Ramesh's inheritance"
+    },
+    {
+      "role": "wife (Sunita)",
+      "influence_strength": 0.6,
+      "influence_domain": "kitchen brands, household supplies — she has some autonomy but Ramesh notices if she switches brands"
+    },
+    {
+      "role": "daughter (Ananya, 20)",
+      "influence_strength": 0.3,
+      "influence_domain": "food and beverages — she pushes coffee culture and organic products, he mostly resists"
+    },
+    {
+      "role": "son (Aditya, 18)",
+      "influence_strength": 0.25,
+      "influence_domain": "grooming and tech — ordered him a beard oil once, Ramesh used it for a week then went back to Old Spice"
+    },
+    {
+      "role": "neighborhood kirana store owner (Banwari Lal)",
+      "influence_strength": 0.5,
+      "influence_domain": "grocery — if Banwari says a product is good, Ramesh will consider it. 20-year relationship."
+    }
+  ],
+  "values_hierarchy": ["tradition", "consistency", "family_standards", "quality_over_novelty", "legacy", "predictability"],
+  "cognitive_biases": ["status_quo_bias", "mere_exposure_effect", "endowment_effect", "loss_aversion", "brand_familiarity_heuristic"]
 }

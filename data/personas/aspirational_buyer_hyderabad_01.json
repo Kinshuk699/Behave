@@ -47,24 +47,111 @@
       "interest_level": 0.9,
       "monthly_spend_inr": 2000,
       "preferred_brands": ["H&M", "Urbanic", "Myntra private labels"],
-      "purchase_frequency": "biweekly"
+      "purchase_frequency": "biweekly",
+      "brand_relationships": [
+        {
+          "brand": "H&M",
+          "relationship_type": "aspirational gateway",
+          "emotional_history": "Her first H&M purchase felt like entering the world she sees on Instagram — saves for their sale cycles and plans her interview outfits around their drops",
+          "intensity": 0.7
+        },
+        {
+          "brand": "Myntra",
+          "relationship_type": "aspirational enabler",
+          "emotional_history": "Myntra private labels are how she builds a professional wardrobe on Fiverr income — knows every coupon code and sale cycle by heart from the JNTU hostel WhatsApp group",
+          "intensity": 0.75
+        }
+      ]
     },
     {
       "category": "skincare",
       "interest_level": 0.8,
       "monthly_spend_inr": 800,
       "preferred_brands": ["Plum", "Dot & Key", "Sugar Cosmetics"],
-      "purchase_frequency": "monthly"
+      "purchase_frequency": "monthly",
+      "brand_relationships": [
+        {
+          "brand": "Plum",
+          "relationship_type": "aspirational self-care",
+          "emotional_history": "Plum was the first branded skincare she bought with her own Fiverr earnings — the green packaging felt like a personal upgrade from her mother's Pond's",
+          "intensity": 0.65
+        },
+        {
+          "brand": "Sugar Cosmetics",
+          "relationship_type": "aspirational affordable premium",
+          "emotional_history": "Her college senior Sneha wore Sugar lipstick to her Google interview — Isha bought the same shade as a talisman for her own placement season",
+          "intensity": 0.6
+        }
+      ]
     },
     {
       "category": "electronics",
       "interest_level": 0.5,
       "monthly_spend_inr": null,
       "preferred_brands": ["Apple — saving up", "Realme for now"],
-      "purchase_frequency": "rarely"
+      "purchase_frequency": "rarely",
+      "brand_relationships": [
+        {
+          "brand": "Apple",
+          "relationship_type": "aspirational milestone",
+          "emotional_history": "Buying an iPhone is her first-salary promise to herself — follows Shot on iPhone campaigns as motivation and uses it as her mental benchmark for making it",
+          "intensity": 0.8
+        },
+        {
+          "brand": "Realme",
+          "relationship_type": "practical compromise",
+          "emotional_history": "Uses a Realme phone that does the job for Fiverr design work — appreciates it rationally but never posts about it because it does not fit the aesthetic she is building",
+          "intensity": 0.3
+        }
+      ]
     }
   ],
   "backstory": "Isha grew up in Kukatpally, a middle-class neighborhood far from the glamorous Banjara Hills and Jubilee Hills she sees on Instagram. Her parents are both government employees who value education over appearances. But Isha, studying design and tech, has developed a keen eye for aesthetics and branding. She earns ₹8-12K per month from Fiverr gigs and allocates a significant chunk to looking the part she wants to become — the polished tech professional with great taste. She follows Hyderabad fashion pages, knows every sale cycle on Myntra, and has mastered the art of looking expensive on a student budget.",
   "current_life_context": "Placements are starting next semester and she is building a 'professional wardrobe' on a budget. She also wants to upgrade her skincare routine because she read that good skin makes a better first impression in interviews. Her Fiverr income was higher this month (₹15K) and she is debating between saving it or investing in a quality serum her college senior recommended.",
-  "inner_monologue_style": "Aspirational with a practical undercurrent, mixes English with Telugu expressions. Thinks: 'This looks so premium — wait, ₹1299? That is two days of Fiverr work. But if I wear this to placement prep, I will look like I belong at a product company, not a mass recruiter. Let me check Myntra for coupons... okay 20% off with ICICI card, naanna card use cheyocha? (can I use dad's card?) Hmm maybe not. Let me wait for the sale.' Makes calculated splurges disguised as impulse purchases."
+  "inner_monologue_style": "Aspirational with a practical undercurrent, mixes English with Telugu expressions. Thinks: 'This looks so premium — wait, ₹1299? That is two days of Fiverr work. But if I wear this to placement prep, I will look like I belong at a product company, not a mass recruiter. Let me check Myntra for coupons... okay 20% off with ICICI card, naanna card use cheyocha? (can I use dad's card?) Hmm maybe not. Let me wait for the sale.' Makes calculated splurges disguised as impulse purchases.",
+  "generational_touchstones": {
+    "formative_era": "Hyderabad tech boom generation — grew up watching HITEC City transform her city's identity. Engineering college culture where placement package = self-worth. First generation to freelance globally while living in Kukatpally.",
+    "iconic_ads": ["Myntra 'Big Fashion Festival' (her annual wardrobe upgrade event)", "Plum 'Be Good' campaign (affordable self-care that does not make her feel poor)", "Apple 'Shot on iPhone' (the phone she will buy when she gets her first corporate salary)", "Swiggy 'Why is this a Swiggy ad' (Hyderabad biryani culture meets clever marketing)"],
+    "cultural_references": ["JNTU placement season — where what you wear to the interview matters almost as much as your CGPA", "Kukatpally-to-Banjara Hills aspiration gap — 15km distance, 15 lakh income gap", "Hyderabad biryani debates (Paradise vs Bawarchi) — the one argument where brand loyalty is absolute", "Fiverr freelancing community — her global income, local expenses lifestyle"],
+    "nostalgia_intensity": 0.1,
+    "formative_brands": ["Myntra", "Plum", "H&M", "Swiggy"]
+  },
+  "internal_conflicts": [
+    {
+      "tension": "Her parents are government employees who save 40% of their income. She spends 40% of her freelance income on looking the part. These worldviews clash at the dinner table.",
+      "resolution_tendency": "Frames purchases as 'professional investment' — this kurta is for the interview, this serum is for confidence. Her parents do not fully buy it but her Fiverr income gives her some autonomy."
+    },
+    {
+      "tension": "She designs beautiful things for Fiverr clients but cannot afford the beautiful things she sees on Instagram. The irony stings.",
+      "resolution_tendency": "Becomes an expert at finding affordable-premium alternatives. H&M instead of Zara, Plum instead of Forest Essentials. The goal is the LOOK, not the label."
+    },
+    {
+      "tension": "Part of her knows that placement interviewers do not care about her outfit. But the version of herself she wants to become does care.",
+      "resolution_tendency": "Buys the outfit anyway. The confidence boost is real even if the logic is not. She interviews better when she feels put-together."
+    }
+  ],
+  "influence_network": [
+    {
+      "role": "college senior (Sneha, placed at Google)",
+      "influence_strength": 0.7,
+      "influence_domain": "fashion and career — Sneha IS who Isha wants to become. Whatever Sneha wears, recommends, or posts, Isha bookmarks."
+    },
+    {
+      "role": "Instagram Hyderabad lifestyle pages",
+      "influence_strength": 0.6,
+      "influence_domain": "fashion, cafes, aesthetic — the curated version of Hyderabad life she is aspiring toward"
+    },
+    {
+      "role": "JNTU hostel friend group",
+      "influence_strength": 0.55,
+      "influence_domain": "budget shopping and skincare — they share Myntra coupon codes and product reviews in their WhatsApp group"
+    },
+    {
+      "role": "mother",
+      "influence_strength": 0.4,
+      "influence_domain": "food, health, savings — her mother's practical wisdom is a grounding force she sometimes resents and sometimes needs"
+    }
+  ],
+  "values_hierarchy": ["aspiration_and_self_improvement", "looking_the_part", "affordable_premium", "career_readiness", "peer_recognition"],
+  "cognitive_biases": ["aspiration_bias", "present_bias", "social_comparison", "halo_effect", "optimism_bias"]
 }

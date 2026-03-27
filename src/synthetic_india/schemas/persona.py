@@ -108,6 +108,40 @@ class CategoryAffinity(BaseModel):
     monthly_spend_inr: Optional[float] = None
     preferred_brands: list[str] = Field(default_factory=list)
     purchase_frequency: Optional[str] = None  # weekly, monthly, quarterly, rarely
+    brand_relationships: list["BrandRelationship"] = Field(default_factory=list)
+
+
+# ── Deep Persona Models (2026-03-28) ─────────────────────────
+
+
+class GenerationalTouchstones(BaseModel):
+    """Cultural memory that shapes purchasing instincts."""
+    formative_era: str = Field(..., description="e.g. '90s Doordarshan kid', 'post-Jio digital native'")
+    iconic_ads: list[str] = Field(default_factory=list, description="Ads burned into memory")
+    cultural_references: list[str] = Field(default_factory=list, description="Events, shows, movements")
+    nostalgia_intensity: float = Field(..., ge=0, le=1, description="0 = forward-looking, 1 = deeply nostalgic")
+    formative_brands: list[str] = Field(default_factory=list, description="Brands from childhood/teen years")
+
+
+class InternalConflict(BaseModel):
+    """A tension the persona lives with when making purchase decisions."""
+    tension: str = Field(..., description="The push-pull, e.g. 'Wants premium but EMI eats budget'")
+    resolution_tendency: str = Field(..., description="How they usually resolve it")
+
+
+class BrandRelationship(BaseModel):
+    """Emotional relationship with a specific brand — beyond 'preferred'."""
+    brand: str
+    relationship_type: str = Field(..., description="loyal_lover, nostalgic_friend, burned_ex, curious_flirt, etc.")
+    emotional_history: str = Field(..., description="Why this relationship exists")
+    intensity: float = Field(..., ge=0, le=1, description="0 = indifferent, 1 = identity-defining")
+
+
+class Influencer(BaseModel):
+    """A person or group that shapes this persona's purchase decisions."""
+    role: str = Field(..., description="mother, spouse, college_friends, YouTube_reviewer, etc.")
+    influence_strength: float = Field(..., ge=0, le=1, description="0 = ignored, 1 = decisive")
+    influence_domain: str = Field(..., description="What categories they influence, e.g. 'grocery, household'")
 
 
 # ── Full Persona ──────────────────────────────────────────────
@@ -136,5 +170,12 @@ class PersonaProfile(BaseModel):
     inner_monologue_style: str = Field(
         ..., description="How they think/talk to themselves when evaluating a product"
     )
+
+    # ── Deep persona fields (2026-03-28) ──
+    generational_touchstones: Optional[GenerationalTouchstones] = None
+    internal_conflicts: list[InternalConflict] = Field(default_factory=list)
+    influence_network: list[Influencer] = Field(default_factory=list)
+    values_hierarchy: list[str] = Field(default_factory=list, description="Ordered: most important first")
+    cognitive_biases: list[str] = Field(default_factory=list, description="e.g. present_bias, anchoring, bandwagon")
 
     model_config = ConfigDict(use_enum_values=True)

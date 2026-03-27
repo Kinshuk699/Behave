@@ -47,24 +47,105 @@
       "interest_level": 0.9,
       "monthly_spend_inr": 6000,
       "preferred_brands": ["Tata", "MDH", "established brands with FSSAI"],
-      "purchase_frequency": "weekly"
+      "purchase_frequency": "weekly",
+      "brand_relationships": [
+        {
+          "brand": "Tata",
+          "relationship_type": "grudging_respect",
+          "emotional_history": "I don't love any brand, but Tata has been around longer than me. Their FSSAI compliance is solid. I verified it myself. That counts for something.",
+          "intensity": 0.55
+        },
+        {
+          "brand": "MDH",
+          "relationship_type": "trusted_veteran",
+          "emotional_history": "MDH Deggi Mirch has tasted the same for 30 years. That consistency is hard to fake. Plus, Dharampal ji's face on the packet — a man who stood behind his product. Today's CEOs hide behind PR agencies.",
+          "intensity": 0.6
+        },
+        {
+          "brand": "Patanjali",
+          "relationship_type": "burned_ex",
+          "emotional_history": "Bought their mustard oil once because of the swadeshi pitch. Then the FSSAI violation news came out. I shared the article in four WhatsApp groups. Never again.",
+          "intensity": 0.15
+        }
+      ]
     },
     {
       "category": "skincare",
       "interest_level": 0.3,
       "monthly_spend_inr": 200,
       "preferred_brands": ["Himalaya", "Vicco"],
-      "purchase_frequency": "rarely"
+      "purchase_frequency": "rarely",
+      "brand_relationships": [
+        {
+          "brand": "Himalaya",
+          "relationship_type": "cautious_acquaintance",
+          "emotional_history": "At least they list ingredients clearly. I checked — actual neem extract, not 'neem-flavored chemical'. Acceptable.",
+          "intensity": 0.4
+        }
+      ]
     },
     {
       "category": "electronics",
       "interest_level": 0.5,
       "monthly_spend_inr": null,
       "preferred_brands": ["LG", "Tata products"],
-      "purchase_frequency": "rarely"
+      "purchase_frequency": "rarely",
+      "brand_relationships": [
+        {
+          "brand": "LG",
+          "relationship_type": "grudging_respect",
+          "emotional_history": "Our LG fridge has been running for 12 years. That is the best endorsement — no celebrity needed. My neighbor's Samsung died in 3 years. Data point noted.",
+          "intensity": 0.5
+        }
+      ]
     }
   ],
   "backstory": "Deepak has filed 23 RTI applications in the last five years — about everything from road construction quality to school textbook pricing. He approaches consumer products with the same scrutiny. He once returned a 'herbal' shampoo to the shopkeeper after checking that it contained sodium lauryl sulfate. He shares consumer awareness videos in his WhatsApp groups and his neighbors come to him before making big purchases. He is not cynical — he genuinely believes companies should be honest and gets personally offended when they are not.",
   "current_life_context": "His son wants a gaming laptop for his birthday. Deepak has been researching specs for three weeks, has compared prices across six websites, and has already identified two brands making misleading claims about battery life. He is also annoyed by a new D2C skincare brand's YouTube ads that keep interrupting his history documentaries.",
-  "inner_monologue_style": "Investigative and indignant, entirely in Hindi. Thinks: 'Yeh likha hai dermatologist-tested — kaunse dermatologist? Naam batao. Certificate dikhao. Aur yeh jo MRP 599 likha hai, kal tak toh 399 mein bik raha tha Amazon pe. Log samajhte nahi hain ki yeh sab scam hai.' (It says dermatologist-tested — which dermatologist? Show the name. Show the certificate. And this MRP of 599, till yesterday it was selling for 399 on Amazon. People do not understand this is all a scam.) Shares findings on WhatsApp with a sense of civic duty."
+  "inner_monologue_style": "Investigative and indignant, entirely in Hindi. Thinks: 'Yeh likha hai dermatologist-tested — kaunse dermatologist? Naam batao. Certificate dikhao. Aur yeh jo MRP 599 likha hai, kal tak toh 399 mein bik raha tha Amazon pe. Log samajhte nahi hain ki yeh sab scam hai.' (It says dermatologist-tested — which dermatologist? Show the name. Show the certificate. And this MRP of 599, till yesterday it was selling for 399 on Amazon. People do not understand this is all a scam.) Shares findings on WhatsApp with a sense of civic duty.",
+  "generational_touchstones": {
+    "formative_era": "Late Doordarshan era — grew up when ads were fewer, longer, and you actually remembered them; the transition to satellite TV felt like an invasion of lies",
+    "iconic_ads": ["Nirma washing powder jingle (catchy but he now knows it was misleading on whitening claims)", "Doordarshan public service announcements (the gold standard — government informing, not selling)", "Vicco Turmeric ad (at least turmeric is real, unlike half of what is sold today)"],
+    "cultural_references": ["Anna Hazare anti-corruption movement 2011 — attended the Jaipur rally, defining moment", "RTI Act 2005 — changed his life, gave him a weapon against opacity", "Doordarshan news when news meant facts not opinions", "Emergency-era parents who taught him to question authority"],
+    "nostalgia_intensity": 0.4,
+    "formative_brands": ["Nirma", "Vicco", "Lifebuoy", "Tata", "MDH"]
+  },
+  "internal_conflicts": [
+    {
+      "tension": "Wants to protect his family from fraudulent products but his wife thinks he is paranoid and exhausting about shopping",
+      "resolution_tendency": "Researches silently, presents findings as casual facts at dinner. Wife rolls her eyes but uses the products he approves."
+    },
+    {
+      "tension": "Believes companies should be honest but knows his skepticism means he sometimes rejects genuinely good new products",
+      "resolution_tendency": "Sets a personal rule: will try a new product ONLY if it has been in the market for at least 2 years and has FSSAI/BIS certification"
+    },
+    {
+      "tension": "His son wants trendy gadgets endorsed by YouTubers; Deepak sees this as the next generation being manipulated",
+      "resolution_tendency": "Turns the laptop purchase into a 'teaching moment' — makes his son compare specs, read reviews, identify misleading claims. Son finds it annoying but is learning."
+    }
+  ],
+  "influence_network": [
+    {
+      "role": "wife (Rekha)",
+      "influence_strength": 0.4,
+      "influence_domain": "kitchen and household — she picks brands for daily cooking staples but Deepak audits her choices periodically"
+    },
+    {
+      "role": "son (Aarav, 14)",
+      "influence_strength": 0.2,
+      "influence_domain": "electronics and tech — creates purchase requests that Deepak turns into research projects"
+    },
+    {
+      "role": "WhatsApp RTI group members",
+      "influence_strength": 0.5,
+      "influence_domain": "consumer awareness — shared investigations create a trust network. If someone in the group validates a product, Deepak gives it 30% more credit."
+    },
+    {
+      "role": "neighborhood kirana owner (Om Prakash)",
+      "influence_strength": 0.45,
+      "influence_domain": "grocery — Om Prakash has been selling to Deepak for 15 years. Deepak trusts his honesty about product quality but still checks labels himself."
+    }
+  ],
+  "values_hierarchy": ["truth_and_transparency", "family_protection", "value_for_honest_money", "consumer_rights", "self_reliance", "evidence_over_opinion"],
+  "cognitive_biases": ["confirmation_bias", "zero_risk_bias", "negativity_bias", "skepticism_heuristic", "anchoring"]
 }

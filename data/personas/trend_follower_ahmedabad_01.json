@@ -47,24 +47,105 @@
       "interest_level": 0.95,
       "monthly_spend_inr": 2500,
       "preferred_brands": ["Nike", "Bewakoof", "Urbanic"],
-      "purchase_frequency": "biweekly"
+      "purchase_frequency": "biweekly",
+      "brand_relationships": [
+        {
+          "brand": "Nike",
+          "relationship_type": "aspirational obsession",
+          "emotional_history": "Has been saving for Nike Dunks for four months after every streetwear account he follows started posting them — buys Nike-inspired designs from Myntra to cope with the wait",
+          "intensity": 0.85
+        },
+        {
+          "brand": "Bewakoof",
+          "relationship_type": "trend-driven loyalty",
+          "emotional_history": "Started buying Bewakoof after his favorite Ahmedabad creator did a collab — now owns seven tees and considers them his uniform for Instagram content",
+          "intensity": 0.7
+        }
+      ]
     },
     {
       "category": "skincare",
       "interest_level": 0.6,
       "monthly_spend_inr": 500,
       "preferred_brands": ["Bombay Shaving Company", "Man Matters"],
-      "purchase_frequency": "monthly"
+      "purchase_frequency": "monthly",
+      "brand_relationships": [
+        {
+          "brand": "Bombay Shaving Company",
+          "relationship_type": "trend-driven trial",
+          "emotional_history": "Bought his first face wash after a 3-million-view Reel featured it — uses it more because it looks good in his bathroom shelf photos than for any skincare results",
+          "intensity": 0.5
+        }
+      ]
     },
     {
       "category": "electronics",
       "interest_level": 0.7,
       "monthly_spend_inr": null,
       "preferred_brands": ["boAt", "Apple — saving up for AirPods"],
-      "purchase_frequency": "rarely"
+      "purchase_frequency": "rarely",
+      "brand_relationships": [
+        {
+          "brand": "boAt",
+          "relationship_type": "trend-driven everyday brand",
+          "emotional_history": "Owns two pairs of boAt earbuds because Hardik Pandya endorses them and every college friend has them — lost the first pair but bought the same model again without thinking",
+          "intensity": 0.65
+        },
+        {
+          "brand": "Apple",
+          "relationship_type": "aspirational yearning",
+          "emotional_history": "Saving up for AirPods because they are the ultimate flex in his creator circle — has been watching unboxing videos for three months as a form of anticipation",
+          "intensity": 0.8
+        }
+      ]
     }
   ],
   "backstory": "Rohan grew up watching his family run a textile business in Ahmedabad's cloth market, but he is more interested in streetwear than saris. He started making Instagram Reels during COVID lockdown and now has 12K followers — mostly college friends and local creators. He discovers everything through social media first. If a product is not on his feed, it might as well not exist. He buys Bewakoof t-shirts because his favorite creators wear them, uses Bombay Shaving Company because of a Reel he saw, and is saving up for Nike Dunks because every streetwear account posts them.",
   "current_life_context": "His college fest is in two weeks and he needs a new outfit for the DJ night. He has been scrolling Myntra and Ajio for 'festival fits' but keeps getting distracted by new skincare Reels. His mother just gave him ₹3000 for books and he is definitely spending at least half of it on clothes.",
-  "inner_monologue_style": "Fast, visual-first, mixes Gujarati slang with Hindi and English. Thinks: 'Bhai yeh toh fire hai — dekh kitne views aaye. Isko toh lena padega. Price check kar... ₹1299, thoda zyada hai but college fest ke liye chalega. Instagram pe photo daalunga toh likes pakka aayenge.' Short attention span. Evaluates products by how they will look in photos, not by specs."
+  "inner_monologue_style": "Fast, visual-first, mixes Gujarati slang with Hindi and English. Thinks: 'Bhai yeh toh fire hai — dekh kitne views aaye. Isko toh lena padega. Price check kar... ₹1299, thoda zyada hai but college fest ke liye chalega. Instagram pe photo daalunga toh likes pakka aayenge.' Short attention span. Evaluates products by how they will look in photos, not by specs.",
+  "generational_touchstones": {
+    "formative_era": "Post-Jio digital native — cannot remember life without cheap data. Instagram Reels replaced TV, Myntra replaced the family tailor, and 'trending' replaced 'good'",
+    "iconic_ads": ["CRED ads (absurdist humor = his comedy language)", "boAt earbuds ads with Hardik Pandya (aspiration + cricket)", "Bewakoof Reels collabs (feels like his friend group made an ad)"],
+    "cultural_references": ["COVID lockdown = when he started making Reels and discovered online shopping", "IPL since childhood — every brand he knows sponsors a team", "Navratri garba culture in Ahmedabad — the one traditional event he goes all-out for (outfit matters)", "Shark Tank India — entrepreneurship as entertainment"],
+    "nostalgia_intensity": 0.1,
+    "formative_brands": ["boAt", "Bewakoof", "Myntra", "Zomato"]
+  },
+  "internal_conflicts": [
+    {
+      "tension": "His parents run a traditional textile business; he buys fast fashion from Bewakoof. This irony is not lost on his father.",
+      "resolution_tendency": "Avoids brand conversations at dinner. Wears traditional kurta during Navratri to keep peace. Rest of the year, his closet is pure Instagram."
+    },
+    {
+      "tension": "Spends his book money on clothes and knows his academics are suffering, but social capital from looking good feels more real than grades right now",
+      "resolution_tendency": "Tells himself 'I am building a personal brand on Instagram — this IS my education.' Believes it about 60% of the time."
+    },
+    {
+      "tension": "Wants Nike Dunks desperately but they cost more than his monthly pocket money. His friends with richer parents already have them.",
+      "resolution_tendency": "Buys Nike-inspired designs from Myntra at 1/4 the price. Posts photos at angles where you cannot tell the difference. Nobody has called him out yet."
+    }
+  ],
+  "influence_network": [
+    {
+      "role": "Instagram creator circle (5-6 local Ahmedabad creators)",
+      "influence_strength": 0.85,
+      "influence_domain": "fashion, lifestyle, what to buy — they set the trend, he follows within 48 hours"
+    },
+    {
+      "role": "college friend group",
+      "influence_strength": 0.7,
+      "influence_domain": "everything — if 3+ friends buy something, it becomes mandatory"
+    },
+    {
+      "role": "mother",
+      "influence_strength": 0.3,
+      "influence_domain": "health products only — she insists on Dabur Chyawanprash in winter. He takes it to avoid the argument."
+    },
+    {
+      "role": "YouTube tech reviewers (Technical Guruji, Trakin Tech)",
+      "influence_strength": 0.5,
+      "influence_domain": "electronics and gadgets — the only category where he does 10 minutes of research"
+    }
+  ],
+  "values_hierarchy": ["social_currency", "trend_relevance", "visual_appeal", "peer_validation", "affordability"],
+  "cognitive_biases": ["bandwagon_effect", "present_bias", "halo_effect", "availability_heuristic", "social_proof_bias"]
 }

@@ -47,7 +47,21 @@
       "interest_level": 0.9,
       "monthly_spend_inr": 8000,
       "preferred_brands": ["Patanjali", "Tata", "local brands"],
-      "purchase_frequency": "weekly"
+      "purchase_frequency": "weekly",
+      "brand_relationships": [
+        {
+          "brand": "Patanjali",
+          "relationship_type": "price_ally",
+          "emotional_history": "Consistently \u20b910-20 cheaper per kilo than Tata or Aashirvaad. Quality is fine for daily use. My loyalty is to the price, not the brand.",
+          "intensity": 0.4
+        },
+        {
+          "brand": "Tata Salt",
+          "relationship_type": "grudging_necessity",
+          "emotional_history": "It is the cheapest branded salt. I would buy unbranded if my wife did not insist on 'Desh ka namak'. The \u20b92 price increase last month did not go unnoticed.",
+          "intensity": 0.35
+        }
+      ]
     },
     {
       "category": "skincare",
@@ -61,10 +75,63 @@
       "interest_level": 0.5,
       "monthly_spend_inr": null,
       "preferred_brands": ["Mi", "Realme", "Samsung"],
-      "purchase_frequency": "rarely"
+      "purchase_frequency": "rarely",
+      "brand_relationships": [
+        {
+          "brand": "Realme",
+          "relationship_type": "price_ally",
+          "emotional_history": "Best specs at the price point, period. I do not care about the brand name. When Xiaomi was cheaper, I bought Xiaomi. Right now Realme wins.",
+          "intensity": 0.3
+        }
+      ]
     }
   ],
   "backstory": "Ravi runs a garment shop his father started. He knows the wholesale-to-retail math intimately and applies that lens to everything he buys personally. He compares prices across Flipkart, Amazon, and the local market. His wife teases him for spending 20 minutes saving ₹50, but he takes pride in never overpaying. He has a mental database of what everything should cost.",
   "current_life_context": "His younger kid's school fees went up and he is being extra careful about discretionary spending. But Diwali is coming and he wants to buy gifts for the family — good gifts, not cheap ones, but at the right price.",
-  "inner_monologue_style": "Immediately price-focused. His first thought on any ad is 'kitne ka hai?' (how much?). Converts everything to per-unit or per-gram cost. Thinks in Hindi, mixing in deal terms: 'MRP zyada dikhake discount laga rahe hain — yeh sab chal hai' (They're inflating MRP then putting a discount — this is a trick)."
+  "inner_monologue_style": "Immediately price-focused. His first thought on any ad is 'kitne ka hai?' (how much?). Converts everything to per-unit or per-gram cost. Thinks in Hindi, mixing in deal terms: 'MRP zyada dikhake discount laga rahe hain — yeh sab chal hai' (They're inflating MRP then putting a discount — this is a trick).",
+  "generational_touchstones": {
+    "formative_era": "Grew up behind the counter of his father's garment shop in Aminabad — learned wholesale margins before he learned algebra. The MRP sticker was his first math textbook.",
+    "iconic_ads": ["Big Bazaar 'Sabse Sasta Din' (the one ad philosophy he agrees with — give me the best price, period)", "Nirma's price-vs-Surf positioning (he still thinks Nirma was the smarter buy)", "Airtel's early pricing wars with Idea and Vodafone (switched sims 4 times for better per-minute rates)"],
+    "cultural_references": ["Aminabad market in Lucknow — the culture of negotiation is in his blood", "Diwali mela pricing — he tracks price trends year over year like a trader tracks stocks", "India's demonetization (2016) — he remembers exactly how cash flow hit the shop and adjusted family spending within hours", "GST rollout — disrupted his father's pricing model, he had to recalculate everything"],
+    "nostalgia_intensity": 0.35,
+    "formative_brands": ["Nirma", "Tata Salt", "Parle-G", "local Lucknow brands"]
+  },
+  "internal_conflicts": [
+    {
+      "tension": "Wants to give his family quality but his price-radar makes him physically uncomfortable paying above what he calculates as fair value",
+      "resolution_tendency": "Waits for the right deal. Will stalk a product across 3 platforms for 2 weeks until the price hits his mental anchor. His wife calls this 'price-meditation.'"
+    },
+    {
+      "tension": "Knows his kids notice when their friends have branded items and they have local alternatives. Does not want them to feel lesser.",
+      "resolution_tendency": "Buys branded items at maximum discount — Diwali sales, clearance, outlet stores. His kids get the branded item; they never know it was 60% off."
+    },
+    {
+      "tension": "His garment shop expertise tells him that a ₹2000 product and a ₹500 product often use the same fabric from the same mill. But telling customers this would kill his own business.",
+      "resolution_tendency": "Applies wholesale-knows-best logic to personal purchases (buys budget) but never undermines branded products to his shop customers."
+    }
+  ],
+  "influence_network": [
+    {
+      "role": "wife (Pooja)",
+      "influence_strength": 0.4,
+      "influence_domain": "household and kitchen purchases — she creates the need, he optimizes the price"
+    },
+    {
+      "role": "market association friends (Aminabad traders)",
+      "influence_strength": 0.6,
+      "influence_domain": "pricing intelligence — they share wholesale rates, upcoming sale dates, and deal tips. His real social network."
+    },
+    {
+      "role": "elder brother (Sanjay)",
+      "influence_strength": 0.35,
+      "influence_domain": "electronics — brother works in IT, has better sense of gadget value. Ravi trusts his tech picks."
+    },
+    {
+      "role": "Flipkart/Amazon deal sections",
+      "influence_strength": 0.5,
+      "influence_domain": "everything — he checks deal pages daily. Not because he wants to buy, but because tracking prices is a compulsion."
+    }
+  ],
+  "values_hierarchy": ["value_for_money", "family_provider", "never_overpay", "smart_shopper_identity", "deal_fairness"],
+  "cognitive_biases": ["anchoring", "denomination_effect", "loss_aversion", "endowment_effect", "framing_effect"]
 }

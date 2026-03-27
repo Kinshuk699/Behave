@@ -1,6 +1,6 @@
 # Synthetic India — Working Notes
 
-Last updated: 2026-03-27
+Last updated: 2026-03-28
 
 ## Purpose
 
@@ -687,3 +687,100 @@ Each pipeline doc links only to its "Next →" step. Click into any node to see 
 20. Bidirectional Databricks flow: the system now writes memory nodes per run AND reads personas/memories from Databricks on startup. Local files are the fallback, not the primary source. This means data survives cluster changes, and the system works offline.
 21. Append-only `memory_nodes.json` per run (not full snapshots) — mirrors the streaming/event-sourcing design. Each run produces only its NEW nodes. Databricks accumulates all of them across runs.
 22. `memory_scope` tracked in `RunMetadata` — tells Databricks which memory strategy was active for each run. Essential for reproducibility and understanding why different runs produce different results.
+
+---
+
+## 🔴 MAJOR DECISION POINT: Deep Persona & Memory System Overhaul (2026-03-28)
+
+**WHY THIS SECTION EXISTS:** If you ever want to understand what changed and why, or revert to the pre-overhaul state, this is the decision record. The state before this change: 86/86 tests GREEN, 20 personas with architecturally sound but emotionally shallow profiles, memory system with dead reflection code, evaluation outputs that read like B2B consulting decks instead of real Indian consumer reactions.
+
+### The Problem (User Diagnosis, 2026-03-28)
+
+User identified 6 critical gaps after reviewing evaluation outputs:
+
+1. **No proper EMOTION** — "there is no proper EMOTION to them like people have in india." Personas have flat `list[str]` emotional profiles with no intensity, no valence, no state.
+2. **No generational memory** — "a persona who is 30 doesn't know movie references from the 90s or the ads of the 90s." A 45yo Lucknow CA should reference Doordarshan and Nirma, not Instagram.
+3. **Recall factor is opaque** — "I currently don't know how their recall factor even works." Reflection code is built but never wired up. PREFERENCE and CATEGORY_BELIEF memory types exist as enums but are never created.
+4. **Output is B2B, not B2C** — "the current final output are for companies that are b2b not b2c." Evaluation reads like "The creative lacks a clear value proposition" instead of "Yeh kya hai? Mera time waste."
+5. **No brand-awareness differentiation** — "the marketing strategy of coca cola a big ass company compared to zepto a gen z type company might be different." System treats heritage brands and D2C startups identically.
+6. **No depth to personas** — "I don't think there is any depth to the personas." Internal conflicts, family dynamics, cognitive biases, values hierarchies — all missing from structured schema.
+
+### Audit Findings (Pre-Overhaul Snapshot)
+
+**Schema (`PersonaProfile`):**
+- 7 nested models + 3 narrative strings (backstory, current_life_context, inner_monologue_style)
+- `EmotionalProfile` is the shallowest — 4 flat `list[str]` fields with no intensity/hierarchy
+- `PurchasePsychology` is well-quantified (8 floats) but purely rational
+- All emotional depth lives in the unstructured narrative fields, not queryable or comparable
+
+**Evaluation output:**
+- 6 scores (overall + 5 dimensional on 0-10)
+- Free-text fields carry the depth but read formulaic across personas
+- 4/9 sample evals had identical reasoning patterns despite very different personas
+
+**Memory system:**
+- Reflection code: built, never wired up. Dead code.
+- `PREFERENCE` and `CATEGORY_BELIEF` MemoryType enums: defined, never used.
+- Embeddings: all `null` in data. Retrieval falls back to naive keyword overlap.
+- Reflection threshold (150) is unreachably high for typical usage.
+
+**20 personas:**
+- 8 archetypes × 2-3 each, 10 cities, 8 languages, ages 19-45
+- Narrative fields (backstory, monologue) are rich, but structured fields are shallow
+- No generational memory, no internal conflicts, no brand emotional history, no influence networks
+
+### What's Being Changed
+
+**Phase 1: Schema Enhancement (PersonaProfile)**
+- 4 NEW nested models: `GenerationalTouchstones`, `InternalConflict`, `BrandRelationship`, `Influencer`
+- 5 NEW fields on PersonaProfile: `generational_touchstones`, `internal_conflicts`, `influence_network`, `values_hierarchy`, `cognitive_biases`
+- `BrandRelationship` added to `CategoryAffinity` for emotional brand history
+- ALL new fields are Optional — backward compatible, existing JSON loads without changes during migration
+
+**Phase 2: All 20 Persona JSON Rewrites**
+Grouped by generation for cultural accuracy:
+- **Doordarshan generation (40-47):** Buniyaad, Chitrahaar, Nirma, MDH, pre-liberalization scarcity mindset
+- **Liberalization kids (30-39):** Cable TV explosion, Nokia 3310, internet cafes, '03 World Cup
+- **Digital natives (20-29):** Jio generation, Instagram-native, COVID-defined college years
+- Regional diversity maintained: South Indian ≠ North Indian cultural references
+
+**Phase 3: Evaluation & Critic Prompt Overhaul**
+- `_build_persona_block()` renders new structured fields as prompt sections
+- System prompt tuned: "React like a REAL person, not a marketing consultant. Be messy, contradictory, emotional."
+- `verbatim_reaction` instruction: "Sound like a WhatsApp voice note to a friend, not a focus group response."
+- Critic gets backstory + generational_touchstones for consistency checking + generational anachronism detection
+
+**Phase 4: Memory System Fixes**
+- Wire reflection triggering: `should_reflect` → `ReflectionEngine` after each eval
+- Lower reflection threshold: 150 → 50
+- Auto-create PREFERENCE nodes (score > 70, positive sentiment)
+- Auto-create CATEGORY_BELIEF nodes (score < 30, negative sentiment)
+- Both get high importance (7-8) for persistence in retrieval
+
+### Key Decisions
+
+| Decision | Choice | Rationale |
+|---|---|---|
+| Brand-awareness | LLM infers from name, no CreativeCard schema change | Coca-Cola, Zepto, Amul are well-known to LLMs; adding metadata is over-engineering |
+| Schema backward compat | All new fields Optional | Incremental migration, no big-bang rewrite |
+| B2C output quality | Prompt tuning only, no new eval output fields | Output schema is already rich; the problem is prompt tone, not missing fields |
+| Memory scope | Wire reflection + PREFERENCE/CATEGORY_BELIEF | Skip cross-persona memory and embeddings for now |
+| JSON rewrite scope | All 20, not a sample | Partial migration creates inconsistency in cohort evaluations |
+
+### Pre-Overhaul State (for revert reference)
+
+- **Test count:** 86/86 GREEN
+- **Schema:** PersonaProfile with Demographics, PurchasePsychology, MediaBehavior, EmotionalProfile, CategoryAffinity
+- **Personas:** 20 files in `data/personas/` — current versions at git HEAD before this commit
+- **Evaluator prompt:** "method actor" system message + 4-block prompt (persona, memory, creative, eval)
+- **Critic prompt:** uses archetype, demographics, 4 purchase psychology floats, trust_signals, rejection_triggers, inner_monologue_style (does NOT use backstory or current_life_context)
+- **Memory:** Reflection never triggered, PREFERENCE/CATEGORY_BELIEF never created, threshold 150
+
+### Excluded From This Overhaul
+
+- Cross-persona memory / social contagion
+- Embedding generation for memory retrieval
+- CreativeCard brand metadata fields
+- New evaluation output fields (emotional_journey, cultural_resonance)
+- Dashboard changes
+- Databricks pipeline changes (existing ingest handles new fields via JSON serialization)

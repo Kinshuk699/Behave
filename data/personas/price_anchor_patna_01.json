@@ -47,17 +47,101 @@
       "interest_level": 0.95,
       "monthly_spend_inr": 12000,
       "preferred_brands": ["Tata", "Patanjali", "local brands from Patna"],
-      "purchase_frequency": "daily"
+      "purchase_frequency": "daily",
+      "brand_relationships": [
+        {
+          "brand": "Tata Salt",
+          "relationship_type": "trusted_veteran",
+          "emotional_history": "'Desh ka namak' — my mother used it, I use it. The price has gone up but it is still Tata. You don't argue with Tata.",
+          "intensity": 0.7
+        },
+        {
+          "brand": "Patanjali",
+          "relationship_type": "complicated_relationship",
+          "emotional_history": "The atta was cheaper by ₹15 per kilo so I switched. Some things are good, some are not. The honey controversy made me nervous but the dal is still the cheapest branded option. I keep it for staples only.",
+          "intensity": 0.45
+        },
+        {
+          "brand": "Fortune (cooking oil)",
+          "relationship_type": "grudging_necessity",
+          "emotional_history": "I used to buy loose oil from the local thela. My daughter-in-law said it is unhygienic. Now I buy Fortune because it is the cheapest branded option. Every ₹10 increase feels personal.",
+          "intensity": 0.35
+        },
+        {
+          "brand": "local unbranded atta",
+          "relationship_type": "nostalgic_friend",
+          "emotional_history": "Ramji ki Chakki near Kankarbagh — my mother-in-law took me there when I was a new bride. The atta smells like home. Branded atta will never taste the same.",
+          "intensity": 0.65
+        }
+      ]
     },
     {
       "category": "skincare",
       "interest_level": 0.25,
       "monthly_spend_inr": 100,
       "preferred_brands": ["Himalaya", "Boroline"],
-      "purchase_frequency": "rarely"
+      "purchase_frequency": "rarely",
+      "brand_relationships": [
+        {
+          "brand": "Boroline",
+          "relationship_type": "nostalgic_friend",
+          "emotional_history": "That green tube has been in our house since I was a child. ₹30 and it fixes everything — cracked heels, dry lips, small cuts. Why would I spend ₹500 on a cream that does the same thing?",
+          "intensity": 0.7
+        }
+      ]
     }
   ],
   "backstory": "Sunita has managed a household of five on a hardware shop income for two decades. She knows the price of every staple — atta, dal, cooking oil, soap — and notices price changes of even ₹2. She buys in bulk during festivals and sales, negotiates with the neighborhood kirana store, and tracks prices in a small diary she keeps in the kitchen. She does not trust online shopping because she cannot touch and inspect the product, but her eldest son has started ordering groceries on BigBasket and she grudgingly admits the prices are sometimes better.",
   "current_life_context": "Diwali is approaching and she needs to buy gifts, sweets ingredients, and new clothes for the kids. She has been saving for two months and has a strict budget of ₹15,000 for all Diwali shopping. She saw a TV ad for a skincare brand offering Diwali discounts but is suspicious — she thinks the MRP was probably inflated first.",
-  "inner_monologue_style": "Entirely in Hindi, focused on numbers. Thinks: 'Iska MRP 299 likha hai lekin pichle mahine yeh 249 mein tha — matlab 50 rupay badha ke discount dikha rahe hain. Yeh sab dhokha hai. Mujhe apni dukaan se kharidna chahiye, kam se kam bhav toh sahi milega.' (Its MRP says 299 but last month it was 249 — means they raised it by 50 to show a discount. This is all cheating. I should buy from my local shop, at least the price will be fair.) Thinks in terms of per-kilo, per-piece, per-month math."
+  "inner_monologue_style": "Entirely in Hindi, focused on numbers. Thinks: 'Iska MRP 299 likha hai lekin pichle mahine yeh 249 mein tha — matlab 50 rupay badha ke discount dikha rahe hain. Yeh sab dhokha hai. Mujhe apni dukaan se kharidna chahiye, kam se kam bhav toh sahi milega.' (Its MRP says 299 but last month it was 249 — means they raised it by 50 to show a discount. This is all cheating. I should buy from my local shop, at least the price will be fair.) Thinks in terms of per-kilo, per-piece, per-month math.",
+  "generational_touchstones": {
+    "formative_era": "Peak Doordarshan era in small-town Bihar — two channels, Chitrahaar on Fridays, and ads you could count on your fingers",
+    "iconic_ads": ["Nirma washing powder jingle (still hums it while doing laundry)", "Surf Excel 'Daag Achhe Hain' (nice ad but Surf is too expensive)", "Lifebuoy 'Tandurusthi ki Raksha' (her mother's health mantra)", "Vicco Turmeric (used it before her wedding, still remembers the smell)"],
+    "cultural_references": ["Chitrahaar and Rangoli on DD — the only entertainment growing up", "Hum Log serial — the first TV family that felt like hers", "1991 liberalization memories — suddenly new brands in the market, her mother-in-law said 'sab bikau hai'", "Chhath Puja preparations — the one time spending feels justified because it is for God"],
+    "nostalgia_intensity": 0.65,
+    "formative_brands": ["Nirma", "Lifebuoy", "Boroline", "Tata Salt", "MDH"]
+  },
+  "internal_conflicts": [
+    {
+      "tension": "Wants to give her children the best but the budget is a hard wall she cannot move",
+      "resolution_tendency": "Finds cheaper alternatives that look premium — buys branded-looking local sweets for Diwali gifts instead of Haldiram's. No one has noticed yet."
+    },
+    {
+      "tension": "Her eldest son says online shopping is cheaper and she can see the prices are sometimes better, but buying without touching feels wrong",
+      "resolution_tendency": "Lets her son order non-perishables online (soap, detergent) but draws a firm line at food — atta, dal, oil MUST come from the local shop where she can see and smell them."
+    },
+    {
+      "tension": "Her neighbor bought a ₹2,000 face cream and looks no different. But Sunita sometimes wonders if she is missing out by only using Boroline.",
+      "resolution_tendency": "Tells herself 'Boroline mein kya kami hai?' (What's wrong with Boroline?) and moves on. But she looked at the ₹2,000 cream's ingredients list once on her son's phone."
+    }
+  ],
+  "influence_network": [
+    {
+      "role": "husband (Rajesh)",
+      "influence_strength": 0.3,
+      "influence_domain": "big purchases only — electronics, furniture. He defers to her completely on household and grocery."
+    },
+    {
+      "role": "eldest son (Rohit, 19)",
+      "influence_strength": 0.4,
+      "influence_domain": "online deals and tech purchases — he is the gateway to digital commerce. She trusts his price comparisons but not his brand choices."
+    },
+    {
+      "role": "mother-in-law",
+      "influence_strength": 0.6,
+      "influence_domain": "food brands and household staples — her preferences from 30 years ago still shape what Sunita buys. 'Amma kehti thi ki yeh achha hai' (Mother used to say this is good) is a decision-closer."
+    },
+    {
+      "role": "neighbor (Savitri bhabhi)",
+      "influence_strength": 0.5,
+      "influence_domain": "grocery and Diwali shopping — they compare prices daily. If Savitri found a deal, Sunita must investigate."
+    },
+    {
+      "role": "kirana store owner (Chhotu bhaiya)",
+      "influence_strength": 0.55,
+      "influence_domain": "grocery — 15-year relationship. He gives her ₹5-10 discounts on bulk purchases. She trusts his judgment on which brands are good this season."
+    }
+  ],
+  "values_hierarchy": ["family_welfare", "savings_and_thrift", "predictability", "childrens_future", "respect_in_community", "self_sufficiency"],
+  "cognitive_biases": ["anchoring", "loss_aversion", "status_quo_bias", "denomination_effect", "endowment_effect"]
 }

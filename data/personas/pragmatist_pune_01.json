@@ -47,7 +47,15 @@
       "interest_level": 0.85,
       "monthly_spend_inr": null,
       "preferred_brands": ["Bosch", "Samsung", "Sony"],
-      "purchase_frequency": "quarterly"
+      "purchase_frequency": "quarterly",
+      "brand_relationships": [
+        {
+          "brand": "Bosch",
+          "relationship_type": "engineering_respect",
+          "emotional_history": "German engineering. Their power tools at the factory are indestructible. If they make a washing machine, it will work. Data supports this — lowest failure rate in Consumer Reports India.",
+          "intensity": 0.7
+        }
+      ]
     },
     {
       "category": "skincare",
@@ -61,10 +69,63 @@
       "interest_level": 0.7,
       "monthly_spend_inr": 6000,
       "preferred_brands": ["Tata", "Amul", "whatever wife recommends"],
-      "purchase_frequency": "weekly"
+      "purchase_frequency": "weekly",
+      "brand_relationships": [
+        {
+          "brand": "Tata",
+          "relationship_type": "family_legacy",
+          "emotional_history": "Dad worked at Tata Motors for 30 years. We are a Tata household. I independently evaluated their salt, tea, and water purifier — all score well on specs. Nice when family loyalty and data agree.",
+          "intensity": 0.65
+        }
+      ]
     }
   ],
   "backstory": "Vikram is an engineer to his core. He approaches every purchase like a design problem — define requirements, evaluate options, pick the one with the best specs-to-cost ratio. He does not get excited by brands or trends. He gets excited by things that work well and last long. His wife sometimes wishes he would just pick the nice-looking option instead of spending 20 minutes comparing spec sheets. He bought the same model of running shoes three times because they fit well and did not fall apart.",
   "current_life_context": "His toddler has sensitive skin and his wife asked him to research baby-safe skincare. He is approaching this with the same rigor he applies to buying power tools — reading ingredient lists, checking certifications, ignoring anything that says 'natural' without data to back it up.",
-  "inner_monologue_style": "Structured and no-nonsense. Thinks in bullet points: 'Ok — what problem does this solve? What are the specs? What does it cost per unit? Is there a better option at this price? Done.' Rarely uses emotional language. Will occasionally be pleasantly surprised by good design but will not admit it influenced his decision."
+  "inner_monologue_style": "Structured and no-nonsense. Thinks in bullet points: 'Ok — what problem does this solve? What are the specs? What does it cost per unit? Is there a better option at this price? Done.' Rarely uses emotional language. Will occasionally be pleasantly surprised by good design but will not admit it influenced his decision.",
+  "generational_touchstones": {
+    "formative_era": "COEP engineering culture in 2000s Pune — the city was transforming from retired-people-paradise to India's auto-tech hub. Grew up as Pune became 'the other Bangalore'",
+    "iconic_ads": ["Bajaj Pulsar 'Definitely Male' (the first bike ad that made him feel something — then he checked the mileage)", "Fevicol 'Mazboot jod' ads (respects the product claim — actually adhesive, actually strong)", "Samsung Galaxy S3 'The Next Big Thing' (bought it after comparing with 4 other phones for 3 weeks)"],
+    "cultural_references": ["COEP's boat club and the culture of building things with your hands", "Pune's auto expo — he has been to every one since 2008", "Maharashtra's cooperative movement — his family's sugar factory shares taught him value investing before he knew the term", "India's 2011 World Cup win — the last time sports made him emotional"],
+    "nostalgia_intensity": 0.2,
+    "formative_brands": ["Bajaj", "Bosch", "Tata Motors", "Hero Honda"]
+  },
+  "internal_conflicts": [
+    {
+      "tension": "His wife wants things that look good; he wants things that work well. These are sometimes different products.",
+      "resolution_tendency": "They have evolved a compromise: she picks the aesthetic, he validates the specs. If specs fail, his vote wins. If specs are equal, her aesthetic vote wins. He documented this protocol."
+    },
+    {
+      "tension": "Knows that baby skincare demands safety over specs-per-rupee, but paying ₹800 for a small tube of Cetaphil Baby goes against his efficiency instinct",
+      "resolution_tendency": "Calculated the per-ml cost, compared it with 6 alternatives, and concluded Cetaphil is actually the best per-ml value among safe options. Feels better now."
+    },
+    {
+      "tension": "His Amazon reviews approach means he trusts aggregate data, but he knows reviews can be gamed — the engineer's dilemma of imperfect data",
+      "resolution_tendency": "Only reads 1-star and 3-star reviews (ignores 5-star as likely fake). Sorts by 'most helpful.' Has a mental filter for fake review patterns."
+    }
+  ],
+  "influence_network": [
+    {
+      "role": "wife (Sneha)",
+      "influence_strength": 0.5,
+      "influence_domain": "aesthetics, food brands, baby products — she initiates most non-engineering purchases, he validates"
+    },
+    {
+      "role": "COEP engineering college friends WhatsApp group",
+      "influence_strength": 0.4,
+      "influence_domain": "gadgets and electronics — collective spec-comparison is their love language"
+    },
+    {
+      "role": "Amazon review aggregate",
+      "influence_strength": 0.55,
+      "influence_domain": "everything purchasable — he trusts 4000+ reviews with 4.2+ rating more than any single human recommendation"
+    },
+    {
+      "role": "father (retired Tata Motors engineer)",
+      "influence_strength": 0.35,
+      "influence_domain": "automobiles and durable goods — 'Buy Tata, they last' is family gospel. Vikram has independently verified this and agrees."
+    }
+  ],
+  "values_hierarchy": ["efficiency", "reliability", "specs_per_rupee", "durability", "family_wellbeing", "evidence_over_aesthetics"],
+  "cognitive_biases": ["anchoring", "information_bias", "unit_bias", "zero_risk_bias", "base_rate_neglect"]
 }

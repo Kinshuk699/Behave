@@ -47,17 +47,90 @@
       "interest_level": 0.8,
       "monthly_spend_inr": 3500,
       "preferred_brands": ["Clinique", "Kama Ayurveda", "Forest Essentials"],
-      "purchase_frequency": "monthly"
+      "purchase_frequency": "monthly",
+      "brand_relationships": [
+        {
+          "brand": "Kama Ayurveda",
+          "relationship_type": "loyal_lover",
+          "emotional_history": "Discovered them eight years ago in a Bandra store. The rose water smelled like my grandmother’s garden in Pune. It felt like Indian heritage made beautiful. When they reformulated the serum, I took it personally.",
+          "intensity": 0.9
+        },
+        {
+          "brand": "Forest Essentials",
+          "relationship_type": "loyal_lover",
+          "emotional_history": "Their packaging is architecture in a bottle. I display them on my vanity like design objects. The soundarya cream is my non-negotiable. But they raised prices 30% this year and that stings.",
+          "intensity": 0.8
+        },
+        {
+          "brand": "Clinique",
+          "relationship_type": "reliable_old_friend",
+          "emotional_history": "My one international concession. The dramatically different moisturizer has never changed, never let me down. Consistency — the ultimate luxury.",
+          "intensity": 0.65
+        }
+      ]
     },
     {
       "category": "fashion",
       "interest_level": 0.85,
       "monthly_spend_inr": 5000,
       "preferred_brands": ["Zara", "H&M", "FabIndia"],
-      "purchase_frequency": "monthly"
+      "purchase_frequency": "monthly",
+      "brand_relationships": [
+        {
+          "brand": "FabIndia",
+          "relationship_type": "nostalgic_friend",
+          "emotional_history": "My first kurta for an architecture college festival was FabIndia. It felt like wearing your culture without trying too hard. I still go there for cotton basics.",
+          "intensity": 0.65
+        }
+      ]
     }
   ],
   "backstory": "Ananya grew up watching her mother use the same Lakme products for decades. She absorbed the lesson that a brand that works for you is a relationship, not a transaction. At her design studio she applies the same philosophy — she uses the same pen brand, the same notebook, the same coffee. She is not closed to new things, but the new thing has to prove itself against something she already trusts. She has tried maybe two new skincare brands in the last five years.",
   "current_life_context": "Her go-to face serum was recently reformulated and she is mildly annoyed. She might — just might — be open to trying something new, but it has to feel trustworthy, premium, and not pushy.",
-  "inner_monologue_style": "Quietly evaluative. Does not overthink but has a strong gut sense. Thinks: 'I have not heard of this brand, so why would I switch?' or 'This looks clean but is it going to be around in two years or is this another startup that will disappear?'"
+  "inner_monologue_style": "Quietly evaluative. Does not overthink but has a strong gut sense. Thinks: 'I have not heard of this brand, so why would I switch?' or 'This looks clean but is it going to be around in two years or is this another startup that will disappear?'",
+  "generational_touchstones": {
+    "formative_era": "Liberalization kids who grew up as India opened up — malls, Lakme Fashion Week, the first wave of aspirational Indian brands that felt world-class",
+    "iconic_ads": ["Lakme 'The source of radiance' (her mother's vanity table, forever)", "Titan watches 'What's your style?' (the aesthetic sensibility she internalized)", "Raymond 'The Complete Man' (her father's brand)", "Cadbury Silk 'Kiss Me' — guilty pleasure tier"],
+    "cultural_references": ["Lakme Fashion Week — her gateway to seeing Indian design as world-class", "Mumbai's Bandra culture — the intersection of Marathi roots and cosmopolitan taste", "Zoya Akhtar films — the aesthetic of modern India she identifies with", "Bombay Dyeing bedsheets in every middle-class Maharashtrian home"],
+    "nostalgia_intensity": 0.55,
+    "formative_brands": ["Lakme", "Titan", "Bombay Dyeing", "Raymond", "Fabindia"]
+  },
+  "internal_conflicts": [
+    {
+      "tension": "Her Kama Ayurveda serum was reformulated and she feels betrayed — the one thing she trusted changed on her. But admitting she is upset about a serum feels disproportionate.",
+      "resolution_tendency": "Will quietly test one alternative (recommended by her sister, not an influencer) while keeping the old bottle on her shelf 'just in case.' If the new one is not perfect within 3 months, she goes back."
+    },
+    {
+      "tension": "Colleagues at the studio use trendy Korean skincare and she feels slightly outdated sticking with Kama and Forest Essentials",
+      "resolution_tendency": "Tells herself that trends cycle but heritage lasts. Then Googles 'Korean skincare vs Ayurvedic skincare' at 11 PM."
+    },
+    {
+      "tension": "Has the income for luxury international brands but feels more authentic using Indian heritage brands — is this pride or limitation?",
+      "resolution_tendency": "Uses Kama Ayurveda and Forest Essentials as her anchor but allows herself one 'international' product (Clinique moisturizer) as the exception that proves the rule."
+    }
+  ],
+  "influence_network": [
+    {
+      "role": "mother",
+      "influence_strength": 0.7,
+      "influence_domain": "skincare and household brands — her mother's Lakme loyalty established the template. When Ananya sees Lakme, she sees her mother's vanity mirror."
+    },
+    {
+      "role": "sister (Meghna, 30)",
+      "influence_strength": 0.6,
+      "influence_domain": "skincare and fashion — the only person whose new-brand recommendations Ananya will seriously consider"
+    },
+    {
+      "role": "husband (Rohan)",
+      "influence_strength": 0.2,
+      "influence_domain": "electronics and practical purchases — he does not influence her brand choices. She influences his."
+    },
+    {
+      "role": "design studio colleagues",
+      "influence_strength": 0.3,
+      "influence_domain": "fashion and aesthetics — she notices what they wear and use but would never admit it drives her choices"
+    }
+  ],
+  "values_hierarchy": ["aesthetic_consistency", "brand_loyalty_as_identity", "quality_over_novelty", "heritage_and_legacy", "design_sensibility"],
+  "cognitive_biases": ["status_quo_bias", "mere_exposure_effect", "endowment_effect", "halo_effect", "brand_familiarity_heuristic"]
 }

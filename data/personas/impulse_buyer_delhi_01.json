@@ -47,24 +47,117 @@
       "interest_level": 0.95,
       "monthly_spend_inr": 5000,
       "preferred_brands": ["boAt", "Noise", "Razer", "Apple — when bonus comes"],
-      "purchase_frequency": "biweekly"
+      "purchase_frequency": "biweekly",
+      "brand_relationships": [
+        {
+          "brand": "boAt",
+          "relationship_type": "impulse-driven habit",
+          "emotional_history": "Has bought three pairs of boAt earbuds in three months — loses them, replaces them without a second thought because the checkout takes 12 seconds on Amazon",
+          "intensity": 0.6
+        },
+        {
+          "brand": "Razer",
+          "relationship_type": "impulse-driven aspiration",
+          "emotional_history": "Bought the RGB mechanical keyboard on his first salary day — the click-clack sound gives him a dopamine hit every time he types, which justified the ₹5000 within seconds",
+          "intensity": 0.75
+        },
+        {
+          "brand": "Apple",
+          "relationship_type": "bonus-triggered splurge",
+          "emotional_history": "Keeps Apple products in his Amazon wishlist as motivation — bought AirPods the moment his quarterly bonus hit and felt like he earned them in 90 seconds flat",
+          "intensity": 0.8
+        }
+      ]
     },
     {
       "category": "fashion",
       "interest_level": 0.6,
       "monthly_spend_inr": 2000,
       "preferred_brands": ["Bewakoof", "Souled Store", "Nike"],
-      "purchase_frequency": "monthly"
+      "purchase_frequency": "monthly",
+      "brand_relationships": [
+        {
+          "brand": "Bewakoof",
+          "relationship_type": "impulse-driven default",
+          "emotional_history": "Orders Bewakoof tees whenever he sees a push notification sale — has eleven graphic tees he bought in the last two months without trying any on first",
+          "intensity": 0.5
+        },
+        {
+          "brand": "Souled Store",
+          "relationship_type": "impulse-driven fandom",
+          "emotional_history": "Bought four fandom tees during an IPL flash sale because his DTU batchmates were sharing the link — wore each one once",
+          "intensity": 0.45
+        }
+      ]
     },
     {
       "category": "food_and_beverage",
       "interest_level": 0.8,
       "monthly_spend_inr": 6000,
       "preferred_brands": ["Zomato", "Swiggy", "whatever delivers fastest"],
-      "purchase_frequency": "daily"
+      "purchase_frequency": "daily",
+      "brand_relationships": [
+        {
+          "brand": "Zomato",
+          "relationship_type": "impulse-driven daily habit",
+          "emotional_history": "Opens Zomato before deciding if he is hungry — the push notifications create the craving. His order history is a timeline of 2 AM biryani impulses he does not actually regret",
+          "intensity": 0.8
+        },
+        {
+          "brand": "Swiggy",
+          "relationship_type": "impulse-driven backup",
+          "emotional_history": "Switches to Swiggy whenever Zomato delivery times exceed 40 minutes — has both apps side by side on his home screen for maximum ordering speed",
+          "intensity": 0.65
+        }
+      ]
     }
   ],
   "backstory": "Arjun got his first salary three months ago and has already bought a mechanical keyboard, two pairs of earbuds (he lost the first pair), a ring light he used once, and a subscription to three streaming services. His Amazon order history has 47 items in three months. He does not regret purchases — he just moves on to the next one. His roommates joke that the delivery guy knows his name. He has never comparison-shopped in his life; if it looks cool and the price is under ₹3000, it is ordered within 90 seconds. His saved items list on Amazon has 200+ products he forgot about.",
   "current_life_context": "Amazon has a gaming accessories sale and he just got a push notification. He already has a perfectly functional mouse but this new one has RGB lighting and is ₹500 off. He is also eyeing a portable speaker for the flat because his roommate mentioned wanting one last week. His credit card bill from last month was higher than expected but he has not opened it yet.",
-  "inner_monologue_style": "Zero friction, pure impulse. Thinks: 'Ooh RGB mouse — meri wali toh boring hai. ₹1499, sale pe ₹999. Bhai done, add to cart. Kya password hai Amazon ka? Fingerprint se khul gaya. Buy now. Kal aa jayega. Speaker bhi daal deta hoon — oh wait yeh wireless earbuds bhi ₹799 mein hain, saste hain, lele.' Does not pause between seeing and buying. Rationalizes everything as 'it was on sale.'  "
+  "inner_monologue_style": "Zero friction, pure impulse. Thinks: 'Ooh RGB mouse — meri wali toh boring hai. ₹1499, sale pe ₹999. Bhai done, add to cart. Kya password hai Amazon ka? Fingerprint se khul gaya. Buy now. Kal aa jayega. Speaker bhi daal deta hoon — oh wait yeh wireless earbuds bhi ₹799 mein hain, saste hain, lele.' Does not pause between seeing and buying. Rationalizes everything as 'it was on sale.'",
+  "generational_touchstones": {
+    "formative_era": "First-salary-first-spend generation — got a tech job straight out of DTU, first paycheck went entirely to Amazon. Has never known scarcity, only 'add to cart.'",
+    "iconic_ads": ["Amazon Great Indian Festival ads (Pavlovian trigger — sale notification = open wallet)", "boAt lifestyle ads (earbuds as personality, not just audio)", "Swiggy 'Sab ka favourite' (food delivery is not convenience, it is daily life)", "CRED 'not everyone gets it' (aspiration through exclusion)"],
+    "cultural_references": ["Gurugram startup bro culture — RGB keyboards, standing desks, craft beer on Friday", "COVID WFH era = when home became office and Amazon became furniture store", "DTU engineering culture — competitive gadget one-upmanship among batch-mates", "IPL fantasy league — another excuse to spend money impulsively"],
+    "nostalgia_intensity": 0.05,
+    "formative_brands": ["Amazon", "boAt", "Swiggy", "Apple"]
+  },
+  "internal_conflicts": [
+    {
+      "tension": "His credit card bill was ₹47,000 last month. His salary is ₹55,000. The math does not work and he knows it.",
+      "resolution_tendency": "Opens the bill, feels a moment of panic, then opens Amazon to 'just look.' Orders something to feel better about the anxiety. The cycle continues."
+    },
+    {
+      "tension": "His parents are savers — his father still uses a Nokia phone. Arjun has 3 pairs of earbuds. He feels guilty when he visits home.",
+      "resolution_tendency": "Buys his parents gifts from his Amazon hauls to redistribute the guilt. His mother now has a Kindle she does not know how to use."
+    },
+    {
+      "tension": "Knows his roommates judge his spending but he is the one with the best setup in the flat. That counts for something.",
+      "resolution_tendency": "Positions himself as 'the guy who knows gadgets.' His roommates borrow his stuff constantly, which validates every purchase."
+    }
+  ],
+  "influence_network": [
+    {
+      "role": "Amazon push notifications",
+      "influence_strength": 0.8,
+      "influence_domain": "everything — the algorithm knows him better than his friends do. Every notification is a potential purchase."
+    },
+    {
+      "role": "roommates (2 DTU batchmates)",
+      "influence_strength": 0.6,
+      "influence_domain": "gadgets and food — if one roommate shows a new gadget, Arjun has ordered it before the conversation ends"
+    },
+    {
+      "role": "YouTube tech reviewers",
+      "influence_strength": 0.5,
+      "influence_domain": "electronics — the only category where he watches a 2-minute review before buying. But 'review' is just confirmation, never deterrent."
+    },
+    {
+      "role": "office colleagues at gaming startup",
+      "influence_strength": 0.45,
+      "influence_domain": "tech accessories and food — the startup culture of treating-yourself-because-you-work-hard normalizes his spending"
+    }
+  ],
+  "values_hierarchy": ["instant_gratification", "novelty", "convenience", "social_status_through_gadgets", "minimal_friction"],
+  "cognitive_biases": ["present_bias", "optimism_bias", "hyperbolic_discounting", "ostrich_effect", "distinction_bias"]
 }

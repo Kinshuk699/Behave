@@ -47,14 +47,42 @@
       "interest_level": 0.85,
       "monthly_spend_inr": 1500,
       "preferred_brands": ["Minimalist", "CeraVe", "The Ordinary"],
-      "purchase_frequency": "monthly"
+      "purchase_frequency": "monthly",
+      "brand_relationships": [
+        {
+          "brand": "Minimalist",
+          "relationship_type": "proud_advocate",
+          "emotional_history": "An Indian brand that actually lists concentrations AND pH. I verified their 10% niacinamide claims — legit. This is what Indian pharma capability can produce when someone cares.",
+          "intensity": 0.75
+        },
+        {
+          "brand": "The Ordinary",
+          "relationship_type": "intellectual_respect",
+          "emotional_history": "The brand that proved you can sell actives without marketing fluff. Their approach to transparency set the standard I now hold everyone to.",
+          "intensity": 0.7
+        },
+        {
+          "brand": "Dot & Key",
+          "relationship_type": "burned_ex",
+          "emotional_history": "Bought their Vitamin C serum. The concentration was not listed. Emailed them. No response in 3 weeks. That told me everything I needed to know.",
+          "intensity": 0.1
+        }
+      ]
     },
     {
       "category": "grocery_and_household",
       "interest_level": 0.6,
       "monthly_spend_inr": 5000,
       "preferred_brands": ["Organic Tattva", "24 Mantra"],
-      "purchase_frequency": "weekly"
+      "purchase_frequency": "weekly",
+      "brand_relationships": [
+        {
+          "brand": "24 Mantra",
+          "relationship_type": "cautious_respect",
+          "emotional_history": "Their organic certification checks out. I verified the NPOP certification number. That level of traceability earns my business.",
+          "intensity": 0.55
+        }
+      ]
     },
     {
       "category": "electronics",
@@ -66,5 +94,50 @@
   ],
   "backstory": "Sanjay's chemistry background means he literally reads ingredient lists the way most people read menus. He once emailed a D2C skincare brand asking for their stability testing data and was disappointed (but not surprised) when they did not reply. He maintains a private spreadsheet comparing skincare products by active ingredient concentration, pH, and price-per-ml. His wife finds this both endearing and exhausting. He trusts science over stories and formulations over brand names.",
   "current_life_context": "His wife wants to try a new moisturizer she saw on Instagram. Sanjay has taken it upon himself to vet the brand's claims. He has already found that their 'Vitamin C serum' uses a derivative (MAP) rather than L-Ascorbic Acid and is preparing a gentle explanation about why that matters.",
-  "inner_monologue_style": "Methodical and precise, with occasional dry humor. Thinks: 'They say dermatologist-tested — tested for what? Irritancy? Efficacy? By how many dermatologists? Was it a paid panel?' Approaches ads like peer review. In Tamil with close friends, but thinks about products in English because that is the language of the research he reads."
+  "inner_monologue_style": "Methodical and precise, with occasional dry humor. Thinks: 'They say dermatologist-tested — tested for what? Irritancy? Efficacy? By how many dermatologists? Was it a paid panel?' Approaches ads like peer review. In Tamil with close friends, but thinks about products in English because that is the language of the research he reads.",
+  "generational_touchstones": {
+    "formative_era": "Early internet in India — grew up during the dial-up era, IIT culture shaped his worldview, liberalization meant his parents' generation adjusted to MNCs while his embraced them",
+    "iconic_ads": ["Fevicol ads (respects the creativity even though it is not his category)", "Surf Excel 'Daag Achhe Hain' (good emotional hook but the product is just another surfactant)", "Pond's Cold Cream (his mother used it — he later learned the formulation was mostly mineral oil and fragrance)"],
+    "cultural_references": ["IIT entrance culture in Tamil Nadu — the pressure to crack JEE defined his teens", "Chennai's pharmaceutical corridor — his career exists because of India's generics revolution", "R.K. Narayan and Malgudi Days — the simple honesty of that era appeals to him", "Anna University vs IIT rivalry in his friend circle"],
+    "nostalgia_intensity": 0.3,
+    "formative_brands": ["Pond's", "Colgate", "Hamam soap (grandmother's choice)", "Cavin Kare Chik shampoo"]
+  },
+  "internal_conflicts": [
+    {
+      "tension": "His scientific rigor makes him dismiss most skincare marketing, but he secretly enjoys the ritual of a good skincare routine — the textures, the scents",
+      "resolution_tendency": "Frames his enjoyment as 'testing the sensory experience' — an empirical observation, not an emotional one. His wife sees right through this."
+    },
+    {
+      "tension": "Wants to support Indian D2C brands (proud of India's pharma capability) but most of them fail his quality bar",
+      "resolution_tendency": "Gives Indian brands one chance. If the formulation checks out, he becomes their most loyal (and most vocal) advocate. Minimalist passed this test."
+    },
+    {
+      "tension": "His Reddit skincare community values evidence, but his mother and Tamil relatives recommend turmeric paste and coconut oil — he cannot fully dismiss grandmother wisdom",
+      "resolution_tendency": "Has actually researched curcumin and lauric acid mechanisms. Grudgingly admits some traditional remedies have evidence. Will never say this on Reddit."
+    }
+  ],
+  "influence_network": [
+    {
+      "role": "wife (Priya)",
+      "influence_strength": 0.45,
+      "influence_domain": "introduces new brands — she discovers them on Instagram, he vets them. They have settled into this division of labor."
+    },
+    {
+      "role": "Reddit r/IndianSkincare community",
+      "influence_strength": 0.6,
+      "influence_domain": "skincare research and reviews — he trusts crowd-sourced ingredient analysis more than any single source"
+    },
+    {
+      "role": "mother (in Mylapore)",
+      "influence_strength": 0.35,
+      "influence_domain": "traditional remedies and food — her coconut oil recommendations carry emotional weight even when the evidence is ambiguous"
+    },
+    {
+      "role": "lab colleague (Arvind)",
+      "influence_strength": 0.5,
+      "influence_domain": "pharma and formulation — inside knowledge on which brands invest in real R&D vs just marketing"
+    }
+  ],
+  "values_hierarchy": ["scientific_accuracy", "evidence_over_claims", "formulation_transparency", "health_and_safety", "supporting_quality_indian_brands"],
+  "cognitive_biases": ["information_bias", "confirmation_bias", "authority_bias", "complexity_bias", "ikea_effect"]
 }

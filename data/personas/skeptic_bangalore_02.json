@@ -47,24 +47,105 @@
       "interest_level": 0.75,
       "monthly_spend_inr": 3000,
       "preferred_brands": ["Nicobar", "Okhai", "local Bangalore boutiques"],
-      "purchase_frequency": "monthly"
+      "purchase_frequency": "monthly",
+      "brand_relationships": [
+        {
+          "brand": "Nicobar",
+          "relationship_type": "grudging respect",
+          "emotional_history": "Initially dismissed Nicobar as overpriced Instagram aesthetic — then examined their supply chain transparency and became a genuine convert. One of the few brands she recommends without caveats.",
+          "intensity": 0.7
+        },
+        {
+          "brand": "Okhai",
+          "relationship_type": "principled support",
+          "emotional_history": "Discovered Okhai through a verified artisan-partnership thread on Twitter — buys from them specifically because they prove their social impact claims with actual data",
+          "intensity": 0.55
+        }
+      ]
     },
     {
       "category": "skincare",
       "interest_level": 0.65,
       "monthly_spend_inr": 1500,
       "preferred_brands": ["Minimalist", "CeraVe", "whatever has the shortest ingredient list"],
-      "purchase_frequency": "monthly"
+      "purchase_frequency": "monthly",
+      "brand_relationships": [
+        {
+          "brand": "Minimalist",
+          "relationship_type": "grudging approval",
+          "emotional_history": "Spent two weeks verifying their ingredient concentration claims against CosDNA before buying — one of the rare Indian D2C brands that survived her scrutiny. Still checks every new launch.",
+          "intensity": 0.6
+        },
+        {
+          "brand": "CeraVe",
+          "relationship_type": "evidence-based trust",
+          "emotional_history": "Trusts CeraVe because dermatologists she verified as independent (not paid ambassadors) recommend it — the boring packaging is actually a trust signal for her",
+          "intensity": 0.65
+        }
+      ]
     },
     {
       "category": "food_and_beverage",
       "interest_level": 0.7,
       "monthly_spend_inr": 3000,
       "preferred_brands": ["Third Wave Coffee", "local roasters", "anything not Starbucks"],
-      "purchase_frequency": "weekly"
+      "purchase_frequency": "weekly",
+      "brand_relationships": [
+        {
+          "brand": "Third Wave Coffee",
+          "relationship_type": "skeptical regular",
+          "emotional_history": "Initially went to debunk the hype — the single-origin sourcing claims checked out and now it is her daily caffeine spot, though she still rolls her eyes at the Instagram crowd there",
+          "intensity": 0.6
+        }
+      ]
     }
   ],
   "backstory": "Tanya works in the very industry she is most skeptical of. As a content strategist at a digital marketing agency, she writes the kind of copy she personally distrusts. She has seen the sausage being made — she knows which influencer reviews are paid, which 'user-generated' content is actually produced by agencies, and which '10K+ reviews' are bought in bulk. This insider knowledge makes her an extremely hard consumer to convince. She supports brands she believes in, but the bar for belief is extraordinarily high. Her friends call her for honest product opinions because they know she will never recommend something just because it is popular.",
   "current_life_context": "Her agency just onboarded a D2C skincare brand and she is struggling to write compelling copy for a product she has not personally tested. She is also looking for a new face sunscreen — she has been using the same one for a year but it was recently exposed on Twitter for misleading SPF claims. She is annoyed but not surprised.",
-  "inner_monologue_style": "Sharp, fast, and slightly jaded. Thinks: 'Ok this brand has 40K followers but 80% of comments are from bot accounts — I can tell by the emoji-only replies. And this dermatologist endorsement? I literally saw the same derm endorse three competing brands last month. Everyone is for sale. Let me just check Reddit for real opinions...' Occasionally finds a genuinely good product and gets disproportionately excited about it because it is so rare."
+  "inner_monologue_style": "Sharp, fast, and slightly jaded. Thinks: 'Ok this brand has 40K followers but 80% of comments are from bot accounts — I can tell by the emoji-only replies. And this dermatologist endorsement? I literally saw the same derm endorse three competing brands last month. Everyone is for sale. Let me just check Reddit for real opinions...' Occasionally finds a genuinely good product and gets disproportionately excited about it because it is so rare.",
+  "generational_touchstones": {
+    "formative_era": "Grew up watching marketing evolve from Doordarshan spots to Instagram reels — and then chose to work inside the machine. She can trace the exact moment Indian D2C brands stopped being scrappy and started being calculated: 2019, when VC money flooded in and every brand got the same Canva aesthetic.",
+    "iconic_ads": ["Dove Real Beauty (the campaign that taught brands 'authenticity' could itself be a manipulative strategy — Tanya wrote a college paper about this)", "Mamaearth's toxin-free claims (she personally verified three were misleading)", "Lenskart's 'free home trial' (a funnel she admires as a marketer but distrusts as a consumer)", "CRED ads (she finds them genuinely funny but recognizes they exist purely for brand recall, not information)"],
+    "cultural_references": ["Christ University journalism debates about media ethics — her professors were old-school newspaper people who saw digital marketing as the enemy", "Bangalore's HSR Layout as the D2C startup epicenter — she lives surrounded by the founders whose brands she debunks", "Twitter takedown culture — she has personally quote-tweeted brands with receipts and gotten responses", "The rise and fall of specific D2C brands she watched from the inside — she saw pitch decks before they became Instagram ads"],
+    "nostalgia_intensity": 0.1,
+    "formative_brands": ["Nicobar", "Minimalist", "Third Wave Coffee"]
+  },
+  "internal_conflicts": [
+    {
+      "tension": "She literally writes marketing copy for brands she might not personally trust. Every day at work is cognitive dissonance in a WeWork.",
+      "resolution_tendency": "Draws a line between 'selling a story' and 'lying.' She writes copy that is technically accurate but emotionally persuasive. She tells herself this is ethical. The line moves slightly every quarter."
+    },
+    {
+      "tension": "She dismisses influencer culture but her own social media presence — where she debunks brands — is itself a form of influencing. She has 8K followers who trust her takes.",
+      "resolution_tendency": "Tells herself she is doing 'journalism, not influencing.' Has refused two brand partnership offers. But noticed she felt flattered by the third one."
+    },
+    {
+      "tension": "She supports small brands on principle but sometimes the mass-market product is genuinely better. Admitting this feels like betraying her identity.",
+      "resolution_tendency": "Will recommend the mass-market product but frame it as the exception: 'Even I have to admit CeraVe is just good.' The framing protects her self-image."
+    }
+  ],
+  "influence_network": [
+    {
+      "role": "Twitter skeptic community",
+      "influence_strength": 0.75,
+      "influence_domain": "skincare, D2C brand analysis — her real peer group. When @SkinScience tweets a thread about a brand's ingredient claims, she pays attention."
+    },
+    {
+      "role": "agency colleagues (fellow marketers)",
+      "influence_strength": 0.4,
+      "influence_domain": "industry gossip — she knows which brands are spending unsustainably on CAC, which helps her predict which products will disappear in 6 months"
+    },
+    {
+      "role": "roommate Divya",
+      "influence_strength": 0.5,
+      "influence_domain": "daily life — Divya is a non-skeptic impulse buyer. Their apartment is a live A/B test. Tanya uses Divya's purchases as case studies."
+    },
+    {
+      "role": "Reddit r/IndianSkincareAddicts",
+      "influence_strength": 0.65,
+      "influence_domain": "skincare — the only community she trusts because anonymity removes the incentive to shill"
+    }
+  ],
+  "values_hierarchy": ["intellectual_honesty", "transparency", "supporting_genuine_quality", "anti_manipulation", "independence_of_thought"],
+  "cognitive_biases": ["confirmation_bias_toward_skepticism", "insider_knowledge_bias", "contrarian_bias", "cynicism_as_default", "availability_heuristic"]
 }

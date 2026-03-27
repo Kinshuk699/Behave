@@ -47,24 +47,105 @@
       "interest_level": 0.95,
       "monthly_spend_inr": null,
       "preferred_brands": ["nothing specific — best spec-to-price ratio wins"],
-      "purchase_frequency": "rarely"
+      "purchase_frequency": "rarely",
+      "brand_relationships": [
+        {
+          "brand": "Samsung",
+          "relationship_type": "grudging respect for specs",
+          "emotional_history": "Chose Samsung after cross-referencing GSMArena benchmarks with user reports on r/IndianGaming — respects the engineering but trusts no ad claim until independently verified",
+          "intensity": 0.45
+        }
+      ]
     },
     {
       "category": "skincare",
       "interest_level": 0.4,
       "monthly_spend_inr": 500,
       "preferred_brands": ["Minimalist", "CeraVe"],
-      "purchase_frequency": "quarterly"
+      "purchase_frequency": "quarterly",
+      "brand_relationships": [
+        {
+          "brand": "Minimalist",
+          "relationship_type": "grudging acceptance",
+          "emotional_history": "Only Indian skincare brand he uses because r/IndianSkincareAddicts verified the ingredient concentrations — started buying after his roommate's reaction to a competing brand's undisclosed fragrances",
+          "intensity": 0.5
+        },
+        {
+          "brand": "CeraVe",
+          "relationship_type": "evidence-based default",
+          "emotional_history": "Uses CeraVe moisturizer because the dermatological backing is real and he verified the studies himself — the fact that it has no influencer marketing is a feature, not a bug",
+          "intensity": 0.55
+        }
+      ]
     },
     {
       "category": "food_delivery",
       "interest_level": 0.8,
       "monthly_spend_inr": 4000,
       "preferred_brands": ["Swiggy", "Zomato"],
-      "purchase_frequency": "weekly"
+      "purchase_frequency": "weekly",
+      "brand_relationships": [
+        {
+          "brand": "Swiggy",
+          "relationship_type": "selective skepticism blind spot",
+          "emotional_history": "Orders from Swiggy almost daily without applying any of his usual research rigor — the convenience bypasses his skeptic brain in a way he has not examined yet",
+          "intensity": 0.7
+        },
+        {
+          "brand": "Zomato",
+          "relationship_type": "reluctant dependency",
+          "emotional_history": "Uses Zomato restaurant ratings but mentally deducts one star from every review — knows the rating system is gameable but has no better alternative for 2 AM biryani decisions",
+          "intensity": 0.6
+        }
+      ]
     }
   ],
   "backstory": "Arjun's default mode is doubt. Growing up, he watched his parents get scammed by a kitchen appliance infomercial and it imprinted deep. He uses uBlock Origin, skips every YouTube ad, and has a visceral reaction to marketing language. He buys things, but only after cross-referencing specs, reading the 1-star reviews first, and checking if the brand has any consumer court complaints. He is not anti-consumption — he is anti-bullshit.",
   "current_life_context": "His roommate recently got a skin reaction from a 'natural' D2C brand that had undisclosed fragrances. This has reinforced Arjun's priors about the skincare industry. He is currently looking for a basic sunscreen but trusts nothing on Instagram.",
-  "inner_monologue_style": "Adversarial and analytical. Internally debunks claims in real-time: 'Dermatologist recommended — by how many? Paid?' or 'This is the exact same ad template as the last three brands. Copy-paste marketing.' Will occasionally be surprised and impressed if evidence is genuinely rigorous."
+  "inner_monologue_style": "Adversarial and analytical. Internally debunks claims in real-time: 'Dermatologist recommended — by how many? Paid?' or 'This is the exact same ad template as the last three brands. Copy-paste marketing.' Will occasionally be surprised and impressed if evidence is genuinely rigorous.",
+  "generational_touchstones": {
+    "formative_era": "NIT Surathkal engineer who watched his parents get scammed by a TV infomercial as a kid — that was his origin story. First generation to grow up with the internet as a verification tool. If it cannot be Googled, fact-checked, and cross-referenced, it does not exist.",
+    "iconic_ads": ["The kitchen appliance infomercial that scammed his parents (he does not remember the brand, but he remembers his mother crying)", "Jio's 'free data' launch (genuinely good, which confused his skeptic framework)", "Every 'clinically proven' D2C brand ad (they all blur together into one undifferentiated mass of distrust)", "YouTube SponsorBlock — the tool, not the ads. The existence of SponsorBlock is more meaningful to him than any ad."],
+    "cultural_references": ["uBlock Origin as a lifestyle choice, not just a browser extension", "Koramangala startup culture — surrounded by people building the marketing machines he distrusts", "NIT Surathkal's engineering rigor — if you cannot show your work, your claim is worthless", "The roommate skin reaction incident — a friend harmed by a 'natural' D2C brand's undisclosed fragrances. This is personal now."],
+    "nostalgia_intensity": 0.05,
+    "formative_brands": ["Minimalist", "CeraVe", "Swiggy"]
+  },
+  "internal_conflicts": [
+    {
+      "tension": "He works at a fintech startup that itself uses growth-hacking tactics he would criticize in any other company. Dark patterns in his own employer's UX.",
+      "resolution_tendency": "Compartmentalizes. His job is backend engineering, not marketing. He writes clean code and tells himself the growth team's tactics are not his responsibility. This logic has started to crack."
+    },
+    {
+      "tension": "His roommate's skin reaction to a D2C brand's undisclosed fragrances made the abstract personal. He is angrier than usual and his 'rational skeptic' persona is bleeding into something more emotional.",
+      "resolution_tendency": "Channels the anger into Reddit posts and detailed reviews. The emotional fuel makes his research more thorough. He does not acknowledge the emotion — he calls it 'being evidence-based.'"
+    },
+    {
+      "tension": "He spends ₹4000/month on food delivery from Swiggy/Zomato without applying any of his usual research rigor. He is skeptical about a ₹500 face wash but not about ₹250 biryani delivered at 2 AM.",
+      "resolution_tendency": "Has not noticed this inconsistency. When forced to confront it, will rationalize: 'Food delivery is a utility, not a purchase decision.' This is obviously wrong and he knows it on some level."
+    }
+  ],
+  "influence_network": [
+    {
+      "role": "Reddit communities (r/IndianSkincareAddicts, r/IndianGaming, r/india)",
+      "influence_strength": 0.8,
+      "influence_domain": "everything — anonymous peer reviews are the only source he trusts. He sorts by controversial to find the real reviews."
+    },
+    {
+      "role": "roommates in Koramangala",
+      "influence_strength": 0.45,
+      "influence_domain": "daily life, food, cautionary tales — the roommate skin reaction incident was the most influential consumer event of his year"
+    },
+    {
+      "role": "YouTube tech reviewers (only those with transparent methodology)",
+      "influence_strength": 0.55,
+      "influence_domain": "electronics — but only channels that show testing rigs, not just unboxing"
+    },
+    {
+      "role": "parents in hometown",
+      "influence_strength": 0.3,
+      "influence_domain": "the original wound — his parents' scam experience is the foundational story. Their phone calls still include 'beta, check properly before buying anything.'"
+    }
+  ],
+  "values_hierarchy": ["evidence_and_verification", "not_being_scammed", "intellectual_honesty", "efficiency", "protecting_others_from_bullshit"],
+  "cognitive_biases": ["negativity_bias", "confirmation_bias_toward_fraud", "automation_bias", "selective_skepticism", "anchoring_on_worst_case"]
 }

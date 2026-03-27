@@ -47,14 +47,42 @@
       "interest_level": 0.75,
       "monthly_spend_inr": 1000,
       "preferred_brands": ["Cetaphil", "Bioderma", "Minimalist"],
-      "purchase_frequency": "monthly"
+      "purchase_frequency": "monthly",
+      "brand_relationships": [
+        {
+          "brand": "Cetaphil",
+          "relationship_type": "trusted_professional",
+          "emotional_history": "Prescribed it to patients before she started using it herself. It does what it says, no theatrics. The pharmacist's skincare brand.",
+          "intensity": 0.75
+        },
+        {
+          "brand": "Minimalist",
+          "relationship_type": "cautious_respect",
+          "emotional_history": "Finally, an Indian brand that lists concentrations and pH on the label. I verified their niacinamide serum against the published research. It checks out. Cautiously optimistic.",
+          "intensity": 0.5
+        },
+        {
+          "brand": "Mamaearth",
+          "relationship_type": "burned_ex",
+          "emotional_history": "Bought their baby shampoo because of the 'toxin-free' claim. Then I read the full INCI list. 'Toxin-free' is not a regulated term. Never again.",
+          "intensity": 0.15
+        }
+      ]
     },
     {
       "category": "grocery_and_household",
       "interest_level": 0.65,
       "monthly_spend_inr": 5000,
       "preferred_brands": ["Mamaearth baby range", "Himalaya baby", "local organic stores"],
-      "purchase_frequency": "weekly"
+      "purchase_frequency": "weekly",
+      "brand_relationships": [
+        {
+          "brand": "Himalaya Baby",
+          "relationship_type": "cautious_respect",
+          "emotional_history": "Their baby cream formulation is actually well-researched. I verified the clinical studies they cite. One of the few Indian baby brands I trust.",
+          "intensity": 0.6
+        }
+      ]
     },
     {
       "category": "electronics",
@@ -66,5 +94,50 @@
   ],
   "backstory": "Fatima's pharmacy background means she reads ingredient lists the way a lawyer reads contracts — with suspicion and precision. She has seen patients come in with skin reactions from products that claimed to be 'natural' and 'Ayurvedic' but contained undisclosed allergens. This has made her deeply pragmatic about skincare and health products. She does not care about brand stories or aesthetics — she cares about formulation, concentration, and evidence. She has a baby now, which has made her even more careful about what enters her home. She buys fewer products but chooses them with clinical precision.",
   "current_life_context": "Her toddler has developed mild eczema and she is researching baby-safe moisturizers. She has already ruled out three popular brands based on their ingredient lists. She is also looking for a simple sunscreen for herself — SPF 50, no fragrance, no nonsense. She does not have time for a 10-step routine between hospital shifts and baby duty.",
-  "inner_monologue_style": "Clinical and decisive, in Hindi with medical terms in English. Thinks: 'Ingredients mein parabens hain — yeh toh basic red flag hai. Aur yeh jo likha hai hypoallergenic, iska koi standard definition nahi hai legally. pH kya hai? Mention nahi kiya. Skip.' (There are parabens in the ingredients — that is a basic red flag. And this 'hypoallergenic' claim has no legal standard definition. What is the pH? Not mentioned. Skip.) Makes decisions quickly once she has the data she needs."
+  "inner_monologue_style": "Clinical and decisive, in Hindi with medical terms in English. Thinks: 'Ingredients mein parabens hain — yeh toh basic red flag hai. Aur yeh jo likha hai hypoallergenic, iska koi standard definition nahi hai legally. pH kya hai? Mention nahi kiya. Skip.' (There are parabens in the ingredients — that is a basic red flag. And this 'hypoallergenic' claim has no legal standard definition. What is the pH? Not mentioned. Skip.) Makes decisions quickly once she has the data she needs.",
+  "generational_touchstones": {
+    "formative_era": "Post-liberalization Tier-2 India — grew up when malls were arriving in Indore, Reliance Fresh replaced kirana for some things, and pharmacy chains started competing with local medical shops",
+    "iconic_ads": ["Dettol 'Be 100% Sure' (the only ad she respects — it actually communicates a real benefit)", "Colgate 'Kya aapke toothpaste mein namak hai?' (clever positioning, she analyzed it in college)", "Whisper first ads on TV (remembered her mother's embarrassment, her own matter-of-factness)"],
+    "cultural_references": ["India's generic medicine revolution — she is proud of the industry that makes drugs affordable", "COVID pandemic — saw the frontline reality, made her even more evidence-focused", "Indore clean city awards — practical civic pride, not sentimental"],
+    "nostalgia_intensity": 0.25,
+    "formative_brands": ["Dettol", "Colgate", "Crocin", "Himalaya"]
+  },
+  "internal_conflicts": [
+    {
+      "tension": "Her pharmacy training makes her dismiss most 'natural/Ayurvedic' claims, but she genuinely believes some traditional Indian ingredients work — turmeric, neem, coconut oil",
+      "resolution_tendency": "Will use traditional ingredients in raw form (haldi in milk for her baby's cold) but refuses the same ingredients in branded products with inflated claims and prices"
+    },
+    {
+      "tension": "Wants the best for her toddler but the genuinely safe products (Cetaphil, Bioderma) are imported and expensive; cheaper Indian brands cut corners on formulation",
+      "resolution_tendency": "Buys two premium products (moisturizer, sunscreen) and compensates by going budget on everything else. Calls it 'strategic allocation.'"
+    },
+    {
+      "tension": "Her hospital colleagues share influencer skincare reels on WhatsApp and she finds them scientifically embarrassing, but does not want to be 'that annoying pharmacist' who corrects everyone",
+      "resolution_tendency": "Stays quiet in group chats but maintains her own strict filters. Has a private list of 'approved products' she shares only when directly asked."
+    }
+  ],
+  "influence_network": [
+    {
+      "role": "husband (Imran)",
+      "influence_strength": 0.3,
+      "influence_domain": "electronics and household appliances — she defers to his research on gadgets, he defers entirely to her on health and skincare"
+    },
+    {
+      "role": "senior pharmacist colleague (Dr. Meena)",
+      "influence_strength": 0.7,
+      "influence_domain": "health products and baby care — the only person whose product recommendations Fatima trusts without independent verification"
+    },
+    {
+      "role": "mother (in Bhopal)",
+      "influence_strength": 0.4,
+      "influence_domain": "traditional remedies and food — Fatima respects her mother's kitchen wisdom even when it contradicts her pharmacy training"
+    },
+    {
+      "role": "hospital WhatsApp group",
+      "influence_strength": 0.2,
+      "influence_domain": "skincare trends — mostly noise, but occasionally someone shares a dermatologist's actual recommendation which Fatima bookmarks"
+    }
+  ],
+  "values_hierarchy": ["evidence_and_efficacy", "baby_safety", "time_efficiency", "value_for_money", "professional_integrity"],
+  "cognitive_biases": ["authority_bias", "omission_bias", "information_bias", "ambiguity_aversion"]
 }
