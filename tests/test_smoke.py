@@ -2238,3 +2238,124 @@ def test_mid_score_creates_no_extra_memory():
     maybe_create_preference_or_belief(stream, evaluation)
 
     assert stream.size == 0
+
+
+# ── Sync Databricks ingest tests ─────────────────────────────
+
+
+def test_auto_ingest_has_wait_parameter():
+    """auto_ingest should accept a wait=True parameter for synchronous mode."""
+    from synthetic_india.pipeline.databricks_ingest import auto_ingest
+    import inspect
+
+    sig = inspect.signature(auto_ingest)
+    assert "wait" in sig.parameters, "auto_ingest must accept a 'wait' parameter"
+    assert sig.parameters["wait"].default is False, "wait should default to False"
+
+
+def test_auto_ingest_wait_polls_job(tmp_path):
+    """When wait=True, auto_ingest should poll the job until it completes."""
+    from pathlib import Path
+    from unittest.mock import patch, MagicMock
+    from synthetic_india.pipeline.databricks_ingest import auto_ingest
+
+    # Create a fake run file so upload succeeds
+    (tmp_path / "metadata.json").write_text('{"run_id": "test"}')
+
+    mock_client = MagicMock()
+    mock_response = MagicMock()
+    mock_response.run_id = 12345
+
+    # Simulate job submission
+    mock_client.jobs.submit.return_value = mock_response
+
+    # Simulate poll: first RUNNING, then SUCCESS
+    from unittest.mock import PropertyMock
+    run_state_running = MagicMock()
+    run_state_running.life_cycle_state = MagicMock()
+    run_state_running.life_cycle_state.value = "RUNNING"
+
+    run_state_done = MagicMock()
+    run_state_done.life_cycle_state = MagicMock()
+    run_state_done.life_cycle_state.value = "TERMINATED"
+    run_state_done.result_state = MagicMock()
+    run_state_done.result_state.value = "SUCCESS"
+
+    run_output_running = MagicMock()
+    run_output_running.state = run_state_running
+
+    run_output_done = MagicMock()
+    run_output_done.state = run_state_done
+
+    mock_client.jobs.get_run.side_effect = [run_output_running, run_output_done]
+
+    with patch("synthetic_india.pipeline.databricks_ingest._get_client", return_value=mock_client):
+        with patch("synthetic_india.pipeline.databricks_ingest.time") as mock_time:
+            mock_time.sleep = MagicMock()  # Don't actually sleep
+            mock_time.time = MagicMock(side_effect=[0, 5, 10])  # Fake timestamps
+            result = auto_ingest("run_test", tmp_path, wait=True)
+
+    assert result is True
+    # Should have polled at least once
+    assert mock_client.jobs.get_run.call_count >= 1
+
+
+def test_auto_ingest_wait_false_no_polling(tmp_path):
+    """When wait=False (default), auto_ingest should NOT poll the job."""
+    from unittest.mock import patch, MagicMock
+    from synthetic_india.pipeline.databricks_ingest import auto_ingest
+
+    (tmp_path / "metadata.json").write_text('{"run_id": "test"}')
+
+    mock_client = MagicMock()
+    mock_response = MagicMock()
+    mock_response.run_id = 12345
+    mock_client.jobs.submit.return_value = mock_response
+
+    with patch("synthetic_india.pipeline.databricks_ingest._get_client", return_value=mock_client):
+        result = auto_ingest("run_test", tmp_path, wait=False)
+
+    assert result is True
+    # Should NOT poll
+    mock_client.jobs.get_run.assert_not_called()
+
+
+# ── Dashboard API tests ──────────────────────────────────────
+
+
+def test_dashboard_personas_endpoint():
+    """GET /api/personas should return all personas with id, name, city, archetype."""
+    from fastapi.testclient import TestClient
+    from dashboard.app import app
+
+    client = TestClient(app)
+    resp = client.get("/api/personas")
+    assert resp.status_code == 200
+
+    data = resp.json()
+    assert isinstance(data, list)
+    assert len(data) >= 10  # We have ~20 personas
+
+    # Each persona should have the expected keys
+    for p in data:
+        assert "persona_id" in p
+        assert "name" in p
+        assert "city" in p
+        assert "archetype" in p
+
+
+def test_simulate_request_accepts_persona_ids():
+    """SimulateRequest should accept an optional persona_ids list."""
+    from dashboard.app import SimulateRequest
+
+    req = SimulateRequest(
+        password="test",
+        brand="TestBrand",
+        category="test_cat",
+        persona_ids=["pragmatist_pune_01", "impulse_buyer_delhi_01"],
+    )
+    assert req.persona_ids == ["pragmatist_pune_01", "impulse_buyer_delhi_01"]
+
+    # Default should be empty list
+    req2 = SimulateRequest(password="test", brand="B", category="C")
+    assert req2.persona_ids == []

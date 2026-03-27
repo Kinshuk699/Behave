@@ -212,6 +212,10 @@ function setupTestForm() {
 
   let savedPassword = '';
   let imageBase64 = '';
+  let allPersonas = [];           // Populated from /api/personas
+  let selectedPersonaIds = new Set();
+
+  const COST_PER_PERSONA = 0.025; // Approx cost per persona eval
 
   // Password gate
   gateBtn.addEventListener('click', () => {
@@ -220,7 +224,106 @@ function setupTestForm() {
       savedPassword = pw;
       gate.style.display = 'none';
       form.style.display = 'block';
+      loadPersonas();  // Fetch personas on unlock
     }
+  });
+
+  // ── Load personas from API ──
+  async function loadPersonas() {
+    try {
+      const resp = await fetch('/api/personas');
+      if (resp.ok) {
+        allPersonas = await resp.json();
+        renderPersonaPicker();
+        // Update slider max to match actual persona count
+        const slider = document.getElementById('inputCohort');
+        slider.max = allPersonas.length;
+      }
+    } catch (e) {
+      console.warn('Could not load personas:', e);
+    }
+  }
+
+  // ── Render persona picker chips ──
+  function renderPersonaPicker() {
+    const grid = document.getElementById('personaPickerGrid');
+    grid.innerHTML = allPersonas.map(p => `
+      <label class="persona-chip" data-id="${esc(p.persona_id)}">
+        <input type="checkbox" class="persona-chip__checkbox" value="${esc(p.persona_id)}">
+        <div class="persona-chip__info">
+          <span class="persona-chip__name">${esc(p.name)}</span>
+          <span class="persona-chip__meta">${esc(p.city)} · ${esc(p.archetype.replace(/_/g, ' '))}</span>
+        </div>
+      </label>
+    `).join('');
+
+    // Chip click handlers
+    grid.querySelectorAll('.persona-chip__checkbox').forEach(cb => {
+      cb.addEventListener('change', () => {
+        const chip = cb.closest('.persona-chip');
+        if (cb.checked) {
+          selectedPersonaIds.add(cb.value);
+          chip.classList.add('persona-chip--selected');
+        } else {
+          selectedPersonaIds.delete(cb.value);
+          chip.classList.remove('persona-chip--selected');
+        }
+        updatePickerCount();
+      });
+    });
+  }
+
+  function updatePickerCount() {
+    const count = selectedPersonaIds.size;
+    document.getElementById('pickerCount').textContent = `(${count} selected)`;
+    document.getElementById('pickerCost').textContent = count > 0
+      ? `~$${(count * COST_PER_PERSONA).toFixed(2)}`
+      : '';
+  }
+
+  // ── Select All / Deselect All ──
+  document.getElementById('selectAllBtn').addEventListener('click', () => {
+    document.querySelectorAll('.persona-chip__checkbox').forEach(cb => {
+      cb.checked = true;
+      cb.closest('.persona-chip').classList.add('persona-chip--selected');
+      selectedPersonaIds.add(cb.value);
+    });
+    updatePickerCount();
+  });
+
+  document.getElementById('deselectAllBtn').addEventListener('click', () => {
+    document.querySelectorAll('.persona-chip__checkbox').forEach(cb => {
+      cb.checked = false;
+      cb.closest('.persona-chip').classList.remove('persona-chip--selected');
+    });
+    selectedPersonaIds.clear();
+    updatePickerCount();
+  });
+
+  // ── Mode toggle: auto vs manual ──
+  const selectionMode = document.getElementById('selectionMode');
+  const autoRow = document.getElementById('autoSelectRow');
+  const manualRow = document.getElementById('manualSelectRow');
+
+  selectionMode.addEventListener('change', () => {
+    if (selectionMode.value === 'manual') {
+      autoRow.style.display = 'none';
+      manualRow.style.display = 'flex';
+    } else {
+      autoRow.style.display = 'flex';
+      manualRow.style.display = 'none';
+    }
+  });
+
+  // ── Cohort slider ──
+  const cohortSlider = document.getElementById('inputCohort');
+  const cohortLabel = document.getElementById('cohortSizeLabel');
+  const cohortCost = document.getElementById('cohortCost');
+
+  cohortSlider.addEventListener('input', () => {
+    const n = parseInt(cohortSlider.value, 10);
+    cohortLabel.textContent = n;
+    cohortCost.textContent = `(~$${(n * COST_PER_PERSONA).toFixed(2)})`;
   });
 
   // Upload zone
@@ -249,7 +352,7 @@ function setupTestForm() {
     reader.readAsDataURL(file);
   }
 
-  // Run simulation
+  // ── Run simulation ──
   runBtn.addEventListener('click', async () => {
     const brand = document.getElementById('inputBrand').value.trim();
     const category = document.getElementById('inputCategory').value.trim();
@@ -258,8 +361,15 @@ function setupTestForm() {
       return;
     }
 
+    const isManual = selectionMode.value === 'manual';
+    if (isManual && selectedPersonaIds.size === 0) {
+      showStatus('Select at least one persona.', 'error');
+      return;
+    }
+
     runBtn.disabled = true;
-    showStatus('Running simulation… This takes 30–90 seconds.', 'loading');
+    const personaCount = isManual ? selectedPersonaIds.size : parseInt(cohortSlider.value, 10);
+    showStatus(`Running simulation with ${personaCount} personas… This takes 30–90 seconds.`, 'loading');
 
     try {
       const body = {
@@ -270,7 +380,8 @@ function setupTestForm() {
         body_copy: document.getElementById('inputBody').value.trim(),
         cta: document.getElementById('inputCta').value.trim(),
         memory_scope: document.getElementById('inputScope').value,
-        cohort_size: parseInt(document.getElementById('inputCohort').value, 10),
+        cohort_size: isManual ? selectedPersonaIds.size : parseInt(cohortSlider.value, 10),
+        persona_ids: isManual ? Array.from(selectedPersonaIds) : [],
         image_base64: imageBase64,
       };
 

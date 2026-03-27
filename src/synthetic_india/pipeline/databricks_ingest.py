@@ -9,6 +9,7 @@ still completes locally — Databricks ingest is best-effort.
 
 import logging
 import os
+import time
 from pathlib import Path
 
 logger = logging.getLogger(__name__)
@@ -118,11 +119,53 @@ def trigger_ingest_notebook(run_id: str) -> str | None:
         return None
 
 
-def auto_ingest(run_id: str, run_dir: Path) -> bool:
+# Poll interval and max wait for synchronous ingest
+_POLL_INTERVAL_SECONDS = 10
+_MAX_WAIT_SECONDS = 180
+
+
+def wait_for_job(job_run_id: str, timeout: int = _MAX_WAIT_SECONDS) -> bool:
+    """Poll a Databricks job run until it terminates or times out.
+
+    Returns True if the job completed successfully.
+    """
+    client = _get_client()
+    start = time.time()
+
+    while time.time() - start < timeout:
+        try:
+            run = client.jobs.get_run(int(job_run_id))
+            state = run.state.life_cycle_state
+            lcs = state.value if hasattr(state, "value") else str(state)
+
+            if lcs in ("TERMINATED", "SKIPPED", "INTERNAL_ERROR"):
+                result = run.state.result_state
+                rs = result.value if hasattr(result, "value") else str(result)
+                if rs == "SUCCESS":
+                    logger.info("Databricks job %s completed successfully", job_run_id)
+                    return True
+                else:
+                    logger.warning("Databricks job %s finished with result: %s", job_run_id, rs)
+                    return False
+        except Exception as exc:
+            logger.warning("Error polling job %s: %s", job_run_id, exc)
+            return False
+
+        time.sleep(_POLL_INTERVAL_SECONDS)
+
+    logger.warning("Timed out waiting for Databricks job %s after %ds", job_run_id, timeout)
+    return False
+
+
+def auto_ingest(run_id: str, run_dir: Path, wait: bool = False) -> bool:
     """Upload run files and trigger the ingest notebook.
 
     Best-effort: returns False and logs warnings on any failure.
     Never raises — simulation should not fail because of Databricks issues.
+
+    Args:
+        wait: If True, poll the Databricks job until it completes (synchronous).
+              If False (default), fire-and-forget.
     """
     try:
         _get_client()  # Fail fast if SDK missing or auth broken
@@ -137,7 +180,13 @@ def auto_ingest(run_id: str, run_dir: Path) -> bool:
             return False
 
         job_run_id = trigger_ingest_notebook(run_id)
-        return job_run_id is not None
+        if job_run_id is None:
+            return False
+
+        if wait:
+            return wait_for_job(job_run_id)
+
+        return True
     except Exception as exc:
         logger.warning("Databricks auto-ingest failed: %s", exc)
         return False

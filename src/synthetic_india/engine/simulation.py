@@ -549,11 +549,13 @@ def _save_run(
             )
         )
 
-    # Auto-ingest to Databricks (best-effort, never blocks)
+    # Auto-ingest to Databricks (best-effort, waits for completion)
     try:
         from synthetic_india.pipeline.databricks_ingest import auto_ingest
-        if auto_ingest(run_meta.run_id, run_dir):
-            console.print("[dim]  Databricks ingest triggered[/dim]")
+        if auto_ingest(run_meta.run_id, run_dir, wait=True):
+            console.print("[dim]  Databricks ingest complete[/dim]")
+        else:
+            console.print("[dim]  Databricks ingest triggered (async)[/dim]")
     except Exception:
         pass  # Graceful — local run is already saved
 

@@ -289,12 +289,35 @@
           </select>
         </div>
         <div class="test__field">
-          <label class="test__label">Cohort Size</label>
-          <select id="inputCohort" class="test__input">
-            <option value="3">3 personas (~$0.07)</option>
-            <option value="5" selected>5 personas (~$0.12)</option>
-            <option value="10">10 personas (~$0.25)</option>
+          <label class="test__label">Selection Mode</label>
+          <select id="selectionMode" class="test__input">
+            <option value="auto" selected>Auto-select (smart cohort)</option>
+            <option value="manual">Manual — Pick personas</option>
           </select>
+        </div>
+      </div>
+
+      <!-- Auto-select: cohort size slider -->
+      <div class="test__row" id="autoSelectRow">
+        <div class="test__field test__field--wide">
+          <label class="test__label">Cohort Size: <span id="cohortSizeLabel">5</span> personas <span id="cohortCost" class="test__cost">(~$0.12)</span></label>
+          <input type="range" id="inputCohort" class="test__slider" min="1" max="20" value="5">
+        </div>
+      </div>
+
+      <!-- Manual-select: persona picker (hidden by default) -->
+      <div class="test__row" id="manualSelectRow" style="display:none;">
+        <div class="test__field test__field--wide">
+          <div class="persona-picker__header">
+            <label class="test__label">Select Personas <span id="pickerCount">(0 selected)</span> <span id="pickerCost" class="test__cost"></span></label>
+            <div class="persona-picker__actions">
+              <button type="button" id="selectAllBtn" class="btn btn--small">Select All</button>
+              <button type="button" id="deselectAllBtn" class="btn btn--small">Deselect All</button>
+            </div>
+          </div>
+          <div class="persona-picker__grid" id="personaPickerGrid">
+            <!-- Populated by JS from /api/personas -->
+          </div>
         </div>
       </div>
       <div class="test__row">

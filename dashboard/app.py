@@ -47,6 +47,7 @@ class SimulateRequest(BaseModel):
     image_base64: str = ""
     memory_scope: str = "category"
     cohort_size: int = 5
+    persona_ids: list[str] = []
 
 
 # ── Routes ────────────────────────────────────────────────────
@@ -55,6 +56,23 @@ class SimulateRequest(BaseModel):
 @app.get("/api/health")
 async def health():
     return {"status": "ok"}
+
+
+@app.get("/api/personas")
+async def list_personas():
+    """Return all available personas (id, name, city, archetype)."""
+    from synthetic_india.engine.simulation import load_personas
+
+    personas = load_personas()
+    return [
+        {
+            "persona_id": p.persona_id,
+            "name": p.name,
+            "city": p.demographics.city,
+            "archetype": p.archetype.value if hasattr(p.archetype, "value") else str(p.archetype),
+        }
+        for p in personas
+    ]
 
 
 @app.post("/api/simulate")
@@ -99,9 +117,19 @@ async def simulate(req: SimulateRequest):
         }
         memory_scope = scope_map.get(req.memory_scope, MemoryScope.CATEGORY)
 
+        # Build persona list if specific IDs were selected
+        selected_personas = None
+        if req.persona_ids:
+            from synthetic_india.engine.simulation import load_personas as _load
+            all_personas = _load()
+            selected_personas = [
+                p for p in all_personas if p.persona_id in req.persona_ids
+            ]
+
         scorecards, recommendation, meta = await run_simulation(
             creatives=[creative],
-            cohort_size=min(req.cohort_size, 10),  # Cap at 10 for cost control
+            personas=selected_personas,
+            cohort_size=req.cohort_size,
             use_memory=memory_scope != MemoryScope.NONE,
             memory_scope=memory_scope,
         )
