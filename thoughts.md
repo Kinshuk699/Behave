@@ -1,6 +1,6 @@
 # Synthetic India — Working Notes
 
-Last updated: 2026-03-25
+Last updated: 2026-03-27
 
 ## Purpose
 
@@ -483,6 +483,43 @@ generate_recommendation()
 3. Databricks SQL Dashboard
 4. End-to-end demo with real creatives + live API calls
 
+### ✅ Completed: Bidirectional Databricks Memory Flow (2026-03-27)
+
+**The gap:** Memory data (`data/memory/*.json`) never flowed to Databricks. Run data did (evaluations, scorecards, verdicts, metadata via `auto_ingest()`), but memory nodes were purely local. The capstone's "streaming data" story was incomplete.
+
+**What was built (9 tasks, TDD, 86/86 tests GREEN):**
+
+**Writes → Databricks:**
+1. `RunMetadata.memory_scope` — new field tracks which scope (NONE/CATEGORY/BRAND/FULL) was active per run
+2. `memory_nodes.json` per run — `_save_run()` writes all new observation + reflection nodes created during that run (append-only, not full snapshots)
+3. `auto_ingest()` now uploads `memory_nodes.json` alongside the other 6 files
+4. Notebook `04_simulation_ingest.py` — bronze ingest (raw nodes), silver validation (node_id + description length + persona_id), gold audit log enriched with `memory_nodes_created` + `memory_scope`, MLflow logs memory count
+5. `databricks.yml` sync includes `data/memory/*.json` for bundle deployment
+6. `backfill_memory_files()` — reads existing 10 local memory files and uploads all nodes to DBFS for one-time historical ingest
+
+**Reads ← Databricks:**
+7. `pipeline/databricks_reader.py` — NEW module: `read_personas()` and `read_memory_nodes()` via SQL (statement execution API), with automatic local JSON fallback
+8. `load_personas()` in simulation now delegates to `databricks_reader.read_personas()`
+9. `MemoryStream.load()` tries Databricks first, falls back to local JSON
+
+**Resilience:** Every Databricks read is wrapped in try/except → falls back to local files. If the cluster crashes or the SDK isn't installed, everything still works from local JSON. Writes are best-effort too — `auto_ingest()` never blocks the simulation.
+
+**New Databricks tables:**
+- `kinshuk_bronze.memory_nodes` — raw memory nodes per run
+- `kinshuk_silver.memory_nodes` — validated memory nodes
+
+**Files created:**
+- `src/synthetic_india/pipeline/databricks_reader.py` — NEW
+
+**Files modified:**
+- `src/synthetic_india/schemas/recommendation.py` — `memory_scope` field on RunMetadata
+- `src/synthetic_india/engine/simulation.py` — memory node collection, _save_run wiring, reader imports
+- `src/synthetic_india/memory/stream.py` — `load()` tries Databricks first
+- `src/synthetic_india/pipeline/databricks_ingest.py` — `memory_nodes.json` in RUN_FILES, `backfill_memory_files()`
+- `notebooks/04_simulation_ingest.py` — bronze/silver/gold memory node ETL
+- `databricks.yml` — `data/memory/*.json` in sync includes
+- `tests/test_smoke.py` — 7 new tests (86 total)
+
 ### ✅ Completed: MLflow Integration (2026-03-25)
 
 **Approach:** Option A — MLflow in ingest notebook only (Databricks has MLflow built-in)
@@ -646,3 +683,7 @@ Each pipeline doc links only to its "Next →" step. Click into any node to see 
 16. Auto-ingest: Kafka is overkill for a few runs/day — Databricks SDK (upload to DBFS + trigger notebook) is the right tool. Graceful degradation means local runs never break if Databricks is down.
 17. DBFS for file uploads, not Workspace files API — `workspace.upload()` treats files as notebooks, `files.upload()` rejects `/Workspace/` paths. DBFS just works for arbitrary JSON.
 18. Notebook parameterization via `dbutils.widgets` — same notebook works for manual runs (hardcoded default) AND auto-triggered runs (run_id passed as base_parameter).
+19. Memory nodes never flowed to Databricks — run data did (evaluations, scorecards, verdicts, metadata) but the memory system was local-only. This was the gap for capstone: the "streaming/incremental data" story was incomplete.
+20. Bidirectional Databricks flow: the system now writes memory nodes per run AND reads personas/memories from Databricks on startup. Local files are the fallback, not the primary source. This means data survives cluster changes, and the system works offline.
+21. Append-only `memory_nodes.json` per run (not full snapshots) — mirrors the streaming/event-sourcing design. Each run produces only its NEW nodes. Databricks accumulates all of them across runs.
+22. `memory_scope` tracked in `RunMetadata` — tells Databricks which memory strategy was active for each run. Essential for reproducibility and understanding why different runs produce different results.
