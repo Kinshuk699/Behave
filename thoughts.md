@@ -1,6 +1,6 @@
 # Synthetic India — Working Notes
 
-Last updated: 2026-03-28
+Last updated: 2026-03-30
 
 ## Purpose
 
@@ -844,8 +844,65 @@ Grouped by generation for cultural accuracy:
 - 3 new tests, all GREEN
 - **Final count: 115/115 GREEN (0.42s)**
 
-### Remaining Future Work
+---
+
+## ✅ SMART INFER + DASHBOARD OVERHAUL (2026-03-30)
+
+**Root cause of 0.0 score bug (Urban Company run):** All 5 persona evaluations threw silent exceptions caught by bare `except Exception` in `simulation.py`. Only the recommendation agent ran on an empty scorecard → produced 0.0/KILL. Likely transient Anthropic API error on March 29 (API confirmed working via diagnostic scripts).
+
+**Approach A ("Smart Infer") — approved and implemented:**
+
+### Categories & Brand Positioning (Tasks 1-4)
+- **18 canonical B2C categories** in `src/synthetic_india/categories.py`: electronics, fashion, food_and_beverage, food_delivery, quick_commerce, skincare, personal_care, automobile, two_wheeler, home_services, fintech, edtech, health_and_wellness, travel, telecom, jewelry_and_luxury, baby_and_kids, grocery_and_household
+- **Category migration**: `CATEGORY_MIGRATION_MAP` (~40 mappings), `normalize_category()` function, `migrate_run_categories()` — updated all 6 existing runs (Automobile→automobile, Household→grocery_and_household, Maid Services→home_services, grocery_delivery→quick_commerce×2, House Maintenance→home_services)
+- **Brand enums**: `BrandPositioning` (heritage/premium/mass_market/value/disruptor/luxury), `BrandEra` (legacy/established/growth/startup), `MarketingTone` (aspirational/playful/informational/urgency/nostalgia/edgy)
+- **Persona affinities**: All 20 personas already had 16-18 affinities covering canonical categories
+
+### Creative Extraction Agent (Task 5)
+- **`src/synthetic_india/agents/creative_extractor.py`** — LLM pre-pass: given brand + image → extracts full CreativeCard
+- Prompt constrains category to exactly one of 18 B2C_CATEGORIES ("Zepto promoting chocolates → quick_commerce because Zepto IS a quick commerce platform")
+- Extracts: headline, body copy, CTA, price framing, urgency/social proof/trust cues, visual style, language, festival context, city tier, brand positioning/era/tone
+- Uses `creative_analysis_model` (Sonnet 4), temperature=0.3
+
+### Error Handling Fix (Task 6)
+- `simulation.py` now tracks `eval_errors: list[str]` with `f"{persona.name}: {type(e).__name__}: {e}"`
+- Raises `RuntimeError` if ALL evaluations fail — no more fake 0-score results
+
+### Dashboard API Simplification (Task 7)
+- `SimulateRequest` reduced to: `password`, `brand`, `image_base64` (required), `memory_scope`, `cohort_size`, `persona_ids`
+- Removed: `category`, `headline`, `body_copy`, `cta` — all extracted by LLM from image
+- Simulate endpoint calls `extract_creative_from_image()` → returns `creative` object in response
+- Evaluations enriched server-side with `persona_name`, `persona_city`, `persona_archetype`
+
+### Dashboard Form UI Simplification (Task 8)
+- Form now: Brand + Image Upload (required) + Memory Scope + Selection Mode + Cohort Size
+- Image marked as required with hint: "Our AI extracts category, headline, CTA, and brand context from the image automatically"
+
+### Focus Group Chat Verbatims (Task 9)
+- New chat-style rendering: persona name, city, archetype badge, action badge (🟢🟡🔴 + "scroll past"/"pause"), score/100, verbatim in quotes, key_themes tags
+- Replaces old plain verbatim cards
+
+### Score Transparency (Task 10)
+- **Creative Intelligence** card — shows what AI extracted from the image (category, headline, CTA, brand positioning, era, tone, visual style, price framing, festival)
+- **Per-Persona Scores** table — ATT/REL/TRU/DES/CLA/Overall columns, color-coded rows (green ≥60, yellow ≥40, red <40)
+
+### Files Modified/Created
+- `src/synthetic_india/categories.py` — NEW
+- `src/synthetic_india/agents/creative_extractor.py` — NEW
+- `src/synthetic_india/schemas/creative.py` — MODIFIED (brand_positioning, brand_era, marketing_tone)
+- `src/synthetic_india/agents/persona_evaluator.py` — MODIFIED (brand context in eval prompt)
+- `src/synthetic_india/engine/simulation.py` — MODIFIED (error handling)
+- `dashboard/app.py` — MODIFIED (simplified API, creative extraction, persona enrichment)
+- `dashboard/static/index.html` — MODIFIED (simplified form, new result containers)
+- `dashboard/static/app.js` — MODIFIED (Focus Group Chat, Creative Intelligence, Score Table)
+- `dashboard/static/styles.css` — MODIFIED (focus-msg, creative-intel, score-table styles)
+- `tests/test_smoke.py` — MODIFIED (new tests for categories, extraction, API schema)
+
+### Test Count: 135/135 GREEN
+
+### Remaining Work
+- End-to-end Urban Company re-run (with image, live API)
 - Embedding generation for memory retrieval
 - Cross-persona memory / social contagion
 - New evaluation output fields (emotional_journey, cultural_resonance)
-- Dashboard changes
+- UI polish pass (user mentioned more changes coming)
