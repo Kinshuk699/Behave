@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Behave — Project Explainer</title>
+    <meta name="description" content="Behave: An Agentic Creative Testing Platform for Indian D2C Brands. Project explainer for DataExpert Capstone.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        /* ===========================================
+           CSS CUSTOM PROPERTIES
+           =========================================== */
+        :root {
+            --bg: #0c0e13;
+            --bg-card: #14171f;
+            --bg-card-hover: #1a1e28;
+            --text: #e8e6e3;
+            --text-dim: #8b8d94;
+            --accent: #ff6b35;
+            --accent-glow: rgba(255, 107, 53, 0.15);
+            --green: #4ade80;
+            --yellow: #facc15;
+            --red: #f87171;
+            --blue: #60a5fa;
+            --purple: #c084fc;
+            --cyan: #22d3ee;
+            --border: rgba(255,255,255,0.06);
+            --font-display: 'Instrument Serif', serif;
+            --font-body: 'DM Sans', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --radius: 12px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; scroll-snap-type: y mandatory; }
+        body {
+            font-family: var(--font-body);
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* ===========================================
+           VIEWPORT BASE
+           =========================================== */
+        .slide {
+            width: 100vw;
+            min-height: 100vh;
+            min-height: 100dvh;
+            overflow: hidden;
+            scroll-snap-align: start;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            padding: clamp(1.5rem, 4vw, 4rem);
+        }
+        .slide-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* ===========================================
+           ANIMATIONS
+           =========================================== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+                        transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .slide.visible .reveal { opacity: 1; transform: translateY(0); }
+        .reveal:nth-child(1) { transition-delay: 0.05s; }
+        .reveal:nth-child(2) { transition-delay: 0.12s; }
+        .reveal:nth-child(3) { transition-delay: 0.19s; }
+        .reveal:nth-child(4) { transition-delay: 0.26s; }
+        .reveal:nth-child(5) { transition-delay: 0.33s; }
+        .reveal:nth-child(6) { transition-delay: 0.40s; }
+
+        @media (prefers-reduced-motion: reduce) {
+            .reveal { opacity: 1; transform: none; transition: none; }
+        }
+
+        /* ===========================================
+           TYPOGRAPHY
+           =========================================== */
+        h1 {
+            font-family: var(--font-display);
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            font-weight: 400;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+        }
+        h2 {
+            font-family: var(--font-display);
+            font-size: clamp(1.6rem, 3.5vw, 2.8rem);
+            font-weight: 400;
+            line-height: 1.15;
+            margin-bottom: clamp(0.75rem, 2vw, 1.5rem);
+        }
+        h3 {
+            font-size: clamp(0.9rem, 1.4vw, 1.15rem);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+        p, li { font-size: clamp(0.85rem, 1.2vw, 1.05rem); max-width: 65ch; }
+        .tag {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            border-radius: 100px;
+            font-size: clamp(0.6rem, 0.9vw, 0.75rem);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        .tag--accent { background: var(--accent); color: #000; }
+        .tag--green { background: rgba(74,222,128,0.15); color: var(--green); }
+        .tag--blue { background: rgba(96,165,250,0.15); color: var(--blue); }
+        .tag--purple { background: rgba(192,132,252,0.15); color: var(--purple); }
+        .tag--cyan { background: rgba(34,211,238,0.15); color: var(--cyan); }
+        .tag--yellow { background: rgba(250,204,21,0.15); color: var(--yellow); }
+        .tag--red { background: rgba(248,113,113,0.15); color: var(--red); }
+
+        .mono { font-family: var(--font-mono); font-size: 0.85em; }
+        .dim { color: var(--text-dim); }
+        em { font-family: var(--font-display); font-style: italic; color: var(--accent); }
+
+        /* ===========================================
+           PROGRESS BAR
+           =========================================== */
+        .progress { position: fixed; top: 0; left: 0; height: 3px; background: var(--accent); z-index: 1000; transition: width 0.3s; }
+
+        /* ===========================================
+           LAYOUT HELPERS
+           =========================================== */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(1rem, 2vw, 2rem); }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(0.75rem, 1.5vw, 1.5rem); }
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(0.5rem, 1vw, 1rem); }
+        @media (max-width: 768px) {
+            .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: clamp(1rem, 2vw, 1.5rem);
+            transition: border-color 0.2s, background 0.2s;
+        }
+        .card:hover { border-color: rgba(255,255,255,0.12); background: var(--bg-card-hover); }
+
+        .divider { width: 60px; height: 3px; background: var(--accent); border-radius: 2px; margin: 1rem 0; }
+
+        /* ===========================================
+           FLOW DIAGRAMS (CSS-only)
+           =========================================== */
+        .flow { display: flex; align-items: center; gap: clamp(0.3rem, 0.8vw, 0.75rem); flex-wrap: wrap; }
+        .flow-node {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: clamp(0.4rem, 0.8vw, 0.6rem) clamp(0.6rem, 1.2vw, 1rem);
+            font-size: clamp(0.65rem, 1vw, 0.85rem);
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        .flow-node--accent { border-color: var(--accent); color: var(--accent); }
+        .flow-node--green { border-color: var(--green); color: var(--green); }
+        .flow-node--blue { border-color: var(--blue); color: var(--blue); }
+        .flow-node--purple { border-color: var(--purple); color: var(--purple); }
+        .flow-node--cyan { border-color: var(--cyan); color: var(--cyan); }
+        .flow-arrow { color: var(--text-dim); font-size: clamp(0.7rem, 1vw, 1rem); }
+
+        /* Medallion pipeline */
+        .medallion { display: flex; gap: clamp(0.5rem, 1vw, 1rem); align-items: stretch; }
+        .medallion-layer {
+            flex: 1;
+            border-radius: var(--radius);
+            padding: clamp(0.75rem, 1.5vw, 1.25rem);
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+        .medallion-layer h4 {
+            font-size: clamp(0.7rem, 1vw, 0.85rem);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 0.3rem;
+        }
+        .medallion-layer li {
+            font-size: clamp(0.6rem, 0.85vw, 0.75rem);
+            color: var(--text-dim);
+            list-style: none;
+            padding-left: 0.8rem;
+            position: relative;
+        }
+        .medallion-layer li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: inherit;
+            opacity: 0.5;
+        }
+        .bronze { background: rgba(205,127,50,0.08); border: 1px solid rgba(205,127,50,0.2); }
+        .bronze h4 { color: #cd7f32; }
+        .silver { background: rgba(192,192,192,0.06); border: 1px solid rgba(192,192,192,0.15); }
+        .silver h4 { color: #c0c0c0; }
+        .gold { background: rgba(255,215,0,0.06); border: 1px solid rgba(255,215,0,0.15); }
+        .gold h4 { color: #ffd700; }
+
+        @media (max-width: 768px) { .medallion { flex-direction: column; } }
+
+        /* Stat blocks */
+        .stat-row { display: flex; gap: clamp(1rem, 2vw, 2rem); flex-wrap: wrap; }
+        .stat-block { text-align: center; }
+        .stat-num {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 4vw, 3.5rem);
+            color: var(--accent);
+            line-height: 1;
+        }
+        .stat-label { font-size: clamp(0.65rem, 0.9vw, 0.8rem); color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 0.3rem; }
+
+        /* Persona chips */
+        .persona-row { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+        .persona-chip {
+            display: flex; align-items: center; gap: 0.4rem;
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 100px;
+            padding: 0.25rem 0.7rem 0.25rem 0.35rem;
+            font-size: clamp(0.6rem, 0.85vw, 0.75rem);
+        }
+        .persona-dot {
+            width: 8px; height: 8px; border-radius: 50%;
+        }
+
+        /* Section number */
+        .section-num {
+            font-family: var(--font-display);
+            font-size: clamp(5rem, 12vw, 10rem);
+            position: absolute;
+            right: clamp(1rem, 4vw, 3rem);
+            top: clamp(0.5rem, 2vw, 1rem);
+            color: rgba(255,255,255,0.025);
+            line-height: 1;
+            pointer-events: none;
+        }
+
+        /* Background patterns */
+        .bg-grid {
+            background-image:
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 60px 60px;
+        }
+        .bg-glow::after {
+            content: '';
+            position: absolute;
+            width: 600px; height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+            top: -200px; right: -200px;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .slide-content { position: relative; z-index: 1; }
+
+        /* By line */
+        .byline {
+            font-size: clamp(0.75rem, 1vw, 0.9rem);
+            color: var(--text-dim);
+            margin-top: clamp(0.5rem, 1vw, 1rem);
+        }
+    </style>
+</head>
+<body>
+    <div class="progress" id="progress"></div>
+
+    <!-- ═══════════════════════════════════════════
+         SLIDE 1: TITLE
+         ═══════════════════════════════════════════ -->
+    <section class="slide bg-glow" style="justify-content: center;">
+        <div class="slide-content" style="align-items: center; text-align: center;">
+            <h3 class="reveal" style="margin-bottom: 1rem;">DataExpert Capstone — Kinshuk Sahni</h3>
+            <h1 class="reveal">Behave</h1>
+            <p class="reveal" style="font-size: clamp(1rem, 1.8vw, 1.3rem); color: var(--text-dim); margin-top: 0.5rem; max-width: 50ch;">
+                An agentic creative testing platform that simulates how <em>real Indian consumers</em> react to ads — before a single rupee is spent.
+            </p>
+            <div class="reveal" style="display: flex; gap: 0.5rem; margin-top: 1.5rem; flex-wrap: wrap; justify-content: center;">
+                <span class="tag tag--accent">Databricks</span>
+                <span class="tag tag--green">Delta Lake</span>
+                <span class="tag tag--blue">MLflow</span>
+                <span class="tag tag--purple">Anthropic Claude</span>
+                <span class="tag tag--cyan">Medallion Pipeline</span>
+                <span class="tag tag--yellow">Agentic AI</span>
+            </div>
+            <p class="reveal byline">March 2026 · Python 3.12 · 135 tests passing · ~$0.25 per simulation run</p>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         SLIDE 2: THE PROBLEM
+         ═══════════════════════════════════════════ -->
+    <section class="slide bg-grid">
+        <span class="section-num">01</span>
+        <div class="slide-content">
+            <h3 class="reveal">The Problem</h3>
+            <h2 class="reveal">Indian D2C brands burn crores on <em>untested</em> creatives</h2>
+            <div class="reveal grid-3" style="margin-top: clamp(1rem, 2vw, 2rem);">
+                <div class="card">
+                    <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🔥</div>
+                    <p style="font-weight: 600; margin-bottom: 0.3rem;">Gut-Driven Spend</p>
+                    <p class="dim" style="font-size: clamp(0.7rem, 0.95vw, 0.85rem);">Most creative decisions are made by intuition. Run the ad → burn budget → learn after the fact.</p>
+                </div>
+                <div class="card">
+                    <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">⏳</div>
+                    <p style="font-weight: 600; margin-bottom: 0.3rem;">A/B Tests Are Slow</p>
+                    <p class="dim" style="font-size: clamp(0.7rem, 0.95vw, 0.85rem);">Live testing takes weeks, costs thousands, and only tests audiences already exposed — no pre-testing exists.</p>
+                </div>
+                <div class="card">
+                    <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🇮🇳</div>
+                    <p style="font-weight: 600; margin-bottom: 0.3rem;">India Is Different</p>
+                    <p class="dim" style="font-size: clamp(0.7rem, 0.95vw, 0.85rem);">Hinglish copy, festival marketing, city-tier pricing, jugaad mentality — Western testing tools miss all of it.</p>
+                </div>
+            </div>
+            <div class="reveal" style="margin-top: clamp(1rem, 2vw, 1.5rem);">
+                <p class="dim" style="font-style: italic;">Behave lets you simulate likely consumer response across multiple archetypes and geographies <strong style="color: var(--text);">for ≈ ₹20 per run</strong> — before committing ad spend.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         SLIDE 3: HOW IT WORKS — END TO END
+         ═══════════════════════════════════════════ -->
+    <section class="slide">
+        <span class="section-num">02</span>
+        <div class="slide-content">
+            <h3 class="reveal">How It Works</h3>
+            <h2 class="reveal">End-to-End Data Flow</h2>
+            <div class="reveal flow" style="margin: clamp(0.75rem, 1.5vw, 1.5rem) 0;">
+                <div class="flow-node flow-node--accent">📤 Brand uploads ad image</div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-node flow-node--blue">🤖 AI extracts CreativeCard</div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-node flow-node--purple">👥 Cohort selection</div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-node flow-node--cyan">🧠 Persona evaluations (vision-native)</div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-node flow-node--green">✅ Critic quality gate</div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-node flow-node--accent">📊 Score + Recommend</div>
+            </div>
+            <div class="reveal grid-2" style="margin-top: clamp(0.5rem, 1vw, 1rem);">
+                <div class="card">
+                    <h3 style="font-size: clamp(0.7rem, 0.9vw, 0.8rem);">① Creative Extraction (LLM Pre-Pass)</h3>
+                   <p class="dim" style="font-size: clamp(0.65rem, 0.85vw, 0.78rem);">User only provides <strong style="color:var(--text)">brand name + ad image</strong>. Claude Sonnet sees the image and extracts: category (from 18 canonical B2C categories), headline, CTA, brand positioning, era, marketing tone, festival context, visual style, pricing signals. No manual form-filling.</p>
+                </div>
+                <div class="card">
+                    <h3 style="font-size: clamp(0.7rem, 0.9vw, 0.8rem);">② Cohort Selection</h3>
+                    <p class="dim" style="font-size: clamp(0.65rem, 0.85vw, 0.78rem);">Rule-based matching: extracted category → persona affinities → rank by affinity score. Top N selected + edge cases. Or manual pick from 20 personas. Memory scope controls which past exposures each persona recalls.</p>
+                </div>
+                <div class="card">
+                    <h3 style="font-size: clamp(0.7rem, 0.9vw, 0.8rem);">③ Vision-Native Persona Evaluation</h3>
+                    <p class="dim" style="font-size: clamp(0.65rem, 0.85vw, 0.78rem);">Each persona receives: their full soul profile + raw ad image + CreativeCard metadata + accumulated memories. Outputs: 5 dimensional scores (attention, relevance, trust, desire, clarity), primary action, verbatim in their voice, key themes.</p>
+                </div>
+                <div class="card">
+                    <h3 style="font-size: clamp(0.7rem, 0.9vw, 0.8rem);">④ Critic → Score → Recommend</h3>
+                    <p class="dim" style="font-size: clamp(0.65rem, 0.85vw, 0.78rem);">Critic agent checks each eval for sycophancy, persona consistency, cultural authenticity. Passed evals aggregate into a scorecard. Recommendation agent decides: <strong style="color:var(--green)">SCALE</strong> / <strong style="color:var(--yellow)">ITERATE</strong> / <strong style="color:var(--red)">KILL</strong> + edit playbook.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         SLIDE 4: THE PERSONAS
+         ═══════════════════════════════════════════ -->
+    <section class="slide bg-grid">
+        <span class="section-num">03</span>
+        <div class="slide-content">
+            <h3 class="reveal">The Persona Library</h3>
+            <h2 class="reveal">20 synthetic consumers. 8 archetypes. <em>Real</em> cultural context.</h2>
+            <p class="reveal dim" style="margin-bottom: clamp(0.75rem, 1.5vw, 1rem);">Inspired by <strong style="color:var(--text)">Generative Agents</strong> (Park et al., Stanford) — each persona has a "soul" (deep behavioral profile), a memory stream (past ad exposures), and an action space (scroll_past → purchase_intent).</p>
+
+            <div class="reveal grid-4" style="font-size: clamp(0.6rem, 0.85vw, 0.75rem);">
+                <div class="card" style="border-left: 3px solid var(--accent);">
+                    <p style="font-weight:700;">Researcher ×3</p>
+                    <p class="dim">Ananya (Bangalore), Sanjay (Kolkata), Meera (Chennai)</p>
+                    <p class="dim" style="font-size: 0.9em;">Deep comparison, review-driven, high research depth</p>
+                </div>
+                <div class="card" style="border-left: 3px solid var(--green);">
+                    <p style="font-weight:700;">Brand Loyalist ×3</p>
+                    <p class="dim">Rajan (Mumbai), Kavitha (Kochi), Ramesh (Lucknow)</p>
+                    <p class="dim" style="font-size: 0.9em;">Trust-first, repeat buyer, resistant to new brands</p>
+                </div>
+                <div class="card" style="border-left: 3px solid var(--blue);">
+                    <p style="font-weight:700;">Aspirational Buyer ×2</p>
+                    <p class="dim">Vikram (Mumbai), Isha (Hyderabad)</p>
+                    <p class="dim" style="font-size: 0.9em;">Status-driven, premium preference, Instagram-influenced</p>
+                </div>
+                <div class="card" style="border-left: 3px solid var(--purple);">
+                    <p style="font-weight:700;">Skeptic ×3</p>
+                    <p class="dim">Arvind (Chennai), Sunil (Ahmedabad), Deepa (Patna)</p>
+                    <p class="dim" style="font-size: 0.9em;">Distrusts marketing claims, high objection rate</p>
+                </div>
+                <div class="card" style="border-left: 3px solid var(--cyan);">
+                    <p style="font-weight:700;">Trend Follower ×3</p>
+                    <p class="dim">Priya (Delhi), Aisha (Bangalore), Rohit (Mumbai)</p>
+                    <p class="dim" style="font-size: 0.9em;">FOMO-driven, social-media-first, fast decisions</p>
+                </div>
+                <div class="card" style="border-left: 3px solid var(--yellow);">
+                    <p style="font-weight:700;">Price Anchor ×2</p>
+                    <p class="dim">Sunita (Lucknow), Manoj (Delhi)</p>
+                    <p class="dim" style="font-size: 0.9em;">Mental ₹ benchmarks per category, value-focused</p>
+                </div>
+                <div class="card" style="border-left: 3px solid var(--red);">
+                    <p style="font-weight:700;">Impulse Buyer ×2</p>
+                    <p class="dim">Neha (Delhi), Arjun (Mumbai)</p>
+                    <p class="dim" style="font-size: 0.9em;">Emotional triggers, fast checkout, low research</p>
+                </div>
+                <div class="card" style="border-left: 3px solid #a78bfa;">
+                    <p style="font-weight:700;">Pragmatist ×2</p>
+                    <p class="dim">Vikram Rao (Pune), Fatima (Indore)</p>
+                    <p class="dim" style="font-size: 0.9em;">Feature-value calculator, spec-driven, methodical</p>
+                </div>
+            </div>
+            <div class="reveal" style="margin-top: clamp(0.5rem, 1vw, 0.75rem);">
+                <p class="dim" style="font-size: clamp(0.65rem, 0.85vw, 0.75rem);">10 cities · 8 languages (Hindi, English, Tamil, Telugu, Bengali, Gujarati, Malayalam, Marathi) · Ages 19-45 · Income: lower-middle → premium</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         SLIDE 5: MEDALLION PIPELINE
+         ═══════════════════════════════════════════ -->
+    <section class="slide">
+        <span class="section-num">04</span>
+        <div class="slide-content">
+            <h3 class="reveal">Databricks Pipeline</h3>
+            <h2 class="reveal">Medallion Architecture — <em>Bronze → Silver → Gold</em></h2>
+
+            <div class="reveal medallion" style="margin-top: clamp(0.75rem, 1.5vw, 1.25rem);">
+                <div class="medallion-layer bronze">
+                    <h4>Bronze — Raw</h4>
+                    <ul>
+                        <li>persona_seed (20 JSONs)</li>
+                        <li>creative_uploads</li>
+                        <li>evaluations (raw LLM output)</li>
+                        <li>critic_verdicts</li>
+                        <li>memory_nodes</li>
+                        <li>run_metadata</li>
+                    </ul>
+                </div>
+                <div class="medallion-layer silver">
+                    <h4>Silver — Validated</h4>
+                    <ul>
+                        <li>personas (schema-checked)</li>
+                        <li>creative_cards (normalized)</li>
+                        <li>evaluations (scores in range, reasoning ≥10 chars)</li>
+                        <li>memory_nodes (node_id valid)</li>
+                        <li>quarantine + rejection reasons</li>
+                    </ul>
+                </div>
+                <div class="medallion-layer gold">
+                    <h4>Gold — Analytics</h4>
+                    <ul>
+                        <li>creative_scorecards (aggregated)</li>
+                        <li>segment_summaries</li>
+                        <li>run_audit_log</li>
+                        <li>MLflow experiments</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="reveal grid-2" style="margin-top: clamp(0.75rem, 1.5vw, 1.25rem);">
+                <div class="card">
+                    <h3 style="font-size: clamp(0.7rem, 0.9vw, 0.8rem);">Data Quality Controls</h3>
+                    <p class="dim" style="font-size: clamp(0.65rem, 0.85vw, 0.75rem);">DLT-style expectations at silver layer: required fields, score ranges, duplicate detection, category vocabulary enforcement. Failed records → quarantine table with rejection reasons. Critic Agent adds a second quality gate: persona consistency, sycophancy detection, cultural authenticity checks.</p>
+                </div>
+                <div class="card">
+                    <h3 style="font-size: clamp(0.7rem, 0.9vw, 0.8rem);">Pipeline Execution</h3>
+                    <p class="dim" style="font-size: clamp(0.65rem, 0.85vw, 0.75rem);">Triggered micro-batch, not always-on streaming. Each simulation auto-ingests: raw JSONs → DBFS → <span class="mono">04_simulation_ingest.py</span> processes bronze → silver → gold. Deliberate design: creative testing is request-driven, not continuous. MLflow logs every run (score, cost, tokens, pass rate).</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         SLIDE 6: MEMORY + AGENT DESIGN
+         ═══════════════════════════════════════════ -->
+    <section class="slide bg-grid">
+        <span class="section-num">05</span>
+        <div class="slide-content">
+            <h3 class="reveal">Agent Architecture</h3>
+            <h2 class="reveal">Three-layer agents with <em>accumulating memory</em></h2>
+
+            <div class="reveal grid-3" style="margin-top: clamp(0.75rem, 1.5vw, 1.25rem);">
+                <div class="card" style="border-top: 3px solid var(--accent);">
+                    <p style="font-weight:700; margin-bottom:0.3rem;">Layer 1: The Soul</p>
+                    <p class="dim" style="font-size: clamp(0.65rem, 0.85vw, 0.75rem);">Deep persona profile: purchase psychology, price sensitivity, brand trust formation, social proof dependency, cultural context (language, festivals, family, city tier), category involvement. Not just demographics.</p>
+                </div>
+                <div class="card" style="border-top: 3px solid var(--blue);">
+                    <p style="font-weight:700; margin-bottom:0.3rem;">Layer 2: The Memory</p>
+                    <p class="dim" style="font-size: clamp(0.65rem, 0.85vw, 0.75rem);">Append-only memory stream: observations, preferences, beliefs, reflections. Full-dump mode (200K context). Reflections trigger at cumulative importance &gt; 150. Memory scoped by category/brand/full. Personas evolve across runs.</p>
+                </div>
+                <div class="card" style="border-top: 3px solid var(--green);">
+                    <p style="font-weight:700; margin-bottom:0.3rem;">Layer 3: The Action</p>
+                    <p class="dim" style="font-size: clamp(0.65rem, 0.85vw, 0.75rem);">SCROLL_PAST → PAUSE → READ → ENGAGE → CLICK → SAVE → SHARE → PURCHASE_INTENT → NEGATIVE_REACT. One primary action + 5 dimensional scores + reasoning + verbatim in persona's voice.</p>
+                </div>
+            </div>
+
+            <div class="reveal" style="margin-top: clamp(0.75rem, 1.5vw, 1.25rem);">
+                <h3 style="font-size: clamp(0.7rem, 0.9vw, 0.8rem); margin-bottom: 0.5rem;">Bidirectional Databricks Integration</h3>
+                <div class="flow">
+                    <div class="flow-node flow-node--cyan">Databricks Silver</div>
+                    <span class="flow-arrow">← reads personas + memories →</span>
+                    <div class="flow-node flow-node--purple">Simulation Engine</div>
+                    <span class="flow-arrow">← writes results →</span>
+                    <div class="flow-node flow-node--green">Databricks Bronze</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-node">Silver</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-node flow-node--accent">Gold + MLflow</div>
+                </div>
+            </div>
+
+            <div class="reveal grid-2" style="margin-top: clamp(0.75rem, 1.5vw, 1rem);">
+                <div class="card">
+                    <h3 style="font-size: clamp(0.7rem, 0.9vw, 0.8rem);">Critic Agent (Quality Gate)</h3>
+                    <p class="dim" style="font-size: clamp(0.65rem, 0.85vw, 0.75rem);">Scores 4 dimensions (0-10): persona consistency, sycophancy, cultural authenticity, action-reasoning alignment. FAIL → quarantine. Not summarization — active data quality enforcement.</p>
+                </div>
+                <div class="card">
+                    <h3 style="font-size: clamp(0.7rem, 0.9vw, 0.8rem);">Recommendation Agent (Business Action)</h3>
+                    <p class="dim" style="font-size: clamp(0.65rem, 0.85vw, 0.75rem);">Consumes gold scorecard + segment summaries + top verbatims. Outputs: SCALE / ITERATE / KILL / SPLIT decision + confidence score + prioritized edit playbook with specific element-level changes.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         SLIDE 7: DASHBOARD + RESULTS
+         ═══════════════════════════════════════════ -->
+    <section class="slide">
+        <span class="section-num">06</span>
+        <div class="slide-content">
+            <h3 class="reveal">Dashboard & Output</h3>
+            <h2 class="reveal">What the brand actually <em>sees</em></h2>
+
+            <div class="reveal grid-2" style="margin-top: clamp(0.75rem, 1.5vw, 1.25rem);">
+                <div>
+                    <p style="font-weight:600; margin-bottom: 0.5rem;">Simplified Input (v3)</p>
+                    <div class="card" style="margin-bottom: 0.75rem;">
+                        <p class="dim" style="font-size: clamp(0.65rem, 0.85vw, 0.75rem);">User provides only: <strong style="color:var(--text)">Brand name</strong> + <strong style="color:var(--text)">Ad image</strong>. AI auto-extracts category, headline, CTA, brand positioning, festival context — everything. Memory scope and cohort selection are optional controls.</p>
+                    </div>
+                    <p style="font-weight:600; margin-bottom: 0.5rem;">Output Dashboard</p>
+                    <div style="display: flex; flex-direction: column; gap: 0.4rem;">
+                        <div class="card" style="padding: 0.6rem 1rem; display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-size: clamp(0.65rem, 0.85vw, 0.75rem);">Verdict Banner</span>
+                            <span class="tag tag--red" style="font-size: 0.6rem;">KILL / ITERATE / SCALE</span>
+                        </div>
+                        <div class="card" style="padding: 0.6rem 1rem;">
+                            <span style="font-size: clamp(0.65rem, 0.85vw, 0.75rem);">Creative Intelligence — what AI extracted from the image</span>
+                        </div>
+                        <div class="card" style="padding: 0.6rem 1rem;">
+                            <span style="font-size: clamp(0.65rem, 0.85vw, 0.75rem);">Radar Chart + 5-dimension scores (ATT/REL/TRU/DES/CLA)</span>
+                        </div>
+                        <div class="card" style="padding: 0.6rem 1rem;">
+                            <span style="font-size: clamp(0.65rem, 0.85vw, 0.75rem);">Per-Persona Score Breakdown (transparent scoring)</span>
+                        </div>
+                        <div class="card" style="padding: 0.6rem 1rem;">
+                            <span style="font-size: clamp(0.65rem, 0.85vw, 0.75rem);">Focus Group Chat — verbatims in each persona's voice</span>
+                        </div>
+                        <div class="card" style="padding: 0.6rem 1rem;">
+                            <span style="font-size: clamp(0.65rem, 0.85vw, 0.75rem);">Edit Playbook — prioritized changes to fix the creative</span>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <p style="font-weight:600; margin-bottom: 0.5rem;">Sample Focus Group Chat Output</p>
+                    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                        <div class="card" style="border-left: 3px solid var(--green);">
+                            <div style="display:flex; gap:0.4rem; align-items:center; font-size:clamp(0.6rem,0.8vw,0.72rem); margin-bottom:0.3rem;">
+                                <strong>Isha Reddy</strong> <span class="dim">Hyderabad</span>
+                                <span class="tag tag--purple" style="font-size:0.55rem; padding:0.1rem 0.4rem;">aspirational buyer</span>
+                                <span style="margin-left:auto;">🟢 pause · 72/100</span>
+                            </div>
+                            <p style="font-size:clamp(0.6rem,0.8vw,0.72rem); font-style:italic; color:var(--text-dim);">"Aww this is actually sweet! Ice cream melting analogy tho — very filmy but works"</p>
+                        </div>
+                        <div class="card" style="border-left: 3px solid var(--red);">
+                            <div style="display:flex; gap:0.4rem; align-items:center; font-size:clamp(0.6rem,0.8vw,0.72rem); margin-bottom:0.3rem;">
+                                <strong>Kavitha Nair</strong> <span class="dim">Kochi</span>
+                                <span class="tag tag--green" style="font-size:0.55rem; padding:0.1rem 0.4rem;">brand loyalist</span>
+                                <span style="margin-left:auto;">🔴 scroll past · 25/100</span>
+                            </div>
+                            <p style="font-size:clamp(0.6rem,0.8vw,0.72rem); font-style:italic; color:var(--text-dim);">"Enth ee love-shove okke... I get my rice from Raghavan uncle's shop for 15 years"</p>
+                        </div>
+                        <div class="card" style="border-left: 3px solid var(--yellow);">
+                            <div style="display:flex; gap:0.4rem; align-items:center; font-size:clamp(0.6rem,0.8vw,0.72rem); margin-bottom:0.3rem;">
+                                <strong>Ramesh Gupta</strong> <span class="dim">Lucknow</span>
+                                <span class="tag tag--green" style="font-size:0.55rem; padding:0.1rem 0.4rem;">brand loyalist</span>
+                                <span style="margin-left:auto;">🟡 pause · 45/100</span>
+                            </div>
+                            <p style="font-size:clamp(0.6rem,0.8vw,0.72rem); font-style:italic; color:var(--text-dim);">"Yeh kya bakwas hai — 10 minute mein grocery? Mera local baniya 20 saal se sahi se..."</p>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: clamp(0.75rem, 1.5vw, 1rem);">
+                        <p style="font-weight:600; margin-bottom: 0.4rem; font-size: clamp(0.7rem, 0.95vw, 0.85rem);">By the Numbers</p>
+                        <div class="stat-row">
+                            <div class="stat-block"><div class="stat-num" style="font-size:clamp(1.2rem,2.5vw,2rem);">20</div><div class="stat-label">Personas</div></div>
+                            <div class="stat-block"><div class="stat-num" style="font-size:clamp(1.2rem,2.5vw,2rem);">18</div><div class="stat-label">B2C Categories</div></div>
+                            <div class="stat-block"><div class="stat-num" style="font-size:clamp(1.2rem,2.5vw,2rem);">135</div><div class="stat-label">Tests Green</div></div>
+                            <div class="stat-block"><div class="stat-num" style="font-size:clamp(1.2rem,2.5vw,2rem);">$0.25</div><div class="stat-label">Per Run</div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         SLIDE 8: TECH STACK + WHY
+         ═══════════════════════════════════════════ -->
+    <section class="slide bg-grid">
+        <span class="section-num">07</span>
+        <div class="slide-content">
+            <h3 class="reveal">Tech Stack & Design Decisions</h3>
+            <h2 class="reveal">Why we built it <em>this way</em></h2>
+            <div class="reveal grid-2" style="margin-top: clamp(0.75rem, 1.5vw, 1.25rem);">
+                <div style="display:flex; flex-direction:column; gap:0.6rem;">
+                    <div class="card">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span style="font-weight:600; font-size:clamp(0.7rem,0.95vw,0.85rem);">Pydantic v2</span>
+                            <span class="tag tag--accent" style="font-size:0.55rem;">Data Models</span>
+                        </div>
+                        <p class="dim" style="font-size:clamp(0.6rem,0.8vw,0.72rem); margin-top:0.2rem;">Structured output enforcement at API level. Every LLM response validated against schema. No parsing errors in production.</p>
+                    </div>
+                    <div class="card">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span style="font-weight:600; font-size:clamp(0.7rem,0.95vw,0.85rem);">Anthropic Claude Sonnet 4</span>
+                            <span class="tag tag--purple" style="font-size:0.55rem;">LLM Engine</span>
+                        </div>
+                        <p class="dim" style="font-size:clamp(0.6rem,0.8vw,0.72rem); margin-top:0.2rem;">Vision-native: personas see the actual ad image, not just extracted text. 200K context window enables full memory dump mode.</p>
+                    </div>
+                    <div class="card">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span style="font-weight:600; font-size:clamp(0.7rem,0.95vw,0.85rem);">Delta Lake + Unity Catalog</span>
+                            <span class="tag tag--green" style="font-size:0.55rem;">Storage</span>
+                        </div>
+                        <p class="dim" style="font-size:clamp(0.6rem,0.8vw,0.72rem); margin-top:0.2rem;">ACID transactions for evaluation writes. Time-travel for cross-run comparison. 3-level namespace: catalog.schema.table. Governed lineage.</p>
+                    </div>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:0.6rem;">
+                    <div class="card">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span style="font-weight:600; font-size:clamp(0.7rem,0.95vw,0.85rem);">MLflow</span>
+                            <span class="tag tag--blue" style="font-size:0.55rem;">Tracking</span>
+                        </div>
+                        <p class="dim" style="font-size:clamp(0.6rem,0.8vw,0.72rem); margin-top:0.2rem;">Every simulation run = an MLflow experiment. Logged: overall score, cost, token usage, critic pass rate, memory nodes created. Enables cross-run comparison.</p>
+                    </div>
+                    <div class="card">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span style="font-weight:600; font-size:clamp(0.7rem,0.95vw,0.85rem);">FastAPI + Vanilla JS</span>
+                            <span class="tag tag--cyan" style="font-size:0.55rem;">Dashboard</span>
+                        </div>
+                        <p class="dim" style="font-size:clamp(0.6rem,0.8vw,0.72rem); margin-top:0.2rem;">Zero build tools. Async endpoints. Live simulation with progress feedback. Pre-loaded Zepto case study for instant demo. Password-gated access.</p>
+                    </div>
+                    <div class="card">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span style="font-weight:600; font-size:clamp(0.7rem,0.95vw,0.85rem);">Triggered Micro-Batch</span>
+                            <span class="tag tag--yellow" style="font-size:0.55rem;">Execution</span>
+                        </div>
+                        <p class="dim" style="font-size:clamp(0.6rem,0.8vw,0.72rem); margin-top:0.2rem;">Not always-on streaming — deliberate choice. Creative testing is request-driven. Each simulation triggers ingest → transform → aggregate pipeline. Cheaper, simpler, correct.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         SLIDE 8: CLOSING
+         ═══════════════════════════════════════════ -->
+    <section class="slide bg-glow" style="justify-content: center;">
+        <div class="slide-content" style="align-items: center; text-align: center;">
+            <h3 class="reveal">In Summary</h3>
+            <h1 class="reveal" style="font-size: clamp(2rem, 5vw, 4rem);">Test creatives before you <em>burn the budget</em></h1>
+            <div class="reveal" style="display: flex; gap: clamp(1.5rem, 3vw, 3rem); margin-top: clamp(1.5rem, 3vw, 2.5rem); flex-wrap: wrap; justify-content: center;">
+                <div class="stat-block"><div class="stat-num">5</div><div class="stat-label">Data Sources</div></div>
+                <div class="stat-block"><div class="stat-num">3</div><div class="stat-label">Medallion Layers</div></div>
+                <div class="stat-block"><div class="stat-num">2</div><div class="stat-label">Agentic Agents</div></div>
+                <div class="stat-block"><div class="stat-num">20</div><div class="stat-label">Synthetic Personas</div></div>
+                <div class="stat-block"><div class="stat-num">₹20</div><div class="stat-label">Per Run Cost</div></div>
+            </div>
+            <p class="reveal dim" style="margin-top: clamp(1.5rem, 3vw, 2rem); max-width: 55ch;">
+                Real cloud pipeline · Visible quality controls · Multiple data inputs · Agents that take business actions · Dashboard that tells the story
+            </p>
+            <p class="reveal" style="margin-top: 1rem; font-size: clamp(0.8rem, 1.1vw, 0.95rem);">
+                <strong>Kinshuk Sahni</strong> <span class="dim">· DataExpert Capstone · March 2026</span>
+            </p>
+        </div>
+    </section>
+
+    <script>
+        /* ===========================================
+           SLIDE CONTROLLER
+           =========================================== */
+        const slides = document.querySelectorAll('.slide');
+        const progressBar = document.getElementById('progress');
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.15 });
+
+        slides.forEach(s => observer.observe(s));
+
+        // Progress bar
+        window.addEventListener('scroll', () => {
+            const scrollTop = document.documentElement.scrollTop;
+            const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const pct = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
+            progressBar.style.width = pct + '%';
+        });
+
+        // Keyboard nav
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowDown' || e.key === ' ' || e.key === 'PageDown') {
+                e.preventDefault();
+                const current = Math.round(window.scrollY / window.innerHeight);
+                const next = Math.min(current + 1, slides.length - 1);
+                slides[next].scrollIntoView({ behavior: 'smooth' });
+            }
+            if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+                e.preventDefault();
+                const current = Math.round(window.scrollY / window.innerHeight);
+                const prev = Math.max(current - 1, 0);
+                slides[prev].scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    </script>
+</body>
+</html>
