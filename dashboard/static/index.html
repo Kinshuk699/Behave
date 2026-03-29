@@ -253,29 +253,20 @@
 
     <div class="test__form" id="testForm" style="display:none;">
       <div class="test__row">
-        <div class="test__field">
+        <div class="test__field test__field--wide">
           <label class="test__label">Brand</label>
-          <input type="text" id="inputBrand" class="test__input" placeholder="e.g. Zepto">
-        </div>
-        <div class="test__field">
-          <label class="test__label">Category</label>
-          <input type="text" id="inputCategory" class="test__input" placeholder="e.g. grocery_delivery">
-        </div>
-      </div>
-      <div class="test__row">
-        <div class="test__field">
-          <label class="test__label">Headline</label>
-          <input type="text" id="inputHeadline" class="test__input" placeholder="Ad headline">
-        </div>
-        <div class="test__field">
-          <label class="test__label">CTA</label>
-          <input type="text" id="inputCta" class="test__input" placeholder="e.g. Shop Now">
+          <input type="text" id="inputBrand" class="test__input" placeholder="e.g. Zepto, Urban Company, Swiggy">
         </div>
       </div>
       <div class="test__row">
         <div class="test__field test__field--wide">
-          <label class="test__label">Body Copy</label>
-          <textarea id="inputBody" class="test__input test__textarea" placeholder="Ad body text"></textarea>
+          <label class="test__label">Creative Image <span class="test__required">*required</span></label>
+          <div class="test__upload" id="uploadZone">
+            <input type="file" id="inputImage" accept="image/*" hidden>
+            <span>Click or drag to upload your ad creative</span>
+          </div>
+          <div class="test__preview" id="imagePreview" style="display:none;"></div>
+          <small class="test__hint">Our AI extracts category, headline, CTA, and brand context from the image automatically.</small>
         </div>
       </div>
       <div class="test__row">
@@ -320,16 +311,7 @@
           </div>
         </div>
       </div>
-      <div class="test__row">
-        <div class="test__field test__field--wide">
-          <label class="test__label">Creative Image (optional)</label>
-          <div class="test__upload" id="uploadZone">
-            <input type="file" id="inputImage" accept="image/*" hidden>
-            <span>Click or drag to upload</span>
-          </div>
-          <div class="test__preview" id="imagePreview" style="display:none;"></div>
-        </div>
-      </div>
+
       <button id="runBtn" class="btn btn--primary btn--large">Run Simulation →</button>
       <div class="test__status" id="testStatus" style="display:none;"></div>
     </div>
@@ -338,12 +320,14 @@
     <div class="test__results" id="testResults" style="display:none;">
       <h3 class="verdict__sub-title">Live Results</h3>
       <div id="liveVerdict"></div>
+      <div id="liveCreativeIntel"></div>
       <div class="verdict__scores">
         <div class="verdict__radar">
           <canvas id="liveRadarChart" width="380" height="380"></canvas>
         </div>
         <div class="verdict__dimensions" id="liveDimensions"></div>
       </div>
+      <div id="liveBreakdown"></div>
       <div id="liveVerbatims"></div>
       <div id="livePlaybook"></div>
     </div>

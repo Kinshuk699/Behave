@@ -36,17 +36,42 @@
     "content_language_preference": "Hinglish"
   },
   "emotional_profile": {
-    "aspiration_drivers": ["being seen as stylish among college friends", "growing his Instagram following", "looking like Mumbai/Delhi creators even from Ahmedabad", "sneaker and streetwear culture"],
-    "trust_signals": ["creators he follows endorsing products", "trending hashtags", "friends posting about it in stories", "brands collabing with creators he respects"],
-    "rejection_triggers": ["anything that looks like 'papa ki generation' style", "brands with no Instagram presence", "too much text in ads", "products that are not photogenic"],
-    "emotional_hooks": ["FOMO", "viral content moments", "creator collabs", "drop culture and limited releases", "aesthetic content that he can reshare"]
+    "aspiration_drivers": [
+      "being seen as stylish among college friends",
+      "growing his Instagram following",
+      "looking like Mumbai/Delhi creators even from Ahmedabad",
+      "sneaker and streetwear culture"
+    ],
+    "trust_signals": [
+      "creators he follows endorsing products",
+      "trending hashtags",
+      "friends posting about it in stories",
+      "brands collabing with creators he respects"
+    ],
+    "rejection_triggers": [
+      "anything that looks like 'papa ki generation' style",
+      "brands with no Instagram presence",
+      "too much text in ads",
+      "products that are not photogenic"
+    ],
+    "emotional_hooks": [
+      "FOMO",
+      "viral content moments",
+      "creator collabs",
+      "drop culture and limited releases",
+      "aesthetic content that he can reshare"
+    ]
   },
   "category_affinities": [
     {
       "category": "fashion",
       "interest_level": 0.95,
       "monthly_spend_inr": 2500,
-      "preferred_brands": ["Nike", "Bewakoof", "Urbanic"],
+      "preferred_brands": [
+        "Nike",
+        "Bewakoof",
+        "Urbanic"
+      ],
       "purchase_frequency": "biweekly",
       "brand_relationships": [
         {
@@ -67,7 +92,10 @@
       "category": "skincare",
       "interest_level": 0.6,
       "monthly_spend_inr": 500,
-      "preferred_brands": ["Bombay Shaving Company", "Man Matters"],
+      "preferred_brands": [
+        "Bombay Shaving Company",
+        "Man Matters"
+      ],
       "purchase_frequency": "monthly",
       "brand_relationships": [
         {
@@ -82,7 +110,10 @@
       "category": "electronics",
       "interest_level": 0.7,
       "monthly_spend_inr": null,
-      "preferred_brands": ["boAt", "Apple — saving up for AirPods"],
+      "preferred_brands": [
+        "boAt",
+        "Apple — saving up for AirPods"
+      ],
       "purchase_frequency": "rarely",
       "brand_relationships": [
         {
@@ -98,6 +129,147 @@
           "intensity": 0.8
         }
       ]
+    },
+    {
+      "category": "automobile",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "Tata Nexon EV",
+        "Kia Seltos"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "two_wheeler",
+      "interest_level": 0.6,
+      "preferred_brands": [
+        "Ather 450X",
+        "Ola S1 Pro"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "home_services",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "Urban Company"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
+    },
+    {
+      "category": "fintech",
+      "interest_level": 0.8,
+      "preferred_brands": [
+        "CRED",
+        "Jupiter",
+        "Fi Money"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
+    },
+    {
+      "category": "edtech",
+      "interest_level": 0.4,
+      "preferred_brands": [
+        "Masterclass",
+        "Skillshare"
+      ],
+      "purchase_frequency": "quarterly",
+      "brand_relationships": []
+    },
+    {
+      "category": "health_and_wellness",
+      "interest_level": 0.7,
+      "preferred_brands": [
+        "Cult.fit",
+        "Nykaa Wellness",
+        "WOW"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
+    },
+    {
+      "category": "travel",
+      "interest_level": 0.6,
+      "preferred_brands": [
+        "Airbnb",
+        "MakeMyTrip"
+      ],
+      "purchase_frequency": "quarterly",
+      "brand_relationships": []
+    },
+    {
+      "category": "telecom",
+      "interest_level": 0.4,
+      "preferred_brands": [
+        "Jio",
+        "Airtel"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
+    },
+    {
+      "category": "jewelry_and_luxury",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "CaratLane",
+        "Swarovski"
+      ],
+      "purchase_frequency": "quarterly",
+      "brand_relationships": []
+    },
+    {
+      "category": "baby_and_kids",
+      "interest_level": 0.2,
+      "preferred_brands": [
+        "FirstCry"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "quick_commerce",
+      "interest_level": 0.8,
+      "preferred_brands": [
+        "Zepto",
+        "Blinkit"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
+    },
+    {
+      "category": "food_delivery",
+      "interest_level": 0.7,
+      "preferred_brands": [
+        "Zomato",
+        "Swiggy"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
+    },
+    {
+      "category": "personal_care",
+      "interest_level": 0.6,
+      "preferred_brands": [
+        "Man Matters",
+        "Plum",
+        "mCaffeine"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
+    },
+    {
+      "category": "grocery_and_household",
+      "interest_level": 0.4,
+      "preferred_brands": [
+        "BigBasket",
+        "Zepto"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
     }
   ],
   "backstory": "Rohan grew up watching his family run a textile business in Ahmedabad's cloth market, but he is more interested in streetwear than saris. He started making Instagram Reels during COVID lockdown and now has 12K followers — mostly college friends and local creators. He discovers everything through social media first. If a product is not on his feed, it might as well not exist. He buys Bewakoof t-shirts because his favorite creators wear them, uses Bombay Shaving Company because of a Reel he saw, and is saving up for Nike Dunks because every streetwear account posts them.",
@@ -105,10 +277,24 @@
   "inner_monologue_style": "Fast, visual-first, mixes Gujarati slang with Hindi and English. Thinks: 'Bhai yeh toh fire hai — dekh kitne views aaye. Isko toh lena padega. Price check kar... ₹1299, thoda zyada hai but college fest ke liye chalega. Instagram pe photo daalunga toh likes pakka aayenge.' Short attention span. Evaluates products by how they will look in photos, not by specs.",
   "generational_touchstones": {
     "formative_era": "Post-Jio digital native — cannot remember life without cheap data. Instagram Reels replaced TV, Myntra replaced the family tailor, and 'trending' replaced 'good'",
-    "iconic_ads": ["CRED ads (absurdist humor = his comedy language)", "boAt earbuds ads with Hardik Pandya (aspiration + cricket)", "Bewakoof Reels collabs (feels like his friend group made an ad)"],
-    "cultural_references": ["COVID lockdown = when he started making Reels and discovered online shopping", "IPL since childhood — every brand he knows sponsors a team", "Navratri garba culture in Ahmedabad — the one traditional event he goes all-out for (outfit matters)", "Shark Tank India — entrepreneurship as entertainment"],
+    "iconic_ads": [
+      "CRED ads (absurdist humor = his comedy language)",
+      "boAt earbuds ads with Hardik Pandya (aspiration + cricket)",
+      "Bewakoof Reels collabs (feels like his friend group made an ad)"
+    ],
+    "cultural_references": [
+      "COVID lockdown = when he started making Reels and discovered online shopping",
+      "IPL since childhood — every brand he knows sponsors a team",
+      "Navratri garba culture in Ahmedabad — the one traditional event he goes all-out for (outfit matters)",
+      "Shark Tank India — entrepreneurship as entertainment"
+    ],
     "nostalgia_intensity": 0.1,
-    "formative_brands": ["boAt", "Bewakoof", "Myntra", "Zomato"]
+    "formative_brands": [
+      "boAt",
+      "Bewakoof",
+      "Myntra",
+      "Zomato"
+    ]
   },
   "internal_conflicts": [
     {
@@ -146,6 +332,18 @@
       "influence_domain": "electronics and gadgets — the only category where he does 10 minutes of research"
     }
   ],
-  "values_hierarchy": ["social_currency", "trend_relevance", "visual_appeal", "peer_validation", "affordability"],
-  "cognitive_biases": ["bandwagon_effect", "present_bias", "halo_effect", "availability_heuristic", "social_proof_bias"]
+  "values_hierarchy": [
+    "social_currency",
+    "trend_relevance",
+    "visual_appeal",
+    "peer_validation",
+    "affordability"
+  ],
+  "cognitive_biases": [
+    "bandwagon_effect",
+    "present_bias",
+    "halo_effect",
+    "availability_heuristic",
+    "social_proof_bias"
+  ]
 }

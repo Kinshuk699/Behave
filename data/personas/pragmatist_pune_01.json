@@ -36,17 +36,41 @@
     "content_language_preference": "English"
   },
   "emotional_profile": {
-    "aspiration_drivers": ["efficiency", "reliability", "getting the job done right the first time", "providing well for his family without waste"],
-    "trust_signals": ["clear specs and features list", "warranty details", "Amazon ratings above 4.0 with 1000+ reviews", "brand track record"],
-    "rejection_triggers": ["flashy ads with no substance", "influencer-driven marketing", "emotional manipulation", "ambiguous pricing or hidden charges"],
-    "emotional_hooks": ["time saved", "hassle-free experience", "durable and long-lasting", "practical benefits over aesthetics"]
+    "aspiration_drivers": [
+      "efficiency",
+      "reliability",
+      "getting the job done right the first time",
+      "providing well for his family without waste"
+    ],
+    "trust_signals": [
+      "clear specs and features list",
+      "warranty details",
+      "Amazon ratings above 4.0 with 1000+ reviews",
+      "brand track record"
+    ],
+    "rejection_triggers": [
+      "flashy ads with no substance",
+      "influencer-driven marketing",
+      "emotional manipulation",
+      "ambiguous pricing or hidden charges"
+    ],
+    "emotional_hooks": [
+      "time saved",
+      "hassle-free experience",
+      "durable and long-lasting",
+      "practical benefits over aesthetics"
+    ]
   },
   "category_affinities": [
     {
       "category": "electronics",
       "interest_level": 0.85,
       "monthly_spend_inr": null,
-      "preferred_brands": ["Bosch", "Samsung", "Sony"],
+      "preferred_brands": [
+        "Bosch",
+        "Samsung",
+        "Sony"
+      ],
       "purchase_frequency": "quarterly",
       "brand_relationships": [
         {
@@ -61,14 +85,21 @@
       "category": "skincare",
       "interest_level": 0.3,
       "monthly_spend_inr": 300,
-      "preferred_brands": ["Nivea", "Cetaphil"],
+      "preferred_brands": [
+        "Nivea",
+        "Cetaphil"
+      ],
       "purchase_frequency": "quarterly"
     },
     {
       "category": "grocery_and_household",
       "interest_level": 0.7,
       "monthly_spend_inr": 6000,
-      "preferred_brands": ["Tata", "Amul", "whatever wife recommends"],
+      "preferred_brands": [
+        "Tata",
+        "Amul",
+        "whatever wife recommends"
+      ],
       "purchase_frequency": "weekly",
       "brand_relationships": [
         {
@@ -78,6 +109,160 @@
           "intensity": 0.65
         }
       ]
+    },
+    {
+      "category": "automobile",
+      "interest_level": 0.6,
+      "preferred_brands": [
+        "Maruti",
+        "Tata",
+        "Honda"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "two_wheeler",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "Honda Activa",
+        "TVS Jupiter"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "home_services",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "Urban Company",
+        "Housejoy"
+      ],
+      "purchase_frequency": "quarterly",
+      "brand_relationships": []
+    },
+    {
+      "category": "fintech",
+      "interest_level": 0.6,
+      "preferred_brands": [
+        "Google Pay",
+        "PhonePe",
+        "Zerodha"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
+    },
+    {
+      "category": "edtech",
+      "interest_level": 0.4,
+      "preferred_brands": [
+        "Coursera",
+        "NPTEL"
+      ],
+      "purchase_frequency": "quarterly",
+      "brand_relationships": []
+    },
+    {
+      "category": "health_and_wellness",
+      "interest_level": 0.6,
+      "preferred_brands": [
+        "Pharmeasy",
+        "1mg",
+        "Himalaya"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
+    },
+    {
+      "category": "travel",
+      "interest_level": 0.4,
+      "preferred_brands": [
+        "IRCTC",
+        "RedBus"
+      ],
+      "purchase_frequency": "quarterly",
+      "brand_relationships": []
+    },
+    {
+      "category": "telecom",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "Airtel",
+        "Jio"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
+    },
+    {
+      "category": "jewelry_and_luxury",
+      "interest_level": 0.3,
+      "preferred_brands": [
+        "Tanishq"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "baby_and_kids",
+      "interest_level": 0.4,
+      "preferred_brands": [
+        "FirstCry",
+        "Pampers"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
+    },
+    {
+      "category": "quick_commerce",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "Blinkit",
+        "BigBasket"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
+    },
+    {
+      "category": "food_delivery",
+      "interest_level": 0.4,
+      "preferred_brands": [
+        "Swiggy",
+        "Zomato"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
+    },
+    {
+      "category": "personal_care",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "Nivea",
+        "Colgate",
+        "Dove"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
+    },
+    {
+      "category": "fashion",
+      "interest_level": 0.3,
+      "preferred_brands": [
+        "Decathlon",
+        "Westside"
+      ],
+      "purchase_frequency": "quarterly",
+      "brand_relationships": []
+    },
+    {
+      "category": "food_and_beverage",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "Amul",
+        "Tata Tea",
+        "Britannia"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
     }
   ],
   "backstory": "Vikram is an engineer to his core. He approaches every purchase like a design problem — define requirements, evaluate options, pick the one with the best specs-to-cost ratio. He does not get excited by brands or trends. He gets excited by things that work well and last long. His wife sometimes wishes he would just pick the nice-looking option instead of spending 20 minutes comparing spec sheets. He bought the same model of running shoes three times because they fit well and did not fall apart.",
@@ -85,10 +270,24 @@
   "inner_monologue_style": "Structured and no-nonsense. Thinks in bullet points: 'Ok — what problem does this solve? What are the specs? What does it cost per unit? Is there a better option at this price? Done.' Rarely uses emotional language. Will occasionally be pleasantly surprised by good design but will not admit it influenced his decision.",
   "generational_touchstones": {
     "formative_era": "COEP engineering culture in 2000s Pune — the city was transforming from retired-people-paradise to India's auto-tech hub. Grew up as Pune became 'the other Bangalore'",
-    "iconic_ads": ["Bajaj Pulsar 'Definitely Male' (the first bike ad that made him feel something — then he checked the mileage)", "Fevicol 'Mazboot jod' ads (respects the product claim — actually adhesive, actually strong)", "Samsung Galaxy S3 'The Next Big Thing' (bought it after comparing with 4 other phones for 3 weeks)"],
-    "cultural_references": ["COEP's boat club and the culture of building things with your hands", "Pune's auto expo — he has been to every one since 2008", "Maharashtra's cooperative movement — his family's sugar factory shares taught him value investing before he knew the term", "India's 2011 World Cup win — the last time sports made him emotional"],
+    "iconic_ads": [
+      "Bajaj Pulsar 'Definitely Male' (the first bike ad that made him feel something — then he checked the mileage)",
+      "Fevicol 'Mazboot jod' ads (respects the product claim — actually adhesive, actually strong)",
+      "Samsung Galaxy S3 'The Next Big Thing' (bought it after comparing with 4 other phones for 3 weeks)"
+    ],
+    "cultural_references": [
+      "COEP's boat club and the culture of building things with your hands",
+      "Pune's auto expo — he has been to every one since 2008",
+      "Maharashtra's cooperative movement — his family's sugar factory shares taught him value investing before he knew the term",
+      "India's 2011 World Cup win — the last time sports made him emotional"
+    ],
     "nostalgia_intensity": 0.2,
-    "formative_brands": ["Bajaj", "Bosch", "Tata Motors", "Hero Honda"]
+    "formative_brands": [
+      "Bajaj",
+      "Bosch",
+      "Tata Motors",
+      "Hero Honda"
+    ]
   },
   "internal_conflicts": [
     {
@@ -126,6 +325,19 @@
       "influence_domain": "automobiles and durable goods — 'Buy Tata, they last' is family gospel. Vikram has independently verified this and agrees."
     }
   ],
-  "values_hierarchy": ["efficiency", "reliability", "specs_per_rupee", "durability", "family_wellbeing", "evidence_over_aesthetics"],
-  "cognitive_biases": ["anchoring", "information_bias", "unit_bias", "zero_risk_bias", "base_rate_neglect"]
+  "values_hierarchy": [
+    "efficiency",
+    "reliability",
+    "specs_per_rupee",
+    "durability",
+    "family_wellbeing",
+    "evidence_over_aesthetics"
+  ],
+  "cognitive_biases": [
+    "anchoring",
+    "information_bias",
+    "unit_bias",
+    "zero_risk_bias",
+    "base_rate_neglect"
+  ]
 }

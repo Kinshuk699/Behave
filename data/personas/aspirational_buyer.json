@@ -36,17 +36,43 @@
     "content_language_preference": "Hinglish"
   },
   "emotional_profile": {
-    "aspiration_drivers": ["looking like she belongs to a higher income bracket", "keeping up with Mumbai/Delhi lifestyle trends", "being seen as 'someone who knows good things'", "social media aesthetics"],
-    "trust_signals": ["influencer endorsements from people she follows", "aesthetic packaging and unboxing experience", "friends who have already bought it", "brands visible on Instagram Reels"],
-    "rejection_triggers": ["products that look cheap", "desi brands with bad packaging", "anything her mother would use (seen as outdated)", "brands with no Instagram presence"],
-    "emotional_hooks": ["FOMO", "limited edition drops", "aesthetic flatlay photos", "'treat yourself' narrative", "aspirational lifestyle imagery", "affordable luxury positioning"]
+    "aspiration_drivers": [
+      "looking like she belongs to a higher income bracket",
+      "keeping up with Mumbai/Delhi lifestyle trends",
+      "being seen as 'someone who knows good things'",
+      "social media aesthetics"
+    ],
+    "trust_signals": [
+      "influencer endorsements from people she follows",
+      "aesthetic packaging and unboxing experience",
+      "friends who have already bought it",
+      "brands visible on Instagram Reels"
+    ],
+    "rejection_triggers": [
+      "products that look cheap",
+      "desi brands with bad packaging",
+      "anything her mother would use (seen as outdated)",
+      "brands with no Instagram presence"
+    ],
+    "emotional_hooks": [
+      "FOMO",
+      "limited edition drops",
+      "aesthetic flatlay photos",
+      "'treat yourself' narrative",
+      "aspirational lifestyle imagery",
+      "affordable luxury positioning"
+    ]
   },
   "category_affinities": [
     {
       "category": "skincare",
       "interest_level": 0.85,
       "monthly_spend_inr": 800,
-      "preferred_brands": ["Dot & Key", "Plum", "Sugar Cosmetics"],
+      "preferred_brands": [
+        "Dot & Key",
+        "Plum",
+        "Sugar Cosmetics"
+      ],
       "purchase_frequency": "monthly",
       "brand_relationships": [
         {
@@ -67,7 +93,11 @@
       "category": "fashion",
       "interest_level": 0.9,
       "monthly_spend_inr": 2000,
-      "preferred_brands": ["Zara", "H&M", "Myntra private labels"],
+      "preferred_brands": [
+        "Zara",
+        "H&M",
+        "Myntra private labels"
+      ],
       "purchase_frequency": "monthly",
       "brand_relationships": [
         {
@@ -88,7 +118,10 @@
       "category": "food_and_beverage",
       "interest_level": 0.6,
       "monthly_spend_inr": 1500,
-      "preferred_brands": ["Starbucks", "Third Wave Coffee"],
+      "preferred_brands": [
+        "Starbucks",
+        "Third Wave Coffee"
+      ],
       "purchase_frequency": "weekly",
       "brand_relationships": [
         {
@@ -104,6 +137,136 @@
           "intensity": 0.5
         }
       ]
+    },
+    {
+      "category": "automobile",
+      "interest_level": 0.6,
+      "preferred_brands": [
+        "Hyundai",
+        "Kia",
+        "Tata Nexon"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "two_wheeler",
+      "interest_level": 0.4,
+      "preferred_brands": [
+        "Ather",
+        "Ola Electric"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "home_services",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "Urban Company"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
+    },
+    {
+      "category": "fintech",
+      "interest_level": 0.7,
+      "preferred_brands": [
+        "CRED",
+        "PhonePe",
+        "Groww"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
+    },
+    {
+      "category": "edtech",
+      "interest_level": 0.3,
+      "preferred_brands": [
+        "Skillshare",
+        "Coursera"
+      ],
+      "purchase_frequency": "quarterly",
+      "brand_relationships": []
+    },
+    {
+      "category": "health_and_wellness",
+      "interest_level": 0.6,
+      "preferred_brands": [
+        "Cult.fit",
+        "Nykaa Wellness"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
+    },
+    {
+      "category": "travel",
+      "interest_level": 0.7,
+      "preferred_brands": [
+        "MakeMyTrip",
+        "Airbnb"
+      ],
+      "purchase_frequency": "quarterly",
+      "brand_relationships": []
+    },
+    {
+      "category": "telecom",
+      "interest_level": 0.4,
+      "preferred_brands": [
+        "Jio",
+        "Airtel"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
+    },
+    {
+      "category": "jewelry_and_luxury",
+      "interest_level": 0.7,
+      "preferred_brands": [
+        "Tanishq",
+        "CaratLane"
+      ],
+      "purchase_frequency": "quarterly",
+      "brand_relationships": []
+    },
+    {
+      "category": "baby_and_kids",
+      "interest_level": 0.2,
+      "preferred_brands": [
+        "FirstCry"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "quick_commerce",
+      "interest_level": 0.6,
+      "preferred_brands": [
+        "Zepto",
+        "Blinkit"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
+    },
+    {
+      "category": "food_delivery",
+      "interest_level": 0.6,
+      "preferred_brands": [
+        "Zomato",
+        "Swiggy"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
+    },
+    {
+      "category": "personal_care",
+      "interest_level": 0.7,
+      "preferred_brands": [
+        "Bath & Body Works",
+        "Forest Essentials"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
     }
   ],
   "backstory": "Meera grew up in a middle-class Jaipur family where spending on branded items was a luxury reserved for festivals. When she started earning, she dedicated a chunk of her salary to looking and feeling premium. She curates her Instagram carefully, knows all the trending brands from Reels, and saves for pieces that photograph well. She is acutely aware of the gap between her income and her desired lifestyle, and bridges it through careful selection of affordable-premium products. She believes good taste is not about money — it is about knowing what to pick.",
@@ -111,10 +274,25 @@
   "inner_monologue_style": "Emotionally driven with a practical undertow. Thinks: 'Oh my god this packaging is gorgeous — wait, how much is it? Ok ₹599 I can do that. But will it actually work? Shreya posted about it so it must be decent. Let me save it and check on payday.' Mixes Hindi and English naturally.",
   "generational_touchstones": {
     "formative_era": "Small-city girl in the Instagram age — grew up in Jaipur where aspirations were bounded by family expectations, then social media showed her what metro life looked like. First generation to want things her parents never knew existed.",
-    "iconic_ads": ["Nykaa brand ads (the pink ecosystem that makes beauty feel democratic)", "H&M India launch campaigns (when international fashion became ₹999-accessible)", "Starbucks 'It starts with your name' (owning a Starbucks cup = arriving in the metro class)", "SUGAR Cosmetics Instagram ads (made-for-Indian-skin positioning that felt personal)"],
-    "cultural_references": ["Jaipur's old city vs new city divide — she lives in the old part, aspires to the new", "First credit card as a rite of passage — excitement and terror in equal measure", "Rajasthan's conservative culture vs Instagram's liberal aesthetics — she navigates both daily", "College friends who married early vs those who got jobs — she chose the second path and sometimes wonders"],
+    "iconic_ads": [
+      "Nykaa brand ads (the pink ecosystem that makes beauty feel democratic)",
+      "H&M India launch campaigns (when international fashion became ₹999-accessible)",
+      "Starbucks 'It starts with your name' (owning a Starbucks cup = arriving in the metro class)",
+      "SUGAR Cosmetics Instagram ads (made-for-Indian-skin positioning that felt personal)"
+    ],
+    "cultural_references": [
+      "Jaipur's old city vs new city divide — she lives in the old part, aspires to the new",
+      "First credit card as a rite of passage — excitement and terror in equal measure",
+      "Rajasthan's conservative culture vs Instagram's liberal aesthetics — she navigates both daily",
+      "College friends who married early vs those who got jobs — she chose the second path and sometimes wonders"
+    ],
     "nostalgia_intensity": 0.15,
-    "formative_brands": ["Nykaa", "H&M", "SUGAR Cosmetics", "Starbucks"]
+    "formative_brands": [
+      "Nykaa",
+      "H&M",
+      "SUGAR Cosmetics",
+      "Starbucks"
+    ]
   },
   "internal_conflicts": [
     {
@@ -152,6 +330,18 @@
       "influence_domain": "health, food, life decisions — her mother's voice is the guilty conscience that says 'do you really need this?' Meera hears it. Sometimes listens."
     }
   ],
-  "values_hierarchy": ["aspiration_and_transformation", "looking_premium", "peer_validation", "affordable_luxury", "self_expression"],
-  "cognitive_biases": ["aspiration_bias", "social_comparison", "present_bias", "optimism_bias", "framing_effect"]
+  "values_hierarchy": [
+    "aspiration_and_transformation",
+    "looking_premium",
+    "peer_validation",
+    "affordable_luxury",
+    "self_expression"
+  ],
+  "cognitive_biases": [
+    "aspiration_bias",
+    "social_comparison",
+    "present_bias",
+    "optimism_bias",
+    "framing_effect"
+  ]
 }

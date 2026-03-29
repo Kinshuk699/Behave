@@ -596,7 +596,135 @@ body {
   font-style: italic;
 }
 
+/* ── FOCUS GROUP CHAT ─────────────────────────────────────── */
+
+.focus-group { display: flex; flex-direction: column; gap: 1rem; }
+.focus-msg {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  transition: border-color 0.2s;
+}
+.focus-msg:hover { border-color: var(--accent); }
+.focus-msg__header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.5rem;
+}
+.focus-msg__name {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+.focus-msg__city {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+.focus-msg__archetype {
+  background: var(--accent);
+  color: #000;
+  padding: 0.1rem 0.5rem;
+  border-radius: 100px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.focus-msg__badge {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-left: auto;
+}
+.focus-msg__score {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+.focus-msg__text {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  font-style: italic;
+}
+.focus-msg__tags {
+  display: flex;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+  flex-wrap: wrap;
+}
+.focus-msg__tag {
+  background: rgba(255,255,255,0.05);
+  color: var(--text-muted);
+  padding: 0.15rem 0.5rem;
+  border-radius: 100px;
+  font-size: 0.7rem;
+}
+
 /* ── PLAYBOOK ─────────────────────────────────────────────── */
+
+/* ── CREATIVE INTELLIGENCE ────────────────────────────────── */
+
+.creative-intel {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 0.5rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+}
+.creative-intel__row {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.3rem 0;
+}
+.creative-intel__label {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.creative-intel__val {
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-align: right;
+}
+
+/* ── SCORE TABLE ──────────────────────────────────────────── */
+
+.score-table-wrap { overflow-x: auto; }
+.score-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.score-table th {
+  text-align: left;
+  color: var(--text-muted);
+  font-weight: 600;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.score-table td {
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  color: var(--text-secondary);
+}
+.score-table__name { font-weight: 500; color: var(--text-primary); }
+.score-table__overall { font-weight: 700; }
+.score-row--green .score-table__overall { color: #4ade80; }
+.score-row--yellow .score-table__overall { color: #facc15; }
+.score-row--red .score-table__overall { color: #f87171; }
+
+/* ── PLAYBOOK CARDS ───────────────────────────────────────── */
 
 .playbook__list {
   display: flex;
@@ -752,6 +880,8 @@ select.test__input {
   transition: border-color 0.2s;
 }
 .test__upload:hover { border-color: var(--accent); }
+.test__required { color: var(--accent); font-size: 0.75rem; margin-left: 0.25rem; }
+.test__hint { display: block; color: var(--text-muted); font-size: 0.75rem; margin-top: 0.4rem; opacity: 0.8; }
 
 /* ── Persona Picker ───────────────────────────────────────── */
 

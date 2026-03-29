@@ -203,6 +203,20 @@ def _build_creative_block(creative: CreativeCard) -> str:
     if creative.code_mixed:
         parts.append("Uses Hinglish / code-mixing")
 
+    # Brand context (when available from creative extraction)
+    if creative.brand_positioning or creative.brand_era or creative.marketing_tone:
+        parts.append("")
+        parts.append("## Brand Context")
+        if creative.brand_positioning:
+            parts.append(f"Brand positioning: {creative.brand_positioning}")
+        if creative.brand_era:
+            parts.append(f"Brand era: {creative.brand_era}")
+        if creative.marketing_tone:
+            parts.append(
+                f"Marketing tone of this ad: {creative.marketing_tone} "
+                f"— consider whether this tone fits what you expect from this brand"
+            )
+
     return "\n".join(parts)
 
 

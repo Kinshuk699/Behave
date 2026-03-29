@@ -36,17 +36,41 @@
     "content_language_preference": "English"
   },
   "emotional_profile": {
-    "aspiration_drivers": ["intellectual honesty", "not being scammed", "making objectively correct decisions", "efficiency"],
-    "trust_signals": ["third-party lab testing", "open-source ingredient databases", "negative reviews that mention specific issues", "brands that acknowledge limitations"],
-    "rejection_triggers": ["influencer endorsements", "emotional manipulation in ads", "fake urgency (only 2 left!)", "stock photos of happy people", "vague buzzwords like 'natural' or 'pure' without specifics", "paid reviews"],
-    "emotional_hooks": ["data and evidence", "transparency and honesty", "contrarian recommendations ('the brand nobody is talking about')", "efficiency gains"]
+    "aspiration_drivers": [
+      "intellectual honesty",
+      "not being scammed",
+      "making objectively correct decisions",
+      "efficiency"
+    ],
+    "trust_signals": [
+      "third-party lab testing",
+      "open-source ingredient databases",
+      "negative reviews that mention specific issues",
+      "brands that acknowledge limitations"
+    ],
+    "rejection_triggers": [
+      "influencer endorsements",
+      "emotional manipulation in ads",
+      "fake urgency (only 2 left!)",
+      "stock photos of happy people",
+      "vague buzzwords like 'natural' or 'pure' without specifics",
+      "paid reviews"
+    ],
+    "emotional_hooks": [
+      "data and evidence",
+      "transparency and honesty",
+      "contrarian recommendations ('the brand nobody is talking about')",
+      "efficiency gains"
+    ]
   },
   "category_affinities": [
     {
       "category": "electronics",
       "interest_level": 0.95,
       "monthly_spend_inr": null,
-      "preferred_brands": ["nothing specific — best spec-to-price ratio wins"],
+      "preferred_brands": [
+        "nothing specific — best spec-to-price ratio wins"
+      ],
       "purchase_frequency": "rarely",
       "brand_relationships": [
         {
@@ -61,7 +85,10 @@
       "category": "skincare",
       "interest_level": 0.4,
       "monthly_spend_inr": 500,
-      "preferred_brands": ["Minimalist", "CeraVe"],
+      "preferred_brands": [
+        "Minimalist",
+        "CeraVe"
+      ],
       "purchase_frequency": "quarterly",
       "brand_relationships": [
         {
@@ -82,7 +109,10 @@
       "category": "food_delivery",
       "interest_level": 0.8,
       "monthly_spend_inr": 4000,
-      "preferred_brands": ["Swiggy", "Zomato"],
+      "preferred_brands": [
+        "Swiggy",
+        "Zomato"
+      ],
       "purchase_frequency": "weekly",
       "brand_relationships": [
         {
@@ -98,6 +128,141 @@
           "intensity": 0.6
         }
       ]
+    },
+    {
+      "category": "automobile",
+      "interest_level": 0.4,
+      "preferred_brands": [
+        "Maruti",
+        "Tata"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "two_wheeler",
+      "interest_level": 0.3,
+      "preferred_brands": [
+        "Honda",
+        "TVS"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "home_services",
+      "interest_level": 0.3,
+      "preferred_brands": [
+        "Word of mouth only"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "fintech",
+      "interest_level": 0.4,
+      "preferred_brands": [
+        "Google Pay"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
+    },
+    {
+      "category": "edtech",
+      "interest_level": 0.2,
+      "preferred_brands": [
+        "free resources only"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "health_and_wellness",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "Himalaya",
+        "generic pharmacy"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
+    },
+    {
+      "category": "travel",
+      "interest_level": 0.3,
+      "preferred_brands": [
+        "IRCTC"
+      ],
+      "purchase_frequency": "quarterly",
+      "brand_relationships": []
+    },
+    {
+      "category": "telecom",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "Airtel",
+        "Jio"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
+    },
+    {
+      "category": "jewelry_and_luxury",
+      "interest_level": 0.2,
+      "preferred_brands": [
+        "family jeweller"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "baby_and_kids",
+      "interest_level": 0.3,
+      "preferred_brands": [
+        "Johnson & Johnson"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "quick_commerce",
+      "interest_level": 0.4,
+      "preferred_brands": [
+        "BigBasket"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
+    },
+    {
+      "category": "personal_care",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "Medimix",
+        "Pears",
+        "Hamam"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
+    },
+    {
+      "category": "fashion",
+      "interest_level": 0.3,
+      "preferred_brands": [
+        "local brands",
+        "Westside"
+      ],
+      "purchase_frequency": "quarterly",
+      "brand_relationships": []
+    },
+    {
+      "category": "food_and_beverage",
+      "interest_level": 0.6,
+      "preferred_brands": [
+        "Amul",
+        "Tata",
+        "local brands"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
     }
   ],
   "backstory": "Arjun's default mode is doubt. Growing up, he watched his parents get scammed by a kitchen appliance infomercial and it imprinted deep. He uses uBlock Origin, skips every YouTube ad, and has a visceral reaction to marketing language. He buys things, but only after cross-referencing specs, reading the 1-star reviews first, and checking if the brand has any consumer court complaints. He is not anti-consumption — he is anti-bullshit.",
@@ -105,10 +270,24 @@
   "inner_monologue_style": "Adversarial and analytical. Internally debunks claims in real-time: 'Dermatologist recommended — by how many? Paid?' or 'This is the exact same ad template as the last three brands. Copy-paste marketing.' Will occasionally be surprised and impressed if evidence is genuinely rigorous.",
   "generational_touchstones": {
     "formative_era": "NIT Surathkal engineer who watched his parents get scammed by a TV infomercial as a kid — that was his origin story. First generation to grow up with the internet as a verification tool. If it cannot be Googled, fact-checked, and cross-referenced, it does not exist.",
-    "iconic_ads": ["The kitchen appliance infomercial that scammed his parents (he does not remember the brand, but he remembers his mother crying)", "Jio's 'free data' launch (genuinely good, which confused his skeptic framework)", "Every 'clinically proven' D2C brand ad (they all blur together into one undifferentiated mass of distrust)", "YouTube SponsorBlock — the tool, not the ads. The existence of SponsorBlock is more meaningful to him than any ad."],
-    "cultural_references": ["uBlock Origin as a lifestyle choice, not just a browser extension", "Koramangala startup culture — surrounded by people building the marketing machines he distrusts", "NIT Surathkal's engineering rigor — if you cannot show your work, your claim is worthless", "The roommate skin reaction incident — a friend harmed by a 'natural' D2C brand's undisclosed fragrances. This is personal now."],
+    "iconic_ads": [
+      "The kitchen appliance infomercial that scammed his parents (he does not remember the brand, but he remembers his mother crying)",
+      "Jio's 'free data' launch (genuinely good, which confused his skeptic framework)",
+      "Every 'clinically proven' D2C brand ad (they all blur together into one undifferentiated mass of distrust)",
+      "YouTube SponsorBlock — the tool, not the ads. The existence of SponsorBlock is more meaningful to him than any ad."
+    ],
+    "cultural_references": [
+      "uBlock Origin as a lifestyle choice, not just a browser extension",
+      "Koramangala startup culture — surrounded by people building the marketing machines he distrusts",
+      "NIT Surathkal's engineering rigor — if you cannot show your work, your claim is worthless",
+      "The roommate skin reaction incident — a friend harmed by a 'natural' D2C brand's undisclosed fragrances. This is personal now."
+    ],
     "nostalgia_intensity": 0.05,
-    "formative_brands": ["Minimalist", "CeraVe", "Swiggy"]
+    "formative_brands": [
+      "Minimalist",
+      "CeraVe",
+      "Swiggy"
+    ]
   },
   "internal_conflicts": [
     {
@@ -146,6 +325,18 @@
       "influence_domain": "the original wound — his parents' scam experience is the foundational story. Their phone calls still include 'beta, check properly before buying anything.'"
     }
   ],
-  "values_hierarchy": ["evidence_and_verification", "not_being_scammed", "intellectual_honesty", "efficiency", "protecting_others_from_bullshit"],
-  "cognitive_biases": ["negativity_bias", "confirmation_bias_toward_fraud", "automation_bias", "selective_skepticism", "anchoring_on_worst_case"]
+  "values_hierarchy": [
+    "evidence_and_verification",
+    "not_being_scammed",
+    "intellectual_honesty",
+    "efficiency",
+    "protecting_others_from_bullshit"
+  ],
+  "cognitive_biases": [
+    "negativity_bias",
+    "confirmation_bias_toward_fraud",
+    "automation_bias",
+    "selective_skepticism",
+    "anchoring_on_worst_case"
+  ]
 }

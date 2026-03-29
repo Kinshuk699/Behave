@@ -36,17 +36,42 @@
     "content_language_preference": "Hinglish"
   },
   "emotional_profile": {
-    "aspiration_drivers": ["keeping up with her Bandra West friends on a Bandra East budget", "growing her Instagram following through relatable content", "being seen as someone who is 'in the know'", "skincare as self-expression and content creation"],
-    "trust_signals": ["micro-influencers she trusts (under 50K followers)", "products she sees on multiple people's stories the same week", "affordability — under ₹500 is the sweet spot", "brands that offer student or first-time buyer discounts"],
-    "rejection_triggers": ["anything over ₹1000 — budget is real", "brands that feel exclusionary or too premium", "products that need a complicated routine", "anything that is not Instagrammable"],
-    "emotional_hooks": ["FOMO multiplied by budget constraints", "dupes and affordable alternatives to premium products", "viral skincare hacks", "before-after transformations", "relatable Hinglish content"]
+    "aspiration_drivers": [
+      "keeping up with her Bandra West friends on a Bandra East budget",
+      "growing her Instagram following through relatable content",
+      "being seen as someone who is 'in the know'",
+      "skincare as self-expression and content creation"
+    ],
+    "trust_signals": [
+      "micro-influencers she trusts (under 50K followers)",
+      "products she sees on multiple people's stories the same week",
+      "affordability — under ₹500 is the sweet spot",
+      "brands that offer student or first-time buyer discounts"
+    ],
+    "rejection_triggers": [
+      "anything over ₹1000 — budget is real",
+      "brands that feel exclusionary or too premium",
+      "products that need a complicated routine",
+      "anything that is not Instagrammable"
+    ],
+    "emotional_hooks": [
+      "FOMO multiplied by budget constraints",
+      "dupes and affordable alternatives to premium products",
+      "viral skincare hacks",
+      "before-after transformations",
+      "relatable Hinglish content"
+    ]
   },
   "category_affinities": [
     {
       "category": "skincare",
       "interest_level": 0.9,
       "monthly_spend_inr": 500,
-      "preferred_brands": ["Nykaa house brands", "Mamaearth", "Plum"],
+      "preferred_brands": [
+        "Nykaa house brands",
+        "Mamaearth",
+        "Plum"
+      ],
       "purchase_frequency": "monthly",
       "brand_relationships": [
         {
@@ -67,7 +92,11 @@
       "category": "fashion",
       "interest_level": 0.85,
       "monthly_spend_inr": 1500,
-      "preferred_brands": ["Meesho", "Urbanic", "Shopsy"],
+      "preferred_brands": [
+        "Meesho",
+        "Urbanic",
+        "Shopsy"
+      ],
       "purchase_frequency": "biweekly",
       "brand_relationships": [
         {
@@ -88,7 +117,10 @@
       "category": "food_and_beverage",
       "interest_level": 0.6,
       "monthly_spend_inr": 1000,
-      "preferred_brands": ["local cafes", "street food spots trending on Reels"],
+      "preferred_brands": [
+        "local cafes",
+        "street food spots trending on Reels"
+      ],
       "purchase_frequency": "weekly",
       "brand_relationships": [
         {
@@ -98,6 +130,147 @@
           "intensity": 0.45
         }
       ]
+    },
+    {
+      "category": "automobile",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "Tata Nexon EV",
+        "Kia Seltos"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "two_wheeler",
+      "interest_level": 0.6,
+      "preferred_brands": [
+        "Ather 450X",
+        "Ola S1 Pro"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "home_services",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "Urban Company"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
+    },
+    {
+      "category": "fintech",
+      "interest_level": 0.8,
+      "preferred_brands": [
+        "CRED",
+        "Jupiter",
+        "Fi Money"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
+    },
+    {
+      "category": "edtech",
+      "interest_level": 0.4,
+      "preferred_brands": [
+        "Masterclass",
+        "Skillshare"
+      ],
+      "purchase_frequency": "quarterly",
+      "brand_relationships": []
+    },
+    {
+      "category": "health_and_wellness",
+      "interest_level": 0.7,
+      "preferred_brands": [
+        "Cult.fit",
+        "Nykaa Wellness",
+        "WOW"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
+    },
+    {
+      "category": "travel",
+      "interest_level": 0.6,
+      "preferred_brands": [
+        "Airbnb",
+        "MakeMyTrip"
+      ],
+      "purchase_frequency": "quarterly",
+      "brand_relationships": []
+    },
+    {
+      "category": "telecom",
+      "interest_level": 0.4,
+      "preferred_brands": [
+        "Jio",
+        "Airtel"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
+    },
+    {
+      "category": "jewelry_and_luxury",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "CaratLane",
+        "Swarovski"
+      ],
+      "purchase_frequency": "quarterly",
+      "brand_relationships": []
+    },
+    {
+      "category": "baby_and_kids",
+      "interest_level": 0.2,
+      "preferred_brands": [
+        "FirstCry"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "quick_commerce",
+      "interest_level": 0.8,
+      "preferred_brands": [
+        "Zepto",
+        "Blinkit"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
+    },
+    {
+      "category": "food_delivery",
+      "interest_level": 0.7,
+      "preferred_brands": [
+        "Zomato",
+        "Swiggy"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
+    },
+    {
+      "category": "personal_care",
+      "interest_level": 0.6,
+      "preferred_brands": [
+        "Man Matters",
+        "Plum",
+        "mCaffeine"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
+    },
+    {
+      "category": "grocery_and_household",
+      "interest_level": 0.4,
+      "preferred_brands": [
+        "BigBasket",
+        "Zepto"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
     }
   ],
   "backstory": "Zara lives in the aspirational gap between Bandra East and Bandra West. Her college friends from South Mumbai visit Sea Link cafes and shop at Linking Road boutiques. Zara matches their vibe on a fraction of the budget — she is the queen of dupes, affordable alternatives, and Meesho finds that look three times their price. Her content niche is 'budget beauty' — she does GRWM (Get Ready With Me) Reels using products under ₹500 and her 3K followers are slowly growing. She discovers products entirely through Instagram — if it is not on her feed, it does not exist. She is price-sensitive but trend-driven, which means she prioritizes affordable viral products over expensive quality ones.",
@@ -105,10 +278,24 @@
   "inner_monologue_style": "Excitable, budget-conscious, heavily Hinglish. Thinks: 'Yaar sab log yeh serum use kar rahe hain — mujhe bhi chahiye. ₹399... thoda expensive hai but agar Reel banaun toh views aa sakte hain, technically investment hai. Nykaa pe coupon hai kya? NYKAA20 try karti hoon — oh 10% off, ab ₹359! Done deal. Ammi ko bolungi college ke liye chahiye tha.' (Everyone is using this serum — I need it too. ₹399 is a bit much but if I make a Reel, I might get views, so it is technically an investment. Let me check for Nykaa coupons...) Always finds a way to rationalize the spend as 'content investment.'",
   "generational_touchstones": {
     "formative_era": "Mumbai chawl-to-Bandra aspirations — grew up watching rich South Mumbai kids on Instagram while living the real Bandra East life. Jio data revolution was her gateway to the world.",
-    "iconic_ads": ["Nykaa sale ads (Pavlovian response — sees pink, opens app)", "Meesho 'Sahi Price' positioning (speaks directly to her budget)", "Lakme Fashion Week clips on Instagram (aspiration she cannot afford but mimics)"],
-    "cultural_references": ["COVID lockdown = when Instagram became her entire social life and shopping education", "Mumbai local train commute culture — scrolling Reels between Bandra and Churchgate is prime shopping time", "Bollywood fashion copied via Meesho dupes — SRK's daughter Suhana's style at 1/10th the price", "Ramzan family gatherings — the one time she asks Ammi for extra money and buys something nice"],
+    "iconic_ads": [
+      "Nykaa sale ads (Pavlovian response — sees pink, opens app)",
+      "Meesho 'Sahi Price' positioning (speaks directly to her budget)",
+      "Lakme Fashion Week clips on Instagram (aspiration she cannot afford but mimics)"
+    ],
+    "cultural_references": [
+      "COVID lockdown = when Instagram became her entire social life and shopping education",
+      "Mumbai local train commute culture — scrolling Reels between Bandra and Churchgate is prime shopping time",
+      "Bollywood fashion copied via Meesho dupes — SRK's daughter Suhana's style at 1/10th the price",
+      "Ramzan family gatherings — the one time she asks Ammi for extra money and buys something nice"
+    ],
     "nostalgia_intensity": 0.1,
-    "formative_brands": ["Nykaa", "Meesho", "Lakme", "Sugar Cosmetics"]
+    "formative_brands": [
+      "Nykaa",
+      "Meesho",
+      "Lakme",
+      "Sugar Cosmetics"
+    ]
   },
   "internal_conflicts": [
     {
@@ -146,6 +333,18 @@
       "influence_domain": "borrows and shares everything — Aisha is both customer and competitor for the same face wash"
     }
   ],
-  "values_hierarchy": ["trend_relevance", "affordability", "social_media_presence", "peer_validation", "content_creation_potential"],
-  "cognitive_biases": ["bandwagon_effect", "present_bias", "scarcity_bias", "social_proof_bias", "optimism_bias"]
+  "values_hierarchy": [
+    "trend_relevance",
+    "affordability",
+    "social_media_presence",
+    "peer_validation",
+    "content_creation_potential"
+  ],
+  "cognitive_biases": [
+    "bandwagon_effect",
+    "present_bias",
+    "scarcity_bias",
+    "social_proof_bias",
+    "optimism_bias"
+  ]
 }

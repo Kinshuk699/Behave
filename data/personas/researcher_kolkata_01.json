@@ -36,17 +36,39 @@
     "content_language_preference": "English"
   },
   "emotional_profile": {
-    "aspiration_drivers": ["making data-driven decisions in every area of life", "being the go-to person friends consult before buying tech", "intellectual satisfaction of finding the optimal choice", "not wasting money on suboptimal products"],
-    "trust_signals": ["detailed spec comparisons", "long-form YouTube reviews with testing methodology", "Reddit discussions with real user experiences", "products with transparent benchmarking data"],
-    "rejection_triggers": ["paid reviews disguised as organic", "specs that do not match real-world performance", "marketing that emphasizes lifestyle over function", "brands that do not publish detailed technical specs"],
-    "emotional_hooks": ["data and benchmarks", "objective comparisons", "hidden gems that outperform premium brands", "value optimization"]
+    "aspiration_drivers": [
+      "making data-driven decisions in every area of life",
+      "being the go-to person friends consult before buying tech",
+      "intellectual satisfaction of finding the optimal choice",
+      "not wasting money on suboptimal products"
+    ],
+    "trust_signals": [
+      "detailed spec comparisons",
+      "long-form YouTube reviews with testing methodology",
+      "Reddit discussions with real user experiences",
+      "products with transparent benchmarking data"
+    ],
+    "rejection_triggers": [
+      "paid reviews disguised as organic",
+      "specs that do not match real-world performance",
+      "marketing that emphasizes lifestyle over function",
+      "brands that do not publish detailed technical specs"
+    ],
+    "emotional_hooks": [
+      "data and benchmarks",
+      "objective comparisons",
+      "hidden gems that outperform premium brands",
+      "value optimization"
+    ]
   },
   "category_affinities": [
     {
       "category": "electronics",
       "interest_level": 0.9,
       "monthly_spend_inr": null,
-      "preferred_brands": ["whatever benchmarks best — currently Samsung and Pixel"],
+      "preferred_brands": [
+        "whatever benchmarks best — currently Samsung and Pixel"
+      ],
       "purchase_frequency": "quarterly",
       "brand_relationships": [
         {
@@ -67,7 +89,10 @@
       "category": "skincare",
       "interest_level": 0.5,
       "monthly_spend_inr": 600,
-      "preferred_brands": ["Minimalist", "The Ordinary"],
+      "preferred_brands": [
+        "Minimalist",
+        "The Ordinary"
+      ],
       "purchase_frequency": "monthly",
       "brand_relationships": [
         {
@@ -88,7 +113,10 @@
       "category": "fashion",
       "interest_level": 0.3,
       "monthly_spend_inr": 1000,
-      "preferred_brands": ["Uniqlo", "Decathlon — function over fashion"],
+      "preferred_brands": [
+        "Uniqlo",
+        "Decathlon — function over fashion"
+      ],
       "purchase_frequency": "quarterly",
       "brand_relationships": [
         {
@@ -104,6 +132,147 @@
           "intensity": 0.45
         }
       ]
+    },
+    {
+      "category": "automobile",
+      "interest_level": 0.6,
+      "preferred_brands": [
+        "Toyota",
+        "Honda",
+        "Hyundai"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "two_wheeler",
+      "interest_level": 0.4,
+      "preferred_brands": [
+        "Ather",
+        "Bajaj"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "home_services",
+      "interest_level": 0.4,
+      "preferred_brands": [
+        "Urban Company"
+      ],
+      "purchase_frequency": "quarterly",
+      "brand_relationships": []
+    },
+    {
+      "category": "fintech",
+      "interest_level": 0.7,
+      "preferred_brands": [
+        "Zerodha",
+        "Groww",
+        "CRED"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
+    },
+    {
+      "category": "edtech",
+      "interest_level": 0.7,
+      "preferred_brands": [
+        "Coursera",
+        "NPTEL",
+        "MIT OCW"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
+    },
+    {
+      "category": "health_and_wellness",
+      "interest_level": 0.6,
+      "preferred_brands": [
+        "1mg",
+        "Pharmeasy"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
+    },
+    {
+      "category": "travel",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "MakeMyTrip",
+        "Booking.com"
+      ],
+      "purchase_frequency": "quarterly",
+      "brand_relationships": []
+    },
+    {
+      "category": "telecom",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "Airtel",
+        "Jio"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
+    },
+    {
+      "category": "jewelry_and_luxury",
+      "interest_level": 0.3,
+      "preferred_brands": [
+        "Tanishq"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "baby_and_kids",
+      "interest_level": 0.3,
+      "preferred_brands": [
+        "FirstCry"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "quick_commerce",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "Blinkit",
+        "Zepto"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
+    },
+    {
+      "category": "food_delivery",
+      "interest_level": 0.4,
+      "preferred_brands": [
+        "Zomato",
+        "Swiggy"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
+    },
+    {
+      "category": "personal_care",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "Cetaphil",
+        "The Ordinary",
+        "CeraVe"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
+    },
+    {
+      "category": "food_and_beverage",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "Amul",
+        "organic brands"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
     }
   ],
   "backstory": "Ananya approaches shopping the way she approaches data analysis — with methodical rigor and a deep distrust of unverified claims. She has a Notion database tracking every electronics purchase she has considered in the last three years, including spec comparisons, price history from PriceHistory.in, and her own star ratings post-purchase. Her colleagues at the IT firm always ask her before buying laptops or phones because she invariably knows the best option at every price point. She reads r/IndianGaming and r/india_gadgets daily. She is not cheap — she just refuses to pay more for less just because of brand positioning.",
@@ -111,10 +280,25 @@
   "inner_monologue_style": "Systematic and data-oriented, in English with Bengali expressions when frustrated or amused. Thinks: 'Driver size 13mm, Bluetooth 5.3, battery claim 40 hours — but what is the real-world battery at 70% volume? Let me check the GSMArena user reviews... ah, someone tested it — 28 hours actual. That is a 30% overstatement. Ki baje kotha! (What nonsense!) Ok, next option...' Creates mental spreadsheets. Will spend 6 hours researching to save ₹200, and enjoys every minute of it.",
   "generational_touchstones": {
     "formative_era": "Kolkata's quietly ambitious tech generation — grew up in Dum Dum watching the Salt Lake IT corridor rise, got an M.Tech from Jadavpur when data science was becoming India's hottest career. First generation where a Bengali girl doing M.Tech in data science was celebrated, not questioned.",
-    "iconic_ads": ["Flipkart Big Billion Days (she tracks the actual discounts vs. inflated MRPs — most are fake and she has the spreadsheet to prove it)", "Samsung Galaxy ads (she used to believe them; now she cross-references every claim with GSMArena)", "Amazon vs Flipkart price wars (she plays them against each other using price-tracking extensions)", "Minimalist's 'transparency-first' positioning (she approved after verifying their ingredient concentrations against CosDNA)"],
-    "cultural_references": ["Jadavpur University's intellectual culture — research is not just a skill, it is an identity", "Kolkata Metro commute as daily research time — she reads Reddit and watches long-form reviews during the 40-minute ride", "Baba's (father's) careful purchasing habits — he researches mixer grinders the way she researches earbuds. The apple did not fall far.", "Durga Puja shopping as the one time she relaxes her research standards — festive emotion overrides data, but only briefly"],
+    "iconic_ads": [
+      "Flipkart Big Billion Days (she tracks the actual discounts vs. inflated MRPs — most are fake and she has the spreadsheet to prove it)",
+      "Samsung Galaxy ads (she used to believe them; now she cross-references every claim with GSMArena)",
+      "Amazon vs Flipkart price wars (she plays them against each other using price-tracking extensions)",
+      "Minimalist's 'transparency-first' positioning (she approved after verifying their ingredient concentrations against CosDNA)"
+    ],
+    "cultural_references": [
+      "Jadavpur University's intellectual culture — research is not just a skill, it is an identity",
+      "Kolkata Metro commute as daily research time — she reads Reddit and watches long-form reviews during the 40-minute ride",
+      "Baba's (father's) careful purchasing habits — he researches mixer grinders the way she researches earbuds. The apple did not fall far.",
+      "Durga Puja shopping as the one time she relaxes her research standards — festive emotion overrides data, but only briefly"
+    ],
     "nostalgia_intensity": 0.2,
-    "formative_brands": ["Samsung", "Pixel", "Minimalist", "Uniqlo"]
+    "formative_brands": [
+      "Samsung",
+      "Pixel",
+      "Minimalist",
+      "Uniqlo"
+    ]
   },
   "internal_conflicts": [
     {
@@ -152,6 +336,18 @@
       "influence_domain": "life philosophy — her father's 'check three shops before buying' ethos is the foundation. She digitized his approach."
     }
   ],
-  "values_hierarchy": ["data_driven_decisions", "value_optimization", "intellectual_satisfaction", "being_the_expert_friend", "patience_over_impulse"],
-  "cognitive_biases": ["analysis_paralysis", "effort_justification", "information_bias", "anchoring_on_specs", "sunk_cost_in_research"]
+  "values_hierarchy": [
+    "data_driven_decisions",
+    "value_optimization",
+    "intellectual_satisfaction",
+    "being_the_expert_friend",
+    "patience_over_impulse"
+  ],
+  "cognitive_biases": [
+    "analysis_paralysis",
+    "effort_justification",
+    "information_bias",
+    "anchoring_on_specs",
+    "sunk_cost_in_research"
+  ]
 }

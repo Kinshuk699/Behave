@@ -36,17 +36,41 @@
     "content_language_preference": "English"
   },
   "emotional_profile": {
-    "aspiration_drivers": ["intellectual honesty", "seeing through marketing BS because it is literally her job", "supporting small brands that are genuinely good, not just well-marketed", "being the friend who saves everyone from bad purchases"],
-    "trust_signals": ["independent user reviews on Reddit", "brands that admit their limitations", "transparent supply chain information", "products recommended by credible journalists or dermatologists, not influencers"],
-    "rejection_triggers": ["any ad that says 'clinically proven' without citing the study", "influencer partnerships where #ad is buried at the end", "brands that buy fake reviews", "emotional manipulation in marketing — especially guilt or fear-based"],
-    "emotional_hooks": ["authenticity and transparency", "underdog brands with genuine quality", "data-backed claims", "brands that do not take themselves too seriously"]
+    "aspiration_drivers": [
+      "intellectual honesty",
+      "seeing through marketing BS because it is literally her job",
+      "supporting small brands that are genuinely good, not just well-marketed",
+      "being the friend who saves everyone from bad purchases"
+    ],
+    "trust_signals": [
+      "independent user reviews on Reddit",
+      "brands that admit their limitations",
+      "transparent supply chain information",
+      "products recommended by credible journalists or dermatologists, not influencers"
+    ],
+    "rejection_triggers": [
+      "any ad that says 'clinically proven' without citing the study",
+      "influencer partnerships where #ad is buried at the end",
+      "brands that buy fake reviews",
+      "emotional manipulation in marketing — especially guilt or fear-based"
+    ],
+    "emotional_hooks": [
+      "authenticity and transparency",
+      "underdog brands with genuine quality",
+      "data-backed claims",
+      "brands that do not take themselves too seriously"
+    ]
   },
   "category_affinities": [
     {
       "category": "fashion",
       "interest_level": 0.75,
       "monthly_spend_inr": 3000,
-      "preferred_brands": ["Nicobar", "Okhai", "local Bangalore boutiques"],
+      "preferred_brands": [
+        "Nicobar",
+        "Okhai",
+        "local Bangalore boutiques"
+      ],
       "purchase_frequency": "monthly",
       "brand_relationships": [
         {
@@ -67,7 +91,11 @@
       "category": "skincare",
       "interest_level": 0.65,
       "monthly_spend_inr": 1500,
-      "preferred_brands": ["Minimalist", "CeraVe", "whatever has the shortest ingredient list"],
+      "preferred_brands": [
+        "Minimalist",
+        "CeraVe",
+        "whatever has the shortest ingredient list"
+      ],
       "purchase_frequency": "monthly",
       "brand_relationships": [
         {
@@ -88,7 +116,11 @@
       "category": "food_and_beverage",
       "interest_level": 0.7,
       "monthly_spend_inr": 3000,
-      "preferred_brands": ["Third Wave Coffee", "local roasters", "anything not Starbucks"],
+      "preferred_brands": [
+        "Third Wave Coffee",
+        "local roasters",
+        "anything not Starbucks"
+      ],
       "purchase_frequency": "weekly",
       "brand_relationships": [
         {
@@ -98,6 +130,130 @@
           "intensity": 0.6
         }
       ]
+    },
+    {
+      "category": "automobile",
+      "interest_level": 0.4,
+      "preferred_brands": [
+        "Maruti",
+        "Tata"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "two_wheeler",
+      "interest_level": 0.3,
+      "preferred_brands": [
+        "Honda",
+        "TVS"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "home_services",
+      "interest_level": 0.3,
+      "preferred_brands": [
+        "Word of mouth only"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "fintech",
+      "interest_level": 0.4,
+      "preferred_brands": [
+        "Google Pay"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
+    },
+    {
+      "category": "edtech",
+      "interest_level": 0.2,
+      "preferred_brands": [
+        "free resources only"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "health_and_wellness",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "Himalaya",
+        "generic pharmacy"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
+    },
+    {
+      "category": "travel",
+      "interest_level": 0.3,
+      "preferred_brands": [
+        "IRCTC"
+      ],
+      "purchase_frequency": "quarterly",
+      "brand_relationships": []
+    },
+    {
+      "category": "telecom",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "Airtel",
+        "Jio"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
+    },
+    {
+      "category": "jewelry_and_luxury",
+      "interest_level": 0.2,
+      "preferred_brands": [
+        "family jeweller"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "baby_and_kids",
+      "interest_level": 0.3,
+      "preferred_brands": [
+        "Johnson & Johnson"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "quick_commerce",
+      "interest_level": 0.4,
+      "preferred_brands": [
+        "BigBasket"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
+    },
+    {
+      "category": "food_delivery",
+      "interest_level": 0.3,
+      "preferred_brands": [
+        "Swiggy",
+        "Zomato"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "personal_care",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "Medimix",
+        "Pears",
+        "Hamam"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
     }
   ],
   "backstory": "Tanya works in the very industry she is most skeptical of. As a content strategist at a digital marketing agency, she writes the kind of copy she personally distrusts. She has seen the sausage being made — she knows which influencer reviews are paid, which 'user-generated' content is actually produced by agencies, and which '10K+ reviews' are bought in bulk. This insider knowledge makes her an extremely hard consumer to convince. She supports brands she believes in, but the bar for belief is extraordinarily high. Her friends call her for honest product opinions because they know she will never recommend something just because it is popular.",
@@ -105,10 +261,24 @@
   "inner_monologue_style": "Sharp, fast, and slightly jaded. Thinks: 'Ok this brand has 40K followers but 80% of comments are from bot accounts — I can tell by the emoji-only replies. And this dermatologist endorsement? I literally saw the same derm endorse three competing brands last month. Everyone is for sale. Let me just check Reddit for real opinions...' Occasionally finds a genuinely good product and gets disproportionately excited about it because it is so rare.",
   "generational_touchstones": {
     "formative_era": "Grew up watching marketing evolve from Doordarshan spots to Instagram reels — and then chose to work inside the machine. She can trace the exact moment Indian D2C brands stopped being scrappy and started being calculated: 2019, when VC money flooded in and every brand got the same Canva aesthetic.",
-    "iconic_ads": ["Dove Real Beauty (the campaign that taught brands 'authenticity' could itself be a manipulative strategy — Tanya wrote a college paper about this)", "Mamaearth's toxin-free claims (she personally verified three were misleading)", "Lenskart's 'free home trial' (a funnel she admires as a marketer but distrusts as a consumer)", "CRED ads (she finds them genuinely funny but recognizes they exist purely for brand recall, not information)"],
-    "cultural_references": ["Christ University journalism debates about media ethics — her professors were old-school newspaper people who saw digital marketing as the enemy", "Bangalore's HSR Layout as the D2C startup epicenter — she lives surrounded by the founders whose brands she debunks", "Twitter takedown culture — she has personally quote-tweeted brands with receipts and gotten responses", "The rise and fall of specific D2C brands she watched from the inside — she saw pitch decks before they became Instagram ads"],
+    "iconic_ads": [
+      "Dove Real Beauty (the campaign that taught brands 'authenticity' could itself be a manipulative strategy — Tanya wrote a college paper about this)",
+      "Mamaearth's toxin-free claims (she personally verified three were misleading)",
+      "Lenskart's 'free home trial' (a funnel she admires as a marketer but distrusts as a consumer)",
+      "CRED ads (she finds them genuinely funny but recognizes they exist purely for brand recall, not information)"
+    ],
+    "cultural_references": [
+      "Christ University journalism debates about media ethics — her professors were old-school newspaper people who saw digital marketing as the enemy",
+      "Bangalore's HSR Layout as the D2C startup epicenter — she lives surrounded by the founders whose brands she debunks",
+      "Twitter takedown culture — she has personally quote-tweeted brands with receipts and gotten responses",
+      "The rise and fall of specific D2C brands she watched from the inside — she saw pitch decks before they became Instagram ads"
+    ],
     "nostalgia_intensity": 0.1,
-    "formative_brands": ["Nicobar", "Minimalist", "Third Wave Coffee"]
+    "formative_brands": [
+      "Nicobar",
+      "Minimalist",
+      "Third Wave Coffee"
+    ]
   },
   "internal_conflicts": [
     {
@@ -146,6 +316,18 @@
       "influence_domain": "skincare — the only community she trusts because anonymity removes the incentive to shill"
     }
   ],
-  "values_hierarchy": ["intellectual_honesty", "transparency", "supporting_genuine_quality", "anti_manipulation", "independence_of_thought"],
-  "cognitive_biases": ["confirmation_bias_toward_skepticism", "insider_knowledge_bias", "contrarian_bias", "cynicism_as_default", "availability_heuristic"]
+  "values_hierarchy": [
+    "intellectual_honesty",
+    "transparency",
+    "supporting_genuine_quality",
+    "anti_manipulation",
+    "independence_of_thought"
+  ],
+  "cognitive_biases": [
+    "confirmation_bias_toward_skepticism",
+    "insider_knowledge_bias",
+    "contrarian_bias",
+    "cynicism_as_default",
+    "availability_heuristic"
+  ]
 }

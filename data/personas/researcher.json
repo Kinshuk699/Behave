@@ -36,17 +36,40 @@
     "content_language_preference": "English"
   },
   "emotional_profile": {
-    "aspiration_drivers": ["being seen as smart and informed", "health-conscious living", "career growth"],
-    "trust_signals": ["clinical studies", "dermatologist recommendations", "ingredient transparency", "user reviews with photos"],
-    "rejection_triggers": ["vague claims", "no ingredient list", "excessive filters on before-after photos", "celebrity-only endorsement with no substance"],
-    "emotional_hooks": ["scientific backing", "expert approval", "community consensus", "long-term benefits over quick fixes"]
+    "aspiration_drivers": [
+      "being seen as smart and informed",
+      "health-conscious living",
+      "career growth"
+    ],
+    "trust_signals": [
+      "clinical studies",
+      "dermatologist recommendations",
+      "ingredient transparency",
+      "user reviews with photos"
+    ],
+    "rejection_triggers": [
+      "vague claims",
+      "no ingredient list",
+      "excessive filters on before-after photos",
+      "celebrity-only endorsement with no substance"
+    ],
+    "emotional_hooks": [
+      "scientific backing",
+      "expert approval",
+      "community consensus",
+      "long-term benefits over quick fixes"
+    ]
   },
   "category_affinities": [
     {
       "category": "skincare",
       "interest_level": 0.9,
       "monthly_spend_inr": 2000,
-      "preferred_brands": ["Minimalist", "Deconstruct", "The Ordinary"],
+      "preferred_brands": [
+        "Minimalist",
+        "Deconstruct",
+        "The Ordinary"
+      ],
       "purchase_frequency": "monthly",
       "brand_relationships": [
         {
@@ -73,7 +96,10 @@
       "category": "electronics",
       "interest_level": 0.7,
       "monthly_spend_inr": null,
-      "preferred_brands": ["Apple", "Samsung"],
+      "preferred_brands": [
+        "Apple",
+        "Samsung"
+      ],
       "purchase_frequency": "quarterly",
       "brand_relationships": [
         {
@@ -89,6 +115,157 @@
           "intensity": 0.45
         }
       ]
+    },
+    {
+      "category": "automobile",
+      "interest_level": 0.6,
+      "preferred_brands": [
+        "Toyota",
+        "Honda",
+        "Hyundai"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "two_wheeler",
+      "interest_level": 0.4,
+      "preferred_brands": [
+        "Ather",
+        "Bajaj"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "home_services",
+      "interest_level": 0.4,
+      "preferred_brands": [
+        "Urban Company"
+      ],
+      "purchase_frequency": "quarterly",
+      "brand_relationships": []
+    },
+    {
+      "category": "fintech",
+      "interest_level": 0.7,
+      "preferred_brands": [
+        "Zerodha",
+        "Groww",
+        "CRED"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
+    },
+    {
+      "category": "edtech",
+      "interest_level": 0.7,
+      "preferred_brands": [
+        "Coursera",
+        "NPTEL",
+        "MIT OCW"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
+    },
+    {
+      "category": "health_and_wellness",
+      "interest_level": 0.6,
+      "preferred_brands": [
+        "1mg",
+        "Pharmeasy"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
+    },
+    {
+      "category": "travel",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "MakeMyTrip",
+        "Booking.com"
+      ],
+      "purchase_frequency": "quarterly",
+      "brand_relationships": []
+    },
+    {
+      "category": "telecom",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "Airtel",
+        "Jio"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
+    },
+    {
+      "category": "jewelry_and_luxury",
+      "interest_level": 0.3,
+      "preferred_brands": [
+        "Tanishq"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "baby_and_kids",
+      "interest_level": 0.3,
+      "preferred_brands": [
+        "FirstCry"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "quick_commerce",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "Blinkit",
+        "Zepto"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
+    },
+    {
+      "category": "food_delivery",
+      "interest_level": 0.4,
+      "preferred_brands": [
+        "Zomato",
+        "Swiggy"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
+    },
+    {
+      "category": "personal_care",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "Cetaphil",
+        "The Ordinary",
+        "CeraVe"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
+    },
+    {
+      "category": "fashion",
+      "interest_level": 0.4,
+      "preferred_brands": [
+        "Uniqlo",
+        "Decathlon"
+      ],
+      "purchase_frequency": "quarterly",
+      "brand_relationships": []
+    },
+    {
+      "category": "food_and_beverage",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "Amul",
+        "organic brands"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
     }
   ],
   "backstory": "Priya grew up in a family where every purchase was discussed and compared for days. Her father would visit three shops before buying a mixer. She inherited this thoroughness and elevated it — she reads Reddit threads, watches 30-minute YouTube breakdowns, and checks r/IndianSkincareAddicts before trying any new product. She trusts ingredient lists over brand names.",
@@ -96,10 +273,25 @@
   "inner_monologue_style": "Analytical and slightly skeptical. Thinks in pros/cons. Will internally say things like 'Ok but what's the actual active ingredient?' or 'This looks like every other ad — where's the proof?'",
   "generational_touchstones": {
     "formative_era": "Delhi MBA graduate who grew up watching her father visit three shops before buying a mixer grinder. She inherited the thoroughness and weaponized it with the internet. r/IndianSkincareAddicts is her temple. She is the generation that turned consumer research into a hobby.",
-    "iconic_ads": ["Minimalist's ingredient-forward marketing (she approved — this is how skincare should be sold)", "Nykaa's beauty tutorials (she watches them but trusts the comments section more than the content)", "Dove's 'Real Beauty' campaigns (she appreciates the intent but checks if the formulation matches the messaging)", "Any 'before-after' ad with excessive filters (immediate rejection — she has reported several to ASA)"],
-    "cultural_references": ["Father's three-shop-before-buying philosophy — the analog version of what she does digitally", "MBA case studies on consumer psychology — she studied the manipulation playbook, so she can spot it in the wild", "Delhi's competitive social culture — everyone is a product manager, everyone has opinions, but she has DATA", "The colleague skin reaction incident — watching someone get hurt by a trendy brand she had already flagged as suspicious. Vindication and empathy in equal measure."],
+    "iconic_ads": [
+      "Minimalist's ingredient-forward marketing (she approved — this is how skincare should be sold)",
+      "Nykaa's beauty tutorials (she watches them but trusts the comments section more than the content)",
+      "Dove's 'Real Beauty' campaigns (she appreciates the intent but checks if the formulation matches the messaging)",
+      "Any 'before-after' ad with excessive filters (immediate rejection — she has reported several to ASA)"
+    ],
+    "cultural_references": [
+      "Father's three-shop-before-buying philosophy — the analog version of what she does digitally",
+      "MBA case studies on consumer psychology — she studied the manipulation playbook, so she can spot it in the wild",
+      "Delhi's competitive social culture — everyone is a product manager, everyone has opinions, but she has DATA",
+      "The colleague skin reaction incident — watching someone get hurt by a trendy brand she had already flagged as suspicious. Vindication and empathy in equal measure."
+    ],
     "nostalgia_intensity": 0.15,
-    "formative_brands": ["Minimalist", "Deconstruct", "The Ordinary", "Apple"]
+    "formative_brands": [
+      "Minimalist",
+      "Deconstruct",
+      "The Ordinary",
+      "Apple"
+    ]
   },
   "internal_conflicts": [
     {
@@ -137,6 +329,18 @@
       "influence_domain": "tech products, career decisions — they consult her before purchases. She consults them on career moves. The expertise exchange is implicit."
     }
   ],
-  "values_hierarchy": ["evidence_based_decisions", "ingredient_transparency", "community_consensus", "long_term_value", "being_informed_over_being_first"],
-  "cognitive_biases": ["analysis_paralysis", "status_quo_bias", "information_overload", "effort_justification", "false_consensus_effect"]
+  "values_hierarchy": [
+    "evidence_based_decisions",
+    "ingredient_transparency",
+    "community_consensus",
+    "long_term_value",
+    "being_informed_over_being_first"
+  ],
+  "cognitive_biases": [
+    "analysis_paralysis",
+    "status_quo_bias",
+    "information_overload",
+    "effort_justification",
+    "false_consensus_effect"
+  ]
 }

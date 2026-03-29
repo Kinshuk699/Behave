@@ -1468,7 +1468,7 @@ def test_dashboard_simulate_rejects_bad_password():
     from app import app
 
     client = TestClient(app)
-    resp = client.post("/api/simulate", json={"password": "wrong", "brand": "Test", "category": "test"})
+    resp = client.post("/api/simulate", json={"password": "wrong", "brand": "Test", "image_base64": "dGVzdA=="})
     assert resp.status_code == 403
 
 
@@ -2351,11 +2351,218 @@ def test_simulate_request_accepts_persona_ids():
     req = SimulateRequest(
         password="test",
         brand="TestBrand",
-        category="test_cat",
+        image_base64="dGVzdA==",
         persona_ids=["pragmatist_pune_01", "impulse_buyer_delhi_01"],
     )
     assert req.persona_ids == ["pragmatist_pune_01", "impulse_buyer_delhi_01"]
 
     # Default should be empty list
-    req2 = SimulateRequest(password="test", brand="B", category="C")
+    req2 = SimulateRequest(password="test", brand="B", image_base64="dGVzdA==")
     assert req2.persona_ids == []
+
+
+def test_simulate_request_no_manual_creative_fields():
+    """SimulateRequest should NOT have category/headline/body_copy/cta fields."""
+    from dashboard.app import SimulateRequest
+
+    fields = set(SimulateRequest.model_fields.keys())
+    # These fields should be gone — LLM extracts them from the image
+    for removed in ["category", "headline", "body_copy", "cta"]:
+        assert removed not in fields, f"Field '{removed}' should be removed from SimulateRequest"
+
+    # These fields must remain
+    for required in ["password", "brand", "image_base64", "memory_scope", "cohort_size", "persona_ids"]:
+        assert required in fields, f"Field '{required}' missing from SimulateRequest"
+
+
+def test_simulate_request_image_base64_required():
+    """image_base64 should be a required field (no default)."""
+    from dashboard.app import SimulateRequest
+    import pytest
+
+    # Should fail without image_base64
+    with pytest.raises(Exception):
+        SimulateRequest(password="test", brand="TestBrand")
+
+
+# ── Category Vocabulary & Brand Positioning (v2) ─────────────
+
+
+def test_category_vocabulary_has_18_categories():
+    """B2C_CATEGORIES should contain exactly 18 categories."""
+    from synthetic_india.categories import B2C_CATEGORIES
+
+    assert isinstance(B2C_CATEGORIES, list)
+    assert len(B2C_CATEGORIES) == 18
+    # Check some key categories exist
+    for expected in [
+        "electronics", "fashion", "food_and_beverage", "food_delivery",
+        "quick_commerce", "skincare", "personal_care", "automobile",
+        "two_wheeler", "home_services", "fintech", "edtech",
+        "health_and_wellness", "travel", "telecom",
+        "jewelry_and_luxury", "baby_and_kids", "grocery_and_household",
+    ]:
+        assert expected in B2C_CATEGORIES, f"Missing category: {expected}"
+
+
+def test_category_migration_map_covers_old_runs():
+    """CATEGORY_MIGRATION_MAP should map all legacy categories to new ones."""
+    from synthetic_india.categories import CATEGORY_MIGRATION_MAP, B2C_CATEGORIES
+
+    # Known legacy categories from old runs
+    legacy = ["Household", "Maid Services", "grocery_delivery", "Automobile", "House Maintenance"]
+    for old in legacy:
+        assert old in CATEGORY_MIGRATION_MAP, f"Missing migration for: {old}"
+        new = CATEGORY_MIGRATION_MAP[old]
+        assert new in B2C_CATEGORIES, f"Migration target '{new}' not in B2C_CATEGORIES"
+
+
+def test_normalize_category_handles_legacy_and_new():
+    """normalize_category should handle both legacy free-text and new vocabulary."""
+    from synthetic_india.categories import normalize_category
+
+    # Direct match (already normalized)
+    assert normalize_category("skincare") == "skincare"
+    assert normalize_category("electronics") == "electronics"
+
+    # Legacy migration
+    assert normalize_category("Household") == "grocery_and_household"
+    assert normalize_category("Maid Services") == "home_services"
+    assert normalize_category("grocery_delivery") == "quick_commerce"
+    assert normalize_category("Automobile") == "automobile"
+    assert normalize_category("House Maintenance") == "home_services"
+
+    # Case insensitive
+    assert normalize_category("SKINCARE") == "skincare"
+    assert normalize_category("Food_Delivery") == "food_delivery"
+
+
+def test_brand_positioning_enum():
+    """BrandPositioning enum should cover all brand tiers."""
+    from synthetic_india.categories import BrandPositioning
+
+    assert BrandPositioning.HERITAGE.value == "heritage"
+    assert BrandPositioning.PREMIUM.value == "premium"
+    assert BrandPositioning.MASS_MARKET.value == "mass_market"
+    assert BrandPositioning.VALUE.value == "value"
+    assert BrandPositioning.DISRUPTOR.value == "disruptor"
+    assert BrandPositioning.LUXURY.value == "luxury"
+
+
+def test_brand_era_enum():
+    """BrandEra enum should cover all brand life stages."""
+    from synthetic_india.categories import BrandEra
+
+    assert BrandEra.LEGACY.value == "legacy"
+    assert BrandEra.ESTABLISHED.value == "established"
+    assert BrandEra.GROWTH.value == "growth"
+    assert BrandEra.STARTUP.value == "startup"
+
+
+def test_marketing_tone_enum():
+    """MarketingTone enum should cover ad tone categories."""
+    from synthetic_india.categories import MarketingTone
+
+    values = {m.value for m in MarketingTone}
+    for expected in ["aspirational", "playful", "informational", "urgency", "nostalgia", "edgy"]:
+        assert expected in values, f"Missing tone: {expected}"
+
+
+def test_migrate_old_runs_updates_categories():
+    """migrate_run_categories should update metadata.json categories to new vocab."""
+    import json
+    import tempfile
+    import shutil
+    from pathlib import Path
+    from synthetic_india.categories import migrate_run_categories, B2C_CATEGORIES
+
+    # Create a fake run directory with a legacy category
+    with tempfile.TemporaryDirectory() as tmp:
+        run_dir = Path(tmp) / "run_test_001"
+        run_dir.mkdir()
+        metadata = {
+            "run_id": "run_test_001",
+            "brand": "Surf Excel",
+            "category": "Household",
+            "total_evaluations": 8,
+        }
+        (run_dir / "metadata.json").write_text(json.dumps(metadata))
+
+        # Run migration
+        updated = migrate_run_categories(Path(tmp))
+
+        assert updated == 1
+        migrated = json.loads((run_dir / "metadata.json").read_text())
+        assert migrated["category"] == "grocery_and_household"
+        assert migrated["category"] in B2C_CATEGORIES
+
+
+def test_persona_affinities_cover_new_categories():
+    """Every persona should have at least 6 category affinities after expansion."""
+    personas = load_personas()
+    from synthetic_india.categories import B2C_CATEGORIES
+
+    # After expansion, each persona needs broader coverage
+    for p in personas:
+        cats = {aff.category for aff in p.category_affinities}
+        assert len(cats) >= 6, (
+            f"{p.name} only has {len(cats)} affinities: {cats}. Need >= 6."
+        )
+        # All affinities should use canonical categories
+        for aff in p.category_affinities:
+            assert aff.category in B2C_CATEGORIES, (
+                f"{p.name} has non-canonical category: {aff.category}"
+            )
+
+
+def test_creative_extraction_module_exists():
+    """creative_extractor module should exist with extract_creative_from_image."""
+    from synthetic_india.agents.creative_extractor import extract_creative_from_image
+    assert callable(extract_creative_from_image)
+
+
+def test_creative_extraction_prompt_constrains_categories():
+    """The extraction prompt should contain the B2C category list."""
+    from synthetic_india.agents.creative_extractor import EXTRACTION_PROMPT
+    from synthetic_india.categories import B2C_CATEGORIES
+
+    for cat in B2C_CATEGORIES:
+        assert cat in EXTRACTION_PROMPT, f"Category '{cat}' missing from extraction prompt"
+
+
+def test_creative_extraction_prompt_includes_brand_positioning():
+    """The extraction prompt should ask for brand positioning and era."""
+    from synthetic_india.agents.creative_extractor import EXTRACTION_PROMPT
+
+    assert "brand_positioning" in EXTRACTION_PROMPT
+    assert "brand_era" in EXTRACTION_PROMPT
+    assert "marketing_tone" in EXTRACTION_PROMPT
+
+
+def test_creative_card_has_brand_context_fields():
+    """CreativeCard should have brand_positioning, brand_era, marketing_tone fields."""
+    card = CreativeCard(
+        creative_id="test",
+        brand="Zepto",
+        category="quick_commerce",
+        format="static_image",
+        brand_positioning="disruptor",
+        brand_era="growth",
+        marketing_tone="playful",
+    )
+    assert card.brand_positioning == "disruptor"
+    assert card.brand_era == "growth"
+    assert card.marketing_tone == "playful"
+
+
+def test_creative_card_brand_context_defaults_to_none():
+    """Brand context fields should default to None for backward compatibility."""
+    card = CreativeCard(
+        creative_id="test",
+        brand="Test",
+        category="electronics",
+        format="static_image",
+    )
+    assert card.brand_positioning is None
+    assert card.brand_era is None
+    assert card.marketing_tone is None

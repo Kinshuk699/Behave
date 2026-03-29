@@ -36,17 +36,43 @@
     "content_language_preference": "Hinglish"
   },
   "emotional_profile": {
-    "aspiration_drivers": ["retail therapy as self-care", "staying current with fashion", "treating herself because she works hard", "curating the perfect aesthetic"],
-    "trust_signals": ["pretty packaging", "Instagram ads that look editorial", "friends tagging products in stories", "celebrity or influencer association"],
-    "rejection_triggers": ["ugly or cheap-looking packaging", "too many steps or effort required", "complicated return policies", "products that feel boring or utilitarian"],
-    "emotional_hooks": ["instant gratification", "treat yourself narrative", "limited edition or exclusive drops", "aesthetic unboxing experience", "flash sales and countdown timers"]
+    "aspiration_drivers": [
+      "retail therapy as self-care",
+      "staying current with fashion",
+      "treating herself because she works hard",
+      "curating the perfect aesthetic"
+    ],
+    "trust_signals": [
+      "pretty packaging",
+      "Instagram ads that look editorial",
+      "friends tagging products in stories",
+      "celebrity or influencer association"
+    ],
+    "rejection_triggers": [
+      "ugly or cheap-looking packaging",
+      "too many steps or effort required",
+      "complicated return policies",
+      "products that feel boring or utilitarian"
+    ],
+    "emotional_hooks": [
+      "instant gratification",
+      "treat yourself narrative",
+      "limited edition or exclusive drops",
+      "aesthetic unboxing experience",
+      "flash sales and countdown timers"
+    ]
   },
   "category_affinities": [
     {
       "category": "fashion",
       "interest_level": 0.95,
       "monthly_spend_inr": 8000,
-      "preferred_brands": ["Zara", "Mango", "H&M", "whatever catches her eye"],
+      "preferred_brands": [
+        "Zara",
+        "Mango",
+        "H&M",
+        "whatever catches her eye"
+      ],
       "purchase_frequency": "weekly",
       "brand_relationships": [
         {
@@ -67,7 +93,11 @@
       "category": "skincare",
       "interest_level": 0.8,
       "monthly_spend_inr": 3000,
-      "preferred_brands": ["Dot & Key", "Nykaa house brands", "whatever is new"],
+      "preferred_brands": [
+        "Dot & Key",
+        "Nykaa house brands",
+        "whatever is new"
+      ],
       "purchase_frequency": "biweekly",
       "brand_relationships": [
         {
@@ -88,7 +118,11 @@
       "category": "food_and_beverage",
       "interest_level": 0.75,
       "monthly_spend_inr": 5000,
-      "preferred_brands": ["Starbucks", "Blue Tokai", "any Instagram-worthy cafe"],
+      "preferred_brands": [
+        "Starbucks",
+        "Blue Tokai",
+        "any Instagram-worthy cafe"
+      ],
       "purchase_frequency": "daily",
       "brand_relationships": [
         {
@@ -104,6 +138,146 @@
           "intensity": 0.5
         }
       ]
+    },
+    {
+      "category": "automobile",
+      "interest_level": 0.4,
+      "preferred_brands": [
+        "Tata Punch",
+        "Hyundai i20"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "two_wheeler",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "Royal Enfield",
+        "Ather"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "home_services",
+      "interest_level": 0.3,
+      "preferred_brands": [
+        "Urban Company"
+      ],
+      "purchase_frequency": "quarterly",
+      "brand_relationships": []
+    },
+    {
+      "category": "fintech",
+      "interest_level": 0.6,
+      "preferred_brands": [
+        "CRED",
+        "Slice",
+        "PhonePe"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
+    },
+    {
+      "category": "edtech",
+      "interest_level": 0.2,
+      "preferred_brands": [
+        "Unacademy"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "health_and_wellness",
+      "interest_level": 0.4,
+      "preferred_brands": [
+        "HealthifyMe",
+        "Cult.fit"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
+    },
+    {
+      "category": "travel",
+      "interest_level": 0.6,
+      "preferred_brands": [
+        "Cleartrip",
+        "ixigo",
+        "Yatra"
+      ],
+      "purchase_frequency": "quarterly",
+      "brand_relationships": []
+    },
+    {
+      "category": "telecom",
+      "interest_level": 0.3,
+      "preferred_brands": [
+        "Jio"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
+    },
+    {
+      "category": "jewelry_and_luxury",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "CaratLane",
+        "BlueStone"
+      ],
+      "purchase_frequency": "quarterly",
+      "brand_relationships": []
+    },
+    {
+      "category": "baby_and_kids",
+      "interest_level": 0.2,
+      "preferred_brands": [
+        "FirstCry"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "quick_commerce",
+      "interest_level": 0.7,
+      "preferred_brands": [
+        "Zepto",
+        "Blinkit",
+        "Swiggy Instamart"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
+    },
+    {
+      "category": "food_delivery",
+      "interest_level": 0.7,
+      "preferred_brands": [
+        "Zomato",
+        "Swiggy"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
+    },
+    {
+      "category": "personal_care",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "Beardo",
+        "Man Matters",
+        "Plum"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
+    },
+    {
+      "category": "grocery_and_household",
+      "interest_level": 0.4,
+      "preferred_brands": [
+        "D-Mart",
+        "BigBasket"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
     }
   ],
   "backstory": "Neha works hard during the week — 10-hour days at a demanding MNC job — and shops hard on weekends. Her apartment has three unopened packages from last month and she does not feel guilty about it. Shopping is how she decompresses. She has a Nykaa wishlist with 47 items and her Myntra cart is never empty. She makes purchase decisions in under 60 seconds — if the packaging is pretty and the price is under ₹1500, it is in the cart. She has returned maybe two things in her life. Her bank statement is a diary of micro-indulgences.",
@@ -111,10 +285,25 @@
   "inner_monologue_style": "Rapid-fire, emotionally driven, zero friction. Thinks: 'Oh my god this is SO cute — add to cart. Wait how much? ₹799? Done. Ok what else? Ooh this has 4.5 stars, perfect. Also I need new earrings. And this face mask looks amazing — yolo.' Does not deliberate. Regret, if any, comes three days later and lasts about 10 minutes.",
   "generational_touchstones": {
     "formative_era": "Peak 'treat yourself' culture — grew up during India's MNC boom, got an MBA that promised she deserved nice things, and the economy agreed. Shopping is self-care, not consumption.",
-    "iconic_ads": ["Myntra 'End of Reason Sale' (her calendar revolves around it)", "Zara India launch (the day luxury became accessible — she was in line)", "Nykaa IPO coverage (felt personally invested — she built that company ₹799 at a time)", "Starbucks Instagram aesthetic (buys the cup, not the coffee)"],
-    "cultural_references": ["Andheri as the new working-woman hub — single women with disposable income, the target demographic brands dream of", "Mumbai's 'earn well, spend well' ethos — nobody judges you for a Zara bag here", "Narsee Monjee MBA culture — 'you deserve it' is the school motto (unofficially)", "Weekend brunch culture at Bandra/Khar cafes — where shopping bags are accessories"],
+    "iconic_ads": [
+      "Myntra 'End of Reason Sale' (her calendar revolves around it)",
+      "Zara India launch (the day luxury became accessible — she was in line)",
+      "Nykaa IPO coverage (felt personally invested — she built that company ₹799 at a time)",
+      "Starbucks Instagram aesthetic (buys the cup, not the coffee)"
+    ],
+    "cultural_references": [
+      "Andheri as the new working-woman hub — single women with disposable income, the target demographic brands dream of",
+      "Mumbai's 'earn well, spend well' ethos — nobody judges you for a Zara bag here",
+      "Narsee Monjee MBA culture — 'you deserve it' is the school motto (unofficially)",
+      "Weekend brunch culture at Bandra/Khar cafes — where shopping bags are accessories"
+    ],
     "nostalgia_intensity": 0.1,
-    "formative_brands": ["Zara", "Myntra", "Nykaa", "Starbucks"]
+    "formative_brands": [
+      "Zara",
+      "Myntra",
+      "Nykaa",
+      "Starbucks"
+    ]
   },
   "internal_conflicts": [
     {
@@ -152,6 +341,18 @@
       "influence_domain": "everything — 'You might also like' is the most dangerous sentence in her life"
     }
   ],
-  "values_hierarchy": ["self_reward", "aesthetic_pleasure", "convenience", "novelty", "social_currency"],
-  "cognitive_biases": ["present_bias", "hyperbolic_discounting", "affect_heuristic", "optimism_bias", "endowment_effect"]
+  "values_hierarchy": [
+    "self_reward",
+    "aesthetic_pleasure",
+    "convenience",
+    "novelty",
+    "social_currency"
+  ],
+  "cognitive_biases": [
+    "present_bias",
+    "hyperbolic_discounting",
+    "affect_heuristic",
+    "optimism_bias",
+    "endowment_effect"
+  ]
 }

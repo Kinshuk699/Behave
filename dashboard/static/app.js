@@ -355,9 +355,12 @@ function setupTestForm() {
   // ── Run simulation ──
   runBtn.addEventListener('click', async () => {
     const brand = document.getElementById('inputBrand').value.trim();
-    const category = document.getElementById('inputCategory').value.trim();
-    if (!brand || !category) {
-      showStatus('Brand and category are required.', 'error');
+    if (!brand) {
+      showStatus('Brand name is required.', 'error');
+      return;
+    }
+    if (!imageBase64) {
+      showStatus('Please upload an ad creative image.', 'error');
       return;
     }
 
@@ -369,20 +372,16 @@ function setupTestForm() {
 
     runBtn.disabled = true;
     const personaCount = isManual ? selectedPersonaIds.size : parseInt(cohortSlider.value, 10);
-    showStatus(`Running simulation with ${personaCount} personas… This takes 30–90 seconds.`, 'loading');
+    showStatus(`Running simulation with ${personaCount} personas… AI is analyzing the creative and evaluating reactions (30–90s).`, 'loading');
 
     try {
       const body = {
         password: savedPassword,
         brand,
-        category,
-        headline: document.getElementById('inputHeadline').value.trim(),
-        body_copy: document.getElementById('inputBody').value.trim(),
-        cta: document.getElementById('inputCta').value.trim(),
+        image_base64: imageBase64,
         memory_scope: document.getElementById('inputScope').value,
         cohort_size: isManual ? selectedPersonaIds.size : parseInt(cohortSlider.value, 10),
         persona_ids: isManual ? Array.from(selectedPersonaIds) : [],
-        image_base64: imageBase64,
       };
 
       const resp = await fetch('/api/simulate', {
@@ -477,17 +476,94 @@ function renderLiveResults(result) {
     `).join('');
   }
 
-  // Verbatims from evaluations
+  // Creative Intelligence card — what the AI extracted
+  if (result.creative) {
+    const c = result.creative;
+    const ciEl = document.getElementById('liveCreativeIntel');
+    if (ciEl) {
+      ciEl.innerHTML = `
+        <h3 class="verdict__sub-title" style="margin-top:2rem;">Creative Intelligence</h3>
+        <div class="creative-intel">
+          <div class="creative-intel__row"><span class="creative-intel__label">Category</span><span class="creative-intel__val">${esc(c.category || '-')}</span></div>
+          <div class="creative-intel__row"><span class="creative-intel__label">Headline</span><span class="creative-intel__val">${esc(c.headline || '-')}</span></div>
+          <div class="creative-intel__row"><span class="creative-intel__label">CTA</span><span class="creative-intel__val">${esc(c.cta_text || c.cta || '-')}</span></div>
+          <div class="creative-intel__row"><span class="creative-intel__label">Brand Positioning</span><span class="creative-intel__val">${esc((c.brand_positioning || '-').replace(/_/g, ' '))}</span></div>
+          <div class="creative-intel__row"><span class="creative-intel__label">Brand Era</span><span class="creative-intel__val">${esc((c.brand_era || '-').replace(/_/g, ' '))}</span></div>
+          <div class="creative-intel__row"><span class="creative-intel__label">Marketing Tone</span><span class="creative-intel__val">${esc((c.marketing_tone || '-').replace(/_/g, ' '))}</span></div>
+          <div class="creative-intel__row"><span class="creative-intel__label">Visual Style</span><span class="creative-intel__val">${esc((c.visual_style || '-').replace(/_/g, ' '))}</span></div>
+          <div class="creative-intel__row"><span class="creative-intel__label">Price Framing</span><span class="creative-intel__val">${esc((c.price_framing || '-').replace(/_/g, ' '))}</span></div>
+          ${c.festival_context ? `<div class="creative-intel__row"><span class="creative-intel__label">Festival</span><span class="creative-intel__val">${esc(c.festival_context)}</span></div>` : ''}
+        </div>
+      `;
+    }
+  }
+
+  // Per-persona score breakdown
+  if (result.evaluations && result.evaluations.length) {
+    const bkEl = document.getElementById('liveBreakdown');
+    if (bkEl) {
+      bkEl.innerHTML = `
+        <h3 class="verdict__sub-title" style="margin-top:2rem;">Per-Persona Scores</h3>
+        <div class="score-table-wrap">
+          <table class="score-table">
+            <thead>
+              <tr>
+                <th>Persona</th><th>ATT</th><th>REL</th><th>TRU</th><th>DES</th><th>CLA</th><th>Overall</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${result.evaluations.map(e => {
+                const name = e.persona_name || e.persona_id;
+                const overall = e.overall_score || 0;
+                const rowClass = overall >= 60 ? 'score-row--green' : overall >= 40 ? 'score-row--yellow' : 'score-row--red';
+                return `
+                  <tr class="${rowClass}">
+                    <td class="score-table__name">${esc(name)}</td>
+                    <td>${(e.attention_score || 0).toFixed(1)}</td>
+                    <td>${(e.relevance_score || 0).toFixed(1)}</td>
+                    <td>${(e.trust_score || 0).toFixed(1)}</td>
+                    <td>${(e.desire_score || 0).toFixed(1)}</td>
+                    <td>${(e.clarity_score || 0).toFixed(1)}</td>
+                    <td class="score-table__overall">${overall.toFixed(0)}</td>
+                  </tr>
+                `;
+              }).join('')}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+  }
+
+  // Focus Group Chat from evaluations
   const liveVerbatims = document.getElementById('liveVerbatims');
   if (result.evaluations && result.evaluations.length) {
     liveVerbatims.innerHTML = `
-      <h3 class="verdict__sub-title" style="margin-top:2rem;">Verbatim Reactions</h3>
-      <div class="verbatims__list">
-        ${result.evaluations.map(e => `
-          <div class="verbatim-card">
-            <div class="verbatim-card__text">${esc(e.verbatim_reaction || e.first_impression || '')}</div>
-          </div>
-        `).join('')}
+      <h3 class="verdict__sub-title" style="margin-top:2rem;">Focus Group Chat</h3>
+      <div class="focus-group">
+        ${result.evaluations.map(e => {
+          const name = e.persona_name || e.persona_id;
+          const city = e.persona_city || '';
+          const archetype = (e.persona_archetype || '').replace(/_/g, ' ');
+          const action = e.primary_action || 'unknown';
+          const score = e.overall_score || 0;
+          const actionBadge = score >= 60 ? '🟢' : score >= 40 ? '🟡' : '🔴';
+          const themes = (e.key_themes || []).slice(0, 3);
+          const verbatim = e.verbatim_reaction || e.first_impression || '';
+          return `
+            <div class="focus-msg">
+              <div class="focus-msg__header">
+                <span class="focus-msg__name">${esc(name)}</span>
+                <span class="focus-msg__city">${esc(city)}</span>
+                <span class="focus-msg__archetype">${esc(archetype)}</span>
+                <span class="focus-msg__badge">${actionBadge} ${esc(action.replace(/_/g, ' '))}</span>
+                <span class="focus-msg__score">${score.toFixed(0)}/100</span>
+              </div>
+              <div class="focus-msg__text">"${esc(verbatim)}"</div>
+              ${themes.length ? `<div class="focus-msg__tags">${themes.map(t => `<span class="focus-msg__tag">${esc(t)}</span>`).join('')}</div>` : ''}
+            </div>
+          `;
+        }).join('')}
       </div>
     `;
   }

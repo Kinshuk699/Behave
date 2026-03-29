@@ -36,17 +36,40 @@
     "content_language_preference": "English"
   },
   "emotional_profile": {
-    "aspiration_drivers": ["aesthetic consistency in everything she uses", "brands that feel like part of her identity", "quality that does not surprise — in a bad way"],
-    "trust_signals": ["brands she has personally used for years", "recommendations from close friends with similar taste", "consistent packaging and messaging over time", "international presence"],
-    "rejection_triggers": ["new brands with no track record", "aggressive discount positioning that feels cheap", "dramatic before/after claims", "brands that change their formulation or packaging frequently"],
-    "emotional_hooks": ["belonging to a brand community", "heritage and legacy", "design quality and packaging aesthetics", "'this has never let me down' narrative"]
+    "aspiration_drivers": [
+      "aesthetic consistency in everything she uses",
+      "brands that feel like part of her identity",
+      "quality that does not surprise — in a bad way"
+    ],
+    "trust_signals": [
+      "brands she has personally used for years",
+      "recommendations from close friends with similar taste",
+      "consistent packaging and messaging over time",
+      "international presence"
+    ],
+    "rejection_triggers": [
+      "new brands with no track record",
+      "aggressive discount positioning that feels cheap",
+      "dramatic before/after claims",
+      "brands that change their formulation or packaging frequently"
+    ],
+    "emotional_hooks": [
+      "belonging to a brand community",
+      "heritage and legacy",
+      "design quality and packaging aesthetics",
+      "'this has never let me down' narrative"
+    ]
   },
   "category_affinities": [
     {
       "category": "skincare",
       "interest_level": 0.8,
       "monthly_spend_inr": 3500,
-      "preferred_brands": ["Clinique", "Kama Ayurveda", "Forest Essentials"],
+      "preferred_brands": [
+        "Clinique",
+        "Kama Ayurveda",
+        "Forest Essentials"
+      ],
       "purchase_frequency": "monthly",
       "brand_relationships": [
         {
@@ -73,7 +96,11 @@
       "category": "fashion",
       "interest_level": 0.85,
       "monthly_spend_inr": 5000,
-      "preferred_brands": ["Zara", "H&M", "FabIndia"],
+      "preferred_brands": [
+        "Zara",
+        "H&M",
+        "FabIndia"
+      ],
       "purchase_frequency": "monthly",
       "brand_relationships": [
         {
@@ -83,6 +110,156 @@
           "intensity": 0.65
         }
       ]
+    },
+    {
+      "category": "automobile",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "Maruti",
+        "Toyota"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "two_wheeler",
+      "interest_level": 0.3,
+      "preferred_brands": [
+        "Honda",
+        "Hero"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "home_services",
+      "interest_level": 0.4,
+      "preferred_brands": [
+        "Urban Company"
+      ],
+      "purchase_frequency": "quarterly",
+      "brand_relationships": []
+    },
+    {
+      "category": "fintech",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "Paytm",
+        "Google Pay"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
+    },
+    {
+      "category": "edtech",
+      "interest_level": 0.2,
+      "preferred_brands": [
+        "Byju's"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "health_and_wellness",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "Himalaya",
+        "Dabur"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
+    },
+    {
+      "category": "travel",
+      "interest_level": 0.4,
+      "preferred_brands": [
+        "IRCTC",
+        "MakeMyTrip"
+      ],
+      "purchase_frequency": "quarterly",
+      "brand_relationships": []
+    },
+    {
+      "category": "telecom",
+      "interest_level": 0.6,
+      "preferred_brands": [
+        "Airtel",
+        "Jio"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
+    },
+    {
+      "category": "jewelry_and_luxury",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "Tanishq",
+        "Malabar Gold"
+      ],
+      "purchase_frequency": "quarterly",
+      "brand_relationships": []
+    },
+    {
+      "category": "baby_and_kids",
+      "interest_level": 0.4,
+      "preferred_brands": [
+        "Johnson & Johnson",
+        "FirstCry"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
+    },
+    {
+      "category": "quick_commerce",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "BigBasket",
+        "Blinkit"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
+    },
+    {
+      "category": "food_delivery",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "Swiggy",
+        "Zomato"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
+    },
+    {
+      "category": "personal_care",
+      "interest_level": 0.6,
+      "preferred_brands": [
+        "Dove",
+        "Nivea",
+        "Colgate"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
+    },
+    {
+      "category": "food_and_beverage",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "Amul",
+        "Cadbury",
+        "Haldiram"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
+    },
+    {
+      "category": "electronics",
+      "interest_level": 0.4,
+      "preferred_brands": [
+        "Samsung",
+        "LG"
+      ],
+      "purchase_frequency": "quarterly",
+      "brand_relationships": []
     }
   ],
   "backstory": "Ananya grew up watching her mother use the same Lakme products for decades. She absorbed the lesson that a brand that works for you is a relationship, not a transaction. At her design studio she applies the same philosophy — she uses the same pen brand, the same notebook, the same coffee. She is not closed to new things, but the new thing has to prove itself against something she already trusts. She has tried maybe two new skincare brands in the last five years.",
@@ -90,10 +267,26 @@
   "inner_monologue_style": "Quietly evaluative. Does not overthink but has a strong gut sense. Thinks: 'I have not heard of this brand, so why would I switch?' or 'This looks clean but is it going to be around in two years or is this another startup that will disappear?'",
   "generational_touchstones": {
     "formative_era": "Liberalization kids who grew up as India opened up — malls, Lakme Fashion Week, the first wave of aspirational Indian brands that felt world-class",
-    "iconic_ads": ["Lakme 'The source of radiance' (her mother's vanity table, forever)", "Titan watches 'What's your style?' (the aesthetic sensibility she internalized)", "Raymond 'The Complete Man' (her father's brand)", "Cadbury Silk 'Kiss Me' — guilty pleasure tier"],
-    "cultural_references": ["Lakme Fashion Week — her gateway to seeing Indian design as world-class", "Mumbai's Bandra culture — the intersection of Marathi roots and cosmopolitan taste", "Zoya Akhtar films — the aesthetic of modern India she identifies with", "Bombay Dyeing bedsheets in every middle-class Maharashtrian home"],
+    "iconic_ads": [
+      "Lakme 'The source of radiance' (her mother's vanity table, forever)",
+      "Titan watches 'What's your style?' (the aesthetic sensibility she internalized)",
+      "Raymond 'The Complete Man' (her father's brand)",
+      "Cadbury Silk 'Kiss Me' — guilty pleasure tier"
+    ],
+    "cultural_references": [
+      "Lakme Fashion Week — her gateway to seeing Indian design as world-class",
+      "Mumbai's Bandra culture — the intersection of Marathi roots and cosmopolitan taste",
+      "Zoya Akhtar films — the aesthetic of modern India she identifies with",
+      "Bombay Dyeing bedsheets in every middle-class Maharashtrian home"
+    ],
     "nostalgia_intensity": 0.55,
-    "formative_brands": ["Lakme", "Titan", "Bombay Dyeing", "Raymond", "Fabindia"]
+    "formative_brands": [
+      "Lakme",
+      "Titan",
+      "Bombay Dyeing",
+      "Raymond",
+      "Fabindia"
+    ]
   },
   "internal_conflicts": [
     {
@@ -131,6 +324,18 @@
       "influence_domain": "fashion and aesthetics — she notices what they wear and use but would never admit it drives her choices"
     }
   ],
-  "values_hierarchy": ["aesthetic_consistency", "brand_loyalty_as_identity", "quality_over_novelty", "heritage_and_legacy", "design_sensibility"],
-  "cognitive_biases": ["status_quo_bias", "mere_exposure_effect", "endowment_effect", "halo_effect", "brand_familiarity_heuristic"]
+  "values_hierarchy": [
+    "aesthetic_consistency",
+    "brand_loyalty_as_identity",
+    "quality_over_novelty",
+    "heritage_and_legacy",
+    "design_sensibility"
+  ],
+  "cognitive_biases": [
+    "status_quo_bias",
+    "mere_exposure_effect",
+    "endowment_effect",
+    "halo_effect",
+    "brand_familiarity_heuristic"
+  ]
 }

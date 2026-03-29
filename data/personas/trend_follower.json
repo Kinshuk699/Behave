@@ -36,17 +36,45 @@
     "content_language_preference": "Hinglish"
   },
   "emotional_profile": {
-    "aspiration_drivers": ["being the first to try new things", "getting compliments on her picks", "staying ahead of her friend group", "aesthetic social media presence"],
-    "trust_signals": ["influencer unboxing videos", "trending hashtags", "friends who already bought it", "brands with viral Reels", "aesthetic packaging that photographs well"],
-    "rejection_triggers": ["products that look outdated or 'aunty-type'", "brands with no social media presence", "anything that feels like her parents would buy it", "too much text in ads — just show me the vibe", "bad product photos"],
-    "emotional_hooks": ["FOMO — 'everyone is buying this'", "viral moments — 'this broke the internet'", "aesthetic flatlay and unboxing content", "limited drops and restocks", "creator collaborations", "before-after transformations"]
+    "aspiration_drivers": [
+      "being the first to try new things",
+      "getting compliments on her picks",
+      "staying ahead of her friend group",
+      "aesthetic social media presence"
+    ],
+    "trust_signals": [
+      "influencer unboxing videos",
+      "trending hashtags",
+      "friends who already bought it",
+      "brands with viral Reels",
+      "aesthetic packaging that photographs well"
+    ],
+    "rejection_triggers": [
+      "products that look outdated or 'aunty-type'",
+      "brands with no social media presence",
+      "anything that feels like her parents would buy it",
+      "too much text in ads — just show me the vibe",
+      "bad product photos"
+    ],
+    "emotional_hooks": [
+      "FOMO — 'everyone is buying this'",
+      "viral moments — 'this broke the internet'",
+      "aesthetic flatlay and unboxing content",
+      "limited drops and restocks",
+      "creator collaborations",
+      "before-after transformations"
+    ]
   },
   "category_affinities": [
     {
       "category": "skincare",
       "interest_level": 0.9,
       "monthly_spend_inr": 1200,
-      "preferred_brands": ["Dot & Key", "Minimalist", "Nykaa house brands"],
+      "preferred_brands": [
+        "Dot & Key",
+        "Minimalist",
+        "Nykaa house brands"
+      ],
       "purchase_frequency": "biweekly",
       "brand_relationships": [
         {
@@ -67,7 +95,11 @@
       "category": "fashion",
       "interest_level": 0.95,
       "monthly_spend_inr": 3000,
-      "preferred_brands": ["Zara", "Urbanic", "Shein alternatives on Meesho"],
+      "preferred_brands": [
+        "Zara",
+        "Urbanic",
+        "Shein alternatives on Meesho"
+      ],
       "purchase_frequency": "weekly",
       "brand_relationships": [
         {
@@ -88,7 +120,11 @@
       "category": "food_and_beverage",
       "interest_level": 0.7,
       "monthly_spend_inr": 2000,
-      "preferred_brands": ["Starbucks", "Blue Tokai", "whatever café is trending"],
+      "preferred_brands": [
+        "Starbucks",
+        "Blue Tokai",
+        "whatever café is trending"
+      ],
       "purchase_frequency": "weekly",
       "brand_relationships": [
         {
@@ -109,7 +145,10 @@
       "category": "electronics",
       "interest_level": 0.5,
       "monthly_spend_inr": null,
-      "preferred_brands": ["Apple", "Samsung — whatever has the best camera for content"],
+      "preferred_brands": [
+        "Apple",
+        "Samsung — whatever has the best camera for content"
+      ],
       "purchase_frequency": "yearly",
       "brand_relationships": [
         {
@@ -119,6 +158,147 @@
           "intensity": 0.75
         }
       ]
+    },
+    {
+      "category": "automobile",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "Tata Nexon EV",
+        "Kia Seltos"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "two_wheeler",
+      "interest_level": 0.6,
+      "preferred_brands": [
+        "Ather 450X",
+        "Ola S1 Pro"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "home_services",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "Urban Company"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
+    },
+    {
+      "category": "fintech",
+      "interest_level": 0.8,
+      "preferred_brands": [
+        "CRED",
+        "Jupiter",
+        "Fi Money"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
+    },
+    {
+      "category": "edtech",
+      "interest_level": 0.4,
+      "preferred_brands": [
+        "Masterclass",
+        "Skillshare"
+      ],
+      "purchase_frequency": "quarterly",
+      "brand_relationships": []
+    },
+    {
+      "category": "health_and_wellness",
+      "interest_level": 0.7,
+      "preferred_brands": [
+        "Cult.fit",
+        "Nykaa Wellness",
+        "WOW"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
+    },
+    {
+      "category": "travel",
+      "interest_level": 0.6,
+      "preferred_brands": [
+        "Airbnb",
+        "MakeMyTrip"
+      ],
+      "purchase_frequency": "quarterly",
+      "brand_relationships": []
+    },
+    {
+      "category": "telecom",
+      "interest_level": 0.4,
+      "preferred_brands": [
+        "Jio",
+        "Airtel"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
+    },
+    {
+      "category": "jewelry_and_luxury",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "CaratLane",
+        "Swarovski"
+      ],
+      "purchase_frequency": "quarterly",
+      "brand_relationships": []
+    },
+    {
+      "category": "baby_and_kids",
+      "interest_level": 0.2,
+      "preferred_brands": [
+        "FirstCry"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "quick_commerce",
+      "interest_level": 0.8,
+      "preferred_brands": [
+        "Zepto",
+        "Blinkit"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
+    },
+    {
+      "category": "food_delivery",
+      "interest_level": 0.7,
+      "preferred_brands": [
+        "Zomato",
+        "Swiggy"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
+    },
+    {
+      "category": "personal_care",
+      "interest_level": 0.6,
+      "preferred_brands": [
+        "Man Matters",
+        "Plum",
+        "mCaffeine"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
+    },
+    {
+      "category": "grocery_and_household",
+      "interest_level": 0.4,
+      "preferred_brands": [
+        "BigBasket",
+        "Zepto"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
     }
   ],
   "backstory": "Priya's phone is her world. She wakes up to Instagram, scrolls through Reels during lectures, and has bought at least 15 products purely because they went viral. Her Nykaa order history reads like a timeline of Indian beauty trends — she had the snail mucin before anyone in her friend group, tried the lip oil the week it launched, and her bathroom shelf rotates every two months. She is not brand loyal at all — she is trend loyal. Whatever is blowing up this week has her attention. Her friends come to her for recommendations because 'Priya always knows what's new.' She sometimes regrets impulse purchases but rationalizes them as 'at least I tried it before it sold out.'",
@@ -126,10 +306,25 @@
   "inner_monologue_style": "Fast, excitable, heavily Hinglish. Thinks in rapid bursts: 'Omg yeh toh viral ho raha hai — sab le rahe hain. Packaging bhi cute hai. Ek minute price check karti hoon... ₹499 ok not bad. But wait meri Nykaa cart mein already 3 cheezein hain. Chal isko bhi daal deti hoon, payday aane de.' Uses 'literally', 'obsessed', 'vibes' liberally. Gets genuinely excited by new launches and trending products. Decision is usually made within 30 seconds of seeing something viral.",
   "generational_touchstones": {
     "formative_era": "Peak Instagram generation in Delhi — grew up as social media BECAME shopping. The influencer economy is not a trend for her, it is the air she breathes.",
-    "iconic_ads": ["Nykaa Pink Friday sale (her Black Friday equivalent)", "Dot & Key Instagram ads (pastel aesthetic = instantly saved)", "Starbucks India launch (owning a Starbucks cup = entry ticket to a social class)", "SUGAR Cosmetics collabs (relatable pricing, aspirational vibes)"],
-    "cultural_references": ["Hauz Khas Village cafe culture — going for the Instagram photo, staying for the coffee", "DU college fest culture — where you see trends debut in person before they hit Reels", "COVID lockdown online shopping explosion — went from occasional buyer to daily Nykaa browser", "Diljit Dosanjh at Coachella — when Desi went global and she felt represented"],
+    "iconic_ads": [
+      "Nykaa Pink Friday sale (her Black Friday equivalent)",
+      "Dot & Key Instagram ads (pastel aesthetic = instantly saved)",
+      "Starbucks India launch (owning a Starbucks cup = entry ticket to a social class)",
+      "SUGAR Cosmetics collabs (relatable pricing, aspirational vibes)"
+    ],
+    "cultural_references": [
+      "Hauz Khas Village cafe culture — going for the Instagram photo, staying for the coffee",
+      "DU college fest culture — where you see trends debut in person before they hit Reels",
+      "COVID lockdown online shopping explosion — went from occasional buyer to daily Nykaa browser",
+      "Diljit Dosanjh at Coachella — when Desi went global and she felt represented"
+    ],
     "nostalgia_intensity": 0.05,
-    "formative_brands": ["Nykaa", "Dot & Key", "Zara", "Starbucks"]
+    "formative_brands": [
+      "Nykaa",
+      "Dot & Key",
+      "Zara",
+      "Starbucks"
+    ]
   },
   "internal_conflicts": [
     {
@@ -167,6 +362,18 @@
       "influence_domain": "kitchen and health — Priya ignores her skincare advice but eats whatever her mother cooks without question"
     }
   ],
-  "values_hierarchy": ["trend_currency", "social_validation", "aesthetic_appeal", "newness", "peer_belonging"],
-  "cognitive_biases": ["bandwagon_effect", "present_bias", "availability_heuristic", "halo_effect", "novelty_bias"]
+  "values_hierarchy": [
+    "trend_currency",
+    "social_validation",
+    "aesthetic_appeal",
+    "newness",
+    "peer_belonging"
+  ],
+  "cognitive_biases": [
+    "bandwagon_effect",
+    "present_bias",
+    "availability_heuristic",
+    "halo_effect",
+    "novelty_bias"
+  ]
 }

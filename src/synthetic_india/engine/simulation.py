@@ -325,6 +325,7 @@ async def run_simulation(
 
         # Evaluate each persona
         evaluations: list[PersonaEvaluation] = []
+        eval_errors: list[str] = []
 
         with Progress(
             SpinnerColumn(),
@@ -393,8 +394,18 @@ async def run_simulation(
                     progress.update(task, advance=1)
 
                 except Exception as e:
-                    console.print(f"  [red]Failed for {persona.name}: {e}[/red]")
+                    error_msg = f"{persona.name}: {type(e).__name__}: {e}"
+                    eval_errors.append(error_msg)
+                    console.print(f"  [red]Failed for {error_msg}[/red]")
                     progress.update(task, advance=1)
+
+        # If ALL evaluations failed, raise — don't produce a fake 0-score result
+        if len(evaluations) == 0 and len(cohort) > 0:
+            error_summary = "; ".join(eval_errors[:3])
+            raise RuntimeError(
+                f"All {len(cohort)} persona evaluations failed. "
+                f"Errors: {error_summary}"
+            )
 
         # Check for reflections
         if use_memory:

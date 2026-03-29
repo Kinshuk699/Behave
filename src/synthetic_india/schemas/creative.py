@@ -107,6 +107,17 @@ class CreativeCard(BaseModel):
         description="Cultural motifs: 'rangoli', 'Bollywood celeb', 'cricket', 'joint family', etc.",
     )
 
+    # Brand context (v2) — extracted by LLM or provided manually
+    brand_positioning: Optional[str] = Field(
+        None, description="heritage, premium, mass_market, value, disruptor, luxury"
+    )
+    brand_era: Optional[str] = Field(
+        None, description="legacy, established, growth, startup"
+    )
+    marketing_tone: Optional[str] = Field(
+        None, description="aspirational, playful, informational, urgency, nostalgia, edgy"
+    )
+
     # Vision-native (v2) — raw ad image for direct LLM evaluation
     image_path: Optional[str] = Field(
         None, description="Local path to raw ad image; base64-encoded at eval time"

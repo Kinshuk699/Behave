@@ -36,17 +36,42 @@
     "content_language_preference": "English"
   },
   "emotional_profile": {
-    "aspiration_drivers": ["looking like she belongs to a higher social circle", "getting her first job at a top tech company and dressing the part", "curating an Instagram aesthetic that looks effortless", "bridging the gap between small-city upbringing and metro ambitions"],
-    "trust_signals": ["products she sees on her aspirational Instagram accounts", "brands that ship fast and have good packaging", "friends from college who have already tried it", "affordable-premium positioning"],
-    "rejection_triggers": ["brands that look cheap or local", "anything her mother would buy from a kirana store", "products requiring complicated routines", "brands with poor mobile shopping experience"],
-    "emotional_hooks": ["affordable luxury", "glow-up narrative", "campus-to-corporate transformation", "treat yourself on a budget", "first-salary worthy purchases"]
+    "aspiration_drivers": [
+      "looking like she belongs to a higher social circle",
+      "getting her first job at a top tech company and dressing the part",
+      "curating an Instagram aesthetic that looks effortless",
+      "bridging the gap between small-city upbringing and metro ambitions"
+    ],
+    "trust_signals": [
+      "products she sees on her aspirational Instagram accounts",
+      "brands that ship fast and have good packaging",
+      "friends from college who have already tried it",
+      "affordable-premium positioning"
+    ],
+    "rejection_triggers": [
+      "brands that look cheap or local",
+      "anything her mother would buy from a kirana store",
+      "products requiring complicated routines",
+      "brands with poor mobile shopping experience"
+    ],
+    "emotional_hooks": [
+      "affordable luxury",
+      "glow-up narrative",
+      "campus-to-corporate transformation",
+      "treat yourself on a budget",
+      "first-salary worthy purchases"
+    ]
   },
   "category_affinities": [
     {
       "category": "fashion",
       "interest_level": 0.9,
       "monthly_spend_inr": 2000,
-      "preferred_brands": ["H&M", "Urbanic", "Myntra private labels"],
+      "preferred_brands": [
+        "H&M",
+        "Urbanic",
+        "Myntra private labels"
+      ],
       "purchase_frequency": "biweekly",
       "brand_relationships": [
         {
@@ -67,7 +92,11 @@
       "category": "skincare",
       "interest_level": 0.8,
       "monthly_spend_inr": 800,
-      "preferred_brands": ["Plum", "Dot & Key", "Sugar Cosmetics"],
+      "preferred_brands": [
+        "Plum",
+        "Dot & Key",
+        "Sugar Cosmetics"
+      ],
       "purchase_frequency": "monthly",
       "brand_relationships": [
         {
@@ -88,7 +117,10 @@
       "category": "electronics",
       "interest_level": 0.5,
       "monthly_spend_inr": null,
-      "preferred_brands": ["Apple — saving up", "Realme for now"],
+      "preferred_brands": [
+        "Apple — saving up",
+        "Realme for now"
+      ],
       "purchase_frequency": "rarely",
       "brand_relationships": [
         {
@@ -104,6 +136,136 @@
           "intensity": 0.3
         }
       ]
+    },
+    {
+      "category": "automobile",
+      "interest_level": 0.6,
+      "preferred_brands": [
+        "Hyundai",
+        "Kia",
+        "Tata Nexon"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "two_wheeler",
+      "interest_level": 0.4,
+      "preferred_brands": [
+        "Ather",
+        "Ola Electric"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "home_services",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "Urban Company"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
+    },
+    {
+      "category": "fintech",
+      "interest_level": 0.7,
+      "preferred_brands": [
+        "CRED",
+        "PhonePe",
+        "Groww"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
+    },
+    {
+      "category": "edtech",
+      "interest_level": 0.3,
+      "preferred_brands": [
+        "Skillshare",
+        "Coursera"
+      ],
+      "purchase_frequency": "quarterly",
+      "brand_relationships": []
+    },
+    {
+      "category": "health_and_wellness",
+      "interest_level": 0.6,
+      "preferred_brands": [
+        "Cult.fit",
+        "Nykaa Wellness"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
+    },
+    {
+      "category": "travel",
+      "interest_level": 0.7,
+      "preferred_brands": [
+        "MakeMyTrip",
+        "Airbnb"
+      ],
+      "purchase_frequency": "quarterly",
+      "brand_relationships": []
+    },
+    {
+      "category": "telecom",
+      "interest_level": 0.4,
+      "preferred_brands": [
+        "Jio",
+        "Airtel"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
+    },
+    {
+      "category": "jewelry_and_luxury",
+      "interest_level": 0.7,
+      "preferred_brands": [
+        "Tanishq",
+        "CaratLane"
+      ],
+      "purchase_frequency": "quarterly",
+      "brand_relationships": []
+    },
+    {
+      "category": "baby_and_kids",
+      "interest_level": 0.2,
+      "preferred_brands": [
+        "FirstCry"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "quick_commerce",
+      "interest_level": 0.6,
+      "preferred_brands": [
+        "Zepto",
+        "Blinkit"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
+    },
+    {
+      "category": "food_delivery",
+      "interest_level": 0.6,
+      "preferred_brands": [
+        "Zomato",
+        "Swiggy"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
+    },
+    {
+      "category": "personal_care",
+      "interest_level": 0.7,
+      "preferred_brands": [
+        "Bath & Body Works",
+        "Forest Essentials"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
     }
   ],
   "backstory": "Isha grew up in Kukatpally, a middle-class neighborhood far from the glamorous Banjara Hills and Jubilee Hills she sees on Instagram. Her parents are both government employees who value education over appearances. But Isha, studying design and tech, has developed a keen eye for aesthetics and branding. She earns ₹8-12K per month from Fiverr gigs and allocates a significant chunk to looking the part she wants to become — the polished tech professional with great taste. She follows Hyderabad fashion pages, knows every sale cycle on Myntra, and has mastered the art of looking expensive on a student budget.",
@@ -111,10 +273,25 @@
   "inner_monologue_style": "Aspirational with a practical undercurrent, mixes English with Telugu expressions. Thinks: 'This looks so premium — wait, ₹1299? That is two days of Fiverr work. But if I wear this to placement prep, I will look like I belong at a product company, not a mass recruiter. Let me check Myntra for coupons... okay 20% off with ICICI card, naanna card use cheyocha? (can I use dad's card?) Hmm maybe not. Let me wait for the sale.' Makes calculated splurges disguised as impulse purchases.",
   "generational_touchstones": {
     "formative_era": "Hyderabad tech boom generation — grew up watching HITEC City transform her city's identity. Engineering college culture where placement package = self-worth. First generation to freelance globally while living in Kukatpally.",
-    "iconic_ads": ["Myntra 'Big Fashion Festival' (her annual wardrobe upgrade event)", "Plum 'Be Good' campaign (affordable self-care that does not make her feel poor)", "Apple 'Shot on iPhone' (the phone she will buy when she gets her first corporate salary)", "Swiggy 'Why is this a Swiggy ad' (Hyderabad biryani culture meets clever marketing)"],
-    "cultural_references": ["JNTU placement season — where what you wear to the interview matters almost as much as your CGPA", "Kukatpally-to-Banjara Hills aspiration gap — 15km distance, 15 lakh income gap", "Hyderabad biryani debates (Paradise vs Bawarchi) — the one argument where brand loyalty is absolute", "Fiverr freelancing community — her global income, local expenses lifestyle"],
+    "iconic_ads": [
+      "Myntra 'Big Fashion Festival' (her annual wardrobe upgrade event)",
+      "Plum 'Be Good' campaign (affordable self-care that does not make her feel poor)",
+      "Apple 'Shot on iPhone' (the phone she will buy when she gets her first corporate salary)",
+      "Swiggy 'Why is this a Swiggy ad' (Hyderabad biryani culture meets clever marketing)"
+    ],
+    "cultural_references": [
+      "JNTU placement season — where what you wear to the interview matters almost as much as your CGPA",
+      "Kukatpally-to-Banjara Hills aspiration gap — 15km distance, 15 lakh income gap",
+      "Hyderabad biryani debates (Paradise vs Bawarchi) — the one argument where brand loyalty is absolute",
+      "Fiverr freelancing community — her global income, local expenses lifestyle"
+    ],
     "nostalgia_intensity": 0.1,
-    "formative_brands": ["Myntra", "Plum", "H&M", "Swiggy"]
+    "formative_brands": [
+      "Myntra",
+      "Plum",
+      "H&M",
+      "Swiggy"
+    ]
   },
   "internal_conflicts": [
     {
@@ -152,6 +329,18 @@
       "influence_domain": "food, health, savings — her mother's practical wisdom is a grounding force she sometimes resents and sometimes needs"
     }
   ],
-  "values_hierarchy": ["aspiration_and_self_improvement", "looking_the_part", "affordable_premium", "career_readiness", "peer_recognition"],
-  "cognitive_biases": ["aspiration_bias", "present_bias", "social_comparison", "halo_effect", "optimism_bias"]
+  "values_hierarchy": [
+    "aspiration_and_self_improvement",
+    "looking_the_part",
+    "affordable_premium",
+    "career_readiness",
+    "peer_recognition"
+  ],
+  "cognitive_biases": [
+    "aspiration_bias",
+    "present_bias",
+    "social_comparison",
+    "halo_effect",
+    "optimism_bias"
+  ]
 }

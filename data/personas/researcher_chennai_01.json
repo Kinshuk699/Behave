@@ -36,17 +36,41 @@
     "content_language_preference": "English"
   },
   "emotional_profile": {
-    "aspiration_drivers": ["scientific accuracy", "being the most informed person in any conversation", "health-conscious decision-making", "protecting his family from harmful ingredients"],
-    "trust_signals": ["peer-reviewed studies", "INCI ingredient lists", "pH values disclosed", "third-party certifications like ECOCERT or COSMOS"],
-    "rejection_triggers": ["marketing buzzwords without data", "claims like '100% natural' with synthetic preservatives listed", "before-after photos without controlled conditions", "influencer reviews with discount codes"],
-    "emotional_hooks": ["scientific rigor", "formulation transparency", "evidence-based claims", "professional expertise behind the product"]
+    "aspiration_drivers": [
+      "scientific accuracy",
+      "being the most informed person in any conversation",
+      "health-conscious decision-making",
+      "protecting his family from harmful ingredients"
+    ],
+    "trust_signals": [
+      "peer-reviewed studies",
+      "INCI ingredient lists",
+      "pH values disclosed",
+      "third-party certifications like ECOCERT or COSMOS"
+    ],
+    "rejection_triggers": [
+      "marketing buzzwords without data",
+      "claims like '100% natural' with synthetic preservatives listed",
+      "before-after photos without controlled conditions",
+      "influencer reviews with discount codes"
+    ],
+    "emotional_hooks": [
+      "scientific rigor",
+      "formulation transparency",
+      "evidence-based claims",
+      "professional expertise behind the product"
+    ]
   },
   "category_affinities": [
     {
       "category": "skincare",
       "interest_level": 0.85,
       "monthly_spend_inr": 1500,
-      "preferred_brands": ["Minimalist", "CeraVe", "The Ordinary"],
+      "preferred_brands": [
+        "Minimalist",
+        "CeraVe",
+        "The Ordinary"
+      ],
       "purchase_frequency": "monthly",
       "brand_relationships": [
         {
@@ -73,7 +97,10 @@
       "category": "grocery_and_household",
       "interest_level": 0.6,
       "monthly_spend_inr": 5000,
-      "preferred_brands": ["Organic Tattva", "24 Mantra"],
+      "preferred_brands": [
+        "Organic Tattva",
+        "24 Mantra"
+      ],
       "purchase_frequency": "weekly",
       "brand_relationships": [
         {
@@ -88,8 +115,162 @@
       "category": "electronics",
       "interest_level": 0.65,
       "monthly_spend_inr": null,
-      "preferred_brands": ["Sony", "Sennheiser"],
+      "preferred_brands": [
+        "Sony",
+        "Sennheiser"
+      ],
       "purchase_frequency": "rarely"
+    },
+    {
+      "category": "automobile",
+      "interest_level": 0.6,
+      "preferred_brands": [
+        "Toyota",
+        "Honda",
+        "Hyundai"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "two_wheeler",
+      "interest_level": 0.4,
+      "preferred_brands": [
+        "Ather",
+        "Bajaj"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "home_services",
+      "interest_level": 0.4,
+      "preferred_brands": [
+        "Urban Company"
+      ],
+      "purchase_frequency": "quarterly",
+      "brand_relationships": []
+    },
+    {
+      "category": "fintech",
+      "interest_level": 0.7,
+      "preferred_brands": [
+        "Zerodha",
+        "Groww",
+        "CRED"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
+    },
+    {
+      "category": "edtech",
+      "interest_level": 0.7,
+      "preferred_brands": [
+        "Coursera",
+        "NPTEL",
+        "MIT OCW"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
+    },
+    {
+      "category": "health_and_wellness",
+      "interest_level": 0.6,
+      "preferred_brands": [
+        "1mg",
+        "Pharmeasy"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
+    },
+    {
+      "category": "travel",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "MakeMyTrip",
+        "Booking.com"
+      ],
+      "purchase_frequency": "quarterly",
+      "brand_relationships": []
+    },
+    {
+      "category": "telecom",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "Airtel",
+        "Jio"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
+    },
+    {
+      "category": "jewelry_and_luxury",
+      "interest_level": 0.3,
+      "preferred_brands": [
+        "Tanishq"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "baby_and_kids",
+      "interest_level": 0.3,
+      "preferred_brands": [
+        "FirstCry"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "quick_commerce",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "Blinkit",
+        "Zepto"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
+    },
+    {
+      "category": "food_delivery",
+      "interest_level": 0.4,
+      "preferred_brands": [
+        "Zomato",
+        "Swiggy"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
+    },
+    {
+      "category": "personal_care",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "Cetaphil",
+        "The Ordinary",
+        "CeraVe"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
+    },
+    {
+      "category": "fashion",
+      "interest_level": 0.4,
+      "preferred_brands": [
+        "Uniqlo",
+        "Decathlon"
+      ],
+      "purchase_frequency": "quarterly",
+      "brand_relationships": []
+    },
+    {
+      "category": "food_and_beverage",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "Amul",
+        "organic brands"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
     }
   ],
   "backstory": "Sanjay's chemistry background means he literally reads ingredient lists the way most people read menus. He once emailed a D2C skincare brand asking for their stability testing data and was disappointed (but not surprised) when they did not reply. He maintains a private spreadsheet comparing skincare products by active ingredient concentration, pH, and price-per-ml. His wife finds this both endearing and exhausting. He trusts science over stories and formulations over brand names.",
@@ -97,10 +278,24 @@
   "inner_monologue_style": "Methodical and precise, with occasional dry humor. Thinks: 'They say dermatologist-tested — tested for what? Irritancy? Efficacy? By how many dermatologists? Was it a paid panel?' Approaches ads like peer review. In Tamil with close friends, but thinks about products in English because that is the language of the research he reads.",
   "generational_touchstones": {
     "formative_era": "Early internet in India — grew up during the dial-up era, IIT culture shaped his worldview, liberalization meant his parents' generation adjusted to MNCs while his embraced them",
-    "iconic_ads": ["Fevicol ads (respects the creativity even though it is not his category)", "Surf Excel 'Daag Achhe Hain' (good emotional hook but the product is just another surfactant)", "Pond's Cold Cream (his mother used it — he later learned the formulation was mostly mineral oil and fragrance)"],
-    "cultural_references": ["IIT entrance culture in Tamil Nadu — the pressure to crack JEE defined his teens", "Chennai's pharmaceutical corridor — his career exists because of India's generics revolution", "R.K. Narayan and Malgudi Days — the simple honesty of that era appeals to him", "Anna University vs IIT rivalry in his friend circle"],
+    "iconic_ads": [
+      "Fevicol ads (respects the creativity even though it is not his category)",
+      "Surf Excel 'Daag Achhe Hain' (good emotional hook but the product is just another surfactant)",
+      "Pond's Cold Cream (his mother used it — he later learned the formulation was mostly mineral oil and fragrance)"
+    ],
+    "cultural_references": [
+      "IIT entrance culture in Tamil Nadu — the pressure to crack JEE defined his teens",
+      "Chennai's pharmaceutical corridor — his career exists because of India's generics revolution",
+      "R.K. Narayan and Malgudi Days — the simple honesty of that era appeals to him",
+      "Anna University vs IIT rivalry in his friend circle"
+    ],
     "nostalgia_intensity": 0.3,
-    "formative_brands": ["Pond's", "Colgate", "Hamam soap (grandmother's choice)", "Cavin Kare Chik shampoo"]
+    "formative_brands": [
+      "Pond's",
+      "Colgate",
+      "Hamam soap (grandmother's choice)",
+      "Cavin Kare Chik shampoo"
+    ]
   },
   "internal_conflicts": [
     {
@@ -138,6 +333,18 @@
       "influence_domain": "pharma and formulation — inside knowledge on which brands invest in real R&D vs just marketing"
     }
   ],
-  "values_hierarchy": ["scientific_accuracy", "evidence_over_claims", "formulation_transparency", "health_and_safety", "supporting_quality_indian_brands"],
-  "cognitive_biases": ["information_bias", "confirmation_bias", "authority_bias", "complexity_bias", "ikea_effect"]
+  "values_hierarchy": [
+    "scientific_accuracy",
+    "evidence_over_claims",
+    "formulation_transparency",
+    "health_and_safety",
+    "supporting_quality_indian_brands"
+  ],
+  "cognitive_biases": [
+    "information_bias",
+    "confirmation_bias",
+    "authority_bias",
+    "complexity_bias",
+    "ikea_effect"
+  ]
 }

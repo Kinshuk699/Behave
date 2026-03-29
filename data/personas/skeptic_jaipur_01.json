@@ -36,17 +36,40 @@
     "content_language_preference": "Hindi"
   },
   "emotional_profile": {
-    "aspiration_drivers": ["protecting consumers from fraud", "being seen as the wise and informed person in his community", "teaching his son to think critically about marketing"],
-    "trust_signals": ["government certifications (FSSAI, BIS, ISI)", "products he has seen in the market for 10+ years", "transparent manufacturing details", "word of mouth from trusted community members"],
-    "rejection_triggers": ["celebrity endorsements (especially cricketers selling paan masala)", "English-heavy marketing targeting Tier 1 audiences", "any claim without verifiable evidence", "D2C brands with no physical store presence"],
-    "emotional_hooks": ["accountability and transparency", "protecting his family", "value for honest money", "brands that respect the consumer's intelligence"]
+    "aspiration_drivers": [
+      "protecting consumers from fraud",
+      "being seen as the wise and informed person in his community",
+      "teaching his son to think critically about marketing"
+    ],
+    "trust_signals": [
+      "government certifications (FSSAI, BIS, ISI)",
+      "products he has seen in the market for 10+ years",
+      "transparent manufacturing details",
+      "word of mouth from trusted community members"
+    ],
+    "rejection_triggers": [
+      "celebrity endorsements (especially cricketers selling paan masala)",
+      "English-heavy marketing targeting Tier 1 audiences",
+      "any claim without verifiable evidence",
+      "D2C brands with no physical store presence"
+    ],
+    "emotional_hooks": [
+      "accountability and transparency",
+      "protecting his family",
+      "value for honest money",
+      "brands that respect the consumer's intelligence"
+    ]
   },
   "category_affinities": [
     {
       "category": "grocery_and_household",
       "interest_level": 0.9,
       "monthly_spend_inr": 6000,
-      "preferred_brands": ["Tata", "MDH", "established brands with FSSAI"],
+      "preferred_brands": [
+        "Tata",
+        "MDH",
+        "established brands with FSSAI"
+      ],
       "purchase_frequency": "weekly",
       "brand_relationships": [
         {
@@ -73,7 +96,10 @@
       "category": "skincare",
       "interest_level": 0.3,
       "monthly_spend_inr": 200,
-      "preferred_brands": ["Himalaya", "Vicco"],
+      "preferred_brands": [
+        "Himalaya",
+        "Vicco"
+      ],
       "purchase_frequency": "rarely",
       "brand_relationships": [
         {
@@ -88,7 +114,10 @@
       "category": "electronics",
       "interest_level": 0.5,
       "monthly_spend_inr": null,
-      "preferred_brands": ["LG", "Tata products"],
+      "preferred_brands": [
+        "LG",
+        "Tata products"
+      ],
       "purchase_frequency": "rarely",
       "brand_relationships": [
         {
@@ -98,6 +127,151 @@
           "intensity": 0.5
         }
       ]
+    },
+    {
+      "category": "automobile",
+      "interest_level": 0.4,
+      "preferred_brands": [
+        "Maruti",
+        "Tata"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "two_wheeler",
+      "interest_level": 0.3,
+      "preferred_brands": [
+        "Honda",
+        "TVS"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "home_services",
+      "interest_level": 0.3,
+      "preferred_brands": [
+        "Word of mouth only"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "fintech",
+      "interest_level": 0.4,
+      "preferred_brands": [
+        "Google Pay"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
+    },
+    {
+      "category": "edtech",
+      "interest_level": 0.2,
+      "preferred_brands": [
+        "free resources only"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "health_and_wellness",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "Himalaya",
+        "generic pharmacy"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
+    },
+    {
+      "category": "travel",
+      "interest_level": 0.3,
+      "preferred_brands": [
+        "IRCTC"
+      ],
+      "purchase_frequency": "quarterly",
+      "brand_relationships": []
+    },
+    {
+      "category": "telecom",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "Airtel",
+        "Jio"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
+    },
+    {
+      "category": "jewelry_and_luxury",
+      "interest_level": 0.2,
+      "preferred_brands": [
+        "family jeweller"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "baby_and_kids",
+      "interest_level": 0.3,
+      "preferred_brands": [
+        "Johnson & Johnson"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "quick_commerce",
+      "interest_level": 0.4,
+      "preferred_brands": [
+        "BigBasket"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
+    },
+    {
+      "category": "food_delivery",
+      "interest_level": 0.3,
+      "preferred_brands": [
+        "Swiggy",
+        "Zomato"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "personal_care",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "Medimix",
+        "Pears",
+        "Hamam"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
+    },
+    {
+      "category": "fashion",
+      "interest_level": 0.3,
+      "preferred_brands": [
+        "local brands",
+        "Westside"
+      ],
+      "purchase_frequency": "quarterly",
+      "brand_relationships": []
+    },
+    {
+      "category": "food_and_beverage",
+      "interest_level": 0.6,
+      "preferred_brands": [
+        "Amul",
+        "Tata",
+        "local brands"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
     }
   ],
   "backstory": "Deepak has filed 23 RTI applications in the last five years — about everything from road construction quality to school textbook pricing. He approaches consumer products with the same scrutiny. He once returned a 'herbal' shampoo to the shopkeeper after checking that it contained sodium lauryl sulfate. He shares consumer awareness videos in his WhatsApp groups and his neighbors come to him before making big purchases. He is not cynical — he genuinely believes companies should be honest and gets personally offended when they are not.",
@@ -105,10 +279,25 @@
   "inner_monologue_style": "Investigative and indignant, entirely in Hindi. Thinks: 'Yeh likha hai dermatologist-tested — kaunse dermatologist? Naam batao. Certificate dikhao. Aur yeh jo MRP 599 likha hai, kal tak toh 399 mein bik raha tha Amazon pe. Log samajhte nahi hain ki yeh sab scam hai.' (It says dermatologist-tested — which dermatologist? Show the name. Show the certificate. And this MRP of 599, till yesterday it was selling for 399 on Amazon. People do not understand this is all a scam.) Shares findings on WhatsApp with a sense of civic duty.",
   "generational_touchstones": {
     "formative_era": "Late Doordarshan era — grew up when ads were fewer, longer, and you actually remembered them; the transition to satellite TV felt like an invasion of lies",
-    "iconic_ads": ["Nirma washing powder jingle (catchy but he now knows it was misleading on whitening claims)", "Doordarshan public service announcements (the gold standard — government informing, not selling)", "Vicco Turmeric ad (at least turmeric is real, unlike half of what is sold today)"],
-    "cultural_references": ["Anna Hazare anti-corruption movement 2011 — attended the Jaipur rally, defining moment", "RTI Act 2005 — changed his life, gave him a weapon against opacity", "Doordarshan news when news meant facts not opinions", "Emergency-era parents who taught him to question authority"],
+    "iconic_ads": [
+      "Nirma washing powder jingle (catchy but he now knows it was misleading on whitening claims)",
+      "Doordarshan public service announcements (the gold standard — government informing, not selling)",
+      "Vicco Turmeric ad (at least turmeric is real, unlike half of what is sold today)"
+    ],
+    "cultural_references": [
+      "Anna Hazare anti-corruption movement 2011 — attended the Jaipur rally, defining moment",
+      "RTI Act 2005 — changed his life, gave him a weapon against opacity",
+      "Doordarshan news when news meant facts not opinions",
+      "Emergency-era parents who taught him to question authority"
+    ],
     "nostalgia_intensity": 0.4,
-    "formative_brands": ["Nirma", "Vicco", "Lifebuoy", "Tata", "MDH"]
+    "formative_brands": [
+      "Nirma",
+      "Vicco",
+      "Lifebuoy",
+      "Tata",
+      "MDH"
+    ]
   },
   "internal_conflicts": [
     {
@@ -146,6 +335,19 @@
       "influence_domain": "grocery — Om Prakash has been selling to Deepak for 15 years. Deepak trusts his honesty about product quality but still checks labels himself."
     }
   ],
-  "values_hierarchy": ["truth_and_transparency", "family_protection", "value_for_honest_money", "consumer_rights", "self_reliance", "evidence_over_opinion"],
-  "cognitive_biases": ["confirmation_bias", "zero_risk_bias", "negativity_bias", "skepticism_heuristic", "anchoring"]
+  "values_hierarchy": [
+    "truth_and_transparency",
+    "family_protection",
+    "value_for_honest_money",
+    "consumer_rights",
+    "self_reliance",
+    "evidence_over_opinion"
+  ],
+  "cognitive_biases": [
+    "confirmation_bias",
+    "zero_risk_bias",
+    "negativity_bias",
+    "skepticism_heuristic",
+    "anchoring"
+  ]
 }

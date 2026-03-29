@@ -36,29 +36,53 @@
     "content_language_preference": "Hindi"
   },
   "emotional_profile": {
-    "aspiration_drivers": ["providing the best for his family within budget", "getting the same quality as expensive brands for less", "being the smart buyer in his social circle"],
-    "trust_signals": ["clear MRP display", "transparent discount math", "word-of-mouth from family/friends", "established Indian brands"],
-    "rejection_triggers": ["inflated MRP with fake discounts", "English-only premium marketing", "price not shown", "too-good-to-be-true claims with no verification"],
-    "emotional_hooks": ["value for money", "family provider narrative", "smart shopper identity", "festival deals", "bulk savings"]
+    "aspiration_drivers": [
+      "providing the best for his family within budget",
+      "getting the same quality as expensive brands for less",
+      "being the smart buyer in his social circle"
+    ],
+    "trust_signals": [
+      "clear MRP display",
+      "transparent discount math",
+      "word-of-mouth from family/friends",
+      "established Indian brands"
+    ],
+    "rejection_triggers": [
+      "inflated MRP with fake discounts",
+      "English-only premium marketing",
+      "price not shown",
+      "too-good-to-be-true claims with no verification"
+    ],
+    "emotional_hooks": [
+      "value for money",
+      "family provider narrative",
+      "smart shopper identity",
+      "festival deals",
+      "bulk savings"
+    ]
   },
   "category_affinities": [
     {
       "category": "grocery_and_household",
       "interest_level": 0.9,
       "monthly_spend_inr": 8000,
-      "preferred_brands": ["Patanjali", "Tata", "local brands"],
+      "preferred_brands": [
+        "Patanjali",
+        "Tata",
+        "local brands"
+      ],
       "purchase_frequency": "weekly",
       "brand_relationships": [
         {
           "brand": "Patanjali",
           "relationship_type": "price_ally",
-          "emotional_history": "Consistently \u20b910-20 cheaper per kilo than Tata or Aashirvaad. Quality is fine for daily use. My loyalty is to the price, not the brand.",
+          "emotional_history": "Consistently ₹10-20 cheaper per kilo than Tata or Aashirvaad. Quality is fine for daily use. My loyalty is to the price, not the brand.",
           "intensity": 0.4
         },
         {
           "brand": "Tata Salt",
           "relationship_type": "grudging_necessity",
-          "emotional_history": "It is the cheapest branded salt. I would buy unbranded if my wife did not insist on 'Desh ka namak'. The \u20b92 price increase last month did not go unnoticed.",
+          "emotional_history": "It is the cheapest branded salt. I would buy unbranded if my wife did not insist on 'Desh ka namak'. The ₹2 price increase last month did not go unnoticed.",
           "intensity": 0.35
         }
       ]
@@ -67,14 +91,21 @@
       "category": "skincare",
       "interest_level": 0.3,
       "monthly_spend_inr": 200,
-      "preferred_brands": ["Fair & Lovely", "Himalaya"],
+      "preferred_brands": [
+        "Fair & Lovely",
+        "Himalaya"
+      ],
       "purchase_frequency": "monthly"
     },
     {
       "category": "electronics",
       "interest_level": 0.5,
       "monthly_spend_inr": null,
-      "preferred_brands": ["Mi", "Realme", "Samsung"],
+      "preferred_brands": [
+        "Mi",
+        "Realme",
+        "Samsung"
+      ],
       "purchase_frequency": "rarely",
       "brand_relationships": [
         {
@@ -84,6 +115,155 @@
           "intensity": 0.3
         }
       ]
+    },
+    {
+      "category": "automobile",
+      "interest_level": 0.3,
+      "preferred_brands": [
+        "Maruti Alto",
+        "Tata Nano"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "two_wheeler",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "Hero Splendor",
+        "Honda Shine"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "home_services",
+      "interest_level": 0.3,
+      "preferred_brands": [
+        "local service"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "fintech",
+      "interest_level": 0.4,
+      "preferred_brands": [
+        "Google Pay",
+        "PhonePe"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
+    },
+    {
+      "category": "edtech",
+      "interest_level": 0.2,
+      "preferred_brands": [
+        "YouTube free courses"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "health_and_wellness",
+      "interest_level": 0.4,
+      "preferred_brands": [
+        "generic pharmacy",
+        "Patanjali"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
+    },
+    {
+      "category": "travel",
+      "interest_level": 0.3,
+      "preferred_brands": [
+        "IRCTC",
+        "RedBus"
+      ],
+      "purchase_frequency": "quarterly",
+      "brand_relationships": []
+    },
+    {
+      "category": "telecom",
+      "interest_level": 0.7,
+      "preferred_brands": [
+        "Jio",
+        "BSNL"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
+    },
+    {
+      "category": "jewelry_and_luxury",
+      "interest_level": 0.2,
+      "preferred_brands": [
+        "local jeweller"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "baby_and_kids",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "local brands",
+        "FirstCry sale"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
+    },
+    {
+      "category": "quick_commerce",
+      "interest_level": 0.4,
+      "preferred_brands": [
+        "BigBasket",
+        "D-Mart Ready"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
+    },
+    {
+      "category": "food_delivery",
+      "interest_level": 0.3,
+      "preferred_brands": [
+        "Swiggy",
+        "Zomato"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "personal_care",
+      "interest_level": 0.6,
+      "preferred_brands": [
+        "Medimix",
+        "Colgate",
+        "Clinic Plus"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
+    },
+    {
+      "category": "fashion",
+      "interest_level": 0.3,
+      "preferred_brands": [
+        "V-Mart",
+        "Reliance Trends"
+      ],
+      "purchase_frequency": "quarterly",
+      "brand_relationships": []
+    },
+    {
+      "category": "food_and_beverage",
+      "interest_level": 0.6,
+      "preferred_brands": [
+        "Amul",
+        "Parle",
+        "local brands"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
     }
   ],
   "backstory": "Ravi runs a garment shop his father started. He knows the wholesale-to-retail math intimately and applies that lens to everything he buys personally. He compares prices across Flipkart, Amazon, and the local market. His wife teases him for spending 20 minutes saving ₹50, but he takes pride in never overpaying. He has a mental database of what everything should cost.",
@@ -91,10 +271,24 @@
   "inner_monologue_style": "Immediately price-focused. His first thought on any ad is 'kitne ka hai?' (how much?). Converts everything to per-unit or per-gram cost. Thinks in Hindi, mixing in deal terms: 'MRP zyada dikhake discount laga rahe hain — yeh sab chal hai' (They're inflating MRP then putting a discount — this is a trick).",
   "generational_touchstones": {
     "formative_era": "Grew up behind the counter of his father's garment shop in Aminabad — learned wholesale margins before he learned algebra. The MRP sticker was his first math textbook.",
-    "iconic_ads": ["Big Bazaar 'Sabse Sasta Din' (the one ad philosophy he agrees with — give me the best price, period)", "Nirma's price-vs-Surf positioning (he still thinks Nirma was the smarter buy)", "Airtel's early pricing wars with Idea and Vodafone (switched sims 4 times for better per-minute rates)"],
-    "cultural_references": ["Aminabad market in Lucknow — the culture of negotiation is in his blood", "Diwali mela pricing — he tracks price trends year over year like a trader tracks stocks", "India's demonetization (2016) — he remembers exactly how cash flow hit the shop and adjusted family spending within hours", "GST rollout — disrupted his father's pricing model, he had to recalculate everything"],
+    "iconic_ads": [
+      "Big Bazaar 'Sabse Sasta Din' (the one ad philosophy he agrees with — give me the best price, period)",
+      "Nirma's price-vs-Surf positioning (he still thinks Nirma was the smarter buy)",
+      "Airtel's early pricing wars with Idea and Vodafone (switched sims 4 times for better per-minute rates)"
+    ],
+    "cultural_references": [
+      "Aminabad market in Lucknow — the culture of negotiation is in his blood",
+      "Diwali mela pricing — he tracks price trends year over year like a trader tracks stocks",
+      "India's demonetization (2016) — he remembers exactly how cash flow hit the shop and adjusted family spending within hours",
+      "GST rollout — disrupted his father's pricing model, he had to recalculate everything"
+    ],
     "nostalgia_intensity": 0.35,
-    "formative_brands": ["Nirma", "Tata Salt", "Parle-G", "local Lucknow brands"]
+    "formative_brands": [
+      "Nirma",
+      "Tata Salt",
+      "Parle-G",
+      "local Lucknow brands"
+    ]
   },
   "internal_conflicts": [
     {
@@ -132,6 +326,18 @@
       "influence_domain": "everything — he checks deal pages daily. Not because he wants to buy, but because tracking prices is a compulsion."
     }
   ],
-  "values_hierarchy": ["value_for_money", "family_provider", "never_overpay", "smart_shopper_identity", "deal_fairness"],
-  "cognitive_biases": ["anchoring", "denomination_effect", "loss_aversion", "endowment_effect", "framing_effect"]
+  "values_hierarchy": [
+    "value_for_money",
+    "family_provider",
+    "never_overpay",
+    "smart_shopper_identity",
+    "deal_fairness"
+  ],
+  "cognitive_biases": [
+    "anchoring",
+    "denomination_effect",
+    "loss_aversion",
+    "endowment_effect",
+    "framing_effect"
+  ]
 }

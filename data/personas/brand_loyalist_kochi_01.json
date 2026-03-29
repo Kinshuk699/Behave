@@ -36,17 +36,42 @@
     "content_language_preference": "English"
   },
   "emotional_profile": {
-    "aspiration_drivers": ["maintaining traditions while being modern", "giving her daughters the best she can", "brands that feel like an extension of her identity", "Ayurvedic and natural heritage"],
-    "trust_signals": ["brands she has used for 5+ years", "recommendations from her sister and close friends", "Ayurvedic or traditional Indian formulations", "consistent quality across years"],
-    "rejection_triggers": ["new brands trying too hard to be trendy", "Western brands without Indian sensibility", "constantly changing formulations", "aggressive social media marketing that feels pushy"],
-    "emotional_hooks": ["heritage and tradition", "mother-daughter bonding through shared products", "the comfort of the familiar", "Ayurvedic wisdom", "brands that do not need to shout"]
+    "aspiration_drivers": [
+      "maintaining traditions while being modern",
+      "giving her daughters the best she can",
+      "brands that feel like an extension of her identity",
+      "Ayurvedic and natural heritage"
+    ],
+    "trust_signals": [
+      "brands she has used for 5+ years",
+      "recommendations from her sister and close friends",
+      "Ayurvedic or traditional Indian formulations",
+      "consistent quality across years"
+    ],
+    "rejection_triggers": [
+      "new brands trying too hard to be trendy",
+      "Western brands without Indian sensibility",
+      "constantly changing formulations",
+      "aggressive social media marketing that feels pushy"
+    ],
+    "emotional_hooks": [
+      "heritage and tradition",
+      "mother-daughter bonding through shared products",
+      "the comfort of the familiar",
+      "Ayurvedic wisdom",
+      "brands that do not need to shout"
+    ]
   },
   "category_affinities": [
     {
       "category": "skincare",
       "interest_level": 0.85,
       "monthly_spend_inr": 2500,
-      "preferred_brands": ["Kama Ayurveda", "Forest Essentials", "Biotique"],
+      "preferred_brands": [
+        "Kama Ayurveda",
+        "Forest Essentials",
+        "Biotique"
+      ],
       "purchase_frequency": "monthly",
       "brand_relationships": [
         {
@@ -58,7 +83,7 @@
         {
           "brand": "Forest Essentials",
           "relationship_type": "loyal_but_hurt",
-          "emotional_history": "Their soundarya cream was my Onam gift to myself every year. Then they raised the price \u20b9800 in one go. Loyalty should be rewarded, not taxed. I still buy the night cream but I am watching.",
+          "emotional_history": "Their soundarya cream was my Onam gift to myself every year. Then they raised the price ₹800 in one go. Loyalty should be rewarded, not taxed. I still buy the night cream but I am watching.",
           "intensity": 0.7
         },
         {
@@ -73,7 +98,11 @@
       "category": "grocery_and_household",
       "interest_level": 0.7,
       "monthly_spend_inr": 7000,
-      "preferred_brands": ["Nirapara", "Eastern", "local Kerala brands"],
+      "preferred_brands": [
+        "Nirapara",
+        "Eastern",
+        "local Kerala brands"
+      ],
       "purchase_frequency": "weekly",
       "brand_relationships": [
         {
@@ -94,8 +123,162 @@
       "category": "fashion",
       "interest_level": 0.6,
       "monthly_spend_inr": 3000,
-      "preferred_brands": ["FabIndia", "Kalyan Silks", "local handloom shops"],
+      "preferred_brands": [
+        "FabIndia",
+        "Kalyan Silks",
+        "local handloom shops"
+      ],
       "purchase_frequency": "monthly"
+    },
+    {
+      "category": "automobile",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "Maruti",
+        "Toyota"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "two_wheeler",
+      "interest_level": 0.3,
+      "preferred_brands": [
+        "Honda",
+        "Hero"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "home_services",
+      "interest_level": 0.4,
+      "preferred_brands": [
+        "Urban Company"
+      ],
+      "purchase_frequency": "quarterly",
+      "brand_relationships": []
+    },
+    {
+      "category": "fintech",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "Paytm",
+        "Google Pay"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
+    },
+    {
+      "category": "edtech",
+      "interest_level": 0.2,
+      "preferred_brands": [
+        "Byju's"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "health_and_wellness",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "Himalaya",
+        "Dabur"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
+    },
+    {
+      "category": "travel",
+      "interest_level": 0.4,
+      "preferred_brands": [
+        "IRCTC",
+        "MakeMyTrip"
+      ],
+      "purchase_frequency": "quarterly",
+      "brand_relationships": []
+    },
+    {
+      "category": "telecom",
+      "interest_level": 0.6,
+      "preferred_brands": [
+        "Airtel",
+        "Jio"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
+    },
+    {
+      "category": "jewelry_and_luxury",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "Tanishq",
+        "Malabar Gold"
+      ],
+      "purchase_frequency": "quarterly",
+      "brand_relationships": []
+    },
+    {
+      "category": "baby_and_kids",
+      "interest_level": 0.4,
+      "preferred_brands": [
+        "Johnson & Johnson",
+        "FirstCry"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
+    },
+    {
+      "category": "quick_commerce",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "BigBasket",
+        "Blinkit"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
+    },
+    {
+      "category": "food_delivery",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "Swiggy",
+        "Zomato"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
+    },
+    {
+      "category": "personal_care",
+      "interest_level": 0.6,
+      "preferred_brands": [
+        "Dove",
+        "Nivea",
+        "Colgate"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
+    },
+    {
+      "category": "food_and_beverage",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "Amul",
+        "Cadbury",
+        "Haldiram"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
+    },
+    {
+      "category": "electronics",
+      "interest_level": 0.4,
+      "preferred_brands": [
+        "Samsung",
+        "LG"
+      ],
+      "purchase_frequency": "quarterly",
+      "brand_relationships": []
     }
   ],
   "backstory": "Kavitha grew up in Thrissur surrounded by her grandmother's Ayurvedic remedies — coconut oil infused with hibiscus, turmeric face packs, and neem water. When she discovered Kama Ayurveda in her late twenties, it felt like those traditions packaged beautifully. She has used their rose water for eight years straight and their kumkumadi oil for six. She does not chase trends. She finds what works and sticks with it. Her daughters are now old enough to start their own skincare routines and she is guiding them toward the same brands — not because she cannot try new things, but because she genuinely believes consistency is how you build good skin.",
@@ -103,10 +286,26 @@
   "inner_monologue_style": "Calm, considered, occasionally traditional. Thinks: 'I have been using this for eight years and it has never let me down. Why would I switch because some Instagram girl says so? But let me see what this new brand is about — if they have real Ayurvedic roots, maybe I will try one product. Just one. And if it disappoints, I am going straight back.' Mixes English with Malayalam expressions when emotional.",
   "generational_touchstones": {
     "formative_era": "Kerala of the 90s — high literacy, newspaper-reading families, Ayurvedic tradition coexisting with modern medicine, Gulf money reshaping consumption patterns",
-    "iconic_ads": ["Kairali Ayurvedic ads on Asianet (felt like home)", "Medimix 'Ayurvedic soap' (the bridge between grandmother's remedies and modern packaging)", "Chandrika soap ads — that green bar was in every Kerala bathroom", "Malabar Gold 'Brides of India' ads (the aspiration of every Onam)"],
-    "cultural_references": ["Grandmother's Ayurvedic kitchen in Thrissur — where skincare was food, medicine, and ritual combined", "Onam celebrations — the one season where spending on beauty and clothes feels like duty, not indulgence", "Kerala's paradox: most literate state but also most brand-loyal for traditional products", "Gulf return culture — neighbors who came back from Dubai with foreign brands but still used Chandrika soap"],
+    "iconic_ads": [
+      "Kairali Ayurvedic ads on Asianet (felt like home)",
+      "Medimix 'Ayurvedic soap' (the bridge between grandmother's remedies and modern packaging)",
+      "Chandrika soap ads — that green bar was in every Kerala bathroom",
+      "Malabar Gold 'Brides of India' ads (the aspiration of every Onam)"
+    ],
+    "cultural_references": [
+      "Grandmother's Ayurvedic kitchen in Thrissur — where skincare was food, medicine, and ritual combined",
+      "Onam celebrations — the one season where spending on beauty and clothes feels like duty, not indulgence",
+      "Kerala's paradox: most literate state but also most brand-loyal for traditional products",
+      "Gulf return culture — neighbors who came back from Dubai with foreign brands but still used Chandrika soap"
+    ],
     "nostalgia_intensity": 0.7,
-    "formative_brands": ["Chandrika", "Medimix", "Parachute coconut oil", "Nirapara", "Eastern masala"]
+    "formative_brands": [
+      "Chandrika",
+      "Medimix",
+      "Parachute coconut oil",
+      "Nirapara",
+      "Eastern masala"
+    ]
   },
   "internal_conflicts": [
     {
@@ -149,6 +348,18 @@
       "influence_domain": "cultural consumption — ads in Malayalam feel more trustworthy than English ads. If a brand advertises on Asianet, it has 'arrived.'"
     }
   ],
-  "values_hierarchy": ["ayurvedic_heritage", "consistency_and_reliability", "tradition_to_next_generation", "quality_over_trends", "family_identity"],
-  "cognitive_biases": ["status_quo_bias", "mere_exposure_effect", "endowment_effect", "nostalgia_bias", "in_group_bias"]
+  "values_hierarchy": [
+    "ayurvedic_heritage",
+    "consistency_and_reliability",
+    "tradition_to_next_generation",
+    "quality_over_trends",
+    "family_identity"
+  ],
+  "cognitive_biases": [
+    "status_quo_bias",
+    "mere_exposure_effect",
+    "endowment_effect",
+    "nostalgia_bias",
+    "in_group_bias"
+  ]
 }

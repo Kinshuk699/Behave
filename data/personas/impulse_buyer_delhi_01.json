@@ -36,17 +36,43 @@
     "content_language_preference": "Hinglish"
   },
   "emotional_profile": {
-    "aspiration_drivers": ["having the latest tech and gadgets", "being the first in his friend group with new gear", "the dopamine hit of a delivery notification", "building the ultimate gaming/WFH setup"],
-    "trust_signals": ["Amazon ratings above 4.0", "tech YouTubers he follows", "friends who already bought it", "products with fast delivery"],
-    "rejection_triggers": ["anything that takes more than 3 days to deliver", "complicated setup or installation", "products that look boring or generic", "having to read long descriptions"],
-    "emotional_hooks": ["instant gratification", "unboxing excitement", "flash sales and lightning deals", "the newest model just launched", "upgrade culture"]
+    "aspiration_drivers": [
+      "having the latest tech and gadgets",
+      "being the first in his friend group with new gear",
+      "the dopamine hit of a delivery notification",
+      "building the ultimate gaming/WFH setup"
+    ],
+    "trust_signals": [
+      "Amazon ratings above 4.0",
+      "tech YouTubers he follows",
+      "friends who already bought it",
+      "products with fast delivery"
+    ],
+    "rejection_triggers": [
+      "anything that takes more than 3 days to deliver",
+      "complicated setup or installation",
+      "products that look boring or generic",
+      "having to read long descriptions"
+    ],
+    "emotional_hooks": [
+      "instant gratification",
+      "unboxing excitement",
+      "flash sales and lightning deals",
+      "the newest model just launched",
+      "upgrade culture"
+    ]
   },
   "category_affinities": [
     {
       "category": "electronics",
       "interest_level": 0.95,
       "monthly_spend_inr": 5000,
-      "preferred_brands": ["boAt", "Noise", "Razer", "Apple — when bonus comes"],
+      "preferred_brands": [
+        "boAt",
+        "Noise",
+        "Razer",
+        "Apple — when bonus comes"
+      ],
       "purchase_frequency": "biweekly",
       "brand_relationships": [
         {
@@ -73,7 +99,11 @@
       "category": "fashion",
       "interest_level": 0.6,
       "monthly_spend_inr": 2000,
-      "preferred_brands": ["Bewakoof", "Souled Store", "Nike"],
+      "preferred_brands": [
+        "Bewakoof",
+        "Souled Store",
+        "Nike"
+      ],
       "purchase_frequency": "monthly",
       "brand_relationships": [
         {
@@ -94,7 +124,11 @@
       "category": "food_and_beverage",
       "interest_level": 0.8,
       "monthly_spend_inr": 6000,
-      "preferred_brands": ["Zomato", "Swiggy", "whatever delivers fastest"],
+      "preferred_brands": [
+        "Zomato",
+        "Swiggy",
+        "whatever delivers fastest"
+      ],
       "purchase_frequency": "daily",
       "brand_relationships": [
         {
@@ -110,6 +144,146 @@
           "intensity": 0.65
         }
       ]
+    },
+    {
+      "category": "automobile",
+      "interest_level": 0.4,
+      "preferred_brands": [
+        "Tata Punch",
+        "Hyundai i20"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "two_wheeler",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "Royal Enfield",
+        "Ather"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "home_services",
+      "interest_level": 0.3,
+      "preferred_brands": [
+        "Urban Company"
+      ],
+      "purchase_frequency": "quarterly",
+      "brand_relationships": []
+    },
+    {
+      "category": "fintech",
+      "interest_level": 0.6,
+      "preferred_brands": [
+        "CRED",
+        "Slice",
+        "PhonePe"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
+    },
+    {
+      "category": "edtech",
+      "interest_level": 0.2,
+      "preferred_brands": [
+        "Unacademy"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "health_and_wellness",
+      "interest_level": 0.4,
+      "preferred_brands": [
+        "HealthifyMe",
+        "Cult.fit"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
+    },
+    {
+      "category": "travel",
+      "interest_level": 0.6,
+      "preferred_brands": [
+        "Cleartrip",
+        "ixigo",
+        "Yatra"
+      ],
+      "purchase_frequency": "quarterly",
+      "brand_relationships": []
+    },
+    {
+      "category": "telecom",
+      "interest_level": 0.3,
+      "preferred_brands": [
+        "Jio"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
+    },
+    {
+      "category": "jewelry_and_luxury",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "CaratLane",
+        "BlueStone"
+      ],
+      "purchase_frequency": "quarterly",
+      "brand_relationships": []
+    },
+    {
+      "category": "baby_and_kids",
+      "interest_level": 0.2,
+      "preferred_brands": [
+        "FirstCry"
+      ],
+      "purchase_frequency": "rarely",
+      "brand_relationships": []
+    },
+    {
+      "category": "quick_commerce",
+      "interest_level": 0.7,
+      "preferred_brands": [
+        "Zepto",
+        "Blinkit",
+        "Swiggy Instamart"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
+    },
+    {
+      "category": "food_delivery",
+      "interest_level": 0.7,
+      "preferred_brands": [
+        "Zomato",
+        "Swiggy"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
+    },
+    {
+      "category": "personal_care",
+      "interest_level": 0.5,
+      "preferred_brands": [
+        "Beardo",
+        "Man Matters",
+        "Plum"
+      ],
+      "purchase_frequency": "monthly",
+      "brand_relationships": []
+    },
+    {
+      "category": "grocery_and_household",
+      "interest_level": 0.4,
+      "preferred_brands": [
+        "D-Mart",
+        "BigBasket"
+      ],
+      "purchase_frequency": "weekly",
+      "brand_relationships": []
     }
   ],
   "backstory": "Arjun got his first salary three months ago and has already bought a mechanical keyboard, two pairs of earbuds (he lost the first pair), a ring light he used once, and a subscription to three streaming services. His Amazon order history has 47 items in three months. He does not regret purchases — he just moves on to the next one. His roommates joke that the delivery guy knows his name. He has never comparison-shopped in his life; if it looks cool and the price is under ₹3000, it is ordered within 90 seconds. His saved items list on Amazon has 200+ products he forgot about.",
@@ -117,10 +291,25 @@
   "inner_monologue_style": "Zero friction, pure impulse. Thinks: 'Ooh RGB mouse — meri wali toh boring hai. ₹1499, sale pe ₹999. Bhai done, add to cart. Kya password hai Amazon ka? Fingerprint se khul gaya. Buy now. Kal aa jayega. Speaker bhi daal deta hoon — oh wait yeh wireless earbuds bhi ₹799 mein hain, saste hain, lele.' Does not pause between seeing and buying. Rationalizes everything as 'it was on sale.'",
   "generational_touchstones": {
     "formative_era": "First-salary-first-spend generation — got a tech job straight out of DTU, first paycheck went entirely to Amazon. Has never known scarcity, only 'add to cart.'",
-    "iconic_ads": ["Amazon Great Indian Festival ads (Pavlovian trigger — sale notification = open wallet)", "boAt lifestyle ads (earbuds as personality, not just audio)", "Swiggy 'Sab ka favourite' (food delivery is not convenience, it is daily life)", "CRED 'not everyone gets it' (aspiration through exclusion)"],
-    "cultural_references": ["Gurugram startup bro culture — RGB keyboards, standing desks, craft beer on Friday", "COVID WFH era = when home became office and Amazon became furniture store", "DTU engineering culture — competitive gadget one-upmanship among batch-mates", "IPL fantasy league — another excuse to spend money impulsively"],
+    "iconic_ads": [
+      "Amazon Great Indian Festival ads (Pavlovian trigger — sale notification = open wallet)",
+      "boAt lifestyle ads (earbuds as personality, not just audio)",
+      "Swiggy 'Sab ka favourite' (food delivery is not convenience, it is daily life)",
+      "CRED 'not everyone gets it' (aspiration through exclusion)"
+    ],
+    "cultural_references": [
+      "Gurugram startup bro culture — RGB keyboards, standing desks, craft beer on Friday",
+      "COVID WFH era = when home became office and Amazon became furniture store",
+      "DTU engineering culture — competitive gadget one-upmanship among batch-mates",
+      "IPL fantasy league — another excuse to spend money impulsively"
+    ],
     "nostalgia_intensity": 0.05,
-    "formative_brands": ["Amazon", "boAt", "Swiggy", "Apple"]
+    "formative_brands": [
+      "Amazon",
+      "boAt",
+      "Swiggy",
+      "Apple"
+    ]
   },
   "internal_conflicts": [
     {
@@ -158,6 +347,18 @@
       "influence_domain": "tech accessories and food — the startup culture of treating-yourself-because-you-work-hard normalizes his spending"
     }
   ],
-  "values_hierarchy": ["instant_gratification", "novelty", "convenience", "social_status_through_gadgets", "minimal_friction"],
-  "cognitive_biases": ["present_bias", "optimism_bias", "hyperbolic_discounting", "ostrich_effect", "distinction_bias"]
+  "values_hierarchy": [
+    "instant_gratification",
+    "novelty",
+    "convenience",
+    "social_status_through_gadgets",
+    "minimal_friction"
+  ],
+  "cognitive_biases": [
+    "present_bias",
+    "optimism_bias",
+    "hyperbolic_discounting",
+    "ostrich_effect",
+    "distinction_bias"
+  ]
 }

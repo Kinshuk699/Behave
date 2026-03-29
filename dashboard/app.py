@@ -40,11 +40,7 @@ GATE_PASSWORD = os.getenv("BEHAVE_PASSWORD", "behave2026")
 class SimulateRequest(BaseModel):
     password: str
     brand: str
-    category: str
-    headline: str = ""
-    body_copy: str = ""
-    cta: str = ""
-    image_base64: str = ""
+    image_base64: str
     memory_scope: str = "category"
     cohort_size: int = 5
     persona_ids: list[str] = []
@@ -86,27 +82,20 @@ async def simulate(req: SimulateRequest):
         from synthetic_india.engine.simulation import run_simulation
         from synthetic_india.schemas.creative import CreativeCard, CreativeFormat
         from synthetic_india.memory.consumer import MemoryScope
+        from synthetic_india.agents.creative_extractor import extract_creative_from_image
 
-        # Build creative card
-        creative = CreativeCard(
-            creative_id=f"live_{hashlib.md5(req.brand.encode()).hexdigest()[:8]}",
+        # Save image to temp file for vision API
+        tmp_file = tempfile.NamedTemporaryFile(suffix=".jpg", delete=False)
+        tmp_file.write(base64.b64decode(req.image_base64))
+        tmp_file.close()
+        image_path = tmp_file.name
+
+        # LLM extracts category, headline, cta, brand positioning etc. from image
+        creative, extraction_resp = await extract_creative_from_image(
             brand=req.brand,
-            category=req.category,
-            format=CreativeFormat.STATIC_IMAGE,
-            headline=req.headline or f"{req.brand} ad",
-            body_copy=req.body_copy,
-            cta=req.cta or "Shop Now",
+            image_base64=req.image_base64,
         )
-
-        # Handle image if provided
-        image_path = None
-        tmp_file = None
-        if req.image_base64:
-            tmp_file = tempfile.NamedTemporaryFile(suffix=".jpg", delete=False)
-            tmp_file.write(base64.b64decode(req.image_base64))
-            tmp_file.close()
-            image_path = tmp_file.name
-            creative.image_path = image_path
+        creative.image_path = image_path
 
         # Map memory scope
         scope_map = {
@@ -135,14 +124,14 @@ async def simulate(req: SimulateRequest):
         )
 
         # Clean up temp file
-        if tmp_file:
-            os.unlink(tmp_file.name)
+        os.unlink(tmp_file.name)
 
         # Serialize results
         result = {
             "metadata": meta.model_dump(mode="json"),
             "scorecards": [s.model_dump(mode="json") for s in scorecards],
             "recommendation": recommendation.model_dump(mode="json") if recommendation else None,
+            "creative": creative.model_dump(mode="json"),
         }
 
         # Load evaluations from saved run directory
@@ -150,7 +139,19 @@ async def simulate(req: SimulateRequest):
         evals_path = run_dir / "evaluations.json"
         if evals_path.exists():
             with open(evals_path) as f:
-                result["evaluations"] = json.load(f)
+                evals = json.load(f)
+
+            # Enrich evaluations with persona display info
+            from synthetic_india.engine.simulation import load_personas as _load_all
+            persona_map = {p.persona_id: p for p in _load_all()}
+            for ev in evals:
+                p = persona_map.get(ev.get("persona_id"))
+                if p:
+                    ev["persona_name"] = p.name
+                    ev["persona_city"] = p.demographics.city
+                    ev["persona_archetype"] = p.archetype.value if hasattr(p.archetype, "value") else str(p.archetype)
+
+            result["evaluations"] = evals
 
         return JSONResponse(result)
 
@@ -171,6 +172,18 @@ async def preloaded():
         if fpath.exists():
             with open(fpath) as f:
                 result[name] = json.load(f)
+
+    # Enrich evaluations with persona display info
+    if "evaluations" in result:
+        from synthetic_india.engine.simulation import load_personas as _load_all
+        persona_map = {p.persona_id: p for p in _load_all()}
+        for ev in result["evaluations"]:
+            p = persona_map.get(ev.get("persona_id"))
+            if p:
+                ev["persona_name"] = p.name
+                ev["persona_city"] = p.demographics.city
+                ev["persona_archetype"] = p.archetype.value if hasattr(p.archetype, "value") else str(p.archetype)
+
     return JSONResponse(result)
 
 
