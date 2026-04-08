@@ -2566,3 +2566,200 @@ def test_creative_card_brand_context_defaults_to_none():
     assert card.brand_positioning is None
     assert card.brand_era is None
     assert card.marketing_tone is None
+
+
+# ── Manufacturing Nostalgia: Scene Memory + Arousal (2026-04-08) ──────────────
+
+
+def test_memory_node_has_emotional_arousal():
+    """MemoryNode must have emotional_arousal field (0.0–1.0, default 0.3)."""
+    node = MemoryNode(
+        node_id="test_arousal_01",
+        persona_id="test_p",
+        memory_type="observation",
+        description="Saw a Boroline ad",
+        subject="test_p",
+        predicate="evaluated",
+        object="Boroline cream",
+        importance=5.0,
+    )
+    assert hasattr(node, "emotional_arousal")
+    assert 0.0 <= node.emotional_arousal <= 1.0
+    assert node.emotional_arousal == 0.3  # default
+
+
+def test_memory_node_emotional_arousal_custom():
+    """MemoryNode emotional_arousal should accept custom value 0.0–1.0."""
+    node = MemoryNode(
+        node_id="test_arousal_02",
+        persona_id="test_p",
+        memory_type="observation",
+        description="Heard the Nirma jingle as a child",
+        subject="test_p",
+        predicate="remembered",
+        object="Nirma washing powder",
+        importance=9.0,
+        emotional_arousal=0.92,
+    )
+    assert node.emotional_arousal == 0.92
+
+
+def test_memory_node_has_memory_era():
+    """MemoryNode must have memory_era field (Optional[str], default None)."""
+    node = MemoryNode(
+        node_id="test_era_01",
+        persona_id="test_p",
+        memory_type="observation",
+        description="A childhood memory",
+        subject="test_p",
+        predicate="recalled",
+        object="Doordarshan",
+        importance=8.0,
+    )
+    assert hasattr(node, "memory_era")
+    assert node.memory_era is None  # default
+
+    node_with_era = node.model_copy(update={"memory_era": "childhood"})
+    assert node_with_era.memory_era == "childhood"
+
+
+def test_memory_node_has_sensory_anchors():
+    """MemoryNode must have sensory_anchors field (list[str], default [])."""
+    node = MemoryNode(
+        node_id="test_anchors_01",
+        persona_id="test_p",
+        memory_type="observation",
+        description="Green Boroline tube smell",
+        subject="test_p",
+        predicate="associated",
+        object="Boroline",
+        importance=8.5,
+    )
+    assert hasattr(node, "sensory_anchors")
+    assert isinstance(node.sensory_anchors, list)
+    assert node.sensory_anchors == []  # default
+
+    node_with_anchors = node.model_copy(update={"sensory_anchors": ["green tube", "medicinal smell", "warm hands"]})
+    assert len(node_with_anchors.sensory_anchors) == 3
+
+
+def test_scene_memory_model_exists():
+    """SceneMemory model must exist in schemas.memory."""
+    from synthetic_india.schemas.memory import SceneMemory
+
+    scene = SceneMemory(
+        title="The Nirma Sunday",
+        narrative=(
+            "I am 8. It is Sunday morning. Amma is washing clothes in the courtyard. "
+            "The Nirma song comes on the radio. Nobody is in a hurry."
+        ),
+        emotional_arousal=0.9,
+        sensory_anchors=["Nirma jingle", "soap bubbles", "courtyard"],
+        memory_era="childhood",
+        persona_age_then=8,
+    )
+    assert scene.title == "The Nirma Sunday"
+    assert scene.emotional_arousal == 0.9
+    assert "Nirma jingle" in scene.sensory_anchors
+    assert scene.memory_era == "childhood"
+    assert scene.persona_age_then == 8
+
+
+def test_persona_profile_has_scene_memories():
+    """PersonaProfile must have scene_memories field (list[SceneMemory], default [])."""
+    personas = load_personas()
+    assert len(personas) > 0
+    p = personas[0]
+    assert hasattr(p, "scene_memories")
+    assert isinstance(p.scene_memories, list)
+
+
+def test_persona_profile_has_formative_window():
+    """PersonaProfile must have formative_window field (Optional[list[int]], default None)."""
+    personas = load_personas()
+    assert len(personas) > 0
+    p = personas[0]
+    assert hasattr(p, "formative_window")
+    # default is None; may be set if persona JSON has it
+    if p.formative_window is not None:
+        assert len(p.formative_window) == 2
+        assert p.formative_window[0] < p.formative_window[1]
+
+
+def test_memory_config_has_arousal_weight():
+    """MemoryConfig must have arousal_weight (default 1.5) and retrieval_count_weight (default 0.3)."""
+    from synthetic_india.config import MemoryConfig
+    config = MemoryConfig()
+    assert hasattr(config, "arousal_weight")
+    assert config.arousal_weight == 1.5
+    assert hasattr(config, "retrieval_count_weight")
+    assert config.retrieval_count_weight == 0.3
+
+
+def test_retrieval_composite_includes_arousal():
+    """High emotional_arousal memory should score higher than low-arousal memory with same other scores."""
+    import math
+    from datetime import datetime, timedelta
+
+    retriever = MemoryRetriever()
+    now = datetime.utcnow()
+    one_hour_ago = now - timedelta(hours=1)
+
+    def make_node(node_id, arousal, access_count=0):
+        return MemoryNode(
+            node_id=node_id,
+            persona_id="test_p",
+            memory_type="observation",
+            description="some memory",
+            subject="test_p",
+            predicate="evaluated",
+            object="Brand X",
+            importance=5.0,
+            emotional_arousal=arousal,
+            access_count=access_count,
+            created_at=one_hour_ago,
+            last_accessed_at=one_hour_ago,
+        )
+
+    high_arousal = make_node("high", arousal=0.9)
+    low_arousal = make_node("low", arousal=0.1)
+
+    results = retriever.retrieve([high_arousal, low_arousal], now=now)
+    scores = {r.node.node_id: r.composite_score for r in results}
+    assert scores["high"] > scores["low"], (
+        f"High arousal memory should score higher: high={scores['high']:.3f} low={scores['low']:.3f}"
+    )
+
+
+def test_retrieval_strengthens_memory_on_access():
+    """Retrieved memories should get an arousal and importance boost."""
+    from datetime import datetime, timedelta
+
+    retriever = MemoryRetriever()
+    now = datetime.utcnow()
+
+    node = MemoryNode(
+        node_id="strengthen_test_01",
+        persona_id="test_p",
+        memory_type="observation",
+        description="Nirma Sunday memory",
+        subject="test_p",
+        predicate="recalled",
+        object="Nirma",
+        importance=5.0,
+        emotional_arousal=0.8,
+        created_at=now - timedelta(hours=2),
+        last_accessed_at=now - timedelta(hours=2),
+    )
+
+    original_arousal = node.emotional_arousal
+    original_importance = node.importance
+
+    retriever.retrieve([node], now=now, top_k=1)
+
+    # access_count should increment
+    assert node.access_count == 1
+    # emotional_arousal should get a small boost
+    assert node.emotional_arousal >= original_arousal
+    # importance should get a small boost
+    assert node.importance >= original_importance

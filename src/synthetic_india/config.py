@@ -49,6 +49,15 @@ class MemoryConfig:
     importance_weight: float = field(
         default_factory=lambda: float(os.getenv("MEMORY_IMPORTANCE_WEIGHT", "1.0"))
     )
+    # Nostalgia retrieval weights (Manufacturing Nostalgia addendum, 2026-04-08)
+    # δ: higher than other weights so formative high-arousal memories surface even when old
+    arousal_weight: float = field(
+        default_factory=lambda: float(os.getenv("MEMORY_AROUSAL_WEIGHT", "1.5"))
+    )
+    # ε: log-scale so frequent retrieval strengthens gradually, not linearly
+    retrieval_count_weight: float = field(
+        default_factory=lambda: float(os.getenv("MEMORY_RETRIEVAL_COUNT_WEIGHT", "0.3"))
+    )
     recency_decay: float = field(
         default_factory=lambda: float(os.getenv("MEMORY_RECENCY_DECAY", "0.99"))
     )

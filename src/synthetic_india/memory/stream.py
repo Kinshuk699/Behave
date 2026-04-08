@@ -17,7 +17,10 @@ import json
 import uuid
 from datetime import datetime
 from pathlib import Path
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
+
+if TYPE_CHECKING:
+    from synthetic_india.schemas.persona import PersonaProfile
 
 from synthetic_india.config import DATA_DIR
 from synthetic_india.schemas.evaluation import PersonaEvaluation
@@ -212,6 +215,41 @@ class MemoryStream:
 
     def get_recent_nodes(self, n: int = 10) -> list[MemoryNode]:
         return sorted(self.nodes, key=lambda x: x.created_at, reverse=True)[:n]
+
+    def seed_scene_memories(self, persona: "PersonaProfile") -> int:
+        """
+        Convert persona.scene_memories into high-arousal MemoryNodes.
+
+        Called once at persona initialization to seed formative-era memories.
+        Safe to call multiple times: skips already-seeded nodes identified
+        by the "scene_" prefix on node_id.
+
+        Returns count of newly seeded memories.
+        """
+        already_seeded = {n.node_id for n in self.nodes if n.node_id.startswith("scene_")}
+        seeded = 0
+        for scene in persona.scene_memories:
+            safe_title = scene.title[:20].replace(" ", "_").lower()
+            node_id = f"scene_{persona.persona_id}_{safe_title}"
+            if node_id in already_seeded:
+                continue
+            node = MemoryNode(
+                node_id=node_id,
+                persona_id=self.persona_id,
+                memory_type=MemoryType.OBSERVATION,
+                description=scene.narrative,
+                subject=persona.persona_id,
+                predicate="remembers",
+                object=scene.title,
+                importance=9.0,
+                embedding_key=scene.narrative,
+                emotional_arousal=scene.emotional_arousal,
+                memory_era=scene.memory_era,
+                sensory_anchors=scene.sensory_anchors,
+            )
+            self.add_node(node)
+            seeded += 1
+        return seeded
 
     # ── Persistence ──────────────────────────────────────────
 

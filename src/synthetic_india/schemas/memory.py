@@ -28,6 +28,44 @@ class MemoryType(str, Enum):
     CATEGORY_BELIEF = "category_belief"  # General belief about a product category
 
 
+class SceneMemory(BaseModel):
+    """
+    A formative-era scene-memory seeded at persona initialization.
+
+    Based on Character-LLM (Shao et al., EMNLP 2023): trait descriptions produce
+    generic output; experienced scenes produce emotional output.
+
+    Each scene contains all three nostalgia layers (Manufacturing Nostalgia, §5.1):
+      - Sensory anchor: the specific trigger that could be activated by a future ad
+      - Life context: who was there, what they felt, what they didn't yet know
+      - Present contrast: implicit or explicit gap between then and now
+
+    These are loaded once at persona initialization and inserted into the memory
+    stream with high emotional_arousal (0.7–0.95), giving them durable retrieval
+    priority across many simulation runs.
+    """
+
+    title: str = Field(..., description="Short label for this scene, e.g. 'The Nirma Sunday'")
+    narrative: str = Field(
+        ..., description="First-person scene in the persona's natural voice. Must include sensory anchor, life context, and present contrast."
+    )
+    emotional_arousal: float = Field(
+        default=0.85, ge=0.0, le=1.0,
+        description="How emotionally charged this memory is. Formative scenes: 0.7–0.95."
+    )
+    sensory_anchors: list[str] = Field(
+        default_factory=list,
+        description="Specific triggers that activate this memory: jingle, smell, brand, visual, texture."
+    )
+    memory_era: str = Field(
+        default="childhood",
+        description="Life stage: childhood | adolescence | early_career | recent"
+    )
+    persona_age_then: Optional[int] = Field(
+        None, description="How old the persona was in this memory — grounds the reminiscence bump."
+    )
+
+
 class MemoryNode(BaseModel):
     """
     A single entry in a persona's memory stream.
@@ -78,6 +116,24 @@ class MemoryNode(BaseModel):
     last_accessed_at: datetime = Field(default_factory=datetime.utcnow)
     access_count: int = 0
 
+    # Nostalgia / emotional signal (Manufacturing Nostalgia addendum, 2026-04-08)
+    emotional_arousal: float = Field(
+        default=0.3, ge=0.0, le=1.0,
+        description=(
+            "How emotionally charged this memory is (LUFY, Sumida et al. 2024). "
+            "Formative scene-memories: 0.7–0.95. Recent ad evaluations: 0.1–0.3. "
+            "Surfaces high-arousal memories even when they are old or loosely relevant."
+        )
+    )
+    memory_era: Optional[str] = Field(
+        None,
+        description="Life stage when this memory was formed: childhood | adolescence | early_career | recent"
+    )
+    sensory_anchors: list[str] = Field(
+        default_factory=list,
+        description="Specific triggers that could activate this memory in a future ad evaluation."
+    )
+
     # Stream offset (assigned by MemoryStream.add_node)
     sequence_number: Optional[int] = Field(
         None, description="Monotonic offset in the stream, assigned on insertion"
@@ -93,6 +149,7 @@ class RetrievalScore(BaseModel):
     recency_score: float = 0.0
     relevance_score: float = 0.0
     importance_score: float = 0.0
+    arousal_score: float = 0.0
     composite_score: float = 0.0
 
 

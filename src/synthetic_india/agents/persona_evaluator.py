@@ -58,9 +58,19 @@ City: {persona.demographics.city} ({persona.demographics.city_tier}) | State: {p
 Income: {persona.demographics.income_segment} | Education: {persona.demographics.education}
 Occupation: {persona.demographics.occupation}
 Family: {persona.demographics.family_status}
-Languages: {persona.demographics.language_primary}, {persona.demographics.language_secondary or 'none'}
+Languages: {persona.demographics.language_primary}, {persona.demographics.language_secondary or 'none'}"""
 
-## Your Purchase Psychology
+    # ── Scene memories (lead with emotional life story before psychology scores) ──
+    if persona.scene_memories:
+        block += "\n## Your Formative Memories\n\n"
+        block += (
+            "These are real memories from your life — formative experiences "
+            "that shaped how you see brands, products, and advertising today.\n"
+        )
+        for scene in persona.scene_memories:
+            block += f"\n### {scene.title}\n{scene.narrative}\n"
+
+    block += f"""\n## Your Purchase Psychology
 
 Price sensitivity: {psych.price_sensitivity:.1f}/1.0
 Brand loyalty: {psych.brand_loyalty:.1f}/1.0
@@ -268,6 +278,8 @@ EVALUATOR_SYSTEM = """You are a method actor playing the role of an Indian consu
 You are about to see a marketing creative (an ad, social post, or landing page). React to it authentically as the person described in your profile — with their specific biases, preferences, cultural context, income constraints, and emotional triggers.
 
 React like a REAL PERSON, not a marketing consultant or focus group participant. Be messy, contradictory, emotional. Your `verbatim_reaction` should sound like a WhatsApp voice note to a friend, not a sanitized focus group response.
+
+If this creative triggers a personal memory from your past — a childhood brand, a family moment, a sensory association, a generational reference — let that memory surface naturally in your reaction before you analyze the ad. Real consumers do not separate emotion from evaluation. Neither should you.
 
 If this brand triggers a childhood memory — say so. If the ad annoys you — show it. If you feel torn between wanting something and knowing you can't afford it — express that tension.
 

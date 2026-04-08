@@ -91,11 +91,18 @@ class MemoryRetriever:
             recency = self._score_recency(node, now)
             relevance = self._score_relevance(node, query_embedding, query_text)
             importance = self._score_importance(node)
+            arousal = self._score_arousal(node)
+            retrieval_freq = self._score_retrieval_frequency(node)
 
+            # Updated formula (Manufacturing Nostalgia, §7.2):
+            # score = α·recency + β·relevance + γ·importance + δ·emotional_arousal + ε·log(1 + retrieval_count)
+            # δ=1.5 is higher than other weights so formative high-arousal memories surface even when old
             composite = (
                 self.config.recency_weight * recency
                 + self.config.relevance_weight * relevance
                 + self.config.importance_weight * importance
+                + self.config.arousal_weight * arousal
+                + self.config.retrieval_count_weight * retrieval_freq
             )
 
             scored.append(
@@ -104,16 +111,23 @@ class MemoryRetriever:
                     recency_score=recency,
                     relevance_score=relevance,
                     importance_score=importance,
+                    arousal_score=arousal,
                     composite_score=composite,
                 )
             )
 
         scored.sort(key=lambda s: s.composite_score, reverse=True)
 
-        # Update access tracking on retrieved nodes
+        # Memory strengthening on retrieval (Manufacturing Nostalgia, §7.3 + ACT-R / Hou et al.):
+        # Memories that get recalled become stronger — mirrors real human memory consolidation.
+        # access_count += 1 (existing), plus tiny boosts to arousal and importance.
         for s in scored[:top_k]:
             s.node.last_accessed_at = now
             s.node.access_count += 1
+            # Small arousal boost — accumulates over many retrievals, capped at 1.0
+            s.node.emotional_arousal = min(1.0, s.node.emotional_arousal + 0.02)
+            # Small importance boost — capped at 10.0
+            s.node.importance = min(10.0, s.node.importance + 0.1)
 
         return scored[:top_k]
 
@@ -149,6 +163,24 @@ class MemoryRetriever:
     def _score_importance(self, node: MemoryNode) -> float:
         """Normalize importance from 0-10 scale to 0-1."""
         return node.importance / 10.0
+
+    def _score_arousal(self, node: MemoryNode) -> float:
+        """
+        Return emotional_arousal directly (already 0-1).
+        Higher weight (δ=1.5) means high-arousal formative memories surface even
+        when they are old and only loosely relevant — exactly how nostalgia works.
+        LUFY (Sumida et al., 2024): emotionally arousing memories retrieved preferentially.
+        """
+        return node.emotional_arousal
+
+    def _score_retrieval_frequency(self, node: MemoryNode) -> float:
+        """
+        Log-scale retrieval count: ε·log(1 + access_count).
+        Diminishing returns: retrieved 10 times gets a boost, not 10x.
+        ACT-R / Hou et al. (CHI EA 2024): frequently recalled memories strengthen over time.
+        The log is already applied here so the weight in the formula is a linear multiplier.
+        """
+        return math.log(1 + node.access_count)
 
     @staticmethod
     def _cosine_similarity(a: list[float], b: list[float]) -> float:

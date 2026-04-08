@@ -7,6 +7,8 @@ from typing import Optional
 
 from pydantic import BaseModel, ConfigDict, Field
 
+from synthetic_india.schemas.memory import SceneMemory
+
 
 class Archetype(str, Enum):
     RESEARCHER = "researcher"
@@ -177,5 +179,24 @@ class PersonaProfile(BaseModel):
     influence_network: list[Influencer] = Field(default_factory=list)
     values_hierarchy: list[str] = Field(default_factory=list, description="Ordered: most important first")
     cognitive_biases: list[str] = Field(default_factory=list, description="e.g. present_bias, anchoring, bandwagon")
+
+    # ── Nostalgia / Scene Memory (Manufacturing Nostalgia addendum, 2026-04-08) ──
+    # Formative-era scene-memories that ground the persona in lived experience.
+    # Seeded at initialization; retrieved preferentially via high emotional_arousal.
+    formative_window: Optional[list[int]] = Field(
+        None,
+        description=(
+            "Year range [start_year, end_year] of the persona's reminiscence bump "
+            "(approx ages 10–22). Determines which cultural references trigger genuine nostalgia."
+        )
+    )
+    scene_memories: list[SceneMemory] = Field(
+        default_factory=list,
+        description=(
+            "5–7 formative-era scene-memories. Each contains sensory anchor, life context, "
+            "and present contrast. Loaded into MemoryStream at initialization with high "
+            "emotional_arousal so they surface during evaluation."
+        )
+    )
 
     model_config = ConfigDict(use_enum_values=True)
