@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Behave — How It Actually Works</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0c0e13;
+      --card: #14171f;
+      --card2: #1a1e28;
+      --text: #e8e6e3;
+      --dim: #8b8d94;
+      --accent: #ff6b35;
+      --glow: rgba(255,107,53,0.15);
+      --green: #4ade80;
+      --yellow: #facc15;
+      --red: #f87171;
+      --blue: #60a5fa;
+      --purple: #c084fc;
+      --cyan: #22d3ee;
+      --pink: #f9a8d4;
+      --border: rgba(255,255,255,0.07);
+      --serif: 'Instrument Serif', serif;
+      --sans: 'DM Sans', sans-serif;
+      --mono: 'JetBrains Mono', monospace;
+      --r: 12px;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; scroll-snap-type:y mandatory; }
+    body { font-family:var(--sans); background:var(--bg); color:var(--text); line-height:1.6; overflow-x:hidden; }
+
+    .slide {
+      width:100vw; min-height:100vh; min-height:100dvh;
+      scroll-snap-align:start;
+      display:flex; flex-direction:column;
+      padding:clamp(1.5rem,4vw,4rem);
+      position:relative; overflow:hidden;
+    }
+    .slide__num {
+      font-family:var(--mono); font-size:.7rem; color:var(--dim);
+      letter-spacing:.1em; margin-bottom:1.5rem;
+    }
+    h1 { font-family:var(--serif); font-size:clamp(2rem,5vw,4rem); font-weight:400; line-height:1.1; }
+    h2 { font-family:var(--serif); font-size:clamp(1.4rem,3vw,2.5rem); font-weight:400; line-height:1.2; margin-bottom:.5rem; }
+    h3 { font-family:var(--sans); font-size:clamp(.9rem,1.5vw,1.1rem); font-weight:600; letter-spacing:.04em; text-transform:uppercase; color:var(--dim); margin-bottom:.4rem; }
+    p { font-size:clamp(.9rem,1.4vw,1.05rem); color:var(--dim); max-width:64ch; }
+    .accent { color:var(--accent); }
+    .green { color:var(--green); }
+    .yellow { color:var(--yellow); }
+    .blue { color:var(--blue); }
+    .purple { color:var(--purple); }
+    .cyan { color:var(--cyan); }
+    .pink { color:var(--pink); }
+    .red { color:var(--red); }
+    em { font-style:italic; color:var(--text); }
+
+    /* CARDS */
+    .card {
+      background:var(--card); border:1px solid var(--border);
+      border-radius:var(--r); padding:1.25rem 1.5rem;
+    }
+    .card--accent { border-color:rgba(255,107,53,.3); background:rgba(255,107,53,.05); }
+    .card--green  { border-color:rgba(74,222,128,.3); background:rgba(74,222,128,.05); }
+    .card--blue   { border-color:rgba(96,165,250,.3); background:rgba(96,165,250,.05); }
+    .card--purple { border-color:rgba(192,132,252,.3); background:rgba(192,132,252,.05); }
+    .card--yellow { border-color:rgba(250,204,21,.3);  background:rgba(250,204,21,.05); }
+    .card--red    { border-color:rgba(248,113,113,.3); background:rgba(248,113,113,.05); }
+    .card--cyan   { border-color:rgba(34,211,238,.3);  background:rgba(34,211,238,.05); }
+
+    /* GRID LAYOUTS */
+    .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+    .grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; }
+    .grid-4 { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; }
+    .grid-auto { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1rem; }
+    @media(max-width:680px) { .grid-2,.grid-3,.grid-4 { grid-template-columns:1fr; } }
+
+    /* PIPELINE FLOW */
+    .flow { display:flex; align-items:flex-start; gap:.5rem; flex-wrap:wrap; }
+    .flow__step {
+      display:flex; flex-direction:column; align-items:center; gap:.3rem;
+      flex:1; min-width:90px;
+    }
+    .flow__bubble {
+      width:52px; height:52px; border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      font-family:var(--mono); font-size:.8rem; font-weight:500;
+      border:2px solid var(--border); position:relative;
+    }
+    .flow__label { font-size:.68rem; color:var(--dim); text-align:center; line-height:1.3; }
+    .flow__arrow { align-self:center; color:var(--dim); font-size:1.2rem; flex-shrink:0; margin-top:-24px; }
+
+    /* MODEL BADGE */
+    .badge {
+      display:inline-flex; align-items:center; gap:.35rem;
+      font-family:var(--mono); font-size:.68rem;
+      padding:.2rem .55rem; border-radius:20px;
+      border:1px solid var(--border);
+    }
+    .badge--sonnet { border-color:rgba(192,132,252,.4); background:rgba(192,132,252,.1); color:var(--purple); }
+    .badge--haiku  { border-color:rgba(96,165,250,.4);  background:rgba(96,165,250,.1);  color:var(--blue); }
+    .badge--noai   { border-color:rgba(74,222,128,.4);  background:rgba(74,222,128,.1);  color:var(--green); }
+
+    /* FORMULA */
+    .formula {
+      font-family:var(--mono); font-size:clamp(.7rem,1.2vw,.85rem);
+      background:#0a0c10; border:1px solid var(--border);
+      border-radius:8px; padding:.9rem 1.2rem;
+      line-height:2; overflow-x:auto; white-space:nowrap;
+    }
+
+    /* MEMORY TYPE PILLS */
+    .pill {
+      display:inline-flex; align-items:center; gap:.3rem;
+      padding:.15rem .6rem; border-radius:20px;
+      font-size:.72rem; font-weight:600; letter-spacing:.03em;
+    }
+    .pill--obs    { background:rgba(96,165,250,.15); color:var(--blue); }
+    .pill--pref   { background:rgba(74,222,128,.15); color:var(--green); }
+    .pill--belief { background:rgba(248,113,113,.15); color:var(--red); }
+    .pill--ref    { background:rgba(192,132,252,.15); color:var(--purple); }
+    .pill--scene  { background:rgba(255,107,53,.15);  color:var(--accent); }
+
+    /* COMPARISON TABLE */
+    .compare { width:100%; border-collapse:collapse; font-size:.85rem; }
+    .compare th {
+      font-family:var(--sans); font-weight:600; font-size:.72rem;
+      letter-spacing:.06em; text-transform:uppercase;
+      color:var(--dim); padding:.6rem .9rem; border-bottom:1px solid var(--border);
+      text-align:left;
+    }
+    .compare td {
+      padding:.65rem .9rem; border-bottom:1px solid rgba(255,255,255,.04);
+      vertical-align:top; line-height:1.5;
+    }
+    .compare tr:last-child td { border-bottom:none; }
+    .compare .old { color:var(--red); }
+    .compare .new { color:var(--green); }
+    .compare .row-label { color:var(--dim); font-size:.8rem; }
+
+    /* ANALOGY BOX */
+    .analogy {
+      border-left:3px solid var(--accent);
+      padding:.7rem 1rem;
+      background:rgba(255,107,53,.06);
+      border-radius:0 8px 8px 0;
+      font-size:.9rem;
+    }
+    .analogy strong { color:var(--accent); }
+
+    /* NAV DOTS */
+    .nav {
+      position:fixed; right:1.5rem; top:50%; transform:translateY(-50%);
+      display:flex; flex-direction:column; gap:.5rem; z-index:100;
+    }
+    .nav__dot {
+      width:8px; height:8px; border-radius:50%;
+      background:var(--border); border:none; cursor:pointer;
+      transition:all .2s; padding:0;
+    }
+    .nav__dot.active { background:var(--accent); transform:scale(1.4); }
+
+    /* SLIDE BG ACCENTS */
+    .bg-glow {
+      position:absolute; border-radius:50%;
+      filter:blur(120px); pointer-events:none; z-index:0;
+    }
+    .slide__inner { position:relative; z-index:1; flex:1; display:flex; flex-direction:column; }
+
+    /* QUOTE */
+    .quote {
+      font-family:var(--serif); font-style:italic;
+      font-size:clamp(1rem,1.8vw,1.3rem);
+      color:var(--text); border-left:3px solid var(--accent);
+      padding:.5rem 1.2rem; line-height:1.7;
+    }
+
+    /* LABEL+VALUE pairs */
+    .kv { display:flex; flex-direction:column; gap:.1rem; }
+    .kv__label { font-size:.68rem; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--dim); }
+    .kv__val { font-size:.95rem; color:var(--text); }
+
+    /* SCORE BAR */
+    .bar-row { display:flex; align-items:center; gap:.75rem; margin:.3rem 0; }
+    .bar-label { font-size:.78rem; color:var(--dim); width:100px; flex-shrink:0; }
+    .bar-track { flex:1; height:6px; background:rgba(255,255,255,.06); border-radius:3px; overflow:hidden; }
+    .bar-fill  { height:100%; border-radius:3px; }
+    .bar-val   { font-family:var(--mono); font-size:.72rem; color:var(--text); width:28px; text-align:right; flex-shrink:0; }
+
+    /* MEMORY TIMELINE */
+    .timeline { display:flex; flex-direction:column; gap:.5rem; }
+    .tl-item {
+      display:grid; grid-template-columns:80px 1fr;
+      gap:.75rem; align-items:start;
+    }
+    .tl-time { font-family:var(--mono); font-size:.65rem; color:var(--dim); padding-top:.2rem; }
+    .tl-body { font-size:.82rem; line-height:1.5; }
+
+    /* SCOPE TABLE */
+    .scope-grid { display:grid; grid-template-columns:120px 1fr; gap:.5rem 1rem; align-items:start; }
+    .scope-key { font-family:var(--mono); font-size:.75rem; padding:.2rem .5rem; border-radius:4px; text-align:center; }
+
+    /* STEP HEADER */
+    .step-hdr { display:flex; align-items:center; gap:.75rem; margin-bottom:1rem; }
+    .step-num {
+      width:36px; height:36px; border-radius:50%; flex-shrink:0;
+      display:flex; align-items:center; justify-content:center;
+      font-family:var(--mono); font-size:.85rem; font-weight:500;
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV DOTS -->
+<nav class="nav" id="navDots"></nav>
+
+<!-- ═══════════════════════════════════════════════
+     SLIDE 1 — TITLE
+═══════════════════════════════════════════════ -->
+<section class="slide" id="s1">
+  <div class="bg-glow" style="width:600px;height:600px;background:rgba(255,107,53,.07);top:-200px;right:-200px;"></div>
+  <div class="slide__inner">
+    <div class="slide__num">BEHAVE · HOW IT ACTUALLY WORKS · DEEP DIVE</div>
+    <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:2rem;max-width:900px;">
+      <h1>The <span class="accent">complete</span> walkthrough —<br>from ad upload to recommendation.</h1>
+      <p style="font-size:clamp(1rem,1.8vw,1.2rem);">For everyone. No CS degree required. Every step, every model call, every memory decision — explained in plain language with the real logic behind it.</p>
+      <div class="flow" style="gap:.25rem;">
+        <div class="flow__step"><div class="flow__bubble" style="border-color:rgba(255,107,53,.4);color:var(--accent);">📸</div><div class="flow__label">Upload Ad</div></div>
+        <div class="flow__arrow">→</div>
+        <div class="flow__step"><div class="flow__bubble" style="border-color:rgba(96,165,250,.4);color:var(--blue);">🔍</div><div class="flow__label">Read Ad</div></div>
+        <div class="flow__arrow">→</div>
+        <div class="flow__step"><div class="flow__bubble" style="border-color:rgba(192,132,252,.4);color:var(--purple);">👥</div><div class="flow__label">Pick People</div></div>
+        <div class="flow__arrow">→</div>
+        <div class="flow__step"><div class="flow__bubble" style="border-color:rgba(250,204,21,.4);color:var(--yellow);">🧠</div><div class="flow__label">Load Memory</div></div>
+        <div class="flow__arrow">→</div>
+        <div class="flow__step"><div class="flow__bubble" style="border-color:rgba(74,222,128,.4);color:var(--green);">💬</div><div class="flow__label">React</div></div>
+        <div class="flow__arrow">→</div>
+        <div class="flow__step"><div class="flow__bubble" style="border-color:rgba(248,113,113,.4);color:var(--red);">🚨</div><div class="flow__label">Quality Check</div></div>
+        <div class="flow__arrow">→</div>
+        <div class="flow__step"><div class="flow__bubble" style="border-color:rgba(255,107,53,.4);color:var(--accent);">💾</div><div class="flow__label">Write Memory</div></div>
+        <div class="flow__arrow">→</div>
+        <div class="flow__step"><div class="flow__bubble" style="border-color:rgba(34,211,238,.4);color:var(--cyan);">📊</div><div class="flow__label">Score</div></div>
+        <div class="flow__arrow">→</div>
+        <div class="flow__step"><div class="flow__bubble" style="border-color:rgba(192,132,252,.4);color:var(--purple);">🎯</div><div class="flow__label">Recommend</div></div>
+      </div>
+      <div style="display:flex;gap:.75rem;flex-wrap:wrap;">
+        <span class="badge badge--sonnet">● claude-sonnet-4 (main brain)</span>
+        <span class="badge badge--haiku">● claude-haiku (fast tasks)</span>
+        <span class="badge badge--noai">● No AI (fast, free)</span>
+      </div>
+    </div>
+    <div style="font-size:.75rem;color:var(--dim);">10 slides · scroll or use dots →</div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     SLIDE 2 — STEP 0: CREATIVE EXTRACTOR
+═══════════════════════════════════════════════ -->
+<section class="slide" id="s2">
+  <div class="bg-glow" style="width:500px;height:500px;background:rgba(96,165,250,.06);bottom:-200px;left:-100px;"></div>
+  <div class="slide__inner">
+    <div class="slide__num">STEP 0 — BEFORE ANYTHING ELSE</div>
+    <div style="flex:1;display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start;padding-top:1rem;">
+      <div style="display:flex;flex-direction:column;gap:1.25rem;">
+        <div>
+          <div class="step-hdr">
+            <div class="step-num" style="background:rgba(96,165,250,.15);color:var(--blue);">0</div>
+            <h2>Reading the Ad</h2>
+          </div>
+          <span class="badge badge--sonnet" style="margin-bottom:.75rem;display:inline-flex;">● claude-sonnet-4-20250514</span>
+          <p>Before any persona sees the ad, Claude <em>reads it like a human would</em>. You only provide the brand name and the image. Everything else is extracted automatically.</p>
+        </div>
+        <div class="analogy">
+          <strong>Analogy:</strong> Think of this as a smart assistant who watches the ad and fills in the briefing sheet for you — so you don't have to type "Headline: Khushiyon ki Safedii" manually into 20 fields.
+        </div>
+        <div class="card">
+          <h3 style="margin-bottom:.6rem;">What it extracts from the image</h3>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:.4rem .75rem;">
+            <div style="font-size:.8rem;color:var(--dim);">● Category (e.g. <span class="blue">FMCG</span>)</div>
+            <div style="font-size:.8rem;color:var(--dim);">● Headline & body text</div>
+            <div style="font-size:.8rem;color:var(--dim);">● Price shown / discount %</div>
+            <div style="font-size:.8rem;color:var(--dim);">● Trust signals</div>
+            <div style="font-size:.8rem;color:var(--dim);">● Urgency cues</div>
+            <div style="font-size:.8rem;color:var(--dim);">● Visual style</div>
+            <div style="font-size:.8rem;color:var(--dim);">● Is a celebrity present?</div>
+            <div style="font-size:.8rem;color:var(--dim);">● Hindi / Hinglish / English?</div>
+            <div style="font-size:.8rem;color:var(--dim);">● Festival context (Diwali?)</div>
+            <div style="font-size:.8rem;color:var(--dim);">● <span class="accent">Brand era</span> (heritage vs challenger)</div>
+            <div style="font-size:.8rem;color:var(--dim);">● <span class="accent">Marketing tone</span> (emotional vs functional)</div>
+            <div style="font-size:.8rem;color:var(--dim);">● <span class="accent">Brand positioning</span> (premium vs value)</div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:1rem;">
+        <div class="card card--blue">
+          <h3>Output: a CreativeCard</h3>
+          <p style="margin-bottom:.75rem;">A structured data object with ~25 fields. Every downstream step reads from this — personas never see the raw image directly (unless vision is enabled).</p>
+          <div class="formula" style="font-size:.7rem;white-space:pre;line-height:1.8;">CreativeCard {
+  brand:        "Nirma"
+  category:     "fmcg_household"
+  headline:     "Khushiyon ki Safedii"
+  price_shown:  null
+  brand_era:    "heritage"        ← NEW field
+  marketing_tone: "emotional"     ← NEW field
+  trust_signals: ["no chemicals"]
+  emotional_hooks: ["family", "nostalgia"]
+}</div>
+        </div>
+        <div class="card" style="background:rgba(255,107,53,.05);border-color:rgba(255,107,53,.2);">
+          <h3 style="color:var(--accent);margin-bottom:.4rem;">Why brand_era matters</h3>
+          <p style="font-size:.85rem;">If Claude identifies the brand as <em>heritage</em>, the persona evaluator later knows to surface childhood memories about that brand. A persona who grew up with Nirma reacts totally differently to a Nirma ad than to a challenger brand ad from 2023.</p>
+        </div>
+        <div class="card card--green">
+          <h3>Skipped when?</h3>
+          <p style="font-size:.85rem;">If you type the creative details manually in the form, Step 0 is skipped entirely. The image extractor is a convenience — not a requirement.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     SLIDE 3 — STEP 1: COHORT SELECTION
+═══════════════════════════════════════════════ -->
+<section class="slide" id="s3">
+  <div class="bg-glow" style="width:500px;height:500px;background:rgba(192,132,252,.06);top:-100px;right:-100px;"></div>
+  <div class="slide__inner">
+    <div class="slide__num">STEP 1 — WHO WATCHES THE AD?</div>
+    <div style="flex:1;display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start;padding-top:1rem;">
+      <div style="display:flex;flex-direction:column;gap:1.25rem;">
+        <div>
+          <div class="step-hdr">
+            <div class="step-num" style="background:rgba(192,132,252,.15);color:var(--purple);">1</div>
+            <h2>Cohort Selection</h2>
+          </div>
+          <span class="badge badge--noai" style="margin-bottom:.75rem;display:inline-flex;">● No AI · Pure math</span>
+          <p>The system picks which personas evaluate this ad. You choose <em>how many</em> (1–20) and <em>how</em> they're selected.</p>
+        </div>
+
+        <div class="card card--purple">
+          <h3 style="margin-bottom:.75rem;">The 3 selection modes</h3>
+
+          <div style="display:flex;flex-direction:column;gap:.9rem;">
+            <div>
+              <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.3rem;">
+                <span style="font-family:var(--mono);font-size:.7rem;background:rgba(74,222,128,.15);color:var(--green);padding:.1rem .45rem;border-radius:4px;">AUTO</span>
+                <span style="font-weight:600;font-size:.9rem;">Best Match (default)</span>
+              </div>
+              <p style="font-size:.82rem;">The system scores every persona against the category and picks the highest-scorers. This is the "best 5" mode — not random, not handpicked. <em>Best for getting realistic results.</em></p>
+            </div>
+            <div>
+              <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.3rem;">
+                <span style="font-family:var(--mono);font-size:.7rem;background:rgba(250,204,21,.15);color:var(--yellow);padding:.1rem .45rem;border-radius:4px;">MANUAL</span>
+                <span style="font-weight:600;font-size:.9rem;">You Pick Personas</span>
+              </div>
+              <p style="font-size:.82rem;">You select checkboxes from the persona list. Use this when you know exactly who your target audience is — e.g. "only Tier-2 city homemakers."</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="analogy">
+          <strong>Analogy:</strong> A focus group facility calls people from a database. "Best match" means the recruiter picks people who've bought in this category before. "Manual" means the client says "I want these specific demographics."
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:1rem;">
+        <div class="card card--blue">
+          <h3 style="margin-bottom:.75rem;">How "Best Match" scoring works</h3>
+          <p style="font-size:.83rem;margin-bottom:.75rem;">Every persona has a list of <em>category affinities</em> — how interested they are in FMCG, Electronics, Fashion, etc. on a 0–1 scale. The scoring formula is simple:</p>
+          <div class="formula" style="font-size:.72rem;white-space:pre;line-height:1.9;">persona_score =
+  (category_interest × 5.0)   ← main signal
+  + archetype_diversity_bonus   ← ensures variety</div>
+          <p style="font-size:.8rem;margin-top:.75rem;">Then all personas are sorted by this score and the top N are picked.</p>
+        </div>
+
+        <div class="card">
+          <h3 style="margin-bottom:.6rem;">Archetype diversity — why it matters</h3>
+          <p style="font-size:.82rem;margin-bottom:.6rem;">If all 5 personas were "brand loyalist", your results would be biased. The system deliberately ensures that different <em>types</em> of people are represented:</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:.35rem;">
+            <div style="font-size:.78rem;padding:.3rem .5rem;background:var(--card2);border-radius:6px;">💸 <span style="color:var(--yellow);">Impulse Buyer</span></div>
+            <div style="font-size:.78rem;padding:.3rem .5rem;background:var(--card2);border-radius:6px;">🔍 <span style="color:var(--blue);">Pragmatist</span></div>
+            <div style="font-size:.78rem;padding:.3rem .5rem;background:var(--card2);border-radius:6px;">❤️ <span style="color:var(--red);">Brand Loyalist</span></div>
+            <div style="font-size:.78rem;padding:.3rem .5rem;background:var(--card2);border-radius:6px;">✨ <span style="color:var(--purple);">Aspirational Buyer</span></div>
+            <div style="font-size:.78rem;padding:.3rem .5rem;background:var(--card2);border-radius:6px;">⚖️ <span style="color:var(--green);">Price Anchor</span></div>
+            <div style="font-size:.78rem;padding:.3rem .5rem;background:var(--card2);border-radius:6px;">🤔 <span style="color:var(--dim);">Value Seeker</span></div>
+          </div>
+        </div>
+
+        <div class="card card--accent" style="font-size:.83rem;">
+          <strong class="accent">Bottom line:</strong> "Best 5" means the 5 people with the highest category interest who together represent the widest spread of buying personalities. Not random. Not manual. Optimally representative.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     SLIDE 4 — STEP 2: MEMORY LOADING + TYPES
+═══════════════════════════════════════════════ -->
+<section class="slide" id="s4">
+  <div class="bg-glow" style="width:500px;height:500px;background:rgba(250,204,21,.05);bottom:-150px;left:-100px;"></div>
+  <div class="slide__inner">
+    <div class="slide__num">STEP 2 — WHAT EACH PERSON CARRIES IN THEIR HEAD</div>
+    <div style="flex:1;display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start;padding-top:1rem;">
+      <div style="display:flex;flex-direction:column;gap:1.25rem;">
+        <div>
+          <div class="step-hdr">
+            <div class="step-num" style="background:rgba(250,204,21,.15);color:var(--yellow);">2</div>
+            <h2>Memory Loading</h2>
+          </div>
+          <span class="badge badge--noai" style="margin-bottom:.75rem;display:inline-flex;">● No AI · Load from disk</span>
+          <p>Each selected persona's memory file is loaded. These files grow over time — every simulation run adds to them.</p>
+        </div>
+        <div class="card">
+          <h3 style="margin-bottom:.75rem;">The 5 memory types — what gets stored</h3>
+          <div class="timeline">
+            <div class="tl-item">
+              <span class="pill pill--scene">SCENE</span>
+              <div class="tl-body"><strong>Formative era memory</strong> — loaded at persona birth, never changes. "Sunday 1988, Nani Ji, the Nirma jingle on Doordarshan." High emotional charge. This is <span class="accent">new in this version.</span></div>
+            </div>
+            <div class="tl-item">
+              <span class="pill pill--obs">OBSERVATION</span>
+              <div class="tl-body"><strong>Every ad evaluation ever done.</strong> "I saw a Surf Excel FMCG ad 3 days ago. I would scroll past. The price felt too premium."</div>
+            </div>
+            <div class="tl-item">
+              <span class="pill pill--pref">PREFERENCE</span>
+              <div class="tl-body"><strong>Created only when score &gt; 70.</strong> "I genuinely liked the Myntra fashion ad. The pricing was transparent and felt fair to me."</div>
+            </div>
+            <div class="tl-item">
+              <span class="pill pill--belief">BELIEF</span>
+              <div class="tl-body"><strong>Created only when score &lt; 30.</strong> "I was put off by the Lenskart ad. Something about the hard sell reminded me of MLM tactics."</div>
+            </div>
+            <div class="tl-item">
+              <span class="pill pill--ref">REFLECTION</span>
+              <div class="tl-body"><strong>Higher-order insight.</strong> "I tend to distrust skincare brands that rely on celebrity endorsements without clinical backing." Synthesised from multiple observations.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:1rem;">
+        <div class="card card--accent">
+          <h3 style="margin-bottom:.5rem;color:var(--accent);">NEW: Scene Memories (Manufacturing Nostalgia)</h3>
+          <p style="font-size:.83rem;margin-bottom:.75rem;">Before this version, nostalgia was stored as a <em>trait list</em>: <code style="font-family:var(--mono);font-size:.75rem;">iconic_ads: ["Nirma jingle", "Air India Maharaja"]</code>. That's just a label. The LLM treated it like a tag, not a memory.</p>
+          <p style="font-size:.83rem;margin-bottom:.75rem;">Now, each persona gets one or more <em>scene memories</em> — full first-person narratives:</p>
+          <div class="quote" style="font-size:.82rem;border-color:var(--accent);">
+            "It was Sunday afternoon. Nani Ji had just finished braiding my hair with jasmine oil. The black-and-white Doordarshan set was on. Then the Nirma jingle started — <em>washing powder Nirma...</em> She hummed along without even noticing. That sound and that smell are fused in my head forever."
+          </div>
+          <p style="font-size:.8rem;margin-top:.6rem;">This is what makes the persona <em>feel</em> the nostalgia rather than just <em>mention</em> it.</p>
+        </div>
+        <div class="card card--yellow">
+          <h3 style="margin-bottom:.5rem;">The 3 nostalgia layers</h3>
+          <div style="display:flex;flex-direction:column;gap:.5rem;font-size:.82rem;">
+            <div style="display:flex;gap:.6rem;align-items:flex-start;"><span style="color:var(--yellow);font-weight:700;flex-shrink:0;">1.</span><div><strong>Sensory anchor</strong> — the specific trigger: jasmine oil smell, jingle melody, the white powder cloud. This is what an ad today might accidentally reactivate.</div></div>
+            <div style="display:flex;gap:.6rem;align-items:flex-start;"><span style="color:var(--yellow);font-weight:700;flex-shrink:0;">2.</span><div><strong>Life context</strong> — who was there, what they felt, what they didn't know yet. Emotional weight comes from <em>who</em> was present.</div></div>
+            <div style="display:flex;gap:.6rem;align-items:flex-start;"><span style="color:var(--yellow);font-weight:700;flex-shrink:0;">3.</span><div><strong>Present contrast</strong> — the gap between then and now. Nani Ji is gone. The jingle is still there. That gap is the emotional charge.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     SLIDE 5 — STEP 3: MEMORY RETRIEVAL DEEP DIVE
+═══════════════════════════════════════════════ -->
+<section class="slide" id="s5">
+  <div class="bg-glow" style="width:600px;height:600px;background:rgba(34,211,238,.05);top:-200px;right:-200px;"></div>
+  <div class="slide__inner">
+    <div class="slide__num">STEP 3 — THE SMART MEMORY PICKER</div>
+    <div style="flex:1;display:grid;grid-template-columns:1.1fr .9fr;gap:2rem;align-items:start;padding-top:1rem;">
+      <div style="display:flex;flex-direction:column;gap:1.25rem;">
+        <div>
+          <div class="step-hdr">
+            <div class="step-num" style="background:rgba(34,211,238,.15);color:var(--cyan);">3</div>
+            <h2>Memory Retrieval</h2>
+          </div>
+          <span class="badge badge--noai" style="margin-bottom:.75rem;display:inline-flex;">● No AI · Weighted scoring</span>
+          <p>With 100 memories, how does the system decide which 5 to put in the prompt? It scores every single memory against 5 dimensions and picks the highest scorers.</p>
+        </div>
+        <div class="card card--cyan">
+          <h3 style="margin-bottom:.75rem;">The scoring formula</h3>
+          <div class="formula">score = <span class="blue">α × recency</span>
+       + <span class="green">β × relevance</span>
+       + <span class="yellow">γ × importance</span>
+       + <span class="accent">δ × emotional_arousal</span>  ← NEW
+       + <span class="purple">ε × log(1 + access_count)</span>  ← NEW</div>
+          <p style="font-size:.8rem;margin-top:.75rem;">All 5 scores combined → one number per memory → sort → take top 5.</p>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:.5rem;">
+          <div class="card" style="padding:.9rem 1.1rem;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:.5rem;">
+              <div><span class="blue" style="font-weight:700;">α · Recency</span><br><span style="font-size:.78rem;color:var(--dim);">Memories from yesterday beat memories from 6 months ago — unless their other scores are very high. Exponential decay over hours.</span></div>
+              <span style="font-family:var(--mono);font-size:.7rem;color:var(--blue);background:rgba(96,165,250,.1);padding:.15rem .45rem;border-radius:4px;flex-shrink:0;">w=1.0</span>
+            </div>
+          </div>
+          <div class="card" style="padding:.9rem 1.1rem;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:.5rem;">
+              <div><span class="green" style="font-weight:700;">β · Relevance</span><br><span style="font-size:.78rem;color:var(--dim);">Text similarity between the memory and the current ad being evaluated. A Nirma memory scores high for a Surf Excel ad. A Zomato memory scores low.</span></div>
+              <span style="font-family:var(--mono);font-size:.7rem;color:var(--green);background:rgba(74,222,128,.1);padding:.15rem .45rem;border-radius:4px;flex-shrink:0;">w=1.0</span>
+            </div>
+          </div>
+          <div class="card" style="padding:.9rem 1.1rem;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:.5rem;">
+              <div><span class="yellow" style="font-weight:700;">γ · Importance</span><br><span style="font-size:.78rem;color:var(--dim);">How significant was this experience when it happened? Scored 0–10. A strong emotional reaction scores 8. A neutral scroll-past scores 3.</span></div>
+              <span style="font-family:var(--mono);font-size:.7rem;color:var(--yellow);background:rgba(250,204,21,.1);padding:.15rem .45rem;border-radius:4px;flex-shrink:0;">w=1.0</span>
+            </div>
+          </div>
+          <div class="card card--accent" style="padding:.9rem 1.1rem;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:.5rem;">
+              <div><span class="accent" style="font-weight:700;">δ · Emotional Arousal</span> <span style="font-size:.7rem;background:rgba(255,107,53,.2);color:var(--accent);padding:.1rem .4rem;border-radius:4px;">NEW</span><br><span style="font-size:.78rem;color:var(--dim);">The emotional charge of the memory. Scene memories start at 0.85–0.95. Recent neutral ad evaluations start at 0.1–0.3. <strong style="color:var(--text);">This is why a 1988 memory beats a Tuesday memory.</strong></span></div>
+              <span style="font-family:var(--mono);font-size:.7rem;color:var(--accent);background:rgba(255,107,53,.1);padding:.15rem .45rem;border-radius:4px;flex-shrink:0;">w=1.5</span>
+            </div>
+          </div>
+          <div class="card" style="padding:.9rem 1.1rem;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:.5rem;">
+              <div><span class="purple" style="font-weight:700;">ε · Retrieval Frequency</span> <span style="font-size:.7rem;background:rgba(192,132,252,.2);color:var(--purple);padding:.1rem .4rem;border-radius:4px;">NEW</span><br><span style="font-size:.78rem;color:var(--dim);">Memories that get retrieved often become more dominant. Uses log(1 + count) so the boost has diminishing returns — the 100th recall doesn't add as much as the 2nd.</span></div>
+              <span style="font-family:var(--mono);font-size:.7rem;color:var(--purple);background:rgba(192,132,252,.1);padding:.15rem .45rem;border-radius:4px;flex-shrink:0;">w=0.3</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:1rem;">
+        <div class="card card--blue">
+          <h3 style="margin-bottom:.75rem;">Scope — the pre-filter before scoring</h3>
+          <p style="font-size:.82rem;margin-bottom:.75rem;">Before scoring, the system first <em>filters</em> which memories are even eligible. This is the "scope" option in the dashboard:</p>
+          <div style="display:flex;flex-direction:column;gap:.5rem;">
+            <div style="display:flex;gap:.6rem;align-items:flex-start;">
+              <span style="font-family:var(--mono);font-size:.68rem;background:rgba(74,222,128,.15);color:var(--green);padding:.2rem .5rem;border-radius:4px;flex-shrink:0;margin-top:.1rem;">NONE</span>
+              <span style="font-size:.8rem;color:var(--dim);">Ignore all memory. Persona sees the ad with zero history — like a first-time customer. Use for baseline testing.</span>
+            </div>
+            <div style="display:flex;gap:.6rem;align-items:flex-start;">
+              <span style="font-family:var(--mono);font-size:.68rem;background:rgba(250,204,21,.15);color:var(--yellow);padding:.2rem .5rem;border-radius:4px;flex-shrink:0;margin-top:.1rem;">CATEGORY</span>
+              <span style="font-size:.8rem;color:var(--dim);"><strong style="color:var(--text);">Default.</strong> Only memories from the same industry — FMCG memories for an FMCG ad, Electronics for Electronics. Cross-category reflections are also included.</span>
+            </div>
+            <div style="display:flex;gap:.6rem;align-items:flex-start;">
+              <span style="font-family:var(--mono);font-size:.68rem;background:rgba(255,107,53,.15);color:var(--accent);padding:.2rem .5rem;border-radius:4px;flex-shrink:0;margin-top:.1rem;">BRAND</span>
+              <span style="font-size:.8rem;color:var(--dim);">Only memories about this specific brand. "What does this persona think specifically about Nirma?" Best for brand health studies.</span>
+            </div>
+            <div style="display:flex;gap:.6rem;align-items:flex-start;">
+              <span style="font-family:var(--mono);font-size:.68rem;background:rgba(192,132,252,.15);color:var(--purple);padding:.2rem .5rem;border-radius:4px;flex-shrink:0;margin-top:.1rem;">FULL</span>
+              <span style="font-size:.8rem;color:var(--dim);">Everything the persona has ever experienced. Slow and expensive to process — only use when you're testing for cross-category spillover effects.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card card--yellow">
+          <h3 style="margin-bottom:.5rem;">The auto-strategy switch</h3>
+          <p style="font-size:.82rem;margin-bottom:.5rem;">After scope filtering, if a persona has <em>fewer than 50 category memories</em>, the system just dumps all of them into the prompt. Why? Because when there are only 10–15 memories, the scoring formula adds noise — better to just show everything.</p>
+          <p style="font-size:.82rem;"><strong>Once they cross 50 memories?</strong> The scoring formula kicks in and picks the best 5. This mirrors how streaming systems work — backfill everything early, then switch to live scoring at scale.</p>
+        </div>
+
+        <div class="card card--accent">
+          <h3 style="margin-bottom:.4rem;">Memory gets stronger on each retrieval</h3>
+          <p style="font-size:.82rem;">Every time a memory is picked and shown to the LLM, it gets a tiny boost: <code style="font-family:var(--mono);font-size:.75rem;">arousal += 0.02, importance += 0.1</code>. The more a childhood Nirma memory surfaces, the more dominant it becomes over time — exactly how nostalgia works in real humans.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     SLIDE 6 — STEP 4: THE EVALUATION PROMPT
+═══════════════════════════════════════════════ -->
+<section class="slide" id="s6">
+  <div class="bg-glow" style="width:500px;height:500px;background:rgba(74,222,128,.05);bottom:-150px;right:-100px;"></div>
+  <div class="slide__inner">
+    <div class="slide__num">STEP 4 — THE PERSON REACTS TO THE AD</div>
+    <div style="flex:1;display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start;padding-top:1rem;">
+      <div style="display:flex;flex-direction:column;gap:1.25rem;">
+        <div>
+          <div class="step-hdr">
+            <div class="step-num" style="background:rgba(74,222,128,.15);color:var(--green);">4</div>
+            <h2>Persona Evaluation</h2>
+          </div>
+          <span class="badge badge--sonnet" style="margin-bottom:.75rem;display:inline-flex;">● claude-sonnet-4-20250514</span>
+          <p>A carefully constructed prompt goes to Claude. It tells Claude <em>who to be</em>, what they remember, and then shows them the ad. Claude responds in-character.</p>
+        </div>
+        <div class="card card--green">
+          <h3 style="margin-bottom:.75rem;">Anatomy of the prompt (in order)</h3>
+          <div style="display:flex;flex-direction:column;gap:.5rem;">
+            <div style="background:rgba(255,107,53,.1);border:1px solid rgba(255,107,53,.2);border-radius:6px;padding:.5rem .75rem;font-size:.8rem;">
+              <strong style="color:var(--accent);">SYSTEM INSTRUCTION (NEW)</strong><br>
+              <span style="color:var(--dim);">"If this creative triggers a personal memory from your past — let that memory surface naturally BEFORE you analyze. Real consumers do not separate emotion from evaluation."</span>
+            </div>
+            <div style="background:var(--card2);border-radius:6px;padding:.5rem .75rem;font-size:.8rem;">
+              <strong>WHO YOU ARE</strong><br>
+              <span style="color:var(--dim);">Name, age, city, income, occupation, family status</span>
+            </div>
+            <div style="background:rgba(255,107,53,.08);border:1px solid rgba(255,107,53,.15);border-radius:6px;padding:.5rem .75rem;font-size:.8rem;">
+              <strong style="color:var(--accent);">YOUR FORMATIVE MEMORIES (NEW — appears FIRST)</strong><br>
+              <span style="color:var(--dim);">First-person scene narratives. Were here before, now moved to the top.</span>
+            </div>
+            <div style="background:var(--card2);border-radius:6px;padding:.5rem .75rem;font-size:.8rem;">
+              <strong>YOUR PURCHASE PSYCHOLOGY</strong><br>
+              <span style="color:var(--dim);">Price sensitivity 0.7 · Brand loyalty 0.4 · Impulse tendency 0.6...</span>
+            </div>
+            <div style="background:var(--card2);border-radius:6px;padding:.5rem .75rem;font-size:.8rem;">
+              <strong>YOUR PAST EXPERIENCES</strong><br>
+              <span style="color:var(--dim);">Top 5 retrieved memories — recent ad reactions, preferences, beliefs</span>
+            </div>
+            <div style="background:rgba(96,165,250,.1);border:1px solid rgba(96,165,250,.2);border-radius:6px;padding:.5rem .75rem;font-size:.8rem;">
+              <strong style="color:var(--blue);">THE AD YOU ARE SEEING</strong><br>
+              <span style="color:var(--dim);">The CreativeCard data — brand, headline, price, visuals, tone...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:1rem;">
+        <div class="card card--blue">
+          <h3 style="margin-bottom:.75rem;">What Claude returns</h3>
+          <div class="formula" style="font-size:.7rem;white-space:pre;line-height:1.9;">{
+ "primary_action":   "engage",
+ "sentiment":        "positive",
+ "overall_score":    72,
+ "attention_score":  7.5,
+ "relevance_score":  6.8,
+ "trust_score":      5.2,
+ "desire_score":     6.0,
+ "clarity_score":    8.5,
+ "first_impression": "Yaar, Nirma ka naam sunte hi...",
+ "reasoning":        "The jingle in the video reminded me...",
+ "objections":       ["powder quality has declined"],
+ "verbatim_reaction": "Arre, ye dekh ke toh Nani Ji yaad
+                        aa gayi. Sunday mornings aur woh
+                        jingle — aaj bhi dil mein hai.",
+ "importance_score": 8.5,
+ "key_themes":       ["nostalgia", "family", "trust"]
+}</div>
+        </div>
+        <div class="analogy">
+          <strong>Why "verbatim_reaction" matters:</strong> This is the WhatsApp voice note the persona would send their friend. Not "I found the advertisement emotionally resonant." But "Arre yaar, ye wahi Nirma hai na jo Nani ke zamaane mein hoti thi?" The difference is everything.
+        </div>
+        <div class="card card--accent" style="font-size:.83rem;">
+          <strong class="accent">The ordering matters.</strong> Scene memories appear at the top of the prompt — before numbers, before scores, before psychology. LLMs pay more attention to content that appears early. Before this change, a scene memory buried under 80 lines of data was effectively invisible. Now it leads.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     SLIDE 7 — STEP 5+6: CRITIC + MEMORY WRITING
+═══════════════════════════════════════════════ -->
+<section class="slide" id="s7">
+  <div class="bg-glow" style="width:500px;height:500px;background:rgba(248,113,113,.05);top:-100px;left:-100px;"></div>
+  <div class="slide__inner">
+    <div class="slide__num">STEP 5 + 6 — THE QUALITY GATE AND THE MEMORY COMMIT</div>
+    <div style="flex:1;display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start;padding-top:1rem;">
+      <div style="display:flex;flex-direction:column;gap:1.25rem;">
+        <div>
+          <div class="step-hdr">
+            <div class="step-num" style="background:rgba(248,113,113,.15);color:var(--red);">5</div>
+            <h2>The Critic Gate</h2>
+          </div>
+          <span class="badge badge--sonnet" style="margin-bottom:.75rem;display:inline-flex;">● claude-sonnet-4-20250514</span>
+          <p>A second Claude call immediately reads the evaluation and asks one question: <em>Is this realistic?</em> This is the quality police. It's completely separate from the evaluator.</p>
+        </div>
+        <div class="card card--red">
+          <h3 style="margin-bottom:.75rem;">4 checks the critic runs</h3>
+          <div style="display:flex;flex-direction:column;gap:.6rem;">
+            <div style="display:flex;gap:.6rem;">
+              <span style="color:var(--red);font-weight:700;flex-shrink:0;">1.</span>
+              <div><strong>Persona consistency</strong> — <span style="font-size:.82rem;color:var(--dim);">Does a price-sensitive Indore homemaker on ₹30k/month really give an "I'll buy this immediately" to a ₹5000 product? Red flag if yes.</span></div>
+            </div>
+            <div style="display:flex;gap:.6rem;">
+              <span style="color:var(--red);font-weight:700;flex-shrink:0;">2.</span>
+              <div><strong>Sycophancy detection</strong> — <span style="font-size:.82rem;color:var(--dim);">LLMs tend to be unrealistically positive. If every persona scored 80+, something is wrong. The critic catches "generic enthusiasm."</span></div>
+            </div>
+            <div style="display:flex;gap:.6rem;">
+              <span style="color:var(--red);font-weight:700;flex-shrink:0;">3.</span>
+              <div><strong>Cultural authenticity</strong> — <span style="font-size:.82rem;color:var(--dim);">Does the verbatim actually sound like someone from that city/background? "I found this creatively stimulating" is not how someone from Patna talks.</span></div>
+            </div>
+            <div style="display:flex;gap:.6rem;">
+              <span style="color:var(--red);font-weight:700;flex-shrink:0;">4.</span>
+              <div><strong>Action-reasoning alignment</strong> — <span style="font-size:.82rem;color:var(--dim);">"I'm worried about the price and I don't trust this brand" → primary_action: "purchase_intent" is a contradiction. Flag it.</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="kv">
+            <div class="kv__label">If PASS</div>
+            <div class="kv__val green">Evaluation is counted in the scorecard ✓</div>
+          </div>
+          <div style="height:.5rem;"></div>
+          <div class="kv">
+            <div class="kv__label">If FAIL</div>
+            <div class="kv__val red">Quarantined — excluded from results. Still saved for audit. ✗</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:1.25rem;">
+        <div>
+          <div class="step-hdr">
+            <div class="step-num" style="background:rgba(255,107,53,.15);color:var(--accent);">6</div>
+            <h2>Memory Commit</h2>
+          </div>
+          <span class="badge badge--noai" style="margin-bottom:.75rem;display:inline-flex;">● No AI · Save to file</span>
+          <p>Only <em>critic-approved</em> evaluations become memories. Garbage in, garbage out — the critic gate protects memory quality.</p>
+        </div>
+        <div class="card card--accent">
+          <h3 style="margin-bottom:.75rem;">What gets written to memory</h3>
+          <div style="display:flex;flex-direction:column;gap:.6rem;">
+            <div style="display:flex;gap:.6rem;align-items:flex-start;">
+              <span class="pill pill--obs">OBSERVATION</span>
+              <span style="font-size:.8rem;color:var(--dim);">Always written. "I saw a Nirma FMCG ad. My first impression: reminded me of childhood. I would engage."</span>
+            </div>
+            <div style="display:flex;gap:.6rem;align-items:flex-start;">
+              <span class="pill pill--pref">PREFERENCE</span>
+              <span style="font-size:.8rem;color:var(--dim);">Only if overall_score &gt; <strong style="color:var(--text);">70</strong>. Captures lasting brand affinity.</span>
+            </div>
+            <div style="display:flex;gap:.6rem;align-items:flex-start;">
+              <span class="pill pill--belief">BELIEF</span>
+              <span style="font-size:.8rem;color:var(--dim);">Only if overall_score &lt; <strong style="color:var(--text);">30</strong>. Captures lasting brand distrust or category skepticism.</span>
+            </div>
+          </div>
+        </div>
+        <div class="card card--purple">
+          <h3 style="margin-bottom:.5rem;">Step 7 (conditional): Reflection</h3>
+          <span class="badge badge--haiku" style="margin-bottom:.6rem;display:inline-flex;">● claude-haiku-3-20250307</span>
+          <p style="font-size:.82rem;margin-bottom:.6rem;">When a persona's total accumulated importance from memories crosses <strong>50 points</strong>, a reflection is triggered. The 10 most important memories are gathered and Haiku is asked:</p>
+          <div class="quote" style="font-size:.8rem;border-color:var(--purple);">"Given these experiences, what high-level insight can you draw about your own buying patterns?"</div>
+          <p style="font-size:.8rem;margin-top:.6rem;">The result is a <span class="purple">REFLECTION</span> node: <em>"I distrust skincare brands that lead with before/after photos over ingredient transparency."</em> This then gets retrieved in future evals and influences future reactions.</p>
+        </div>
+        <div class="analogy">
+          <strong>Analogy:</strong> Reflection is like when you notice, after 5 bad dates, "I keep falling for people who are emotionally unavailable." You didn't know it after date 1. After date 5, the pattern is obvious. That insight now changes how date 6 goes.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     SLIDE 8 — STEP 8+9: SCORECARD + RECOMMENDATION
+═══════════════════════════════════════════════ -->
+<section class="slide" id="s8">
+  <div class="bg-glow" style="width:500px;height:500px;background:rgba(192,132,252,.06);bottom:-150px;right:-100px;"></div>
+  <div class="slide__inner">
+    <div class="slide__num">STEP 8 + 9 — SCORECARD AND RECOMMENDATION</div>
+    <div style="flex:1;display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start;padding-top:1rem;">
+      <div style="display:flex;flex-direction:column;gap:1.25rem;">
+        <div>
+          <div class="step-hdr">
+            <div class="step-num" style="background:rgba(34,211,238,.15);color:var(--cyan);">8</div>
+            <h2>Aggregation</h2>
+          </div>
+          <span class="badge badge--noai" style="margin-bottom:.75rem;display:inline-flex;">● No AI · Pure statistics</span>
+          <p>All approved evaluations are averaged and grouped to produce a CreativeScorecard.</p>
+        </div>
+        <div class="card">
+          <h3 style="margin-bottom:.75rem;">What goes into the scorecard</h3>
+          <div class="bar-row"><span class="bar-label">Overall</span><div class="bar-track"><div class="bar-fill" style="width:68%;background:var(--green);"></div></div><span class="bar-val">68</span></div>
+          <div class="bar-row"><span class="bar-label">Attention</span><div class="bar-track"><div class="bar-fill" style="width:75%;background:var(--blue);"></div></div><span class="bar-val">7.5</span></div>
+          <div class="bar-row"><span class="bar-label">Relevance</span><div class="bar-track"><div class="bar-fill" style="width:62%;background:var(--blue);"></div></div><span class="bar-val">6.2</span></div>
+          <div class="bar-row"><span class="bar-label">Trust</span><div class="bar-track"><div class="bar-fill" style="width:52%;background:var(--yellow);"></div></div><span class="bar-val">5.2</span></div>
+          <div class="bar-row"><span class="bar-label">Desire</span><div class="bar-track"><div class="bar-fill" style="width:60%;background:var(--yellow);"></div></div><span class="bar-val">6.0</span></div>
+          <div class="bar-row"><span class="bar-label">Clarity</span><div class="bar-track"><div class="bar-fill" style="width:85%;background:var(--green);"></div></div><span class="bar-val">8.5</span></div>
+        </div>
+        <div class="card card--cyan">
+          <h3 style="margin-bottom:.5rem;">Also computed</h3>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:.4rem;font-size:.8rem;">
+            <div class="card" style="padding:.5rem .7rem;background:var(--card2);">Letter grade (A/B/C/D/F)</div>
+            <div class="card" style="padding:.5rem .7rem;background:var(--card2);">Action distribution<br><span style="color:var(--dim);">35% engage, 25% scroll...</span></div>
+            <div class="card" style="padding:.5rem .7rem;background:var(--card2);">Top verbatim quotes</div>
+            <div class="card" style="padding:.5rem .7rem;background:var(--card2);">Per-archetype segments</div>
+            <div class="card" style="padding:.5rem .7rem;background:var(--card2);">Top strengths</div>
+            <div class="card" style="padding:.5rem .7rem;background:var(--card2);">Top weaknesses</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:1.25rem;">
+        <div>
+          <div class="step-hdr">
+            <div class="step-num" style="background:rgba(192,132,252,.15);color:var(--purple);">9</div>
+            <h2>Recommendation</h2>
+          </div>
+          <span class="badge badge--sonnet" style="margin-bottom:.75rem;display:inline-flex;">● claude-sonnet-4-20250514</span>
+          <p>One final LLM call reads all scorecards and makes a concrete business decision. This is the "agentic action" — not a summary, an actual call.</p>
+        </div>
+        <div class="card card--purple">
+          <h3 style="margin-bottom:.75rem;">The 5 possible decisions</h3>
+          <div style="display:flex;flex-direction:column;gap:.4rem;font-size:.82rem;">
+            <div style="display:flex;gap:.6rem;align-items:center;">
+              <span style="font-family:var(--mono);font-size:.7rem;background:rgba(74,222,128,.15);color:var(--green);padding:.15rem .45rem;border-radius:4px;flex-shrink:0;min-width:80px;text-align:center;">SCALE</span>
+              <span style="color:var(--dim);">Strong enough to run at full budget. Go.</span>
+            </div>
+            <div style="display:flex;gap:.6rem;align-items:center;">
+              <span style="font-family:var(--mono);font-size:.7rem;background:rgba(250,204,21,.15);color:var(--yellow);padding:.15rem .45rem;border-radius:4px;flex-shrink:0;min-width:80px;text-align:center;">ITERATE</span>
+              <span style="color:var(--dim);">Good bones, needs specific changes before scaling.</span>
+            </div>
+            <div style="display:flex;gap:.6rem;align-items:center;">
+              <span style="font-family:var(--mono);font-size:.7rem;background:rgba(248,113,113,.15);color:var(--red);padding:.15rem .45rem;border-radius:4px;flex-shrink:0;min-width:80px;text-align:center;">KILL</span>
+              <span style="color:var(--dim);">Will underperform. Stop spending.</span>
+            </div>
+            <div style="display:flex;gap:.6rem;align-items:center;">
+              <span style="font-family:var(--mono);font-size:.7rem;background:rgba(96,165,250,.15);color:var(--blue);padding:.15rem .45px;border-radius:4px;flex-shrink:0;min-width:80px;text-align:center;">SPLIT_TEST</span>
+              <span style="color:var(--dim);">Can't pick a winner — run a controlled A/B test.</span>
+            </div>
+            <div style="display:flex;gap:.6rem;align-items:center;">
+              <span style="font-family:var(--mono);font-size:.7rem;background:rgba(139,141,148,.15);color:var(--dim);padding:.15rem .45rem;border-radius:4px;flex-shrink:0;min-width:80px;text-align:center;">HOLD</span>
+              <span style="color:var(--dim);">Need more data or context.</span>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <h3 style="margin-bottom:.5rem;">+  Edit recommendations</h3>
+          <p style="font-size:.82rem;">The agent also produces specific edit suggestions ranked by priority — "Change the headline from X to Y — trust score is dragging everything down. Expected impact: +12 on trust, +6 on overall."</p>
+        </div>
+        <div class="analogy">
+          <strong>Analogy:</strong> This is the media planner sitting at the table after the focus group. She's not just reading results. She's saying "Run Creative B. Kill A. For Creative B, change the CTA — that's what's holding back conversion intent."
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     SLIDE 9 — BEFORE vs AFTER: MANUFACTURING NOSTALGIA
+═══════════════════════════════════════════════ -->
+<section class="slide" id="s9">
+  <div class="bg-glow" style="width:600px;height:600px;background:rgba(255,107,53,.07);top:-200px;right:-200px;"></div>
+  <div class="slide__inner">
+    <div class="slide__num">THE BIG CHANGE — MANUFACTURING NOSTALGIA</div>
+    <div style="flex:1;display:flex;flex-direction:column;gap:1.5rem;padding-top:.5rem;">
+      <div>
+        <h2>What changed — and why it matters</h2>
+        <p style="margin-top:.3rem;">Nostalgia was already in the data. It was just not making it into the output.</p>
+      </div>
+
+      <div class="card card--accent" style="max-width:700px;">
+        <p style="font-size:.88rem;"><strong style="color:var(--accent);">The core problem:</strong> The old system stored cultural references as a list — <code style="font-family:var(--mono);font-size:.8rem;">iconic_ads: ["Nirma jingle"]</code>. That's a label. A Post-It note. The AI read it and produced analyst language: "This ad appeals to nostalgia which is effective for this demographic." Technically true. Emotionally hollow.</p>
+      </div>
+
+      <div style="overflow-x:auto;">
+        <table class="compare" style="min-width:700px;">
+          <thead>
+            <tr>
+              <th>WHAT</th>
+              <th class="old">BEFORE — v1</th>
+              <th class="new">AFTER — v2 (Manufacturing Nostalgia)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="row-label">How nostalgia was stored</td>
+              <td class="old">Trait list: <code style="font-family:var(--mono);font-size:.78rem;">iconic_ads: ["Nirma jingle"]</code> — a tag, not a story</td>
+              <td class="new">First-person narrative scene with sensory detail, who was there, emotional charge — a lived experience</td>
+            </tr>
+            <tr>
+              <td class="row-label">Where it appeared in the prompt</td>
+              <td class="old">Buried at the bottom under <em>## Your Cultural Memory</em> — after 80 lines of psychology numbers. LLMs pay less attention to content that appears late.</td>
+              <td class="new">Now the <strong>first thing</strong> after identity — before price sensitivity, before scores. Leads the context. Gets attended to.</td>
+            </tr>
+            <tr>
+              <td class="row-label">Memory retrieval priority</td>
+              <td class="old">A memory from 1988 competed equally with a neutral ad memory from Tuesday. Same weights = old memories lose to recent ones.</td>
+              <td class="new"><code style="font-family:var(--mono);font-size:.78rem;">emotional_arousal=0.85</code> × weight 1.5x. A high-arousal childhood memory beats a flat recent one on the scoring formula — even if it's 40 years older.</td>
+            </tr>
+            <tr>
+              <td class="row-label">System instruction</td>
+              <td class="old">"If a brand triggers a childhood memory — say so."</td>
+              <td class="new">"If this creative triggers a personal memory — <strong>let it surface BEFORE you analyze</strong>. Real consumers don't separate emotion from evaluation."</td>
+            </tr>
+            <tr>
+              <td class="row-label">What the LLM actually produced</td>
+              <td class="old old" style="font-style:italic;">"This ad appeals to nostalgia which is effective for this demographic. The brand heritage creates trust signals."</td>
+              <td class="new new" style="font-style:italic;">"Yaar, ye Nirma wali dhun sunte hi Nani Ji yaad aa gayi — Sunday mornings, oiled hair, Doordarshan. Dil bhar aaya. Definitely buying."</td>
+            </tr>
+            <tr>
+              <td class="row-label">Memory gets stronger over time?</td>
+              <td class="old">No. Every retrieval was stateless — no impact on future retrievals.</td>
+              <td class="new">Yes. Each retrieval boosts <code style="font-family:var(--mono);font-size:.78rem;">arousal += 0.02</code>, <code style="font-family:var(--mono);font-size:.78rem;">importance += 0.1</code>. The more it surfaces, the more dominant it becomes.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card" style="background:rgba(255,107,53,.08);border-color:rgba(255,107,53,.2);max-width:900px;">
+        <p style="font-size:.88rem;"><strong style="color:var(--accent);">Why this is the right fix:</strong> The problem was architectural, not content-based. The personas were rich. The memories were detailed. But the prompt structure had nostalgia losing to recency in the retrieval formula, and arriving too late in the prompt to fully shape the LLM's character. Both are now fixed.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     SLIDE 10 — FULL SYSTEM SUMMARY
+═══════════════════════════════════════════════ -->
+<section class="slide" id="s10">
+  <div class="bg-glow" style="width:500px;height:500px;background:rgba(74,222,128,.05);bottom:-100px;left:-100px;"></div>
+  <div class="slide__inner">
+    <div class="slide__num">SUMMARY — THE COMPLETE PICTURE</div>
+    <div style="flex:1;display:flex;flex-direction:column;gap:1.25rem;padding-top:.5rem;">
+      <h2>Every step, every model, every decision</h2>
+
+      <div style="overflow-x:auto;">
+        <table class="compare" style="min-width:750px;">
+          <thead>
+            <tr>
+              <th style="width:36px;">#</th>
+              <th>WHAT HAPPENS</th>
+              <th>MODEL / ENGINE</th>
+              <th>INPUT</th>
+              <th>OUTPUT</th>
+              <th>AI?</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="font-family:var(--mono);color:var(--dim);font-size:.75rem;">0</td>
+              <td><strong>Read the ad image</strong></td>
+              <td style="font-size:.75rem;"><span class="purple">claude-sonnet-4</span></td>
+              <td style="font-size:.78rem;color:var(--dim);">Brand + image</td>
+              <td style="font-size:.78rem;color:var(--dim);">CreativeCard (25 fields)</td>
+              <td><span class="badge badge--sonnet" style="font-size:.65rem;">Sonnet</span></td>
+            </tr>
+            <tr>
+              <td style="font-family:var(--mono);color:var(--dim);font-size:.75rem;">1</td>
+              <td><strong>Pick the cohort</strong></td>
+              <td style="font-size:.75rem;"><span class="green">Cohort engine</span></td>
+              <td style="font-size:.78rem;color:var(--dim);">Persona library + category</td>
+              <td style="font-size:.78rem;color:var(--dim);">5–20 selected personas</td>
+              <td><span class="badge badge--noai" style="font-size:.65rem;">No AI</span></td>
+            </tr>
+            <tr>
+              <td style="font-family:var(--mono);color:var(--dim);font-size:.75rem;">2</td>
+              <td><strong>Load memory streams</strong></td>
+              <td style="font-size:.75rem;"><span class="green">MemoryStream.load()</span></td>
+              <td style="font-size:.78rem;color:var(--dim);">persona_id + scope</td>
+              <td style="font-size:.78rem;color:var(--dim);">All memory nodes per persona</td>
+              <td><span class="badge badge--noai" style="font-size:.65rem;">No AI</span></td>
+            </tr>
+            <tr>
+              <td style="font-family:var(--mono);color:var(--dim);font-size:.75rem;">3</td>
+              <td><strong>Score + retrieve memories</strong></td>
+              <td style="font-size:.75rem;"><span class="green">MemoryRetriever</span></td>
+              <td style="font-size:.78rem;color:var(--dim);">All nodes + ad query text</td>
+              <td style="font-size:.78rem;color:var(--dim);">Top 5 most relevant memories</td>
+              <td><span class="badge badge--noai" style="font-size:.65rem;">No AI</span></td>
+            </tr>
+            <tr style="background:rgba(255,107,53,.04);">
+              <td style="font-family:var(--mono);color:var(--dim);font-size:.75rem;">4</td>
+              <td><strong>Persona reacts</strong> <span style="font-size:.7rem;color:var(--accent);">← main event</span></td>
+              <td style="font-size:.75rem;"><span class="purple">claude-sonnet-4</span></td>
+              <td style="font-size:.78rem;color:var(--dim);">Persona + memories + creative</td>
+              <td style="font-size:.78rem;color:var(--dim);">Scores, action, verbatim, reasoning</td>
+              <td><span class="badge badge--sonnet" style="font-size:.65rem;">Sonnet</span></td>
+            </tr>
+            <tr>
+              <td style="font-family:var(--mono);color:var(--dim);font-size:.75rem;">5</td>
+              <td><strong>Quality check (critic)</strong></td>
+              <td style="font-size:.75rem;"><span class="purple">claude-sonnet-4</span></td>
+              <td style="font-size:.78rem;color:var(--dim);">Persona profile + evaluation</td>
+              <td style="font-size:.78rem;color:var(--dim);">PASS / QUARANTINE + reason</td>
+              <td><span class="badge badge--sonnet" style="font-size:.65rem;">Sonnet</span></td>
+            </tr>
+            <tr>
+              <td style="font-family:var(--mono);color:var(--dim);font-size:.75rem;">6</td>
+              <td><strong>Write to memory</strong></td>
+              <td style="font-size:.75rem;"><span class="green">MemoryStream.add_node()</span></td>
+              <td style="font-size:.78rem;color:var(--dim);">Approved evaluation</td>
+              <td style="font-size:.78rem;color:var(--dim);">New OBSERVATION / PREFERENCE / BELIEF node</td>
+              <td><span class="badge badge--noai" style="font-size:.65rem;">No AI</span></td>
+            </tr>
+            <tr>
+              <td style="font-family:var(--mono);color:var(--dim);font-size:.75rem;">7</td>
+              <td><strong>Reflection</strong> (if triggered)</td>
+              <td style="font-size:.75rem;"><span class="blue">claude-haiku-3</span></td>
+              <td style="font-size:.78rem;color:var(--dim);">Top 10 important memories</td>
+              <td style="font-size:.78rem;color:var(--dim);">Higher-order insight node (REFLECTION)</td>
+              <td><span class="badge badge--haiku" style="font-size:.65rem;">Haiku</span></td>
+            </tr>
+            <tr>
+              <td style="font-family:var(--mono);color:var(--dim);font-size:.75rem;">8</td>
+              <td><strong>Aggregate scorecard</strong></td>
+              <td style="font-size:.75rem;"><span class="green">aggregate_evaluations()</span></td>
+              <td style="font-size:.78rem;color:var(--dim);">All approved evaluations</td>
+              <td style="font-size:.78rem;color:var(--dim);">Scorecard + grade + segment breakdowns</td>
+              <td><span class="badge badge--noai" style="font-size:.65rem;">No AI</span></td>
+            </tr>
+            <tr>
+              <td style="font-family:var(--mono);color:var(--dim);font-size:.75rem;">9</td>
+              <td><strong>Recommendation</strong></td>
+              <td style="font-size:.75rem;"><span class="purple">claude-sonnet-4</span></td>
+              <td style="font-size:.78rem;color:var(--dim);">All scorecards</td>
+              <td style="font-size:.78rem;color:var(--dim);">SCALE / ITERATE / KILL + edit list</td>
+              <td><span class="badge badge--sonnet" style="font-size:.65rem;">Sonnet</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="grid-3" style="gap:.75rem;margin-top:.25rem;">
+        <div class="card card--accent" style="padding:.8rem 1rem;">
+          <div class="kv__label">Sonnet calls per run</div>
+          <div style="font-family:var(--serif);font-size:1.4rem;margin:.2rem 0;">Step 0, 4, 5, 9</div>
+          <div style="font-size:.78rem;color:var(--dim);">Most expensive — longest thinking, best quality</div>
+        </div>
+        <div class="card card--blue" style="padding:.8rem 1rem;">
+          <div class="kv__label">Haiku calls per run</div>
+          <div style="font-family:var(--serif);font-size:1.4rem;margin:.2rem 0;">Step 7 only</div>
+          <div style="font-size:.78rem;color:var(--dim);">Conditional — only fires when importance crosses 50pts. Fast and cheap.</div>
+        </div>
+        <div class="card card--green" style="padding:.8rem 1rem;">
+          <div class="kv__label">Steps with zero AI</div>
+          <div style="font-family:var(--serif);font-size:1.4rem;margin:.2rem 0;">Steps 1, 2, 3, 6, 8</div>
+          <div style="font-size:.78rem;color:var(--dim);">Pure Python math. Fast, free, and fully auditable. No hallucination risk.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Build nav dots
+  const slides = document.querySelectorAll('.slide');
+  const nav = document.getElementById('navDots');
+  slides.forEach((s, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'nav__dot';
+    btn.title = `Slide ${i+1}`;
+    btn.onclick = () => s.scrollIntoView({ behavior: 'smooth' });
+    nav.appendChild(btn);
+  });
+
+  // Update active dot on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const idx = Array.from(slides).indexOf(entry.target);
+        document.querySelectorAll('.nav__dot').forEach((d, i) => {
+          d.classList.toggle('active', i === idx);
+        });
+      }
+    });
+  }, { threshold: 0.5 });
+  slides.forEach(s => observer.observe(s));
+
+  // Keyboard navigation
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+      const cur = Array.from(slides).findIndex(s => {
+        const r = s.getBoundingClientRect();
+        return r.top >= -10 && r.top < window.innerHeight / 2;
+      });
+      if (cur < slides.length - 1) slides[cur + 1].scrollIntoView({ behavior: 'smooth' });
+    }
+    if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+      const cur = Array.from(slides).findIndex(s => {
+        const r = s.getBoundingClientRect();
+        return r.top >= -10;
+      });
+      if (cur > 0) slides[cur - 1].scrollIntoView({ behavior: 'smooth' });
+    }
+  });
+</script>
+</body>
+</html>
