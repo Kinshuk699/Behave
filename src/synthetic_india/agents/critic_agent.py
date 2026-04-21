@@ -14,6 +14,10 @@ If FAIL → quarantine the evaluation, exclude from scorecard aggregation.
 from __future__ import annotations
 
 from synthetic_india.agents.llm_client import call_anthropic
+from synthetic_india.agents.critic_rules import (
+    run_pre_critic_checks,
+    run_specificity_check,
+)
 from synthetic_india.config import LLMConfig, get_llm_config
 from synthetic_india.schemas.critic import CriticVerdict, CriticRunSummary
 from synthetic_india.schemas.evaluation import PersonaEvaluation
@@ -177,6 +181,10 @@ async def evaluate_single(
 
     parsed = response.parse_json()
 
+    rule_flags = run_pre_critic_checks(persona, evaluation) + run_specificity_check(
+        evaluation
+    )
+
     return CriticVerdict(
         evaluation_id=evaluation.evaluation_id,
         persona_id=evaluation.persona_id,
@@ -186,6 +194,7 @@ async def evaluate_single(
         action_reasoning_alignment=parsed["action_reasoning_alignment"],
         explanation=parsed["explanation"],
         flags=parsed.get("flags", []),
+        rule_flags=rule_flags,
         model_used=response.model,
         cost_usd=response.cost_usd,
     )

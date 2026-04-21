@@ -32,6 +32,12 @@ class CriticVerdict(BaseModel):
     explanation: str
     flags: list[str] = Field(default_factory=list)
 
+    # Phase 3 — deterministic pre-critic violations (any entry vetoes pass).
+    rule_flags: list[str] = Field(
+        default_factory=list,
+        description="Deterministic rule violations from critic_rules.py. Non-empty forces passed=False.",
+    )
+
     # Metadata
     model_used: str = ""
     cost_usd: float = 0.0
@@ -51,6 +57,8 @@ class CriticVerdict(BaseModel):
     @computed_field  # type: ignore[prop-decorator]
     @property
     def passed(self) -> bool:
+        if self.rule_flags:
+            return False
         return self.overall_quality >= PASS_THRESHOLD
 
 
