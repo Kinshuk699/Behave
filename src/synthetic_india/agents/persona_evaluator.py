@@ -161,6 +161,54 @@ Formative brands: {brands}"""
 
 {biases}"""
 
+    # ── Phase 4: persona contradictions ─────────────────────────
+    if persona.shadow_archetype:
+        block += f"""
+
+## Your Shadow Archetype
+
+You are normally a {persona.archetype}, but when stressed, excited, tired, or
+off-script, you slip into being a {persona.shadow_archetype}. The normal rules
+about how you decide do not apply in those moments. Be honest if the ad catches
+you in that state."""
+
+    if persona.value_conflicts:
+        lines = []
+        for vc in persona.value_conflicts:
+            dom_label = {
+                "a": f"{vc.value_a} usually wins",
+                "b": f"{vc.value_b} usually wins",
+                "situational": "depends on context",
+            }.get(vc.dominant_side, vc.dominant_side)
+            lines.append(
+                f"- {vc.value_a} vs {vc.value_b} — "
+                f"{vc.value_a} when {vc.context_a}; "
+                f"{vc.value_b} when {vc.context_b}. ({dom_label})"
+            )
+        conflicts = "\n".join(lines)
+        block += f"""
+
+## Your Value Conflicts
+
+You hold competing values. Which side wins depends on context:
+{conflicts}"""
+
+    if persona.context_modifiers:
+        lines = []
+        for name, bm in persona.context_modifiers.items():
+            deltas = ", ".join(
+                f"{dial} {'+' if d >= 0 else ''}{d:.2f}"
+                for dial, d in bm.dial_deltas.items()
+            )
+            lines.append(f"- **{name}**: {bm.description} → {deltas}")
+        modifiers = "\n".join(lines)
+        block += f"""
+
+## Your Context Modifiers
+
+In these situations, your usual psychology dials shift:
+{modifiers}"""
+
     return block
 
 

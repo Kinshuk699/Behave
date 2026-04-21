@@ -3,9 +3,9 @@
 from __future__ import annotations
 
 from enum import Enum
-from typing import Optional
+from typing import Literal, Optional
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 from synthetic_india.schemas.memory import SceneMemory
 
@@ -146,6 +146,71 @@ class Influencer(BaseModel):
     influence_domain: str = Field(..., description="What categories they influence, e.g. 'grocery, household'")
 
 
+# ── Phase 4: Persona contradictions (Opus #5) ────────────────
+
+# Whitelist of psychology dials that BehaviorModifier may shift.
+_VALID_DIALS: frozenset[str] = frozenset(
+    {
+        "price_sensitivity",
+        "brand_loyalty",
+        "impulse_tendency",
+        "social_proof_need",
+        "research_depth",
+        "risk_tolerance",
+        "deal_sensitivity",
+    }
+)
+
+
+class ValueConflict(BaseModel):
+    """Two competing values the persona holds, with the contexts that activate each.
+
+    Richer than free-text `internal_conflicts` because it forces structure:
+    'value_a vs value_b, triggered by context_a vs context_b'.
+    """
+
+    value_a: str = Field(..., description="e.g. 'thrift', 'family_security'")
+    value_b: str = Field(..., description="e.g. 'status', 'self_reward'")
+    context_a: str = Field(
+        ..., description="Situation where value_a wins (e.g. 'grocery shopping with mother')"
+    )
+    context_b: str = Field(
+        ..., description="Situation where value_b wins (e.g. 'dinner with college friends')"
+    )
+    dominant_side: Literal["a", "b", "situational"] = Field(
+        "situational",
+        description="Which side usually wins overall: 'a', 'b', or 'situational' (depends).",
+    )
+
+
+class BehaviorModifier(BaseModel):
+    """Named situation that nudges psychology dials at decision time.
+
+    e.g. {'end_of_month': BehaviorModifier(description='bills cleared, salary not in',
+          dial_deltas={'price_sensitivity': +0.2, 'impulse_tendency': -0.15})}
+    """
+
+    description: str = Field(..., description="Human-readable trigger context.")
+    dial_deltas: dict[str, float] = Field(
+        ...,
+        description="Map of psychology dial name → signed delta in [-1, 1].",
+    )
+
+    @field_validator("dial_deltas")
+    @classmethod
+    def _validate_dials(cls, v: dict[str, float]) -> dict[str, float]:
+        for dial, delta in v.items():
+            if dial not in _VALID_DIALS:
+                raise ValueError(
+                    f"unknown dial '{dial}'; must be one of {sorted(_VALID_DIALS)}"
+                )
+            if not -1.0 <= delta <= 1.0:
+                raise ValueError(
+                    f"delta for '{dial}' = {delta} out of range [-1.0, 1.0]"
+                )
+        return v
+
+
 # ── Full Persona ──────────────────────────────────────────────
 
 
@@ -197,6 +262,30 @@ class PersonaProfile(BaseModel):
             "and present contrast. Loaded into MemoryStream at initialization with high "
             "emotional_arousal so they surface during evaluation."
         )
+    )
+
+    # ── Phase 4 (Opus #5): Persona contradictions ──
+    shadow_archetype: Optional[Archetype] = Field(
+        None,
+        description=(
+            "The archetype this persona becomes when stressed, excited, or off-script. "
+            "e.g. a 'pragmatist' whose shadow is 'impulse_buyer' — captures the moments "
+            "when normal rules don't apply."
+        ),
+    )
+    value_conflicts: list[ValueConflict] = Field(
+        default_factory=list,
+        description=(
+            "Pairs of competing values with the contexts that activate each side. "
+            "Richer than free-text internal_conflicts because each side has an explicit trigger."
+        ),
+    )
+    context_modifiers: dict[str, BehaviorModifier] = Field(
+        default_factory=dict,
+        description=(
+            "Named situations (e.g. 'end_of_month', 'salary_day', 'after_argument_with_spouse') "
+            "that shift psychology dials at decision time."
+        ),
     )
 
     model_config = ConfigDict(use_enum_values=True)
