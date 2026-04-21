@@ -115,6 +115,14 @@ class MemoryNode(BaseModel):
     # Access tracking
     last_accessed_at: datetime = Field(default_factory=datetime.utcnow)
     access_count: int = 0
+    recent_retrieval_timestamps: list[datetime] = Field(
+        default_factory=list,
+        description=(
+            "Rolling window (cap 10) of recent retrieval times. Used by "
+            "MemoryRetriever to detect habituation: >5 retrievals in last 7 "
+            "days -> arousal stops growing and starts dampening (Phase 2)."
+        ),
+    )
 
     # Nostalgia / emotional signal (Manufacturing Nostalgia addendum, 2026-04-08)
     emotional_arousal: float = Field(

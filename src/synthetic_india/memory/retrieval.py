@@ -22,7 +22,7 @@ Paper reference: Park et al., Section 5.2 "Retrieval"
 from __future__ import annotations
 
 import math
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Optional
 
 import numpy as np
@@ -119,18 +119,109 @@ class MemoryRetriever:
 
         scored.sort(key=lambda s: s.composite_score, reverse=True)
 
-        # Memory strengthening on retrieval (Manufacturing Nostalgia, §7.3 + ACT-R / Hou et al.):
-        # Memories that get recalled become stronger — mirrors real human memory consolidation.
-        # access_count += 1 (existing), plus tiny boosts to arousal and importance.
+        # Memory strengthening on retrieval — Phase 2 habituation-aware version.
+        # Cite: Opus pressure-test Issue #1 (runaway loop); Anshuj v3 Part 5
+        # (ACT-R activation + habituation + fading affect bias). The original
+        # blind '+0.02 every retrieval' code created a positive feedback loop
+        # with no ceiling and no decay. Now: first <=5 retrievals in 7 days
+        # strengthen the memory; beyond that, habituation actively dampens.
         for s in scored[:top_k]:
-            s.node.last_accessed_at = now
-            s.node.access_count += 1
-            # Small arousal boost — accumulates over many retrievals, capped at 1.0
-            s.node.emotional_arousal = min(1.0, s.node.emotional_arousal + 0.02)
-            # Small importance boost — capped at 10.0
-            s.node.importance = min(10.0, s.node.importance + 0.1)
+            self._on_retrieval(s.node, now)
 
         return scored[:top_k]
+
+    # ── Lifecycle constants (Phase 2, 2026-04-21) ─────────────────────
+    # All values are conservative starting points. Tune from simulation
+    # data (Anshuj v3 Experiment 2) — they are not magic numbers.
+    HABITUATION_THRESHOLD: int = 5            # retrievals within window
+    HABITUATION_WINDOW_DAYS: int = 7
+    HABITUATION_PENALTY: float = 0.03         # arousal -= this when habituated
+    STRENGTHENING_DELTA: float = 0.02         # arousal += this when fresh
+    IMPORTANCE_DELTA: float = 0.10
+    MAX_AROUSAL: float = 1.0
+    MIN_AROUSAL_FLOOR: float = 0.15           # never disappear, can revive
+    MAX_IMPORTANCE: float = 10.0
+    TIMESTAMP_WINDOW_CAP: int = 10            # rolling window size
+    DORMANCY_MIN_DAYS: int = 30               # decay starts after this
+    DORMANCY_DECAY_RATE: float = 0.005        # arousal lost per daily_decay call
+    FADING_AFFECT_POSITIVE_FACTOR: float = 0.5   # positive memories decay slower
+    FADING_AFFECT_NEGATIVE_FACTOR: float = 1.5   # negative memories decay faster
+
+    _POSITIVE_THEME_MARKERS: frozenset[str] = frozenset({
+        "joyful", "warmth", "nostalgia", "comfort", "pride", "celebration",
+        "family_warmth", "tradition", "heritage", "love",
+    })
+    _NEGATIVE_THEME_MARKERS: frozenset[str] = frozenset({
+        "loss", "anxious", "shame", "anger", "fear", "betrayal",
+        "regret", "melancholy",
+    })
+
+    def _on_retrieval(self, node: MemoryNode, now: datetime) -> None:
+        """Update node state after it surfaces in a retrieval result.
+
+        Order matters: append the timestamp FIRST, then count recent ones,
+        so the just-fired retrieval is itself part of the habituation count.
+        """
+        node.last_accessed_at = now
+        node.access_count += 1
+        node.recent_retrieval_timestamps.append(now)
+        # Cap the rolling window (oldest dropped first).
+        if len(node.recent_retrieval_timestamps) > self.TIMESTAMP_WINDOW_CAP:
+            node.recent_retrieval_timestamps = node.recent_retrieval_timestamps[
+                -self.TIMESTAMP_WINDOW_CAP:
+            ]
+
+        recent_count = self._count_recent_retrievals(node, now)
+
+        if recent_count > self.HABITUATION_THRESHOLD:
+            # Habituated — dampen.
+            node.emotional_arousal = max(
+                self.MIN_AROUSAL_FLOOR,
+                node.emotional_arousal - self.HABITUATION_PENALTY,
+            )
+        else:
+            # Fresh retrieval — strengthen.
+            node.emotional_arousal = min(
+                self.MAX_AROUSAL,
+                node.emotional_arousal + self.STRENGTHENING_DELTA,
+            )
+            node.importance = min(
+                self.MAX_IMPORTANCE,
+                node.importance + self.IMPORTANCE_DELTA,
+            )
+
+    def _count_recent_retrievals(self, node: MemoryNode, now: datetime) -> int:
+        cutoff = now - timedelta(days=self.HABITUATION_WINDOW_DAYS)
+        return sum(1 for ts in node.recent_retrieval_timestamps if ts > cutoff)
+
+    def daily_decay(self, node: MemoryNode, now: Optional[datetime] = None) -> None:
+        """Apply time-based arousal decay with fading affect bias.
+
+        - Memories accessed in the last DORMANCY_MIN_DAYS are untouched.
+        - Older memories lose arousal at DORMANCY_DECAY_RATE per call.
+        - Positive-themed memories decay 0.5x as fast (fading affect bias,
+          Walker & Skowronski 2009).
+        - Negative-themed memories decay 1.5x as fast.
+        - Hard floor at MIN_AROUSAL_FLOOR so dormant memories can be revived
+          by a strong matching cue rather than vanishing.
+        """
+        now = now or datetime.utcnow()
+        days_since = (now - node.last_accessed_at).total_seconds() / 86400.0
+        if days_since < self.DORMANCY_MIN_DAYS:
+            return
+
+        themes = {t.lower() for t in (node.key_themes or [])}
+        if themes & self._POSITIVE_THEME_MARKERS:
+            factor = self.FADING_AFFECT_POSITIVE_FACTOR
+        elif themes & self._NEGATIVE_THEME_MARKERS:
+            factor = self.FADING_AFFECT_NEGATIVE_FACTOR
+        else:
+            factor = 1.0
+
+        node.emotional_arousal = max(
+            self.MIN_AROUSAL_FLOOR,
+            node.emotional_arousal - self.DORMANCY_DECAY_RATE * factor,
+        )
 
     def _score_recency(self, node: MemoryNode, now: datetime) -> float:
         """
@@ -185,12 +276,16 @@ class MemoryRetriever:
 
     def _score_retrieval_frequency(self, node: MemoryNode) -> float:
         """
-        Log-scale retrieval count: ε·log(1 + access_count).
-        Diminishing returns: retrieved 10 times gets a boost, not 10x.
-        ACT-R / Hou et al. (CHI EA 2024): frequently recalled memories strengthen over time.
-        The log is already applied here so the weight in the formula is a linear multiplier.
+        Log-scale retrieval count: ε·log(1 + min(access_count, CAP)).
+        Diminishing returns + a hard cap so a single dominator memory cannot
+        accumulate unbounded boost from retrieval frequency. Without the cap,
+        habituation in arousal is overwhelmed by frequency once a memory has
+        been retrieved >10 times, defeating the lifecycle (Phase 2 fix).
+        ACT-R / Hou et al. (CHI EA 2024).
         """
-        return math.log(1 + node.access_count)
+        return math.log(1 + min(node.access_count, self._RETRIEVAL_FREQ_CAP))
+
+    _RETRIEVAL_FREQ_CAP: int = 5
 
     @staticmethod
     def _cosine_similarity(a: list[float], b: list[float]) -> float:

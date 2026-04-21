@@ -122,15 +122,38 @@ class MemoryConsumer:
         if scope == MemoryScope.FULL:
             return list(stream.nodes)
 
-        # Default: CATEGORY — existing auto-strategy behavior
+        # Default: CATEGORY — auto-strategy with a SMOOTH taper (Phase 2,
+        # 2026-04-21). Replaces the original binary cliff at full_dump_threshold
+        # which produced visibly different behavior at 49 vs 51 memories.
+        # Cite: Opus pressure-test Issue #7.
         category_count = len(stream.get_nodes_by_category(category))
+        full_dump_limit = self.config.full_dump_threshold  # default 50
 
-        if category_count < self.config.full_dump_threshold:
+        if category_count <= full_dump_limit:
+            # Below the limit: full dump (existing fast path).
             return self.consume_all(stream, category)
-        else:
+
+        # Beyond the limit: scored retrieval, but with a soft taper so behavior
+        # doesn't snap from "all" to "top_k". For up to 1.5x the threshold we
+        # widen top_k toward the previously-included count, then ease into the
+        # caller-supplied top_k as memory count grows further.
+        soft_zone_top = int(full_dump_limit * 1.2)  # e.g. 50 -> 60
+        if category_count <= soft_zone_top:
+            # Linear interpolation: at category_count == full_dump_limit + 1 we
+            # return ~full_dump_limit memories; at soft_zone_top we return top_k.
+            span = max(1, soft_zone_top - full_dump_limit)
+            progress = (category_count - full_dump_limit) / span  # 0 .. 1
+            tapered_k = int(round(full_dump_limit - progress * (full_dump_limit - top_k)))
+            tapered_k = max(top_k, tapered_k)
             return self.consume_scored(
-                stream, query, category, top_k, query_embedding, query_tags=query_tags,
+                stream, query, category, tapered_k, query_embedding,
+                query_tags=query_tags,
             )
+
+        # Above the soft zone: stable top_k retrieval.
+        return self.consume_scored(
+            stream, query, category, top_k, query_embedding, query_tags=query_tags,
+        )
 
     def get_exposure_summary(self, stream: MemoryStream) -> dict:
         """
