@@ -49,6 +49,7 @@ class MemoryRetriever:
         top_k: int = 10,
         category_filter: Optional[str] = None,
         brand_filter: Optional[str] = None,
+        query_tags: Optional[dict] = None,
     ) -> list[RetrievalScore]:
         """
         Score all nodes and return the top-k most relevant memories.
@@ -89,7 +90,7 @@ class MemoryRetriever:
         scored: list[RetrievalScore] = []
         for node in filtered:
             recency = self._score_recency(node, now)
-            relevance = self._score_relevance(node, query_embedding, query_text)
+            relevance = self._score_relevance(node, query_embedding, query_text, query_tags)
             importance = self._score_importance(node)
             arousal = self._score_arousal(node)
             retrieval_freq = self._score_retrieval_frequency(node)
@@ -145,16 +146,25 @@ class MemoryRetriever:
         node: MemoryNode,
         query_embedding: Optional[list[float]],
         query_text: Optional[str],
+        query_tags: Optional[dict] = None,
     ) -> float:
         """
-        Cosine similarity between query and memory embeddings.
-        Falls back to keyword overlap if embeddings are not available.
+        Relevance scoring with three tiers (most-preferred first):
+          1. Structured multi-signal score from query_tags (Phase 1, 2026-04-21).
+             Categorical + theme + era/sensory match. Resilient to lexical drift
+             (Nirma memory ↔ Surf Excel ad scores high without sharing tokens).
+          2. Cosine similarity if both query and memory embeddings exist.
+          3. Naive whitespace token overlap (legacy fallback).
         """
-        # Dense vector similarity
+        # Tier 1: structured tags — the only signal Opus #2 considered acceptable.
+        if query_tags:
+            return self._structured_relevance(node, query_tags)
+
+        # Tier 2: dense vector similarity
         if query_embedding and node.embedding:
             return self._cosine_similarity(query_embedding, node.embedding)
 
-        # Keyword fallback — not as precise, but works without API calls
+        # Tier 3: keyword fallback — not precise; kept for back-compat.
         if query_text and node.embedding_key:
             return self._keyword_similarity(query_text, node.embedding_key, node.key_themes)
 
@@ -217,6 +227,171 @@ class MemoryRetriever:
         theme_overlap = len(query_tokens & theme_tokens) / max(len(query_tokens), 1)
 
         return min(1.0, text_overlap * 0.7 + theme_overlap * 0.3)
+
+    # ── Structured relevance (Phase 1, 2026-04-21) ────────────────────
+    #
+    # Replaces the naive whitespace-token overlap as the primary relevance
+    # signal. Token cosine remains a 10% tiebreaker. Cite: Anshuj v3 Part 4
+    # ("Multi-Signal Relevance Formula"); Opus pressure-test Issue #2
+    # ("Relevance Score is doing all the heavy lifting and you haven't
+    # specified how it works").
+    #
+    # Score = 0.40·category + 0.30·themes + 0.20·era_or_sensory + 0.10·token
+    #
+    # Each component returns 0-1; final score is in [0, 1].
+
+    # Sibling categories live under the same parent. Exact match = 1.0,
+    # sibling = 0.5, otherwise 0. Hand-curated for Indian consumer ad
+    # categories common in our persona library; expand as needed.
+    _CATEGORY_TREE: dict[str, list[str]] = {
+        "personal_care": ["soap", "shampoo", "skincare", "deodorant", "toothpaste"],
+        "home_care": ["detergent", "dishwash", "floor_cleaner", "air_freshener"],
+        "food_packaged": ["biscuit", "snacks", "noodles", "cereal", "sweets"],
+        "beverages": ["tea", "coffee", "soft_drink", "juice"],
+        "kitchen_staples": ["salt", "spices", "atta", "oil", "ghee"],
+        "apparel": ["apparel", "footwear", "accessories"],
+        "tech_consumer": ["smartphone", "laptop", "headphones", "smartwatch"],
+        "fintech": ["fintech", "banking", "insurance", "mutual_fund"],
+        "automotive": ["car", "two_wheeler", "luxury_car", "ev"],
+        "food_service": ["restaurant", "food_delivery", "quick_commerce"],
+        "media": ["music", "music_streaming", "video_streaming", "ott"],
+    }
+
+    @classmethod
+    def _category_match(cls, mem_category: Optional[str], crt_category: Optional[str]) -> float:
+        """1.0 exact, 0.5 sibling under same parent, 0.0 otherwise."""
+        if not mem_category or not crt_category:
+            return 0.0
+        m = mem_category.lower()
+        c = crt_category.lower()
+        if m == c:
+            return 1.0
+        for siblings in cls._CATEGORY_TREE.values():
+            if m in siblings and c in siblings:
+                return 0.5
+        return 0.0
+
+    @staticmethod
+    def _set_overlap(a: list[str], b: list[str]) -> float:
+        """Symmetric Jaccard-like overlap. Returns 0 if either set is empty."""
+        if not a or not b:
+            return 0.0
+        sa = {s.lower().strip() for s in a if s}
+        sb = {s.lower().strip() for s in b if s}
+        if not sa or not sb:
+            return 0.0
+        intersection = len(sa & sb)
+        if intersection == 0:
+            return 0.0
+        # Recall over the smaller set — captures "this memory's anchors are
+        # well-covered by this ad's signifiers" without requiring the ad to
+        # match every single anchor.
+        return intersection / min(len(sa), len(sb))
+
+    def _structured_relevance(
+        self,
+        node: MemoryNode,
+        creative_tags: dict,
+    ) -> float:
+        """
+        Multi-signal relevance score in [0, 1].
+
+        Args:
+            node: A MemoryNode with category/brand/key_themes/memory_era/sensory_anchors.
+            creative_tags: A dict shaped like
+                {
+                    "category": str,
+                    "brand": Optional[str],
+                    "themes": list[str],
+                    "era_signifiers": list[str],
+                    "sensory": list[str],
+                }
+                Built from CreativeCard fields by build_creative_tags().
+
+        Weights (rationale in Anshuj v3 Part 4):
+            0.40 category — strongest deterministic signal; exact = 1.0, sibling = 0.5
+            0.30 themes  — emotional/positioning overlap (Bower mood-congruence)
+            0.20 era + sensory — reminiscence-bump cue match (Chu & Downes)
+            0.10 token cosine — last-resort tiebreaker on description text
+        """
+        cat_score = self._category_match(node.category, creative_tags.get("category"))
+        theme_score = self._set_overlap(
+            node.key_themes,
+            creative_tags.get("themes") or [],
+        )
+        era_score = self._set_overlap(
+            (node.sensory_anchors or []) + ([node.memory_era] if node.memory_era else []),
+            (creative_tags.get("era_signifiers") or []) + (creative_tags.get("sensory") or []),
+        )
+
+        # Token similarity tiebreaker — only against description, not the full
+        # query. Kept low-weight precisely because Opus #2 calls this signal a
+        # black box.
+        token_score = 0.0
+        if node.embedding_key:
+            tag_blob = " ".join(
+                [creative_tags.get("category") or ""]
+                + (creative_tags.get("themes") or [])
+                + (creative_tags.get("era_signifiers") or [])
+                + (creative_tags.get("sensory") or [])
+            ).strip()
+            if tag_blob:
+                token_score = self._keyword_similarity(tag_blob, node.embedding_key, node.key_themes)
+
+        return min(
+            1.0,
+            0.40 * cat_score
+            + 0.30 * theme_score
+            + 0.20 * era_score
+            + 0.10 * token_score,
+        )
+
+
+def build_creative_tags(creative) -> dict:
+    """
+    Build the structured-relevance tag dict from a CreativeCard.
+
+    Pulled from existing CreativeCard fields — no new schema fields required.
+    Robust to missing values (returns empty lists, not None).
+
+    Mapping rationale:
+      themes         <- emotional_hooks + [marketing_tone] + [brand_positioning]
+      era_signifiers <- cultural_references + [festival_context] + [brand_era]
+      sensory        <- [visual_style] + [color_dominant]
+                        (CreativeCard does not yet carry sensory tags directly;
+                         visual style is the closest proxy until Phase 2 enriches
+                         the creative analyzer to extract sensory anchors.)
+    """
+    if creative is None:
+        return {"category": None, "brand": None, "themes": [], "era_signifiers": [], "sensory": []}
+
+    themes: list[str] = []
+    themes.extend(getattr(creative, "emotional_hooks", []) or [])
+    if getattr(creative, "marketing_tone", None):
+        themes.append(creative.marketing_tone)
+    if getattr(creative, "brand_positioning", None):
+        themes.append(creative.brand_positioning)
+
+    era: list[str] = []
+    era.extend(getattr(creative, "cultural_references", []) or [])
+    if getattr(creative, "festival_context", None):
+        era.append(creative.festival_context)
+    if getattr(creative, "brand_era", None):
+        era.append(creative.brand_era)
+
+    sensory: list[str] = []
+    if getattr(creative, "visual_style", None):
+        sensory.append(str(creative.visual_style))
+    if getattr(creative, "color_dominant", None):
+        sensory.append(creative.color_dominant)
+
+    return {
+        "category": getattr(creative, "category", None),
+        "brand": getattr(creative, "brand", None),
+        "themes": themes,
+        "era_signifiers": era,
+        "sensory": sensory,
+    }
 
 
 class ReflectionEngine:

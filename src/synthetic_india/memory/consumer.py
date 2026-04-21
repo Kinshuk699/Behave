@@ -72,11 +72,14 @@ class MemoryConsumer:
         category: str,
         top_k: int = 10,
         query_embedding: Optional[list[float]] = None,
+        query_tags: Optional[dict] = None,
     ) -> list[MemoryNode]:
         """
         Scored retrieval: delegates to MemoryRetriever for weighted scoring.
 
         Used when per-category memory count exceeds threshold.
+        When ``query_tags`` is provided, structured multi-signal relevance is
+        used instead of token overlap (Phase 1, 2026-04-21).
         """
         scored = self._retriever.retrieve(
             nodes=stream.nodes,
@@ -84,6 +87,7 @@ class MemoryConsumer:
             query_embedding=query_embedding,
             top_k=top_k,
             category_filter=category,
+            query_tags=query_tags,
         )
         return [s.node for s in scored]
 
@@ -96,6 +100,7 @@ class MemoryConsumer:
         query_embedding: Optional[list[float]] = None,
         scope: MemoryScope = MemoryScope.CATEGORY,
         brand: Optional[str] = None,
+        query_tags: Optional[dict] = None,
     ) -> list[MemoryNode]:
         """
         Auto-select strategy based on scope and per-category node count.
@@ -124,7 +129,7 @@ class MemoryConsumer:
             return self.consume_all(stream, category)
         else:
             return self.consume_scored(
-                stream, query, category, top_k, query_embedding
+                stream, query, category, top_k, query_embedding, query_tags=query_tags,
             )
 
     def get_exposure_summary(self, stream: MemoryStream) -> dict:

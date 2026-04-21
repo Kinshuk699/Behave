@@ -376,12 +376,19 @@ async def evaluate_creative(
 
         query_text = f"{creative.brand} {creative.category} {creative.headline or ''}"
 
+        # Phase 1 (2026-04-21): build structured tags so the retriever uses
+        # multi-signal relevance (category + theme + era + sensory) instead of
+        # naive whitespace token overlap. Cite Opus pressure-test Issue #2.
+        from synthetic_india.memory.retrieval import build_creative_tags
+        query_tags = build_creative_tags(creative)
+
         # Build consume kwargs — scope and brand are optional
         consume_kwargs: dict = {
             "stream": memory_stream,
             "query": query_text,
             "category": creative.category,
             "top_k": 5,
+            "query_tags": query_tags,
         }
         if memory_scope is not None:
             from synthetic_india.memory.consumer import MemoryScope
