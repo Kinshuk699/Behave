@@ -18,6 +18,10 @@ from synthetic_india.agents.critic_rules import (
     run_pre_critic_checks,
     run_specificity_check,
 )
+from synthetic_india.agents.cross_model_critic import (
+    call_openai_critic,
+    cross_model_flags,
+)
 from synthetic_india.config import LLMConfig, get_llm_config
 from synthetic_india.schemas.critic import CriticVerdict, CriticRunSummary
 from synthetic_india.schemas.evaluation import PersonaEvaluation
@@ -185,7 +189,7 @@ async def evaluate_single(
         evaluation
     )
 
-    return CriticVerdict(
+    primary_verdict = CriticVerdict(
         evaluation_id=evaluation.evaluation_id,
         persona_id=evaluation.persona_id,
         persona_consistency=parsed["persona_consistency"],
@@ -194,10 +198,32 @@ async def evaluate_single(
         action_reasoning_alignment=parsed["action_reasoning_alignment"],
         explanation=parsed["explanation"],
         flags=parsed.get("flags", []),
-        rule_flags=rule_flags,
+        rule_flags=list(rule_flags),
         model_used=response.model,
         cost_usd=response.cost_usd,
     )
+
+    # Phase 3.5 — cross-model second opinion (best-effort; never breaks primary).
+    if config.enable_cross_model_critic and config.openai_api_key:
+        try:
+            secondary_verdict = await call_openai_critic(
+                persona=persona,
+                evaluation=evaluation,
+                config=config,
+                model=config.cross_model_critic_model,
+            )
+            disagreement_flags = cross_model_flags(
+                primary_verdict,
+                secondary_verdict,
+                threshold=config.cross_model_disagreement_threshold,
+            )
+            if disagreement_flags:
+                primary_verdict.rule_flags.extend(disagreement_flags)
+            primary_verdict.cost_usd += secondary_verdict.cost_usd
+        except Exception as exc:  # pragma: no cover - network/JSON failure path
+            primary_verdict.flags.append(f"cross_model_call_failed: {type(exc).__name__}")
+
+    return primary_verdict
 
 
 def summarize_run(run_id: str, verdicts: list[CriticVerdict]) -> CriticRunSummary:

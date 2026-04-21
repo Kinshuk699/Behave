@@ -37,6 +37,17 @@ class LLMConfig:
     openai_api_key: str = field(default_factory=lambda: os.getenv("OPENAI_API_KEY", ""), repr=False)
     anthropic_api_key: str = field(default_factory=lambda: os.getenv("ANTHROPIC_API_KEY", ""), repr=False)
 
+    # Phase 3.5 — cross-model critic. Default on when an OpenAI key is present.
+    enable_cross_model_critic: bool = field(
+        default_factory=lambda: os.getenv("ENABLE_CROSS_MODEL_CRITIC", "1") not in ("0", "false", "False", "")
+    )
+    cross_model_critic_model: str = field(
+        default_factory=lambda: os.getenv("CROSS_MODEL_CRITIC_MODEL", "gpt-4o-mini")
+    )
+    cross_model_disagreement_threshold: float = field(
+        default_factory=lambda: float(os.getenv("CROSS_MODEL_DISAGREEMENT_THRESHOLD", "3.0"))
+    )
+
 
 @dataclass(frozen=True)
 class MemoryConfig:
