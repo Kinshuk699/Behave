@@ -27,8 +27,31 @@ from typing import Optional
 
 import numpy as np
 
+from synthetic_india.agents.llm_client import get_embedding
 from synthetic_india.config import MemoryConfig, get_memory_config
 from synthetic_india.schemas.memory import MemoryNode, RetrievalScore
+
+# ── Phase 7 (2026-04-23): query embedding cache ────────────────────────
+# Process-local dict keyed on raw query text. Prevents duplicate OpenAI
+# `text-embedding-3-small` calls when the same creative is evaluated across
+# many personas. Module-level so it survives across evaluate_creative() calls
+# but is wiped on process restart (no stale embeddings if we change models).
+_QUERY_EMBEDDING_CACHE: dict[str, list[float]] = {}
+
+
+async def embed_query_cached(query_text: str) -> list[float]:
+    """
+    Return an embedding for `query_text`, using a process-local cache.
+
+    Looks `get_embedding` up via this module's globals so unit tests can
+    monkeypatch `synthetic_india.memory.retrieval.get_embedding` directly.
+    """
+    cached = _QUERY_EMBEDDING_CACHE.get(query_text)
+    if cached is not None:
+        return cached
+    embedding = await get_embedding(query_text)
+    _QUERY_EMBEDDING_CACHE[query_text] = embedding
+    return embedding
 
 
 class MemoryRetriever:
@@ -248,8 +271,12 @@ class MemoryRetriever:
           3. Naive whitespace token overlap (legacy fallback).
         """
         # Tier 1: structured tags — the only signal Opus #2 considered acceptable.
+        # Phase 7 (2026-04-23): pass query_embedding through so the 10% slot can
+        # use cosine similarity when both query and memory have embeddings.
         if query_tags:
-            return self._structured_relevance(node, query_tags)
+            return self._structured_relevance(
+                node, query_tags, query_embedding=query_embedding
+            )
 
         # Tier 2: dense vector similarity
         if query_embedding and node.embedding:
@@ -387,6 +414,7 @@ class MemoryRetriever:
         self,
         node: MemoryNode,
         creative_tags: dict,
+        query_embedding: Optional[list[float]] = None,
     ) -> float:
         """
         Multi-signal relevance score in [0, 1].
@@ -419,11 +447,17 @@ class MemoryRetriever:
             (creative_tags.get("era_signifiers") or []) + (creative_tags.get("sensory") or []),
         )
 
-        # Token similarity tiebreaker — only against description, not the full
-        # query. Kept low-weight precisely because Opus #2 calls this signal a
-        # black box.
+        # 10% tiebreaker slot.
+        # Phase 7 (2026-04-23): if both query and memory have embeddings, use
+        # cosine similarity. Otherwise fall back to the legacy token overlap
+        # against the tag blob — preserves backward compatibility for memory
+        # nodes seeded before embeddings were wired in.
         token_score = 0.0
-        if node.embedding_key:
+        if query_embedding and node.embedding:
+            cos = self._cosine_similarity(query_embedding, node.embedding)
+            # Cosine on OpenAI embeddings is in [-1, 1]; clamp to [0, 1]
+            token_score = max(0.0, cos)
+        elif node.embedding_key:
             tag_blob = " ".join(
                 [creative_tags.get("category") or ""]
                 + (creative_tags.get("themes") or [])

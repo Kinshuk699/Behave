@@ -438,6 +438,23 @@ async def evaluate_creative(
             "top_k": 5,
             "query_tags": query_tags,
         }
+
+        # Phase 7 (2026-04-23): when use_embeddings=True, fetch a dense
+        # embedding for the query text (cached per-text) and pass it to the
+        # retriever. Structured relevance uses it for the 10% tiebreaker
+        # slot when memory nodes also have embeddings; otherwise it's a
+        # no-op and the legacy token fallback runs. Failures fall back
+        # silently — embedding is an enhancement, not a hard dependency.
+        if use_embeddings:
+            try:
+                from synthetic_india.memory.retrieval import embed_query_cached
+                query_embedding = await embed_query_cached(query_text)
+                consume_kwargs["query_embedding"] = query_embedding
+            except Exception:
+                # OpenAI key missing / network failure / model error.
+                # Continue without embeddings — relevance falls back to tokens.
+                pass
+
         if memory_scope is not None:
             from synthetic_india.memory.consumer import MemoryScope
             consume_kwargs["scope"] = memory_scope
