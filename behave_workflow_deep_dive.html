@@ -555,8 +555,8 @@
         </div>
 
         <div class="card card--accent">
-          <h3 style="margin-bottom:.4rem;">Memory gets stronger on each retrieval</h3>
-          <p style="font-size:.82rem;">Every time a memory is picked and shown to the LLM, it gets a tiny boost: <code style="font-family:var(--mono);font-size:.75rem;">arousal += 0.02, importance += 0.1</code>. The more a childhood Nirma memory surfaces, the more dominant it becomes over time — exactly how nostalgia works in real humans.</p>
+          <h3 style="margin-bottom:.4rem;">Memory strengthens — but with a ceiling</h3>
+          <p style="font-size:.82rem;">When a memory is retrieved, its <code style="font-family:var(--mono);font-size:.75rem;">arousal</code> nudges up by <code style="font-family:var(--mono);font-size:.75rem;">0.02</code> and <code style="font-family:var(--mono);font-size:.75rem;">access_count</code> increments. <strong style="color:var(--accent);">But strengthening saturates.</strong> If the same memory is hit more than 5 times in a 7-day window, habituation kicks in and arousal <em>dampens</em> by 0.03 instead. The retrieval-frequency boost in the scoring formula is also capped (<code style="font-family:var(--mono);font-size:.75rem;">log(1+min(access_count,&nbsp;5))</code>) so a single dominant memory cannot snowball into a monoculture. Memories untouched for 30+ days decay slowly toward a floor of 0.15, with positive memories fading half as fast as negative ones (fading affect bias).</p>
         </div>
       </div>
     </div>
@@ -875,7 +875,7 @@
             <tr>
               <td class="row-label">Memory gets stronger over time?</td>
               <td class="old">No. Every retrieval was stateless — no impact on future retrievals.</td>
-              <td class="new">Yes. Each retrieval boosts <code style="font-family:var(--mono);font-size:.78rem;">arousal += 0.02</code>, <code style="font-family:var(--mono);font-size:.78rem;">importance += 0.1</code>. The more it surfaces, the more dominant it becomes.</td>
+              <td class="new">Yes, but bounded. Each retrieval boosts <code style="font-family:var(--mono);font-size:.78rem;">arousal&nbsp;+=&nbsp;0.02</code>, <code style="font-family:var(--mono);font-size:.78rem;">access_count&nbsp;+=&nbsp;1</code>. <strong>Habituation</strong> dampens after &gt;5 retrievals in 7 days, the retrieval-frequency term is capped at access_count&nbsp;=&nbsp;5, and idle memories <strong>decay</strong> after 30 days (positive 0.5×, negative 1.5×) toward a floor of 0.15.</td>
             </tr>
           </tbody>
         </table>
@@ -883,6 +883,10 @@
 
       <div class="card" style="background:rgba(255,107,53,.08);border-color:rgba(255,107,53,.2);max-width:900px;">
         <p style="font-size:.88rem;"><strong style="color:var(--accent);">Why this is the right fix:</strong> The problem was architectural, not content-based. The personas were rich. The memories were detailed. But the prompt structure had nostalgia losing to recency in the retrieval formula, and arriving too late in the prompt to fully shape the LLM's character. Both are now fixed.</p>
+      </div>
+
+      <div class="card" style="background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.12);max-width:900px;">
+        <p style="font-size:.82rem;color:var(--dim);"><strong style="color:var(--text);">Honest framing.</strong> “Manufacturing Nostalgia” is internal shorthand for <em>scene-based memory activation</em> grounded in the reminiscence-bump literature (Rubin &amp; Berntsen, 2003) and the autobiographical-memory salience model (Conway &amp; Pleydell-Pearce, 2000). The arousal-initialization values (scene memories at 0.85–0.95, neutral evaluations at 0.10–0.30) are <strong>research-grounded priors, not measurements</strong> from these specific personas. The system manufactures nothing on its own — it surfaces scene memories the persona authors wrote, and weights them so they win against newer but flatter memories. Calibration of the arousal weights, decay rates, and habituation thresholds remains an open empirical question.</p>
       </div>
     </div>
   </div>
@@ -939,8 +943,8 @@
               <td style="font-family:var(--mono);color:var(--dim);font-size:.75rem;">3</td>
               <td><strong>Score + retrieve memories</strong></td>
               <td style="font-size:.75rem;"><span class="green">MemoryRetriever</span></td>
-              <td style="font-size:.78rem;color:var(--dim);">All nodes + ad query text</td>
-              <td style="font-size:.78rem;color:var(--dim);">Top 5 most relevant memories</td>
+              <td style="font-size:.78rem;color:var(--dim);">All nodes + creative tags (category, themes, era, sensory)</td>
+              <td style="font-size:.78rem;color:var(--dim);">Top-k by recency + structured relevance + arousal + freq (capped)</td>
               <td><span class="badge badge--noai" style="font-size:.65rem;">No AI</span></td>
             </tr>
             <tr style="background:rgba(255,107,53,.04);">
@@ -953,11 +957,11 @@
             </tr>
             <tr>
               <td style="font-family:var(--mono);color:var(--dim);font-size:.75rem;">5</td>
-              <td><strong>Quality check (critic)</strong></td>
-              <td style="font-size:.75rem;"><span class="purple">claude-sonnet-4</span></td>
-              <td style="font-size:.78rem;color:var(--dim);">Persona profile + evaluation</td>
-              <td style="font-size:.78rem;color:var(--dim);">PASS / QUARANTINE + reason</td>
-              <td><span class="badge badge--sonnet" style="font-size:.65rem;">Sonnet</span></td>
+              <td><strong>Quality check (3-layer critic)</strong></td>
+              <td style="font-size:.75rem;"><span class="green">rules</span> + <span class="purple">sonnet-4</span> + <span class="green">gpt-4o-mini</span></td>
+              <td style="font-size:.78rem;color:var(--dim);">Persona + evaluation</td>
+              <td style="font-size:.78rem;color:var(--dim);">Deterministic flags → Claude verdict → GPT cross-check; any flag vetoes pass</td>
+              <td><span class="badge badge--sonnet" style="font-size:.65rem;">Sonnet+GPT</span></td>
             </tr>
             <tr>
               <td style="font-family:var(--mono);color:var(--dim);font-size:.75rem;">6</td>

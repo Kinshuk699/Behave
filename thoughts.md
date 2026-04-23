@@ -906,3 +906,159 @@ Grouped by generation for cultural accuracy:
 - Cross-persona memory / social contagion
 - New evaluation output fields (emotional_journey, cultural_resonance)
 - UI polish pass (user mentioned more changes coming)
+
+---
+
+## 2026-04-21 — Pressure-Test Response: Phases 1-5 (Opus Critique)
+
+After Anshuj's v3 redesign + Opus's adversarial pressure-test, addressed
+the highest-severity issues in 5 verified phases. **Final state: 195/195
+tests passing.**
+
+### Phase 1 — Structured Relevance (commit `57ed06f`)
+
+**Issue addressed:** Opus #1 — relevance was set-overlap on keywords
+(`len(query_keywords & memory_keywords) / len(query)`); a black box.
+
+**Fix:** `_structured_relevance()` in `MemoryRetriever` uses an explicit
+weighted formula over **creative tags** built from `CreativeCard`:
+`0.40·category + 0.30·themes + 0.20·era/sensory + 0.10·token cosine`.
+Sibling categories (e.g. detergent ↔ surface_cleaner) get partial credit
+via `_CATEGORY_TREE`. Threaded `query_tags` through `retrieve()`,
+`consume()`, `consume_scored()`, and `persona_evaluator.evaluate_creative()`.
+
+**Evidence:** SHOULD-MATCH mean 0.784, SHOULDN'T-MATCH mean 0.018 — 44×
+separation on 15 hand-labeled pairs. Nirma↔Surf Excel scores 0.932;
+Nirma↔HDFC Insurance scores 0.000.
+
+### Phase 2 — Lifecycle Health (commit `34bc006`)
+
+**Issues addressed:** Opus #2 (runaway arousal — strengthening was
+unbounded `+0.02` per retrieval) and #7 (cliff in `MemoryConsumer` between
+top-k and full-dump strategies).
+
+**Fixes:**
+1. **Habituation:** `MemoryNode.recent_retrieval_timestamps` rolling
+   10-element window. >5 retrievals in 7 days → arousal **dampens**
+   `-0.03` instead of strengthening. `access_count` capped at 5 in
+   `_score_retrieval_frequency` (`log(1+min(access_count, 5))`) prevents
+   dominator snowball.
+2. **Decay (`MemoryRetriever.daily_decay()`):** memories untouched 30+
+   days lose `0.005`/call from arousal, with **fading affect bias**
+   (positive themes 0.5×, negative 1.5×); floor 0.15.
+3. **Smooth cliff:** `MemoryConsumer.consume()` linearly tapers between
+   `full_dump_threshold` (50) and `1.2×` (60) instead of binary switch.
+
+**Evidence:** Over 100 retrievals on 10 candidate memories, dominator
+share dropped from **100% → 26%**; 5 different winners rotated;
+habituated memories dampen from `0.77 → 0.24`.
+
+### Phase 3 — Critic v2 (Layers 1 + 2)
+
+**Issues addressed:** Opus #4 (same-model bias) and #9 (sycophancy
+escapes when LLM critic itself is sycophantic).
+
+**Fix:** New `critic_rules.py` with two pure-Python gates that run BEFORE
+the LLM critic:
+- **Layer 1 — `run_pre_critic_checks()`:** price-vs-income sanity
+  (BUDGET buyer + premium category + no objections + score≥80 → flag),
+  action-vs-score contradiction (purchase_intent + trust<4 → flag),
+  score inflation (all 5 dim scores ≥8 + zero objections → flag).
+- **Layer 2 — `run_specificity_check()`:** forbidden consultant phrases
+  ("resonates with", "well-crafted", etc.) + requires ≥2 of {rupee,
+  named-person, sensory, temporal} signals.
+
+`CriticVerdict.rule_flags` field added; non-empty list **vetoes**
+`passed`. The existing 4-dim LLM critic stays as Layer 3.
+
+### Phase 3.5 — Cross-Model Critic
+
+**Issue addressed:** Same-model bias (Opus #4) — Claude critiquing Claude
+shares blind spots.
+
+**Fix:** `cross_model_critic.py` runs the same critic prompt through
+**GPT-4o-mini**. `compute_disagreement()` returns per-dim absolute diffs;
+`cross_model_flags()` emits a `cross_model_disagreement_*` flag when any
+dim diverges by >3.0 OR the two verdicts disagree on pass/fail. Wired
+into `evaluate_single` with safe try/except — GPT failures degrade
+gracefully (logged in `flags`, never break primary verdict). Controlled
+by `ENABLE_CROSS_MODEL_CRITIC`, `CROSS_MODEL_CRITIC_MODEL`,
+`CROSS_MODEL_DISAGREEMENT_THRESHOLD` env vars. Cost: ~5-10% addition.
+
+### Phase 4 — Persona Contradictions
+
+**Issue addressed:** Opus #5 — personas read as flat / over-coherent.
+
+**Fix:** Three new optional fields on `PersonaProfile`:
+- `shadow_archetype: Archetype | None` — who this persona becomes when
+  stressed/excited/off-script.
+- `value_conflicts: list[ValueConflict]` — `(value_a, value_b,
+  context_a, context_b, dominant_side)` — competing values with the
+  contexts that activate each side.
+- `context_modifiers: dict[str, BehaviorModifier]` — named situations
+  (e.g. `end_of_month`, `salary_day`) that nudge psychology dials. Dial
+  names whitelisted; deltas validated to `[-1, 1]`.
+
+All optional → existing persona JSONs continue loading. New sections
+render in `_build_persona_block` only when populated.
+
+### Phase 5 — Docs Honesty Pass
+
+**Issue addressed:** Opus #10 — claims in docs overstated what was
+empirically verified.
+
+**Fixes:**
+1. `behave_workflow_deep_dive.html` "memory gets stronger" claim is now
+   honest about habituation cap, frequency cap at access_count=5, and
+   30-day decay with fading affect bias.
+2. The "Manufacturing Nostalgia" section now carries an honest framing
+   note: it's internal shorthand for **scene-based memory activation**
+   grounded in the reminiscence-bump literature (Rubin & Berntsen, 2003)
+   and autobiographical-memory salience model (Conway & Pleydell-Pearce,
+   2000). Arousal init values (0.85-0.95 for scene memories, 0.10-0.30
+   for neutral ad evaluations) are explicitly framed as
+   **research-grounded priors, not measurements** from these specific
+   personas. Calibration of weights/thresholds remains open.
+3. Summary table updated: critic row now shows the 3-layer architecture
+   (rules + Sonnet + GPT-4o-mini); memory retrieval row reflects
+   creative-tag input and capped frequency scoring.
+
+### Tests added per phase
+
+| Phase | Test file | Count |
+|-------|-----------|-------|
+| 1     | `tests/test_relevance.py`              | 5  |
+| 2     | `tests/test_lifecycle.py`              | 11 |
+| 3     | `tests/test_critic_rules.py`           | 12 |
+| 3.5   | `tests/test_cross_model_critic.py`     | 10 |
+| 4     | `tests/test_persona_contradictions.py` | 12 |
+| **Total** | | **+50** (145 → 195) |
+
+### Files touched (net)
+
+**New modules:**
+- `src/synthetic_india/agents/critic_rules.py` (Phase 3)
+- `src/synthetic_india/agents/cross_model_critic.py` (Phase 3.5)
+
+**Modified:**
+- `src/synthetic_india/memory/retrieval.py` (Phase 1, 2)
+- `src/synthetic_india/memory/consumer.py` (Phase 1, 2)
+- `src/synthetic_india/agents/persona_evaluator.py` (Phase 1, 4)
+- `src/synthetic_india/agents/critic_agent.py` (Phase 3, 3.5)
+- `src/synthetic_india/schemas/memory.py` (Phase 2)
+- `src/synthetic_india/schemas/persona.py` (Phase 4)
+- `src/synthetic_india/schemas/critic.py` (Phase 3)
+- `src/synthetic_india/config.py` (Phase 3.5)
+- `behave_workflow_deep_dive.html` (Phase 5)
+- `thoughts.md` (this entry)
+
+### Known remaining gaps
+
+- Arousal init values, decay rates, and habituation thresholds are
+  research-grounded priors — empirical calibration against real consumer
+  panels remains an open question (Opus #6, #10).
+- Embedding-based relevance is implemented but optional and currently
+  null in production memory data — token-cosine fallback is what
+  actually runs (Opus #1 partially open).
+- No evaluation harness yet for "did the new critic actually catch more
+  bad outputs than the old one?" — proposed but not built.
