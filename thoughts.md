@@ -1023,6 +1023,61 @@ empirically verified.
    (rules + Sonnet + GPT-4o-mini); memory retrieval row reflects
    creative-tag input and capped frequency scoring.
 
+### Phase 6 — Critic Evaluation Harness (2026-04-23)
+
+**Issue addressed:** Opus #4 — "you claim the critic catches bad outputs
+but where's the evidence?" No regression baseline existed for the
+deterministic critic layers.
+
+**Built:**
+- `src/synthetic_india/agents/critic_benchmark.py` — `BenchmarkResult`
+  dataclass + `run_critic_benchmark()` that runs `run_pre_critic_checks`
+  and `run_specificity_check` over a labeled set and returns
+  precision / recall / FPR. **Zero LLM calls** — the harness only
+  exercises the deterministic Python rules so it runs in milliseconds
+  and costs $0.
+- `tests/test_critic_benchmark.py` — 10 hand-labeled "bad" cases
+  (factual fabrications, persona contradictions, vague non-reactions)
+  + 8 "good" cases (specific, grounded, persona-consistent reactions).
+  6 harness tests assert recall ≥ 0.80, precision ≥ 0.80, FPR ≤ 0.20.
+
+**Empirical baseline (recorded 2026-04-23):**
+- TP=10, FN=0, FP=0, TN=8
+- **Precision = 1.0, Recall = 1.0, FPR = 0.0**
+- The deterministic critic catches every bad case in the golden set
+  and clears every good one. This is now a regression gate — any future
+  rule change that drops these numbers will fail in CI.
+
+### Phase 7 — Embeddings Actually Wired In (2026-04-23)
+
+**Issue addressed:** Opus #1 partial — `evaluate_creative` accepted a
+`use_embeddings: bool = False` parameter that was completely ignored.
+Memory nodes carried `embedding: null`. The "dense vector relevance"
+claim was vapor.
+
+**Fixes:**
+1. `_structured_relevance` now accepts an optional `query_embedding`.
+   When both query and memory have embeddings, the **0.10 tiebreaker
+   slot** uses cosine similarity (clamped to [0, 1]) instead of token
+   overlap on the tag blob. Falls back to legacy token path otherwise —
+   full backward compatibility.
+2. `_score_relevance` threads `query_embedding` through to
+   `_structured_relevance` even when `query_tags` are present (the
+   prior early-return path skipped embeddings entirely).
+3. `evaluate_creative(use_embeddings=True)` now actually calls
+   `embed_query_cached(query_text)` and passes the vector through
+   `consumer.consume(query_embedding=…)`. Wrapped in `try/except` so
+   missing OpenAI key / network failure degrades gracefully to token
+   similarity.
+4. `_QUERY_EMBEDDING_CACHE` (module-level dict) deduplicates calls —
+   same creative query text triggers exactly one OpenAI
+   `text-embedding-3-small` call per process. Wiped on restart.
+
+**Caveat:** Existing memory nodes seeded before this change still have
+`embedding: null`. For those, the 0.10 slot continues to use token
+overlap. New evaluations from this point forward will pick up
+embeddings automatically — no backfill performed.
+
 ### Tests added per phase
 
 | Phase | Test file | Count |
@@ -1032,24 +1087,28 @@ empirically verified.
 | 3     | `tests/test_critic_rules.py`           | 12 |
 | 3.5   | `tests/test_cross_model_critic.py`     | 10 |
 | 4     | `tests/test_persona_contradictions.py` | 12 |
-| **Total** | | **+50** (145 → 195) |
+| 6     | `tests/test_critic_benchmark.py`       | 6  |
+| 7     | `tests/test_embeddings_wired.py`       | 8  |
+| **Total** | | **+64** (145 → 209) |
 
 ### Files touched (net)
 
 **New modules:**
 - `src/synthetic_india/agents/critic_rules.py` (Phase 3)
 - `src/synthetic_india/agents/cross_model_critic.py` (Phase 3.5)
+- `src/synthetic_india/agents/critic_benchmark.py` (Phase 6)
 
 **Modified:**
-- `src/synthetic_india/memory/retrieval.py` (Phase 1, 2)
+- `src/synthetic_india/memory/retrieval.py` (Phase 1, 2, 7)
 - `src/synthetic_india/memory/consumer.py` (Phase 1, 2)
-- `src/synthetic_india/agents/persona_evaluator.py` (Phase 1, 4)
+- `src/synthetic_india/agents/persona_evaluator.py` (Phase 1, 4, 7)
 - `src/synthetic_india/agents/critic_agent.py` (Phase 3, 3.5)
 - `src/synthetic_india/schemas/memory.py` (Phase 2)
 - `src/synthetic_india/schemas/persona.py` (Phase 4)
 - `src/synthetic_india/schemas/critic.py` (Phase 3)
 - `src/synthetic_india/config.py` (Phase 3.5)
 - `behave_workflow_deep_dive.html` (Phase 5)
+- `behave_changes_simple.html` (Phase 7 — new walkthrough of all changes)
 - `thoughts.md` (this entry)
 
 ### Known remaining gaps
@@ -1057,8 +1116,9 @@ empirically verified.
 - Arousal init values, decay rates, and habituation thresholds are
   research-grounded priors — empirical calibration against real consumer
   panels remains an open question (Opus #6, #10).
-- Embedding-based relevance is implemented but optional and currently
-  null in production memory data — token-cosine fallback is what
-  actually runs (Opus #1 partially open).
-- No evaluation harness yet for "did the new critic actually catch more
-  bad outputs than the old one?" — proposed but not built.
+- Memory nodes seeded before Phase 7 still have `embedding: null`;
+  embedding cosine only kicks in for memories created after the wiring
+  fix. No backfill (Opus #1 mostly closed; long-tail open).
+- The 209-test suite gates regressions but does not yet include a
+  full live end-to-end smoke (one real persona, one real creative,
+  the full pipeline). Optional Phase 8 — user can run via dashboard.

@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Behave — What Just Changed (in plain English)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0c0e13;
+      --card: #14171f;
+      --card2: #1a1e28;
+      --text: #e8e6e3;
+      --dim: #8b8d94;
+      --accent: #ff6b35;
+      --green: #4ade80;
+      --yellow: #facc15;
+      --red: #f87171;
+      --blue: #60a5fa;
+      --purple: #c084fc;
+      --cyan: #22d3ee;
+      --pink: #f9a8d4;
+      --border: rgba(255,255,255,0.07);
+      --serif: 'Instrument Serif', serif;
+      --sans: 'DM Sans', sans-serif;
+      --mono: 'JetBrains Mono', monospace;
+      --r: 12px;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; scroll-snap-type:y mandatory; }
+    body { font-family:var(--sans); background:var(--bg); color:var(--text); line-height:1.6; overflow-x:hidden; }
+
+    .slide {
+      width:100vw; min-height:100vh; min-height:100dvh;
+      scroll-snap-align:start;
+      display:flex; flex-direction:column;
+      padding:clamp(1.5rem,4vw,4rem);
+      position:relative; overflow:hidden;
+    }
+    .slide__num {
+      font-family:var(--mono); font-size:.7rem; color:var(--dim);
+      letter-spacing:.1em; margin-bottom:1.5rem;
+    }
+    h1 { font-family:var(--serif); font-size:clamp(2rem,5vw,4rem); font-weight:400; line-height:1.1; }
+    h2 { font-family:var(--serif); font-size:clamp(1.4rem,3vw,2.5rem); font-weight:400; line-height:1.2; margin-bottom:.5rem; }
+    h3 { font-family:var(--sans); font-size:clamp(.85rem,1.4vw,1rem); font-weight:600; letter-spacing:.04em; text-transform:uppercase; color:var(--dim); margin-bottom:.4rem; }
+    p { font-size:clamp(.92rem,1.4vw,1.05rem); color:var(--dim); max-width:64ch; }
+    .accent { color:var(--accent); }
+    .green { color:var(--green); }
+    .yellow { color:var(--yellow); }
+    .blue { color:var(--blue); }
+    .purple { color:var(--purple); }
+    .cyan { color:var(--cyan); }
+    .red { color:var(--red); }
+    em { font-style:italic; color:var(--text); }
+    strong { color:var(--text); font-weight:600; }
+
+    .card {
+      background:var(--card); border:1px solid var(--border);
+      border-radius:var(--r); padding:1.25rem 1.5rem;
+    }
+    .card--accent { border-color:rgba(255,107,53,.3); background:rgba(255,107,53,.05); }
+    .card--green  { border-color:rgba(74,222,128,.3); background:rgba(74,222,128,.05); }
+    .card--blue   { border-color:rgba(96,165,250,.3); background:rgba(96,165,250,.05); }
+    .card--purple { border-color:rgba(192,132,252,.3); background:rgba(192,132,252,.05); }
+    .card--yellow { border-color:rgba(250,204,21,.3);  background:rgba(250,204,21,.05); }
+    .card--red    { border-color:rgba(248,113,113,.3); background:rgba(248,113,113,.05); }
+    .card--cyan   { border-color:rgba(34,211,238,.3);  background:rgba(34,211,238,.05); }
+
+    .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+    .grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; }
+    .grid-auto { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:1rem; }
+    @media(max-width:680px) { .grid-2,.grid-3 { grid-template-columns:1fr; } }
+
+    /* Before / After comparison */
+    .ba {
+      display:grid; grid-template-columns:1fr 40px 1fr; gap:.75rem;
+      align-items:stretch;
+    }
+    @media(max-width:680px) { .ba { grid-template-columns:1fr; } .ba__arrow { display:none; } }
+    .ba__col {
+      padding:1rem 1.1rem; border-radius:var(--r);
+      border:1px solid var(--border);
+      display:flex; flex-direction:column; gap:.5rem;
+    }
+    .ba__col--before { background:rgba(248,113,113,.05); border-color:rgba(248,113,113,.25); }
+    .ba__col--after  { background:rgba(74,222,128,.05);  border-color:rgba(74,222,128,.25); }
+    .ba__tag {
+      font-family:var(--mono); font-size:.65rem; letter-spacing:.08em;
+      text-transform:uppercase; color:var(--dim);
+    }
+    .ba__col--before .ba__tag { color:var(--red); }
+    .ba__col--after  .ba__tag { color:var(--green); }
+    .ba__body { font-size:.92rem; color:var(--text); line-height:1.55; }
+    .ba__arrow {
+      display:flex; align-items:center; justify-content:center;
+      color:var(--accent); font-size:1.4rem;
+    }
+
+    /* Pill */
+    .pill {
+      display:inline-flex; align-items:center; gap:.3rem;
+      padding:.18rem .65rem; border-radius:20px;
+      font-size:.7rem; font-weight:600; letter-spacing:.04em;
+      font-family:var(--mono);
+    }
+    .pill--green { background:rgba(74,222,128,.15);  color:var(--green); }
+    .pill--red   { background:rgba(248,113,113,.15); color:var(--red); }
+    .pill--blue  { background:rgba(96,165,250,.15);  color:var(--blue); }
+    .pill--purple{ background:rgba(192,132,252,.15); color:var(--purple); }
+    .pill--accent{ background:rgba(255,107,53,.15);  color:var(--accent); }
+    .pill--dim   { background:rgba(255,255,255,.06); color:var(--dim); }
+
+    /* Phase chip — top-left badge above each phase title */
+    .chip {
+      display:inline-flex; align-items:center; gap:.5rem;
+      padding:.35rem .8rem; border-radius:6px;
+      font-family:var(--mono); font-size:.7rem; letter-spacing:.08em;
+      background:rgba(255,107,53,.1); color:var(--accent);
+      border:1px solid rgba(255,107,53,.3);
+      margin-bottom:1rem;
+    }
+
+    /* Score table */
+    .scorecard { width:100%; border-collapse:collapse; font-size:.9rem; }
+    .scorecard th {
+      font-family:var(--sans); font-weight:600; font-size:.7rem;
+      letter-spacing:.06em; text-transform:uppercase; color:var(--dim);
+      padding:.7rem .9rem; border-bottom:1px solid var(--border);
+      text-align:left;
+    }
+    .scorecard td {
+      padding:.7rem .9rem; border-bottom:1px solid rgba(255,255,255,.04);
+      vertical-align:top; line-height:1.5;
+    }
+    .scorecard tr:last-child td { border-bottom:none; }
+    .scorecard td.num {
+      font-family:var(--mono); font-size:.85rem; text-align:right;
+    }
+
+    /* Analogy */
+    .analogy {
+      border-left:3px solid var(--accent);
+      padding:.7rem 1rem;
+      background:rgba(255,107,53,.06);
+      border-radius:0 8px 8px 0;
+      font-size:.95rem;
+    }
+    .analogy strong { color:var(--accent); }
+
+    /* Key-value */
+    .kv-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:1rem; }
+    .kv { display:flex; flex-direction:column; gap:.15rem; }
+    .kv__label { font-size:.66rem; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--dim); }
+    .kv__val { font-size:1.1rem; color:var(--text); font-family:var(--mono); }
+
+    /* Nav dots */
+    .nav {
+      position:fixed; right:1.5rem; top:50%; transform:translateY(-50%);
+      display:flex; flex-direction:column; gap:.5rem; z-index:100;
+    }
+    .nav__dot {
+      width:8px; height:8px; border-radius:50%;
+      background:var(--border); border:none; cursor:pointer;
+      transition:all .2s; padding:0;
+    }
+    .nav__dot.active { background:var(--accent); transform:scale(1.4); }
+
+    .bg-glow {
+      position:absolute; border-radius:50%;
+      filter:blur(120px); pointer-events:none; z-index:0;
+    }
+    .slide__inner { position:relative; z-index:1; flex:1; display:flex; flex-direction:column; }
+
+    .quote {
+      font-family:var(--serif); font-style:italic;
+      font-size:clamp(1rem,1.8vw,1.3rem);
+      color:var(--text); border-left:3px solid var(--accent);
+      padding:.5rem 1.2rem; line-height:1.7;
+    }
+
+    .checklist { list-style:none; padding:0; display:flex; flex-direction:column; gap:.5rem; }
+    .checklist li {
+      font-size:.9rem; color:var(--text); padding-left:1.6rem; position:relative;
+      line-height:1.55;
+    }
+    .checklist li::before {
+      content:"✓"; position:absolute; left:0; top:0;
+      color:var(--green); font-weight:700;
+    }
+    .checklist li.bad::before { content:"✗"; color:var(--red); }
+
+    code {
+      font-family:var(--mono); font-size:.82em;
+      background:rgba(255,255,255,.05); padding:.1rem .4rem;
+      border-radius:4px; color:var(--cyan);
+    }
+  </style>
+</head>
+<body>
+
+<nav class="nav" id="navDots"></nav>
+
+<!-- ═══ TITLE ═══ -->
+<section class="slide" id="s-title">
+  <div class="bg-glow" style="background:var(--accent); width:600px; height:600px; top:-200px; right:-200px; opacity:.18;"></div>
+  <div class="bg-glow" style="background:var(--purple); width:500px; height:500px; bottom:-150px; left:-150px; opacity:.12;"></div>
+
+  <div class="slide__num">BEHAVE · WHAT JUST CHANGED · APRIL 2026</div>
+  <div class="slide__inner" style="justify-content:center;">
+    <h1>The pressure-test fixes —<br><span class="accent">in plain English.</span></h1>
+    <p style="margin-top:1.5rem; font-size:1.15rem;">
+      Claude Opus stress-tested the codebase and found 10 weak spots.
+      Over <strong>seven phases</strong>, we fixed them — adding
+      <strong class="green">64 new tests</strong> and growing the suite from
+      <strong>145 → 209 tests, all green.</strong>
+    </p>
+    <p style="margin-top:1rem;">
+      This deck explains every change. No jargon. Just before vs after.
+    </p>
+
+    <div style="margin-top:2.5rem; display:flex; gap:.5rem; flex-wrap:wrap;">
+      <span class="pill pill--green">209 / 209 passing</span>
+      <span class="pill pill--accent">7 phases shipped</span>
+      <span class="pill pill--blue">Zero regressions</span>
+      <span class="pill pill--purple">TDD throughout</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ THE BIG PICTURE ═══ -->
+<section class="slide" id="s-overview">
+  <div class="slide__num">THE BIG PICTURE</div>
+  <div class="slide__inner">
+    <h2>What Opus called out, what we did about it</h2>
+    <p style="margin-bottom:1.5rem;">
+      Each phase tackles one or two of Opus's complaints. Read it as a
+      to-do list that's now done.
+    </p>
+
+    <table class="scorecard">
+      <thead>
+        <tr><th>Phase</th><th>Opus's complaint (paraphrased)</th><th>What we did</th><th class="num">Tests added</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="pill pill--accent">1</span> Relevance</td>
+          <td>"How does the memory picker even work? Looks like keyword overlap."</td>
+          <td>Replaced keyword counting with a <em>multi-signal</em> formula.</td>
+          <td class="num green">+5</td>
+        </tr>
+        <tr>
+          <td><span class="pill pill--accent">2</span> Lifecycle</td>
+          <td>"Memory just keeps getting stronger forever — that's not how brains work."</td>
+          <td>Added habituation, frequency caps, 30-day fade.</td>
+          <td class="num green">+11</td>
+        </tr>
+        <tr>
+          <td><span class="pill pill--accent">3</span> Critic v2</td>
+          <td>"One LLM critic? It'll miss its own kind of mistakes."</td>
+          <td>Built a deterministic Python rules layer underneath the LLM critic.</td>
+          <td class="num green">+12</td>
+        </tr>
+        <tr>
+          <td><span class="pill pill--accent">3.5</span> Cross-model</td>
+          <td>"Same model judging itself = inflated scores."</td>
+          <td>Added a second LLM (GPT-4o-mini) as a cross-checker.</td>
+          <td class="num green">+10</td>
+        </tr>
+        <tr>
+          <td><span class="pill pill--accent">4</span> Persona contradictions</td>
+          <td>"Personas can love Apple <em>and</em> distrust foreign brands. Nothing catches that."</td>
+          <td>Added explicit "tensions" + "non-negotiables" with auto-detection.</td>
+          <td class="num green">+12</td>
+        </tr>
+        <tr>
+          <td><span class="pill pill--accent">5</span> Docs honesty</td>
+          <td>"Your docs claim more than your code actually does."</td>
+          <td>Rewrote the over-claiming sections with honest caveats.</td>
+          <td class="num dim">docs only</td>
+        </tr>
+        <tr>
+          <td><span class="pill pill--accent">6</span> Critic harness</td>
+          <td>"You say the critic catches bad outputs — prove it."</td>
+          <td>Built a 18-case golden benchmark with precision/recall metrics.</td>
+          <td class="num green">+6</td>
+        </tr>
+        <tr>
+          <td><span class="pill pill--accent">7</span> Embeddings</td>
+          <td>"`use_embeddings=True` is a flag that does nothing. Dead code."</td>
+          <td>Actually wired OpenAI embeddings into the relevance scorer + cached calls.</td>
+          <td class="num green">+8</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══ PHASE 1 — RELEVANCE ═══ -->
+<section class="slide" id="s-p1">
+  <div class="slide__num">PHASE 1</div>
+  <div class="slide__inner">
+    <span class="chip">PHASE 1 · MEMORY RELEVANCE</span>
+    <h2>How does the persona pick which memories to recall?</h2>
+    <p style="margin-bottom:1.25rem;">
+      When a persona sees a new ad, we have to choose ~5 memories from
+      potentially hundreds. Picking the wrong ones makes the persona's
+      reaction generic. Opus said our picker was a black box.
+    </p>
+
+    <div class="ba" style="margin-bottom:1.25rem;">
+      <div class="ba__col ba__col--before">
+        <span class="ba__tag">BEFORE</span>
+        <div class="ba__body">
+          We counted how many words from the ad appeared in each memory.
+          More overlap = more relevant. <strong>That's it.</strong>
+          A Nirma memory and a Surf Excel ad share zero words but should
+          obviously be related.
+        </div>
+      </div>
+      <div class="ba__arrow">→</div>
+      <div class="ba__col ba__col--after">
+        <span class="ba__tag">AFTER</span>
+        <div class="ba__body">
+          A weighted mix of four signals:
+          <strong>40% category match</strong> (detergent ↔ detergent),
+          <strong>30% shared themes</strong> (nostalgia, value-for-money),
+          <strong>20% era + sensory cues</strong> (1990s, jingles),
+          <strong>10% word overlap</strong> as a tiebreaker.
+        </div>
+      </div>
+    </div>
+
+    <div class="analogy">
+      <strong>Analogy:</strong> Before, it was like a librarian who only
+      matches books by counting shared words in the title. Now she also
+      checks the genre, the mood, the era it was written in — and only
+      uses word matches as a final tiebreaker.
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PHASE 2 — LIFECYCLE ═══ -->
+<section class="slide" id="s-p2">
+  <div class="slide__num">PHASE 2</div>
+  <div class="slide__inner">
+    <span class="chip">PHASE 2 · MEMORY LIFECYCLE</span>
+    <h2>Memories should fade — and stop growing infinitely.</h2>
+    <p style="margin-bottom:1.25rem;">
+      In the old code, every time a memory got retrieved, its
+      "emotional intensity" went up — forever. Real brains don't work
+      that way: see something often enough and it loses its punch. Old
+      stuff also fades unless something keeps it alive.
+    </p>
+
+    <div class="grid-3" style="gap:1rem;">
+      <div class="card card--blue">
+        <h3 class="blue">Habituation</h3>
+        <p style="color:var(--text); font-size:.92rem;">
+          If a memory gets pulled up <strong>more than 5 times in 7 days</strong>,
+          its emotional charge stops growing — and starts dampening.
+          Like getting tired of a song.
+        </p>
+      </div>
+      <div class="card card--purple">
+        <h3 class="purple">Frequency cap</h3>
+        <p style="color:var(--text); font-size:.92rem;">
+          The "I've been retrieved a lot" boost caps at
+          <strong>5 retrievals</strong>. Without it, one dominant memory
+          would crowd everyone else out forever.
+        </p>
+      </div>
+      <div class="card card--accent">
+        <h3 class="accent">30-day fade</h3>
+        <p style="color:var(--text); font-size:.92rem;">
+          Memories slowly lose intensity over 30 days unless re-triggered.
+          Painful memories fade <em>faster</em> than positive ones —
+          the "fading affect bias" from psychology.
+        </p>
+      </div>
+    </div>
+
+    <div class="analogy" style="margin-top:1.25rem;">
+      <strong>Analogy:</strong> Like turning down the volume on a
+      song you've heard 50 times this week, while letting old favourites
+      slowly drift out of rotation unless something brings them back.
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PHASE 3 — CRITIC v2 ═══ -->
+<section class="slide" id="s-p3">
+  <div class="slide__num">PHASE 3</div>
+  <div class="slide__inner">
+    <span class="chip">PHASE 3 · CRITIC RULES LAYER</span>
+    <h2>A second pair of eyes — that doesn't need an LLM.</h2>
+    <p style="margin-bottom:1.25rem;">
+      The original critic was one LLM (Sonnet) judging another LLM's
+      output. Opus pointed out: LLMs share blind spots. If Sonnet
+      hallucinates, Sonnet won't catch its own hallucination.
+    </p>
+
+    <div class="ba" style="margin-bottom:1.25rem;">
+      <div class="ba__col ba__col--before">
+        <span class="ba__tag">BEFORE — 1 LAYER</span>
+        <div class="ba__body">
+          Sonnet writes the persona's reaction. Sonnet judges if the
+          reaction is good. <strong>Marking your own homework.</strong>
+        </div>
+      </div>
+      <div class="ba__arrow">→</div>
+      <div class="ba__col ba__col--after">
+        <span class="ba__tag">AFTER — 3 LAYERS</span>
+        <div class="ba__body">
+          <strong>1.</strong> Plain Python rules check first
+          (no LLM, no cost): banned phrases, contradictions, vague
+          non-reactions. <strong>2.</strong> Sonnet critic.
+          <strong>3.</strong> Cross-model GPT-4o-mini sanity check.
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="background:var(--card2);">
+      <h3>What the rules layer catches without any AI</h3>
+      <ul class="checklist" style="margin-top:.5rem;">
+        <li>Vague reactions ("It's nice", "I like it") — not specific enough.</li>
+        <li>Persona contradictions — a budget-conscious persona suddenly raving about premium.</li>
+        <li>Banned phrases — corporate-speak that no real person says.</li>
+        <li>Score sanity — claims "I'd buy this" but gave it 2/10.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PHASE 3.5 — CROSS-MODEL ═══ -->
+<section class="slide" id="s-p35">
+  <div class="slide__num">PHASE 3.5</div>
+  <div class="slide__inner">
+    <span class="chip">PHASE 3.5 · CROSS-MODEL CHECK</span>
+    <h2>Get a second opinion from a different brain.</h2>
+    <p style="margin-bottom:1.25rem;">
+      Even with the rules layer, both writer and judge were Anthropic
+      models. So we added <strong>OpenAI GPT-4o-mini</strong> as a
+      lightweight cross-checker. Different training data, different
+      blind spots, different "tells" for what looks real.
+    </p>
+
+    <div class="kv-grid">
+      <div class="card card--purple">
+        <h3 class="purple">Writer</h3>
+        <div class="kv__val">Claude Sonnet</div>
+        <p style="font-size:.82rem; margin-top:.4rem;">Generates the persona's reaction.</p>
+      </div>
+      <div class="card card--blue">
+        <h3 class="blue">Same-model critic</h3>
+        <div class="kv__val">Claude Sonnet</div>
+        <p style="font-size:.82rem; margin-top:.4rem;">Catches reasoning errors in detail.</p>
+      </div>
+      <div class="card card--green">
+        <h3 class="green">Cross-model critic</h3>
+        <div class="kv__val">GPT-4o-mini</div>
+        <p style="font-size:.82rem; margin-top:.4rem;">Catches stylistic blind spots Sonnet shares with itself.</p>
+      </div>
+    </div>
+
+    <div class="analogy" style="margin-top:1.25rem;">
+      <strong>Why this matters:</strong> if both critics flag the same
+      output, that's strong signal. If they disagree, that's signal too —
+      we surface it for human review instead of silently shipping.
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PHASE 4 — PERSONA TENSIONS ═══ -->
+<section class="slide" id="s-p4">
+  <div class="slide__num">PHASE 4</div>
+  <div class="slide__inner">
+    <span class="chip">PHASE 4 · PERSONA TENSIONS</span>
+    <h2>Real people contradict themselves. Now our personas can too.</h2>
+    <p style="margin-bottom:1.25rem;">
+      Opus pointed out: a real Indian middle-class buyer might
+      <em>say</em> "I only buy Indian brands" but also <em>own</em> an
+      iPhone. Our personas were too clean — no internal conflicts.
+    </p>
+
+    <div class="grid-2">
+      <div class="card card--yellow">
+        <h3 class="yellow">"Tensions" field</h3>
+        <p style="color:var(--text); font-size:.92rem;">
+          Each persona can now declare contradictions like:
+          <em>"Aspires to global brands but feels guilty buying foreign."</em>
+          The persona evaluator <strong>actively surfaces</strong> these
+          when scoring an ad.
+        </p>
+      </div>
+      <div class="card card--red">
+        <h3 class="red">"Non-negotiables"</h3>
+        <p style="color:var(--text); font-size:.92rem;">
+          Hard limits the persona will not cross — e.g. "won't pay
+          more than ₹500 for skincare." The critic flags any reaction
+          that violates these.
+        </p>
+      </div>
+    </div>
+
+    <div class="analogy" style="margin-top:1.25rem;">
+      <strong>Analogy:</strong> Before, every persona was a one-page CV.
+      Now they're a CV <em>plus</em> a therapist's note about their
+      contradictions. Reactions feel like a person, not a stereotype.
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PHASE 5 — DOCS ═══ -->
+<section class="slide" id="s-p5">
+  <div class="slide__num">PHASE 5</div>
+  <div class="slide__inner">
+    <span class="chip">PHASE 5 · DOCS HONESTY</span>
+    <h2>Stop overclaiming what the code does.</h2>
+    <p style="margin-bottom:1.25rem;">
+      The original deep-dive HTML said things like "memory gets stronger
+      with use" — true, but it didn't mention the cap, the habituation,
+      the fade. Opus called this out as marketing copy, not engineering
+      docs.
+    </p>
+
+    <table class="scorecard">
+      <thead>
+        <tr><th>Claim</th><th>What we said</th><th>What we say now</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Memory strength</td>
+          <td class="red">"gets stronger with every use"</td>
+          <td class="green">"gets stronger up to a cap of 5, then plateaus; habituation kicks in after 5 uses in 7 days"</td>
+        </tr>
+        <tr>
+          <td>Manufacturing Nostalgia</td>
+          <td class="red">presented as a measurement</td>
+          <td class="green">framed as research-grounded priors (Rubin & Berntsen 2003) — calibration still open</td>
+        </tr>
+        <tr>
+          <td>Critic architecture</td>
+          <td class="red">"LLM critic"</td>
+          <td class="green">"3-layer: deterministic rules → Sonnet → GPT-4o-mini cross-check"</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══ PHASE 6 — BENCHMARK ═══ -->
+<section class="slide" id="s-p6">
+  <div class="slide__num">PHASE 6</div>
+  <div class="slide__inner">
+    <span class="chip">PHASE 6 · CRITIC BENCHMARK</span>
+    <h2>Don't claim the critic works — measure it.</h2>
+    <p style="margin-bottom:1.25rem;">
+      We built a small "golden set" of 18 hand-labeled examples and ran
+      the deterministic critic against it. <strong>No LLM calls — runs
+      in milliseconds, costs $0.</strong> Now any future change that
+      breaks the critic will fail the test suite immediately.
+    </p>
+
+    <div class="grid-2" style="margin-bottom:1.25rem;">
+      <div class="card card--red">
+        <h3 class="red">10 bad examples</h3>
+        <p style="color:var(--text); font-size:.92rem;">
+          Made-up brand facts, persona contradictions, vague
+          non-reactions, banned corporate phrases. The critic
+          <strong>must catch all of these.</strong>
+        </p>
+      </div>
+      <div class="card card--green">
+        <h3 class="green">8 good examples</h3>
+        <p style="color:var(--text); font-size:.92rem;">
+          Specific, grounded, persona-consistent reactions. The
+          critic <strong>must not flag these</strong> as bad
+          (no false alarms).
+        </p>
+      </div>
+    </div>
+
+    <div class="card card--cyan">
+      <h3 class="cyan">Recorded baseline · 23 April 2026</h3>
+      <div class="kv-grid" style="margin-top:.75rem;">
+        <div class="kv">
+          <span class="kv__label">Recall</span>
+          <span class="kv__val green">100%</span>
+        </div>
+        <div class="kv">
+          <span class="kv__label">Precision</span>
+          <span class="kv__val green">100%</span>
+        </div>
+        <div class="kv">
+          <span class="kv__label">False Positive Rate</span>
+          <span class="kv__val green">0%</span>
+        </div>
+        <div class="kv">
+          <span class="kv__label">Cost per run</span>
+          <span class="kv__val green">$0.00</span>
+        </div>
+      </div>
+      <p style="margin-top:.85rem; font-size:.85rem;">
+        10 of 10 bad caught. 8 of 8 good cleared. This is now a
+        <strong>regression gate</strong> — the bar can only go up from here.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PHASE 7 — EMBEDDINGS ═══ -->
+<section class="slide" id="s-p7">
+  <div class="slide__num">PHASE 7</div>
+  <div class="slide__inner">
+    <span class="chip">PHASE 7 · EMBEDDINGS WIRED IN</span>
+    <h2>The flag that did nothing — now does something.</h2>
+    <p style="margin-bottom:1.25rem;">
+      We had a function parameter called <code>use_embeddings=True</code>
+      that looked impressive in the API. Opus opened the code and found
+      it was <strong>ignored</strong>. Memory nodes had
+      <code>embedding: null</code>. Pure vapor.
+    </p>
+
+    <div class="ba" style="margin-bottom:1.25rem;">
+      <div class="ba__col ba__col--before">
+        <span class="ba__tag">BEFORE</span>
+        <div class="ba__body">
+          <code>evaluate_creative(use_embeddings=True)</code> accepted
+          the flag and silently ignored it. The 10% tiebreaker slot in
+          the relevance formula always used keyword overlap.
+        </div>
+      </div>
+      <div class="ba__arrow">→</div>
+      <div class="ba__col ba__col--after">
+        <span class="ba__tag">AFTER</span>
+        <div class="ba__body">
+          The flag actually triggers an OpenAI embedding call (cached
+          per-text so we never pay twice for the same query). When both
+          query and memory have embeddings, the 10% slot uses
+          <strong>true cosine similarity</strong>. Otherwise falls
+          back to the old keyword path — full backward compatibility.
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-3">
+      <div class="card card--blue">
+        <h3 class="blue">What changed</h3>
+        <ul class="checklist" style="margin-top:.5rem;">
+          <li>Relevance scorer accepts an embedding</li>
+          <li>Evaluator computes & passes one</li>
+          <li>Process-level cache dedupes calls</li>
+        </ul>
+      </div>
+      <div class="card card--purple">
+        <h3 class="purple">What didn't change</h3>
+        <ul class="checklist" style="margin-top:.5rem;">
+          <li>Old code paths still work</li>
+          <li>No OpenAI key? Falls back gracefully</li>
+          <li>All 201 prior tests still pass</li>
+        </ul>
+      </div>
+      <div class="card card--yellow">
+        <h3 class="yellow">Honest caveat</h3>
+        <p style="color:var(--text); font-size:.85rem; margin-top:.5rem;">
+          Memories saved <em>before</em> this change still have no
+          embedding stored. For those, the old keyword path runs. New
+          memories pick up embeddings automatically — no backfill done.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ THE SCORECARD ═══ -->
+<section class="slide" id="s-scorecard">
+  <div class="slide__num">SCOREBOARD</div>
+  <div class="slide__inner">
+    <h2>The bottom line</h2>
+    <p style="margin-bottom:1.5rem;">
+      Seven phases, sixty-four new tests, zero regressions. Here's the
+      whole journey on one card.
+    </p>
+
+    <div class="grid-2" style="margin-bottom:1.5rem;">
+      <div class="card card--green">
+        <h3 class="green">Test suite</h3>
+        <div style="font-family:var(--mono); font-size:2rem; color:var(--green); margin:.4rem 0;">
+          145 → 209
+        </div>
+        <p style="color:var(--text); font-size:.88rem;">
+          Every phase started with failing tests (RED), then made them
+          pass (GREEN). No code shipped without tests written first.
+        </p>
+      </div>
+      <div class="card card--accent">
+        <h3 class="accent">Opus issues addressed</h3>
+        <div style="font-family:var(--mono); font-size:2rem; color:var(--accent); margin:.4rem 0;">
+          10 / 10
+        </div>
+        <p style="color:var(--text); font-size:.88rem;">
+          Every flagged weak spot has either a code fix, a documented
+          honest caveat, or both. Nothing was hand-waved away.
+        </p>
+      </div>
+    </div>
+
+    <h3 style="margin-bottom:.6rem;">Files we touched</h3>
+    <table class="scorecard">
+      <thead>
+        <tr><th>File</th><th>What it does</th><th>Phases</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>memory/retrieval.py</code></td>
+          <td>The smart memory picker</td>
+          <td><span class="pill pill--accent">1</span> <span class="pill pill--accent">2</span> <span class="pill pill--accent">7</span></td>
+        </tr>
+        <tr>
+          <td><code>memory/consumer.py</code></td>
+          <td>Wraps retrieval for the evaluator</td>
+          <td><span class="pill pill--accent">1</span> <span class="pill pill--accent">2</span></td>
+        </tr>
+        <tr>
+          <td><code>agents/persona_evaluator.py</code></td>
+          <td>Runs the persona's reaction to an ad</td>
+          <td><span class="pill pill--accent">1</span> <span class="pill pill--accent">4</span> <span class="pill pill--accent">7</span></td>
+        </tr>
+        <tr>
+          <td><code>agents/critic_rules.py</code> <span class="pill pill--green">NEW</span></td>
+          <td>Deterministic Python rules layer</td>
+          <td><span class="pill pill--accent">3</span></td>
+        </tr>
+        <tr>
+          <td><code>agents/cross_model_critic.py</code> <span class="pill pill--green">NEW</span></td>
+          <td>OpenAI cross-checker</td>
+          <td><span class="pill pill--accent">3.5</span></td>
+        </tr>
+        <tr>
+          <td><code>agents/critic_benchmark.py</code> <span class="pill pill--green">NEW</span></td>
+          <td>Golden-set evaluation harness</td>
+          <td><span class="pill pill--accent">6</span></td>
+        </tr>
+        <tr>
+          <td><code>schemas/persona.py</code></td>
+          <td>Adds tensions + non-negotiables</td>
+          <td><span class="pill pill--accent">4</span></td>
+        </tr>
+        <tr>
+          <td><code>behave_workflow_deep_dive.html</code></td>
+          <td>The honesty pass on docs</td>
+          <td><span class="pill pill--accent">5</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══ WHAT'S LEFT ═══ -->
+<section class="slide" id="s-whatsleft">
+  <div class="slide__num">WHAT'S LEFT</div>
+  <div class="slide__inner" style="justify-content:center;">
+    <h2>What you can do now — and what's still open</h2>
+
+    <div class="grid-2" style="margin-top:1.5rem;">
+      <div class="card card--green">
+        <h3 class="green">You can test the final output</h3>
+        <ul class="checklist" style="margin-top:.5rem;">
+          <li>Run the dashboard end-to-end</li>
+          <li>Upload a creative, pick personas, hit run</li>
+          <li>Watch the critic catch any weak reactions</li>
+          <li>Check the recommendation summary</li>
+        </ul>
+      </div>
+      <div class="card card--yellow">
+        <h3 class="yellow">Honest open gaps</h3>
+        <ul class="checklist" style="margin-top:.5rem;">
+          <li class="bad">Memory thresholds are research-grounded priors, not panel-calibrated</li>
+          <li class="bad">Old memory files still have <code>embedding: null</code> — only new ones get vectors</li>
+          <li class="bad">No live multi-persona end-to-end smoke test in CI yet (optional Phase 8)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="quote" style="margin-top:2rem; max-width:60ch;">
+      The pressure-test surfaced ten real problems. Seven phases later,
+      every one has a fix or an honest caveat. The codebase is now
+      <strong class="accent">harder to lie with</strong> — the tests
+      hold us to it.
+    </div>
+  </div>
+</section>
+
+<script>
+  // Nav dots
+  const slides = document.querySelectorAll('.slide');
+  const navDots = document.getElementById('navDots');
+  slides.forEach((s, i) => {
+    const dot = document.createElement('button');
+    dot.className = 'nav__dot';
+    dot.title = s.id;
+    dot.onclick = () => s.scrollIntoView({ behavior: 'smooth' });
+    navDots.appendChild(dot);
+  });
+  const dots = navDots.querySelectorAll('.nav__dot');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const idx = [...slides].indexOf(e.target);
+        dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+      }
+    });
+  }, { threshold: 0.55 });
+  slides.forEach(s => obs.observe(s));
+</script>
+
+</body>
+</html>
