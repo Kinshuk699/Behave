@@ -159,9 +159,60 @@ BRAND UPLOADS AD IMAGE
 
 ---
 
+## The Project Also Ships Four Interactive HTML Explainer Decks
+
+These aren't just README files — they're beautiful, scroll-snapped, CSS-only slide decks with progress bars, keyboard navigation, and reveal-on-scroll animations. Each serves a different audience:
+
+| File | Audience | Purpose |
+|---|---|---|
+| `behave-platform-overview.html` | **Everyone** (non-technical) | 11 slides. "What is this? Who are the personas? How do they react? What's the verdict?" Accessible language, visual trait sliders, analogy-driven. |
+| `behave_explainer.html` | **Technical interviewers** | 8 slides. Architecture diagrams, tech stack justification, Databricks integration, agent design. Course-technology mapping for the capstone rubric. |
+| `behave_workflow_deep_dive.html` | **Engineers who want to understand every detail** | 10 slides. Every single step of the pipeline from ad upload to recommendation. Exact model names, exact formulas, exact prompt structure. The "Manufacturing Nostalgia" before/after comparison table. |
+| `behave_changes_simple.html` | **Code reviewers / skeptics** | 9 slides. The 7-phase pressure-test story: Opus found 10 weak spots → all 10 fixed → 145 → 209 tests. Before/after comparisons for every phase. The honest-caveats scorecard. |
+
+---
+
 ## The Smart & Creative Things (What Sets This Apart)
 
-### 1. The Critic Agent Has Three Defense Layers — and Only One Costs Money
+### 1. Manufacturing Nostalgia — The Crown Jewel Concept
+
+This is the single most creative idea in the entire project. It solves a problem that most people wouldn't even recognize as a problem.
+
+**The old way:** Nostalgia was stored as a *trait list*. `iconic_ads: ["Nirma jingle", "Air India Maharaja"]`. That's a label. A Post-It note. The LLM read it and produced analyst-speak: *"This ad appeals to nostalgia which is effective for this demographic."* Technically true. Emotionally hollow.
+
+**The new way:** Each persona gets one or more **scene memories** — full first-person narratives with three layers:
+
+> *"It was Sunday afternoon. Nani Ji had just finished braiding my hair with jasmine oil. The black-and-white Doordarshan set was on. Then the Nirma jingle started — washing powder Nirma... She hummed along without even noticing. That sound and that smell are fused in my head forever."*
+
+**The three nostalgia layers (Manufacturing Nostalgia, §5.1):**
+
+| Layer | What It Is | Why It Matters |
+|---|---|---|
+| **1. Sensory anchor** | The specific trigger: jasmine oil smell, jingle melody, the white powder cloud | This is what an ad today might accidentally reactivate. A visual, a sound, a texture. |
+| **2. Life context** | Who was there, what they felt, what they didn't yet know | Emotional weight comes from *who* was present. Nani Ji is the emotional anchor, not the jingle. |
+| **3. Present contrast** | The implicit gap between then and now | Nani Ji is gone. The jingle is still there. That gap *is* the emotional charge. The nostalgia isn't about the product — it's about the person. |
+
+**Why this is architecturally brilliant:**
+
+The problem wasn't that the personas lacked nostalgia data. The data was there. The problem was that nostalgia was **losing at every stage of the pipeline**:
+
+1. **Retrieval formula:** A 1988 memory competed equally with a Tuesday memory. Same weights = old memories always lose to recent ones. Fix: `emotional_arousal = 0.85` with weight **1.5×** in the retrieval formula. A high-arousal childhood scene beats a flat recent memory even if it's 40 years older.
+
+2. **Prompt positioning:** Scene memories were buried under 80 lines of psychology numbers at the bottom of the prompt. LLMs pay exponentially more attention to content that appears early. Fix: Scene memories now appear **FIRST** — before price sensitivity, before scores, before any number. They *lead* the context.
+
+3. **System instruction:** The old instruction was passive: *"If a brand triggers a childhood memory — say so."* The new instruction is active: *"If this creative triggers a personal memory — let it surface BEFORE you analyze. Real consumers do not separate emotion from evaluation."*
+
+**The before/after in the LLM's actual output:**
+
+| Before | After |
+|---|---|
+| *"This ad appeals to nostalgia which is effective for this demographic. The brand heritage creates trust signals."* | *"Yaar, ye Nirma wali dhun sunte hi Nani Ji yaad aa gayi — Sunday mornings, oiled hair, Doordarshan. Dil bhar aaya. Definitely buying."* |
+
+One is an analyst. The other is a person. That difference is the entire project.
+
+**Honest academic framing** (from the deep-dive deck): "Manufacturing Nostalgia" is internal shorthand for *scene-based memory activation* grounded in the reminiscence-bump literature (Rubin & Berntsen, 2003) and the autobiographical-memory salience model (Conway & Pleydell-Pearce, 2000). The arousal-initialization values (scene memories at 0.85–0.95, neutral evaluations at 0.10–0.30) are **research-grounded priors, not measurements** from these specific personas. The system manufactures nothing on its own — it surfaces scene memories the persona authors wrote, and weights them so they win against newer but flatter memories. Calibration of the arousal weights, decay rates, and habituation thresholds remains an open empirical question. This is exactly the kind of honest intellectual framing that separates genuine research engineering from AI hype.
+
+### 2. The Critic Agent Has Three Defense Layers — and a Cross-Model Cross-Checker
 
 Most "AI evaluation" tools are thin wrappers around a single LLM prompt. Behave's Critic Agent has **four distinct quality gates**, and two of them are zero-cost deterministic checks that run before the LLM is ever called:
 
@@ -357,6 +408,56 @@ All 209 pass. Tests are fully mocked — zero API calls. The test suite runs in 
 Every category in the system must come from this vocabulary. The LLM extraction agent is constrained to pick from this list. Cohort selection does exact-match on category strings. The category migration map handles common free-text inputs. This is the kind of constraint that makes a system reliable instead of brittle.
 
 ---
+
+### 4. The 5 Memory Types — A Complete Cognitive Model
+
+Every memory in the system is one of five types, each created under specific conditions:
+
+| Type | Trigger Condition | Purpose | Example |
+|---|---|---|---|
+| **SCENE** | Loaded at persona birth, never changes | Formative era memory with sensory anchors and emotional charge (0.85–0.95) | "Sunday 1988, Nani Ji, the Nirma jingle on Doordarshan" |
+| **OBSERVATION** | Every ad evaluation (always written) | The atomic unit of experience — "I saw X ad, I felt Y, I would do Z" | "I saw a Surf Excel FMCG ad 3 days ago. I would scroll past. The price felt too premium." |
+| **PREFERENCE** | Only when `overall_score > 70` | Captures lasting brand affinity — the persona genuinely liked this | "I genuinely liked the Myntra fashion ad. The pricing was transparent and felt fair to me." |
+| **BELIEF** | Only when `overall_score < 30` | Captures lasting brand distrust or category skepticism | "I was put off by the Lenskart ad. Something about the hard sell reminded me of MLM tactics." |
+| **REFLECTION** | Triggered when cumulative importance > 50 | Higher-order insight synthesized from multiple observations | "I tend to distrust skincare brands that rely on celebrity endorsements without clinical backing." |
+
+**The Reflection mechanism** is particularly clever. It mirrors how humans form abstract beliefs: you don't know after one bad date that you have a type. After five, the pattern is obvious. Claude Haiku 3 takes the 10 most important recent memories and synthesizes a higher-order insight — which then gets retrieved in future evaluations and shapes future reactions. This is how the personas *learn* across runs, not just remember.
+
+**The auto-strategy switch:** If a persona has fewer than 50 category memories, the system dumps ALL of them into the prompt (full-dump mode, leveraging 200K context windows). Once they cross 50, the weighted scoring formula kicks in and picks the top 5. This mirrors how streaming systems work — backfill everything early, then switch to live scoring at scale. It eliminates the #1 failure mode from the original Generative Agents paper (retrieval errors in early phases when there aren't enough memories to score meaningfully).
+
+### 5. The 7-Phase Pressure-Test Story: 145 → 209 Tests
+
+The project's code quality narrative is a story, not just a number. Claude Opus was used to stress-test the entire codebase — and it found 10 weak spots. Over seven phases, every single one was addressed. The test suite grew from 145 to 209 tests. **Zero regressions.** Every phase started with failing tests (RED), then made them pass (GREEN). No code shipped without tests written first.
+
+| Phase | Opus's Complaint | What Changed | Tests Added |
+|---|---|---|---|
+| **1 — Relevance** | "Memory picker is just keyword overlap — a black box" | Replaced keyword counting with multi-signal formula: 40% category match + 30% shared themes + 20% era/sensory cues + 10% word overlap | +5 |
+| **2 — Lifecycle** | "Memory keeps getting stronger forever — not how brains work" | Added habituation (5+ retrievals in 7 days → dampening), frequency cap (`log(1+min(count, 5))`), 30-day fade with fading affect bias | +11 |
+| **3 — Critic v2** | "One LLM judging another LLM — marking your own homework" | Built deterministic Python rules layer: price-income sanity, action-score contradiction, score inflation detection. $0 cost, runs in milliseconds | +12 |
+| **3.5 — Cross-model** | "Same model judging itself = inflated scores" | Added GPT-4o-mini as second critic. Different training data, different blind spots. Disagreement > threshold → auto-quarantine | +10 |
+| **4 — Persona contradictions** | "Personas are too flat — real people have internal conflicts" | Added shadow archetypes, value conflicts, non-negotiables, context modifiers. Personas can now be conflicted: "Wants iPhone but feels guilty buying foreign" | +12 |
+| **5 — Docs honesty** | "Your docs claim more than your code actually does" | Rewrote over-claiming sections. "Memory gets stronger forever" → "gets stronger up to a cap of 5, then plateaus; habituation kicks in." Honest academic framing on Manufacturing Nostalgia | docs |
+| **6 — Critic benchmark** | "You say the critic catches bad outputs — prove it" | Built 18-case golden benchmark: 10 bad examples (must catch all), 8 good examples (must not flag). **100% precision, 100% recall, $0 cost.** Now a regression gate | +6 |
+| **7 — Embeddings** | "`use_embeddings=True` is a flag that does nothing — dead code" | Actually wired OpenAI embeddings into the relevance scorer. Process-level cache prevents duplicate calls. Falls back gracefully when no OpenAI key. Old memories without embeddings still work | +8 |
+
+**The critic benchmark deserves special mention.** It's a small golden set of 18 hand-labeled examples — 10 deliberately bad (made-up brand facts, persona contradictions, vague non-reactions, banned corporate phrases) and 8 genuinely good (specific, grounded, persona-consistent). The deterministic critic runs against all 18 in milliseconds at zero cost. 10 of 10 bad caught. 8 of 8 good cleared. This is now a **regression gate** — any future change that breaks the critic will fail the test suite immediately. The bar can only go up.
+
+### 6. Persona Contradictions — The "Therapist's Note" Beyond the CV
+
+Real people are not internally consistent. A real Indian middle-class buyer might *say* "I only buy Indian brands" but also *own* an iPhone. The old personas were too clean. Four new mechanisms fix this:
+
+- **Shadow archetype**: Who they become under stress, excitement, or off-script. A Pragmatist might become an Impulse Buyer during Diwali sales.
+- **Value conflicts**: Pairs of competing values with context-dependent activation. *"Thrift (grocery shopping with mother) vs. Status (dinner with college friends)."*
+- **Non-negotiables**: Hard limits the persona will not cross. *"Won't pay more than ₹500 for skincare."* The critic flags any evaluation that violates these.
+- **Context modifiers**: Named situations that shift psychology dials. *"End of month: price_sensitivity +0.3, impulse_tendency -0.2."*
+
+The persona evaluator **actively surfaces** these tensions when scoring an ad. The Critic Agent checks for them. The result: reactions feel like a person, not a stereotype. As the platform overview deck says: *"Before, every persona was a one-page CV. Now they're a CV plus a therapist's note about their contradictions."*
+
+### 7. The Embedding Dead-Code Fix — A Flag That Now Actually Does Something
+
+The function signature had `use_embeddings=True` — a parameter that looked impressive in the API but was silently ignored. Memory nodes had `embedding: null`. Pure vapor. Phase 7 fixed this: the flag now triggers an actual OpenAI `text-embedding-3-small` call, the relevance scorer accepts an embedding vector, and the 10% tiebreaker slot in the relevance formula uses true cosine similarity instead of keyword overlap. A process-level `_QUERY_EMBEDDING_CACHE` dict prevents duplicate calls when the same creative is evaluated across 20 personas.
+
+**What makes this honest:** The fix document explicitly states that old memories saved before this change still have no embedding stored. For those, the old keyword path runs. New memories pick up embeddings automatically. No backfill was done. This kind of honest caveat — instead of pretending everything is perfect — is rare in AI projects.
 
 ## What Makes This Different From Every Other "AI Marketing Tool"
 
